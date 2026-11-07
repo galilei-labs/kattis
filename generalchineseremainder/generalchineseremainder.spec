@@ -2,27 +2,32 @@
 
 (** ** Description *)
 
-(** [crt residue1 modulus1 residue2 modulus2] solves the system x =
-    residue1 (mod modulus1), x = residue2 (mod modulus2) for moduli
-    that need not be coprime. It returns Some (value, period) with
-    period = lcm(modulus1, modulus2) and value the solution in [0,
-    period), or None ("no solution") when no integer satisfies both
-    congruences. *)
+(** Solve two modular congruences whose moduli need not be coprime. Return
+    the least nonnegative solution and its period, or report that the
+    congruences are inconsistent.
 
-(** [@kattis generalchineseremainder]
+    [@kattis generalchineseremainder]
     - Difficulty: 2.6
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Both moduli are from 1 to 1000000000.
+    - Each residue is nonnegative and smaller than its modulus. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 10000 23000 9000 23000
 10000 23000 10000 23000
-1234 2000 746 2002 = no solution
+1234 2000 746 2002
+Output:
+no solution
 10000 23000
-489234 2002000 *)
+489234 2002000
+*)
 
 (** ** [@hide] Environment *)
 (* @function        crt

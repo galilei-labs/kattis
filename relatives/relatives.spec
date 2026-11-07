@@ -2,13 +2,28 @@
 
 (** ** Description *)
 
-(** Count the positive integers smaller than a given
-    [number] that are relatively prime to it.
+(** Count the positive integers smaller than n that are relatively prime to
+    n.
 
     [@kattis relatives]
     - Difficulty: 2.7
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 <= n <= 1000000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+7
+12
+0
+Output:
+6
+4
+*)
 
 (** ** [@hide] Environment *)
 

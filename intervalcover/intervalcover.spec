@@ -2,16 +2,50 @@
 
 (** ** Description *)
 
-(** [cover target_left target_right lefts rights] returns the indices of
-    a smallest selection of the intervals [lefts_i, rights_i] whose
-    union contains [target_left, target_right], any one of them when
-    several exist, or None when no selection does ; the harness
-    prints the count then the indices, or "impossible". *)
+(** Find a smallest subset of given closed intervals whose union covers a
+    target interval, or report that coverage is impossible.
 
-(** [@kattis intervalcover]
+    [@kattis intervalcover]
     - Difficulty: 4.3
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 20000 intervals; each left endpoint is no greater than its right
+      endpoint.
+    - Input coordinates have at most six digits after the decimal point. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+-0.5 1
+3
+-0.9 -0.1
+-0.2 2
+-0.7 1
+0 1
+3
+0 0.25
+0.25 0.75
+0.75 0.999
+0 1
+3
+0 0.25
+0.25 0.75
+0.75 1
+1 1
+1
+1 1
+Output:
+1
+2
+impossible
+3
+0 1 2
+1
+0
+*)
 
 (** ** [@hide] Environment *)
 (* @function        cover

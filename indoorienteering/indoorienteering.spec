@@ -2,32 +2,31 @@
 
 (** ** Description *)
 
-(** [indoorienteering distances desired_length] decides whether the n
-    control points, whose pairwise distances form the n x n matrix
-    distances, can be visited each exactly once in some order,
-    returning directly to the first one, with a total race length of
-    exactly desired_length. It returns true ("possible") iff such an
-    order exists, false ("impossible") otherwise. *)
+(** Decide whether a tour can visit every vertex exactly once, return to its
+    start, and have exactly a specified total length.
 
-(** [@kattis indoorienteering]
+    [@kattis indoorienteering]
     - Difficulty: 6.6
     - CPU time limit: 8 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 14 vertices; target length from 1 to 10^15.
+    - Distances are symmetric, zero on the diagonal, and otherwise from 1 to
+      the target length; they satisfy the triangle inequality. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 4 10
+(** Kattis text input and output. *)
+(* Input:
+4 10
 0 3 2 1
 3 0 1 3
 2 1 0 2
-1 3 2 0 = possible *)
-
-(** Kattis sample: text input and output. *)
-(* 3 5
-0 1 2
-1 0 3
-2 3 0 = impossible *)
+1 3 2 0
+Output:
+possible
+*)
 
 (** ** [@hide] Environment *)
 (* @function        indoorienteering

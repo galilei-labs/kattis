@@ -2,31 +2,32 @@
 
 (** ** Description *)
 
-(** Rectangle i has lower left corner (lefts_i, bottoms_i) and upper
-    right corner (rights_i, tops_i). The answer is true exactly when
-    two distinct rectangles have boundaries with a common point of
-    the real plane (a rectangle nested strictly inside another does
-    not count). *)
+(** Decide whether any two axis-aligned rectangles have intersecting
+    boundaries. Strict containment without boundary contact does not count.
 
-(** [@kattis intersectingrectangles]
+    [@kattis intersectingrectangles]
     - Difficulty: 5.5
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 rectangles.
+    - Integer coordinates from -10^9 to 10^9; each rectangle has positive
+      width and height.
+    - All horizontal coordinates are distinct, as are all vertical
+      coordinates. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 0 0 2 2
 1 1 3 4
-5 7 6 8 = 1 *)
-
-(** Kattis sample: text input and output. *)
-(* 4
-0 0 20 20
-1 1 3 4
-2 10 9 12
-11 3 19 18 = 0 *)
+5 7 6 8
+Output:
+1
+*)
 
 (** ** [@hide] Environment *)
 (* @function        intersecting_rectangles

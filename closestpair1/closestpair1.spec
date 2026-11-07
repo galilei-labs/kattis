@@ -2,17 +2,37 @@
 
 (** ** Description *)
 
-(** One test case: [closestpair x_coordinates
-    y_coordinates] takes the n >= 2 points
-    (x_coordinates_k, y_coordinates_k) of the case and
-    returns the indices i, j of two distinct points that
-    no pair of distinct points is strictly closer than,
-    exactly over the reals the floats denote; any such
-    pair, in either order. The harness prints
-    x_coordinates_i y_coordinates_i x_coordinates_j
-    y_coordinates_j.
+(** Find two distinct points with minimum Euclidean distance, comparing the
+    exact real values represented by their floating-point coordinates.
+
     [@kattis closestpair1]
-    - Difficulty: 3.4 *)
+    - Difficulty: 3.4
+
+    **Kattis Bounds**
+    - 2 to 100000 points.
+    - Each coordinate has absolute value at most 100000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+1.12 0
+0 0.51
+3
+158 12
+123 15
+1859 -1489
+3
+21.12 -884.2
+18.18 43.34
+21.12 -884.2
+0
+Output:
+0.0 0.51 1.12 0.00
+123 15 158 12.00
+21.12 -884.20 21.12 -884.20
+*)
 
 (** ** [@hide] Environment *)
 

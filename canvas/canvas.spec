@@ -2,14 +2,29 @@
 
 (** ** Description *)
 
-(** [canvas sizes] is the least total ink the painting
-    machine of the statement can spend, over every order
-    of the belt and every run of painting steps, to take
-    the canvasses of sizes sizes_0, ..., sizes_(n-1),
-    all of one colour at first, to pairwise distinct
-    colours.
+(** Repeatedly split a group of weighted items into two groups, paying the
+    group's total weight for each split. Find the minimum cost of separating
+    all items into singletons.
+
     [@kattis canvas]
-    - Difficulty: 3.5 *)
+    - Difficulty: 3.5
+
+    **Kattis Bounds**
+    - 1 to 100000 items; each weight from 1 to 100000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+3
+7 4 7
+4
+5 3 7 5
+Output:
+29
+40
+*)
 
 (** ** [@hide] Environment *)
 

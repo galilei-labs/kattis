@@ -2,38 +2,35 @@
 
 (** ** Description *)
 
-(** [knigsoftheforest pool_size year_count karl_year karl_strength
-    other_years other_strengths]: Karl-Algtav enters the tournament
-    in year karl_year with strength karl_strength, the other moose
-    in years other_years with strengths other_strengths (parallel
-    lists). Every year from 2011 on, the strongest moose that has
-    entered and not yet won wins and leaves. The result is Some year
-    when Karl wins in that year, one of the year_count years 2011 ..
-    2011 + year_count - 1 the data cover, and None ("unknown")
-    otherwise. *)
+(** Process annual arrivals into a competition where the strongest active
+    participant wins and leaves each year. Determine when a designated
+    participant wins, or whether the known arrivals are insufficient to
+    tell.
 
-(** [@kattis knigsoftheforest]
+    [@kattis knigsoftheforest]
     - Difficulty: 3.3
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Pool size and observed year count from 1 to 100000.
+    - Entry years span 2011 through 2011 + year count - 1.
+    - Distinct strengths from 0 to 2^31 - 1; a full pool enters initially
+      and one new participant enters each subsequent year. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 2 4
+(** Kattis text input and output. *)
+(* Input:
+2 4
 2013 2
 2011 1
 2011 3
 2014 4
-2012 6 = 2013 *)
-
-(** Kattis sample: text input and output. *)
-(* 2 4
-2011 1
-2013 2
-2012 4
-2011 5
-2014 3 = unknown *)
+2012 6
+Output:
+2013
+*)
 
 (** ** [@hide] Environment *)
 (* @function        knigsoftheforest

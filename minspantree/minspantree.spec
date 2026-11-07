@@ -2,22 +2,23 @@
 
 (** ** Description *)
 
-(** [mst vertex_count edge_sources edge_targets edge_weights] returns a
-    minimum spanning tree of the undirected graph on the vertices 0
-    .. vertex_count - 1 with the edges (edge_sources[k],
-    edge_targets[k]) of weight edge_weights[k], as its total weight
-    and the indices of its edges, or None when the graph is not
-    connected ; any minimum spanning tree when several exist. *)
+(** Find a minimum spanning tree of an undirected weighted graph. Return its
+    total weight and edge indices, or report that the graph is disconnected.
 
-(** [@kattis minspantree]
+    [@kattis minspantree]
     - Difficulty: 2.5
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 20000 vertices; 0 to 30000 edges.
+    - Edge weights from -20000 to 20000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 4 4
+(** Kattis text input and output. *)
+(* Input:
+4 4
 0 1 1
 1 2 2
 1 3 3
@@ -25,13 +26,16 @@
 2 1
 0 1 100
 3 0
-0 0 = 3
+0 0
+Output:
+3
 0 1
 1 2
 2 3
 100
 0 1
-Impossible *)
+Impossible
+*)
 
 (** ** [@hide] Environment *)
 (* @function        mst

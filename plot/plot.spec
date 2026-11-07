@@ -2,24 +2,28 @@
 
 (** ** Description *)
 
-(** [plot degree coefficients] takes the degree n and the n+1
-    coefficients a_n, ..., a_1, a_0 of p in input order (a_n first)
-    and returns the n+1 constants C_0, ..., C_n with which the
-    statement's pseudocode produces p(i) at every integer point i =
-    0, 1, 2, . *)
+(** Convert a polynomial's coefficients into initial finite differences.
+    Starting with these values and repeatedly adding each next entry to its
+    predecessor must produce the polynomial's values at 0, 1, 2 and so on.
 
-(** [@kattis plot]
+    [@kattis plot]
     - Difficulty: 2.4
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Polynomial degree from 1 to 6.
+    - Integer coefficients with absolute value at most 50; leading
+      coefficient nonzero. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 1 5 2 = 2 5 *)
-
-(** Kattis sample: text input and output. *)
-(* 2 2 -4 5 = 5 -2 4 *)
+(** Kattis text input and output. *)
+(* Input:
+1 5 2
+Output:
+2 5
+*)
 
 (** ** [@hide] Environment *)
 (* @function        plot

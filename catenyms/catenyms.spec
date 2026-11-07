@@ -2,16 +2,36 @@
 
 (** ** Description *)
 
-(** Given a dictionary of distinct lower-case words,
-    [catenyms words] returns the words arranged as the
-    lexicographically smallest compound catenym that
-    contains each dictionary word exactly once (three or
-    more words, the last letter of each the first letter
-    of the next), or None (the "***" line) when there is
-    none. Lexicographic order is that of the printed
-    line, the words joined by periods.
+(** Arrange all given words exactly once so each word's last letter matches
+    the next word's first letter. Return the lexicographically smallest
+    period-separated arrangement, or report that none exists.
+
     [@kattis catenyms]
-    - Difficulty: 6.5 *)
+    - Difficulty: 6.5
+
+    **Kattis Bounds**
+    - 3 to 1000 distinct words, each containing 1 to 20 lowercase letters. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+6
+aloha
+arachnid
+dog
+gopher
+rat
+tiger
+3
+oak
+maple
+elm
+Output:
+aloha.arachnid.dog.gopher.rat.tiger
+***
+*)
 
 (** ** [@hide] Environment *)
 

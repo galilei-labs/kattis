@@ -2,19 +2,29 @@
 
 (** ** Description *)
 
-(** Dish i is the circle of centre (x_coordinates_i,
-    y_coordinates_i) and radius radii_i ; no two dishes
-    overlap. A compliant design is a set of straight
-    beams, each joining a point on the circumference of
-    one dish to a point on the circumference of a
-    different dish, such that no two beams share a
-    point, no beam enters the interior of a dish, and
-    dishes and beams form one connected structure. The
-    result is the minimum total beam length of a
-    compliant design, with absolute or relative error
-    below 10^-6.
+(** Connect nonoverlapping circles with straight segments of minimum total
+    length. Segments must join circle boundaries without crossing each other
+    or entering any circle's interior.
+
     [@kattis communicationssatellite]
-    - Difficulty: 2.9 *)
+    - Difficulty: 2.9
+
+    **Kattis Bounds**
+    - 1 to 2000 circles with no overlaps.
+    - Integer center coordinates from -1000 to 1000; radii from 1 to 100. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+3 4 3
+0 0 2
+4 -2 2
+9 4 1
+Output:
+2.47213595
+*)
 
 (** ** [@hide] Environment *)
 

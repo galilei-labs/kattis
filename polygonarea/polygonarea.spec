@@ -2,22 +2,23 @@
 
 (** ** Description *)
 
-(** [signed_area2 x_coordinates y_coordinates] returns twice the signed
-    area of the polygon whose vertices are (x_coordinates[i],
-    y_coordinates[i]) in order : positive when they are given
-    counterclockwise, negative when clockwise. The harness prints
-    the direction from the sign and the area, half the absolute
-    value, with one decimal. *)
+(** Compute twice a polygon's signed area: positive for counterclockwise
+    vertex order and negative for clockwise order.
 
-(** [@kattis polygonarea]
+    [@kattis polygonarea]
     - Difficulty: 1.8
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 3 to 1000 vertices.
+    - Integer coordinates with absolute value at most 10000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 0 0
 10 0
 0 10
@@ -27,8 +28,11 @@
 -51 -6
 73 17
 -30 -34
-0 = CCW 50.0
-CW 3817.5 *)
+0
+Output:
+CCW 50.0
+CW 3817.5
+*)
 
 (** ** [@hide] Environment *)
 (* @function        signed_area2

@@ -2,16 +2,28 @@
 
 (** ** Description *)
 
-(** [bilateral stockholm_members london_members] takes
-    the m two-person teams, team k being the Stockholm
-    employee stockholm_members_k and the London employee
-    london_members_k, and returns the IDs of a smallest
-    set of employees containing at least one member of
-    every team. Among the smallest such sets it returns
-    one containing the friend, employee 1009, whenever
-    one exists.
+(** Find a smallest vertex cover of a bipartite graph: a set containing at
+    least one endpoint of every edge. Prefer a minimum cover containing
+    vertex 1009 whenever one exists.
+
     [@kattis bilateral]
-    - Difficulty: 5.6 *)
+    - Difficulty: 5.6
+
+    **Kattis Bounds**
+    - 1 to 10000 distinct edges.
+    - The two vertex sets use IDs 1000 to 1999 and 2000 to 2999. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+1009 2011
+1017 2011
+Output:
+1
+2011
+*)
 
 (** ** [@hide] Environment *)
 

@@ -2,12 +2,23 @@
 
 (** ** Description *)
 
-(** [bigfactoring number] returns the prime factors of
-    number in ascending order, each one repeated as many
-    times as it occurs in number: a sorted list of
-    primes whose product is number.
+(** Factor an integer into primes, listed in ascending order with
+    multiplicity.
+
     [@kattis bigfactoring]
-    - Difficulty: 7.2 *)
+    - Difficulty: 7.2
+
+    **Kattis Bounds**
+    - Integer from 2 to 10^24. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+166448
+Output:
+2 2 2 2 101 103
+*)
 
 (** ** [@hide] Environment *)
 

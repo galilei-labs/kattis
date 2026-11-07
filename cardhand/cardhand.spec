@@ -2,17 +2,26 @@
 
 (** ** Description *)
 
-(** A hand of pairwise distinct cards, each a rank
-    character (2-9, T, J, Q, K, A, in increasing order)
-    followed by a suit character (s, h, d, c), is sorted
-    when the cards of each suit are contiguous and the
-    ranks within each suit are ascending or descending
-    (the order of the suits and the direction of each
-    suit are free). A move takes one card out and
-    reinserts it anywhere. [min_moves hand] is the least
-    number of moves that sorts the hand.
+(** Reorder distinct playing cards so each suit is contiguous and its ranks
+    are monotone in either direction. Find the fewest moves, where one move
+    removes a card and reinserts it anywhere.
+
     [@kattis cardhand]
-    - Difficulty: 4.4 *)
+    - Difficulty: 4.4
+
+    **Kattis Bounds**
+    - 1 to 52 distinct cards.
+    - Thirteen ranks (2 through ace) and four suits. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+2h Th 8c Qh
+Output:
+1
+*)
 
 (** ** [@hide] Environment *)
 

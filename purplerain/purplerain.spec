@@ -2,15 +2,26 @@
 
 (** ** Description *)
 
-(** Find the contiguous [part] of a red-and-blue
-    peninsula with the largest colour imbalance. Break
-    ties by the smallest starting position, then the
-    smallest ending position.
+(** Find a contiguous substring with the largest absolute difference between
+    counts of two symbols. Break ties by the earliest start, then the
+    earliest end.
 
     [@kattis purplerain]
     - Difficulty: 3.8
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 characters, each R or B. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+BBRRBRRBRB
+Output:
+3 7
+*)
 
 (** ** [@hide] Environment *)
 

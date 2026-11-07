@@ -2,38 +2,31 @@
 
 (** ** Description *)
 
-(** [kingpin_escape hideout_count headquarters first_ends second_ends]
-    takes a tree on hideouts 0..hideout_count-1, given as its
-    hideout_count-1 passageways (first_ends_k, second_ends_k), and
-    the headquarters. It returns new passageways, as two parallel
-    lists, such that after adding them every hideout still reaches
-    the headquarters when any one passageway is blocked, and no
-    smaller set of new passageways does so. *)
+(** Add the fewest edges to a tree so the graph remains connected after any
+    single edge is removed.
 
-(** [@kattis kingpinescape]
+    [@kattis kingpinescape]
     - Difficulty: 6.9
     - CPU time limit: 6 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 100000 vertices, initially connected by exactly n - 1 edges
+      forming a tree. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 4 0
-0 1
-0 2
-0 3 = 2
-3 2
-3 1 *)
-
-(** Kattis sample: text input and output. *)
-(* 6 0
+(** Kattis text input and output. *)
+(* Input:
+4 0
 0 1
 0 2
 0 3
-1 4
-1 5 = 2
-3 5
-2 4 *)
+Output:
+2
+3 2
+3 1
+*)
 
 (** ** [@hide] Environment *)
 (* @function        kingpin_escape

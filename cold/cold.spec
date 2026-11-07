@@ -2,7 +2,7 @@
 
 (** ** Description *)
 
-(** Given [n] integers [t_1, ..., t_n], count how many are strictly below zero.
+(** Count how many integers in a sequence are strictly below zero.
 
     [@kattis cold]
     - Difficulty: 1.2
@@ -10,8 +10,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - [1 <= n <= 100]
-    - [-1000000 <= t_i <= 1000000] for every [i] *)
+    - 1 <= n <= 100.
+    - -1000000 <= each value <= 1000000. *)
 
 (** ** Examples *)
 (* count_negatives [5; -10; 15] = 1 *)

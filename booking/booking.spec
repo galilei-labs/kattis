@@ -2,17 +2,42 @@
 
 (** ** Description *)
 
-(** [min_rooms cleaning_time arrivals departures] is the
-    minimum number of hotel rooms to which one test
-    case's bookings (booking i from arrivals_i to
-    departures_i, Gregorian calendar, leap years
-    included) can be assigned so that two bookings
-    sharing a room never overlap, a room being unusable
-    for cleaning_time minutes after each departure
-    (cleaning): a room left at time t can be taken again
-    at exactly t + cleaning_time.
+(** Find the minimum number of resources needed to accommodate time
+    intervals, allowing a fixed cleanup period after each interval before
+    its resource can be reused.
+
     [@kattis booking]
-    - Difficulty: 4.5 *)
+    - Difficulty: 4.5
+
+    **Kattis Bounds**
+    - 1 to 5000 intervals; cleanup time from 0 to 360 minutes.
+    - Valid dates from 2013 through 2016; each interval ends no earlier than
+      it starts. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+2 120
+1 2013-07-01 15:59 2013-07-08 16:30
+2 2013-07-08 17:30 2013-07-15 12:00
+3 60
+65 2013-07-08 14:30 2013-07-08 16:00
+32 2013-07-01 16:00 2013-07-15 12:00
+91 2013-07-01 16:00 2013-07-08 15:00
+2 360
+a7 2016-02-21 14:00 2016-02-28 21:00
+xx 2016-03-01 01:00 2016-03-02 12:57
+2 60
+a9 2016-02-21 14:00 2016-02-28 11:00
+a8 2016-02-28 12:00 2016-03-11 21:00
+Output:
+2
+3
+1
+1
+*)
 
 (** ** [@hide] Environment *)
 

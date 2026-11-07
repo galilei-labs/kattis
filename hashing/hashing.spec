@@ -2,36 +2,39 @@
 
 (** ** Description *)
 
-(** [hashes hash_key text query_lefts query_rights] returns, for every
-    query (query_lefts[i], query_rights[i]), the hash with key
-    hash_key of the substring text[query_lefts[i]] ...
-    text[query_rights[i] - 1], for one family of hashes indexed by
-    the key : equal substrings get equal hashes under every key, and
-    two different substrings get equal hashes for at most max of
-    their lengths of the 2^61 - 1 keys, so a key drawn at random by
-    the harness separates them with high probability. *)
+(** Compute keyed hashes for queried substrings. Equal substrings must
+    always hash equally; distinct substrings may collide for at most as many
+    keys as their maximum length, among 2^61 - 1 possible keys.
 
-(** [@kattis hashing]
+    [@kattis hashing]
     - Difficulty: 4.9
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 300000 lowercase text characters; at most 300000 queries.
+    - Each query selects a nonempty substring within the text. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* abba
+(** Kattis text input and output. *)
+(* Input:
+abba
 6
 0 1
 3 4
 1 2
 2 3
 0 2
-2 4 = 33
+2 4
+Output:
+33
 33
 34
 34
 143
-124 *)
+124
+*)
 
 (** ** [@hide] Environment *)
 (* @function        hashes

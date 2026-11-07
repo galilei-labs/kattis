@@ -2,13 +2,53 @@
 
 (** ** Description *)
 
-(** Classify rainfall claims as true, false or possibly
-    true, accounting for [years] with missing records.
+(** For each queried pair of years, test whether the later rainfall is no
+    greater than the earlier rainfall and exceeds every intervening year's
+    rainfall. Classify the claim as confirmed, impossible or still possible
+    when records are missing.
 
     [@kattis worstweather]
     - Difficulty: 6.5
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 50000 recorded years and 1 to 10000 queries.
+    - Years from -1000000000 to 1000000000; recorded years are strictly
+      increasing.
+    - Rainfall from 1 to 1000000000; each query's first year precedes its
+      second. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+2002 4920
+2003 5901
+2004 2832
+2005 3890
+2
+2002 2005
+2003 2005
+
+3
+1985 5782
+1995 3048
+2005 4890
+2
+1985 2005
+2005 2015
+
+0
+0
+Output:
+false
+true
+
+maybe
+maybe
+*)
 
 (** ** [@hide] Environment *)
 

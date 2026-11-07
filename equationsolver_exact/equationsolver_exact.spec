@@ -2,21 +2,48 @@
 
 (** ** Description *)
 
-(** [solve unknown_count matrix right_sides] decides the linear system
-    matrix x = right_sides over the reals, matrix being
-    unknown_count rows of unknown_count coefficients and right_sides
-    the unknown_count right-hand sides, the system being the exact
-    one the input floats denote : Unique approximation when it has
-    exactly one solution, approximation holding unknown_count floats
-    each within 10^-3 of the corresponding component of that
-    solution (wherever a float lies within 10^-3 of it) ; Multiple
-    when it has several ; Inconsistent when it has none. The harness
-    prints approximation, "multiple" or "inconsistent". *)
+(** Solve a square linear system, distinguishing a unique solution, multiple
+    solutions and inconsistency. For a unique solution, approximate each
+    component within 0.001 wherever that accuracy is representable.
 
-(** [@kattis equationsolver_exact]
+    [@kattis equationsolver_exact]
     - Difficulty: 4.4
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100 unknowns, with a square coefficient matrix.
+    - Coefficients and right-hand sides are floating-point numbers; no
+      magnitude bound is stated. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+1 1
+0 1
+23 42
+1
+5
+1
+3
+1 -2 0
+2 -4 0
+1 -2 1
+3 6 4
+3
+1 1 0
+3 3 0
+0 1 2
+1 4 8
+0
+Output:
+-19 42
+0.2
+multiple
+inconsistent
+*)
 
 (** ** [@hide] Environment *)
 (* @function        solve

@@ -2,15 +2,28 @@
 
 (** ** Description *)
 
-(** [winner first_player x_lengths y_lengths z_lengths]
-    is the player who wins the Cuboid Slicing Game when
-    [first_player] moves first from the cuboids
-    x_lengths_i x y_lengths_i x z_lengths_i and both
-    play optimally. A move cuts one cuboid along three
-    planes through it, leaving up to 8 smaller cuboids;
-    the player who removes the last cuboid wins.
+(** Determine the winner under optimal play in a game on integer-sized
+    cuboids. Each move removes one unit-thick slice perpendicular to each
+    axis from one cuboid, leaving up to eight smaller cuboids. The player
+    making the last move wins.
+
     [@kattis cuboidslicinggame]
-    - Difficulty: 4.2 *)
+    - Difficulty: 4.2
+
+    **Kattis Bounds**
+    - 1 to 100 cuboids.
+    - Each integer side length is from 1 to 30. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+RUBEN
+1
+4 1 7
+Output:
+RUBEN
+*)
 
 (** ** [@hide] Environment *)
 

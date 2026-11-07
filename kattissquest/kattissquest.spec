@@ -2,24 +2,24 @@
 
 (** ** Description *)
 
-(** [kattissquest commands] runs the commands in order over a pool of
-    quests, initially empty: [add E G] puts one more quest of energy
-    E and gold G in the pool; [query X] runs Kattis's greedy session
-    with energy X (repeatedly clear the quest of largest energy <=
-    the energy left, ties by largest gold, removing it from the pool
-    and subtracting its energy) and prints the gold earned. The
-    result, output, holds the printed golds, one per query, in
-    order. *)
+(** Maintain tasks with energy costs and rewards. For each budget query,
+    repeatedly remove the affordable task with greatest cost, breaking ties
+    by greatest reward, and return the total reward earned.
 
-(** [@kattis kattissquest]
+    [@kattis kattissquest]
     - Difficulty: 4.0
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 200000 commands.
+    - Task energy, reward and query budget are from 1 to 100000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 9
+(** Kattis text input and output. *)
+(* Input:
+9
 add 8 10
 add 3 25
 add 5 6
@@ -28,10 +28,13 @@ query 7
 add 1 9
 add 2 13
 query 20
-query 1 = 6
+query 1
+Output:
+6
 25
 32
-0 *)
+0
+*)
 
 (** ** [@hide] Environment *)
 (* @function        kattissquest

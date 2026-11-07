@@ -2,13 +2,28 @@
 
 (** ** Description *)
 
-(** Multiply the given power of every prime in an
-    inclusive interval, modulo 1000000007.
+(** Compute the product of p^E over all primes p in a given inclusive
+    interval, modulo 1000000007.
 
     [@kattis primepower]
     - Difficulty: 4.5
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 <= E <= 1000000.
+    - 1 <= lower bound <= upper bound <= 1000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+6
+10
+Output:
+343
+*)
 
 (** ** [@hide] Environment *)
 

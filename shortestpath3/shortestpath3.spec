@@ -2,14 +2,42 @@
 
 (** ** Description *)
 
-(** Answer shortest-path [queries] in a directed weighted
-    graph, distinguishing unreachable vertices and paths
-    whose cost is unbounded below.
+(** Answer shortest-path queries from one source in a directed weighted
+    graph, distinguishing unreachable vertices and costs unbounded below by
+    negative cycles.
 
     [@kattis shortestpath3]
     - Difficulty: 1.9
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 1000 vertices; 0 to 5000 edges; 1 to 100 queries.
+    - Edge weights from -2000 to 2000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5 4 3 0
+0 1 999
+1 2 -2
+2 1 1
+0 3 2
+1
+3
+4
+2 1 1 0
+0 1 -100
+1
+0 0 0 0
+Output:
+-Infinity
+2
+Impossible
+
+-100
+*)
 
 (** ** [@hide] Environment *)
 

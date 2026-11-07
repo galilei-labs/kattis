@@ -2,14 +2,35 @@
 
 (** ** Description *)
 
-(** Count the badge numbers that allow a route from the
-    starting room to the [destination] through directed,
-    badge-restricted doors.
+(** Each edge of a directed graph permits an inclusive interval of integer
+    labels. Count the labels that permit a path from a specified source to a
+    destination.
 
     [@kattis securitybadge]
     - Difficulty: 7.0
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 1000 vertices; 1 to 5000 directed edges.
+    - Labels from 1 to B, where B <= 1000000000.
+    - Source and destination differ; each ordered vertex pair has at most
+      one edge, with an allowed interval inside 1 through B. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4 5 10
+3 2
+1 2 4 7
+3 1 1 6
+3 4 7 10
+2 4 3 5
+4 2 8 9
+Output:
+5
+*)
 
 (** ** [@hide] Environment *)
 

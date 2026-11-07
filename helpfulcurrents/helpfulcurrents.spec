@@ -2,31 +2,32 @@
 
 (** ** Description *)
 
-(** [helpfulcurrents row_count column_count start_column ocean_map]
-    counts the distinct routes of the ship from column start_column
-    of the bottom row of the map to the castle '@', a route being a
-    sequence of moves, each either north onto a cell that is not '#'
-    or along the current ('>' east, '<' west) of the cell the ship
-    is on. It returns [Some (count mod 1000003)] when at least one
-    route exists and [None] ("begin repairs") when none does. *)
+(** Count paths through a grid from a given bottom-row cell to a
+    destination. Each move goes north or follows the current cell's
+    horizontal arrow, avoiding obstacles. Return the count modulo 1000003,
+    distinguishing an unreachable destination.
 
-(** [@kattis helpfulcurrents]
+    [@kattis helpfulcurrents]
     - Difficulty: 6.9
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 300 rows and 1 to 50000 columns.
+    - Exactly one destination; the start is not an obstacle.
+    - Arrows stay within the grid and point to neither an obstacle nor an
+      opposing arrow. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 2 2 0
+(** Kattis text input and output. *)
+(* Input:
+2 2 0
 >@
->~ = 2 *)
-
-(** Kattis sample: text input and output. *)
-(* 3 5 1
->>@<<
->~#~<
->>>>~ = 4 *)
+>~
+Output:
+2
+*)
 
 (** ** [@hide] Environment *)
 (* @function        helpfulcurrents

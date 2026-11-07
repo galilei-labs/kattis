@@ -2,41 +2,33 @@
 
 (** ** Description *)
 
-(** [joggers intersection_count jog_distance trail_starts trail_ends
-    trail_lengths lamps]: the woods have intersections
-    1..intersection_count, the campus is 1, trail j joins
-    trail_starts_j and trail_ends_j and is trail_lengths_j metres
-    long, and lamps already stand at the intersections listed in
-    lamps. A jogger runs exactly jog_distance metres from the campus
-    back to the campus, turning around anywhere, even inside a
-    trail. The result is the least number of new lamps, placed at
-    intersections, such that every trail some jogger may run on has
-    a lamp at one of its two ends. *)
+(** In a weighted tree with a designated root, add the fewest marked
+    vertices so every edge usable by a closed walk of a specified length
+    from the root has a marked endpoint. Walks may turn around inside edges.
 
-(** [@kattis joggers]
+    [@kattis joggers]
     - Difficulty: 5.2
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 50000 vertices forming a tree; edge lengths from 1 to 100.
+    - Walk length from 1 to 10000; at most one existing mark per vertex. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 5 6
+(** Kattis text input and output. *)
+(* Input:
+5 6
 1 2 1
 1 3 1
 4 3 3
 3 5 2
 1
-1 = 1 *)
-
-(** Kattis sample: text input and output. *)
-(* 5 6
-1 2 1
-1 3 1
-4 3 3
-3 5 2
 1
-3 = 1 *)
+Output:
+1
+*)
 
 (** ** [@hide] Environment *)
 (* @function        joggers

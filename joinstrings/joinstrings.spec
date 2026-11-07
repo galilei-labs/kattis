@@ -2,37 +2,35 @@
 
 (** ** Description *)
 
-(** [joinstrings strings targets sources] executes, in order, the N-1
-    operations of the statement on the N strings S_1..S_N = strings:
-    the i-th operation (1-based indices a_i = targets_i, b_i =
-    sources_i) sets S_(a_i) := S_(a_i) ++ S_(b_i), then S_(b_i) :=
-    "". It returns the one string that remains at the end, the S_r
-    whose index r is no b_i. *)
+(** Process operations that append one string to another and empty the
+    source. Return the single string remaining after all operations.
 
-(** [@kattis joinstrings]
+    [@kattis joinstrings]
     - Difficulty: 3.6
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 nonempty lowercase strings, totaling at most 1000000
+      characters.
+    - Exactly N - 1 operations on distinct source and target indices; an
+      emptied source is never accessed again. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 4
+(** Kattis text input and output. *)
+(* Input:
+4
 cute
 cat
 kattis
 is
 3 2
 4 1
-3 4 = kattiscatiscute *)
-
-(** Kattis sample: text input and output. *)
-(* 3
-howis
-this
-practicalexam
-1 2
-1 3 = howisthispracticalexam *)
+3 4
+Output:
+kattiscatiscute
+*)
 
 (** ** [@hide] Environment *)
 (* @function        joinstrings

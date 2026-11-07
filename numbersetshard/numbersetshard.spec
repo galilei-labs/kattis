@@ -2,24 +2,31 @@
 
 (** ** Description *)
 
-(** [numbersets interval_start interval_end min_prime] is the number of
-    sets left when every integer of [interval_start, interval_end]
-    starts in a set of its own and the sets of any two integers of
-    that interval sharing a prime factor at least min_prime are
-    merged. One call per test case. *)
+(** Group the integers in an interval by repeatedly merging groups whose
+    members share a prime factor at least a given threshold. Return the
+    number of resulting groups.
 
-(** [@kattis numbersetshard]
+    [@kattis numbersetshard]
     - Difficulty: 6.6
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 <= lower bound <= upper bound <= 10^12; interval width at most
+      1000000.
+    - Prime-factor threshold from 2 to the upper bound. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 2
+(** Kattis text input and output. *)
+(* Input:
+2
 10 20 5
-10 20 3 = Case #1: 9
-Case #2: 7 *)
+10 20 3
+Output:
+Case #1: 9
+Case #2: 7
+*)
 
 (** ** [@hide] Environment *)
 (* @function        numbersets

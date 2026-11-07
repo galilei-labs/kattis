@@ -2,23 +2,24 @@
 
 (** ** Description *)
 
-(** [magic sequence_length seed multiplier modulus hash_base
-    hash_modulus] generates the sequence S of sequence_length
-    integers S[0] = seed, S[i] = (S[i-1] * multiplier + seed) mod
-    modulus for 1 <= i < sequence_length, sorts it into R, and
-    returns the hash V obtained from V = 0 by V := (V * hash_base +
-    R[i]) mod hash_modulus for i from 0 to sequence_length - 1. One
-    test case per call. *)
+(** Generate N integers by S[0] = A and S[i] = (S[i-1] * B + A) mod C, then
+    sort them. Hash the sorted sequence by starting at zero and repeatedly
+    replacing V with (V * X + value) mod Y.
 
-(** [@kattis magicsequence]
+    [@kattis magicsequence]
     - Difficulty: 7.4
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 <= N <= 1000000.
+    - 1 <= A, B, C, X, Y <= 1000000000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 7
 7 7 12
 1 20
@@ -27,9 +28,12 @@
 1 14
 7
 2 5 6
-1 19 = 0
+1 19
+Output:
+0
 1
-8 *)
+8
+*)
 
 (** ** [@hide] Environment *)
 (* @function        magic

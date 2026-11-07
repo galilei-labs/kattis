@@ -2,17 +2,39 @@
 
 (** ** Description *)
 
-(** [baza database queries] answers every query word of
-    queries, in order: the number of steps the
-    statement's primitive search takes to find it in
-    database, i.e. the number of database words it is
-    compared to (in database order, up to and including
-    the word equal to it, or all of them when it is
-    absent) plus the sum of the lengths of the longest
-    common prefixes of the query and each of those
-    words.
+(** For each query word, scan an ordered dictionary until a match is found
+    or the dictionary ends. Return the number of words examined plus the sum
+    of their common-prefix lengths with the query.
+
     [@kattis baza]
-    - Difficulty: 5.5 *)
+    - Difficulty: 5.5
+
+    **Kattis Bounds**
+    - 1 to 30000 dictionary words and 1 to 30000 queries.
+    - Words contain fewer than 30 lowercase letters; dictionary entries are
+      distinct. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+hobotnica
+robot
+hobi
+hobit
+robi
+4
+robi
+hobi
+hobit
+rakija
+Output:
+12
+10
+16
+7
+*)
 
 (** ** [@hide] Environment *)
 

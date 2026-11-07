@@ -2,14 +2,27 @@
 
 (** ** Description *)
 
-(** [atrivialpursuit term_count gcd_factors lcm_factors]
-    counts the sequences of term_count (P) positive
-    integers whose gcd is G, the product of the
-    gcd_factors, and whose lcm is L, the product of the
-    lcm_factors, and returns that count modulo 10^9 + 7
-    (0 when no sequence exists).
+(** Count ordered sequences of positive integers with a specified length,
+    greatest common divisor and least common multiple. The latter two are
+    given as products of factors; return the count modulo 1000000007.
+
     [@kattis atrivialpursuit]
-    - Difficulty: 9.1 *)
+    - Difficulty: 9.1
+
+    **Kattis Bounds**
+    - Sequence length from 1 to 10^18.
+    - Each factor list has 1 to 400 entries, each from 1 to 10^18. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 1 2
+3
+17 18
+Output:
+216
+*)
 
 (** ** [@hide] Environment *)
 

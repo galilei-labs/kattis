@@ -2,12 +2,26 @@
 
 (** ** Description *)
 
-(** [best_and section_count integers] returns the
-    greatest bitwise AND of the bitwise ORs of the
-    sections, over the divisions of the circle integers
-    into section_count contiguous non-empty sections
+(** Partition a circular sequence into a specified number of nonempty
+    contiguous sections. Maximize the bitwise AND of the sections' bitwise
+    ORs.
+
     [@kattis bitwise]
-    - Difficulty: 6.2 *)
+    - Difficulty: 6.2
+
+    **Kattis Bounds**
+    - 1 <= section count <= sequence length <= 500000.
+    - Entries from 0 to 1000000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4 2
+2 3 4 1
+Output:
+3
+*)
 
 (** ** [@hide] Environment *)
 

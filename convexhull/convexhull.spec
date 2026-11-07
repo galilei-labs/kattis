@@ -2,14 +2,46 @@
 
 (** ** Description *)
 
-(** [convex_hull x_coordinates y_coordinates] returns
-    the indices, in counterclockwise order, of the
-    vertices of the convex hull of the points
-    (x_coordinates[i], y_coordinates[i]), no three
-    consecutive vertices collinear ; any cyclic shift,
-    and any index among duplicates of a vertex
+(** Return the vertices of a point set's convex hull in counterclockwise
+    order, omitting collinear intermediate vertices.
+
     [@kattis convexhull]
-    - Difficulty: 2.4 *)
+    - Difficulty: 2.4
+
+    **Kattis Bounds**
+    - 1 to 10000 points.
+    - Integer coordinates with absolute value at most 10000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+0 0
+10 0
+0 10
+5
+41 -6
+-24 -74
+-51 -6
+73 17
+-30 -34
+2
+50 50
+50 50
+0
+Output:
+3
+0 0
+10 0
+0 10
+3
+-24 -74
+73 17
+-51 -6
+1
+50 50
+*)
 
 (** ** [@hide] Environment *)
 

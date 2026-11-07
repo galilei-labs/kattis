@@ -2,13 +2,31 @@
 
 (** ** Description *)
 
-(** Count [inversions]: pairs of positions whose values
-    appear in decreasing order.
+(** Count inversions in a sequence: pairs of positions where the earlier
+    value is larger than the later value.
 
     [@kattis ultraquicksort]
     - Difficulty: 3.9
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 500000 distinct integers.
+    - Values from 0 to 999999999. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+9
+1
+0
+5
+4
+Output:
+6
+*)
 
 (** ** [@hide] Environment *)
 

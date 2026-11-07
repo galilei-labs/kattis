@@ -2,14 +2,25 @@
 
 (** ** Description *)
 
-(** [canonical denominations] takes a coin system given
-    as its denominations in increasing order, the first
-    being 1, and returns true exactly when the system is
-    canonical: no positive amount has a minimum number
-    of coins strictly smaller than the number of coins
-    the greedy algorithm uses for it.
+(** Decide whether repeatedly choosing the largest affordable coin always
+    yields a minimum-size representation of every positive amount.
+
     [@kattis canonical]
-    - Difficulty: 4.7 *)
+    - Difficulty: 4.7
+
+    **Kattis Bounds**
+    - 2 to 100 strictly increasing denominations.
+    - The first denomination is 1; the largest is at most 1000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+1 2 4 8
+Output:
+canonical
+*)
 
 (** ** [@hide] Environment *)
 

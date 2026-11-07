@@ -2,37 +2,32 @@
 
 (** ** Description *)
 
-(** The rooms of a maze are given by their distinct numbers; two rooms
-    whose numbers have a common factor greater than one are joined
-    by a passage on which gcd(x, y) people per minute can walk in
-    each direction, simultaneously. [mazemovement rooms] is the
-    maximum number of people per minute that can enter at the
-    lowest-numbered room and leave at the highest-numbered one,
-    nobody waiting in a room. *)
+(** Build a network on distinct integer labels, joining two vertices when
+    their greatest common divisor exceeds one and using that divisor as
+    capacity in each direction. Find the maximum flow from the smallest
+    label to the largest.
 
-(** [@kattis mazemovement]
+    [@kattis mazemovement]
     - Difficulty: 2.8
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 1000 distinct labels, each from 2 to 2000000000.
+    - The maximum flow is at most 1000000000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 4
+(** Kattis text input and output. *)
+(* Input:
+4
 4
 6
 8
-9 = 3 *)
-
-(** Kattis sample: text input and output. *)
-(* 7
-25289
-17017
-2601
-325
-225
-55223
-190969 = 18 *)
+9
+Output:
+3
+*)
 
 (** ** [@hide] Environment *)
 (* @function        mazemovement

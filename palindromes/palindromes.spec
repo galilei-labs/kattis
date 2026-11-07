@@ -2,32 +2,36 @@
 
 (** ** Description *)
 
-(** [palindromes name left_ends right_ends] answers every customer of
-    the company name: customer k remembers the letters left_end ..
-    right_end of name (1-based, left_end = left_ends_k, right_end =
-    right_ends_k), and answer k is the number of pairs (i, j) with
-    left_end <= i <= j <= right_end such that the letters i .. j of
-    name form a palindrome. *)
+(** For each queried interval of a string, count the palindromic substrings
+    contained entirely within that interval.
 
-(** [@kattis palindromes]
+    [@kattis palindromes]
     - Difficulty: 7.2
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 lowercase characters; 1 to 100000 queries.
+    - Each query is a nonempty interval within the string. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* aabacab
+(** Kattis text input and output. *)
+(* Input:
+aabacab
 5
 1 7
 1 4
 3 7
 2 5
-5 7 = 11
+5 7
+Output:
+11
 6
 7
 5
-3 *)
+3
+*)
 
 (** ** [@hide] Environment *)
 (* @function        palindromes

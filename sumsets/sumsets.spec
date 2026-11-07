@@ -2,14 +2,31 @@
 
 (** ** Description *)
 
-(** Find the largest element of a set that is the sum of
-    three other distinct [elements], or report that no
-    solution exists.
+(** Find the largest member of an integer set equal to the sum of three
+    other distinct members, or report that none exists.
 
     [@kattis sumsets]
     - Difficulty: 6.7
     - CPU time limit: 11 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 4000 distinct integers.
+    - Values from -536870912 to 536870911. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+2
+3
+5
+7
+12
+Output:
+12
+*)
 
 (** ** [@hide] Environment *)
 

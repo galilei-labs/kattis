@@ -2,17 +2,29 @@
 
 (** ** Description *)
 
-(** [chatter people_count seed multiplier increment
-    modulus] simulates one day of the chat server:
-    people_count chats are started between people
-    0..people_count-1 drawn from the generator state <-
-    (state*multiplier+increment) mod modulus seeded with
-    seed. It returns the number of groups (people linked
-    by chains of chats) and, from the largest size to
-    the smallest, each distinct group size with the
-    number of groups of that size.
+(** Generate distinct endpoint pairs using a linear congruential generator,
+    joining them until the number of edges equals the number of vertices.
+    Return the connected-component count and the frequency of each component
+    size, largest first.
+
     [@kattis chatter]
-    - Difficulty: 3.4 *)
+    - Difficulty: 3.4
+
+    **Kattis Bounds**
+    - 2 to 10000 vertices.
+    - Seed from 0 to 10000; multiplier and increment from 1 to 10000.
+    - Generator modulus from 2 to 50000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+10 5 1 2 200
+100 311 523 39 101
+Output:
+6 5 1x5
+50 3 2x48 1
+*)
 
 (** ** [@hide] Environment *)
 

@@ -2,14 +2,46 @@
 
 (** ** Description *)
 
-(** Find every occurrence of each pattern in a [text],
-    including overlaps, with positions in [ascending]
-    order for each pattern.
+(** Find every occurrence of each pattern in a text, including overlaps, and
+    return ascending starting positions for each pattern.
 
     [@kattis stringmultimatching]
     - Difficulty: 4.1
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Nonempty patterns with total length at most 100000.
+    - Nonempty text of length at most 200000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+p
+pup
+Popup
+2
+You
+peek a boo
+you speek a bootiful language
+4
+anas
+ana
+an
+a
+bananananaspaj
+Output:
+2 4
+2
+
+5
+7
+1 3 5 7
+1 3 5 7
+1 3 5 7 9 12
+*)
 
 (** ** [@hide] Environment *)
 

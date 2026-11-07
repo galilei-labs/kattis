@@ -2,14 +2,32 @@
 
 (** ** Description *)
 
-(** For each node of a weighted tree, find the cheapest
-    path starting there, including the endpoint-[penalty]
-    product, and sum these minimum costs.
+(** For each vertex u of a weighted tree, minimize distance(u, v) +
+    penalty(u) * penalty(v) over all vertices v, then sum these minimum
+    costs.
 
     [@kattis yatp]
     - Difficulty: 4.3
     - CPU time limit: 5 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 200000 vertices forming a tree.
+    - Vertex penalties and edge weights from 1 to 1000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+9 7 1 1 9
+3 2 8
+5 2 10
+4 3 10
+2 1 2
+Output:
+63
+*)
 
 (** ** [@hide] Environment *)
 

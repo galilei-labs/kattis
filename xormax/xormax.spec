@@ -2,13 +2,26 @@
 
 (** ** Description *)
 
-(** Find the largest XOR obtainable from a subset of the
-    input entries.
+(** Find the largest bitwise XOR obtainable from any subset of the input
+    integers.
 
     [@kattis xormax]
     - Difficulty: 5.9
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 integers, each from 1 to 10^18. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+1 3 5
+Output:
+7
+*)
 
 (** ** [@hide] Environment *)
 

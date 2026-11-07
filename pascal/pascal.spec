@@ -2,22 +2,25 @@
 
 (** ** Description *)
 
-(** [pascal number] is what Frane's Pascal program prints on input
-    number: the counter after the loop "for i := number-1 downto 1,
-    add one to the counter, stop as soon as number mod i = 0". *)
+(** Starting at n - 1 and counting downward, stop at the first divisor of n.
+    Return the number of candidate integers examined.
 
-(** [@kattis pascal]
+    [@kattis pascal]
     - Difficulty: 3.5
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 <= n <= 1000000000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 1 = 0 *)
-
-(** Kattis sample: text input and output. *)
-(* 10 = 5 *)
+(** Kattis text input and output. *)
+(* Input:
+1
+Output:
+0
+*)
 
 (** ** [@hide] Environment *)
 (* @function        pascal

@@ -2,31 +2,36 @@
 
 (** ** Description *)
 
-(** Given the one-way streets of a city as two parallel lists of store
-    names (street k goes from origins_k to destinations_k),
-    [loopy_regions origins destinations] returns the groups of two
-    or more stores that can be visited together indefinitely (each
-    reaches every other one and back), each group in lexicographic
-    order and the groups in lexicographic order, and, in
-    lexicographic order, the stores in no group. *)
+(** Find the strongly connected components of a directed graph that contain
+    at least two vertices. Sort the names within each component and the
+    components lexicographically, and list the remaining vertices
+    separately.
 
-(** [@kattis loopycabdrivers]
+    [@kattis loopycabdrivers]
     - Difficulty: 5.1
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 0 to 10000 directed edges, with no repeated edge or self-loop.
+    - Vertex names contain 1 to 20 uppercase or lowercase letters. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 6
+(** Kattis text input and output. *)
+(* Input:
+6
 Starbucks HEB
 BahamaBucks CVS
 CVS HEB
 CVS BahamaBucks
 HEB Starbucks
-BahamaBucks OfficeDepot = okay BahamaBucks CVS
+BahamaBucks OfficeDepot
+Output:
+okay BahamaBucks CVS
 okay HEB Starbucks
-avoid OfficeDepot *)
+avoid OfficeDepot
+*)
 
 (** ** [@hide] Environment *)
 (* @function        loopy_regions

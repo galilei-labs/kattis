@@ -2,15 +2,30 @@
 
 (** ** Description *)
 
-(** Recover the unique number of books from the
-    remainders left when packing them into the three
-    largest distinct boxes foldable from a rectangular
-    sheet.
+(** Form the three largest distinct values of x * (a - 2x) * (b - 2x) over
+    positive integers x with 2x < a and 2x < b. Find the unique integer in a
+    specified interval having the given remainders modulo those three
+    values.
 
     [@kattis remainderreminder]
     - Difficulty: 5.1
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 7 <= a <= b <= 100.
+    - Each remainder is from 1 to 1000000000.
+    - Search interval endpoints satisfy 1 <= lower < upper <= 1000000000;
+      exactly one answer exists. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+16 21 407 409 17 20000 30000
+Output:
+22457
+*)
 
 (** ** [@hide] Environment *)
 

@@ -2,16 +2,26 @@
 
 (** ** Description *)
 
-(** [dirtydriving deceleration distances] is the minimum
-    distance D you must keep to the car directly in
-    front, the cars ahead of you being at the distinct
-    distances [distances] (in any order): moving
-    yourself so that the nearest car is at distance D,
-    every car x must then be at distance at least
-    deceleration * (k + 1), k being the number of cars
-    between you and x.
+(** Given distinct distances to objects ahead and a spacing constant p, find
+    the smallest new distance to the nearest object such that the k-th
+    nearest object is at least k * p away.
+
     [@kattis dirtydriving]
-    - Difficulty: 3.3 *)
+    - Difficulty: 3.3
+
+    **Kattis Bounds**
+    - 1 to 100000 distinct distances, each from 1 to 10000000.
+    - Spacing constant from 1 to 20. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 1
+1 2 4
+Output:
+1
+*)
 
 (** ** [@hide] Environment *)
 

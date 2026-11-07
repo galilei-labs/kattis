@@ -2,15 +2,25 @@
 
 (** ** Description *)
 
-(** [cudak lower_bound upper_bound target_sum] answers
-    Bozo's two questions on the interval [lower_bound,
-    upper_bound]: how many integers x with lower_bound
-    <= x <= upper_bound have decimal digit sum
-    target_sum, and which is the smallest of them. The
-    answer is the pair (count, smallest); the input
-    guarantees that at least one such integer exists.
+(** Count integers in an inclusive interval with a specified decimal digit
+    sum, and return the smallest such integer.
+
     [@kattis cudak]
-    - Difficulty: 5.4 *)
+    - Difficulty: 5.4
+
+    **Kattis Bounds**
+    - 1 <= lower bound <= upper bound < 10^15.
+    - Target digit sum from 1 to 135; at least one matching integer exists. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+1 9 5
+Output:
+1
+5
+*)
 
 (** ** [@hide] Environment *)
 

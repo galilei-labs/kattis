@@ -2,14 +2,24 @@
 
 (** ** Description *)
 
-(** [ada values] reads values as the values of a
-    polynomial at n = length values regularly spaced
-    inputs and returns (degree, next_value): degree is
-    the degree of a minimal-degree polynomial producing
-    these values, and next_value is the value of that
-    polynomial at the next regularly spaced input.
+(** Given polynomial values at equally spaced inputs, find the smallest
+    possible degree and predict the next value.
+
     [@kattis ada]
-    - Difficulty: 2.2 *)
+    - Difficulty: 2.2
+
+    **Kattis Bounds**
+    - 2 to 10 values; each between -2000000 and 2000000.
+    - At least two values differ. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5 3 6 9 12 15
+Output:
+1 18
+*)
 
 (** ** [@hide] Environment *)
 

@@ -2,23 +2,26 @@
 
 (** ** Description *)
 
-(** Given relationship i reads "given_sources_i given_kinds_i
-    given_targets_i" and query j reads "query_sources_j
-    query_kinds_j query_targets_j", the kind being is-a or has-a.
-    Answer j is true exactly when query j follows from the given
-    relationships: x is-a y iff a chain of zero or more given is-a
-    steps leads from x to y; x has-a y iff a chain of given steps of
-    either kind, at least one of them has-a, does. *)
+(** Answer reachability queries on is-a and has-a relationships. An is-a
+    query requires only is-a edges; a has-a query allows both edge types but
+    requires at least one has-a edge.
 
-(** [@kattis isahasa]
+    [@kattis isahasa]
     - Difficulty: 6.4
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 10000 given relationships and 1 to 10000 queries.
+    - At most 500 distinct class names; query names occur in the given
+      relationships.
+    - No nontrivial is-a cycles. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 5 5
+(** Kattis text input and output. *)
+(* Input:
+5 5
 Day is-a Time
 Appointment is-a Datebook
 Appointment is-a Reminder
@@ -28,11 +31,14 @@ Day is-a Time
 Time is-a Day
 Appointment has-a Time
 Appointment has-a Year
-Day is-a Day = Query 1: true
+Day is-a Day
+Output:
+Query 1: true
 Query 2: false
 Query 3: true
 Query 4: true
-Query 5: true *)
+Query 5: true
+*)
 
 (** ** [@hide] Environment *)
 (* @function        isahasa

@@ -2,13 +2,17 @@
 
 (** ** Description *)
 
-(** Multiply two polynomials whose integer coefficients
-    are listed from lowest to highest degree.
+(** Multiply two integer polynomials given by their coefficients in
+    increasing degree order, returning the product in the same order.
 
     [@kattis polymul1]
     - Difficulty: 1.7
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Each polynomial has degree from 1 to 255.
+    - Input and output coefficients are signed 32-bit integers. *)
 
 (** ** Examples *)
 

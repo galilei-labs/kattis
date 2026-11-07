@@ -2,14 +2,26 @@
 
 (** ** Description *)
 
-(** [bracketsequence tokens] evaluates the bracket
-    sequence spelled by tokens: the items outside every
-    bracket are added, the items directly inside a pair
-    of brackets are multiplied, and the operator keeps
-    alternating with each nesting level. The value is
-    returned modulo 10^9+7.
+(** Evaluate a nested sequence of integers, adding at the outermost level
+    and alternating multiplication and addition at successive nesting
+    levels. Return the value modulo 1000000007.
+
     [@kattis bracketsequence]
-    - Difficulty: 3.9 *)
+    - Difficulty: 3.9
+
+    **Kattis Bounds**
+    - 1 to 300000 tokens forming a valid bracket sequence.
+    - Integer tokens from 0 to 1000000006. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+2 3
+Output:
+5
+*)
 
 (** ** [@hide] Environment *)
 

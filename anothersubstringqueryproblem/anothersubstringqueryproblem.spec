@@ -2,14 +2,33 @@
 
 (** ** Description *)
 
-(** [kth_occurrences text patterns ranks] answers every
-    query at once: cell q is the 1-based position in
-    text where the ranks_q-th occurrence, from the left,
-    of the pattern patterns_q starts, or -1 when
-    patterns_q occurs fewer than ranks_q times in text.
-    Occurrences may overlap.
+(** For each pattern and occurrence rank, find the starting position of that
+    occurrence in a text, counting overlaps. Return -1 if it does not exist.
+
     [@kattis anothersubstringqueryproblem]
-    - Difficulty: 7.7 *)
+    - Difficulty: 7.7
+
+    **Kattis Bounds**
+    - Text length and query count from 1 to 200000.
+    - Nonempty lowercase patterns, with total length at most 200000.
+    - Occurrence ranks from 1 to the text length. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+abacabadabacaba
+4
+a 7
+e 3
+bac 2
+abada 1
+Output:
+13
+-1
+10
+5
+*)
 
 (** ** [@hide] Environment *)
 

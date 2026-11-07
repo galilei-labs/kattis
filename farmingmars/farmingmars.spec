@@ -2,23 +2,24 @@
 
 (** ** Description *)
 
-(** [farmingmars ph_values left_ends right_ends] answers the m queries
-    [left_ends_j, right_ends_j] (acres numbered from 1, both ends
-    included) on the strip whose acre i has pH ph_values_i: answer j
-    is true ("usable") exactly when some pH value is shared by a
-    strict majority, floor((r-l+1)/2) + 1, of the acres l..r, and
-    false ("unusable") otherwise. pH values are compared exactly, as
-    the reals they denote. *)
+(** For each interval of a sequence, decide whether one value occurs in
+    strictly more than half its positions.
 
-(** [@kattis farmingmars]
+    [@kattis farmingmars]
     - Difficulty: 5.7
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 10000 values and 1 to 10000 queries.
+    - Values from 0 to 14; each query is a nonempty interval within the
+      sequence. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 8 4
+(** Kattis text input and output. *)
+(* Input:
+8 4
 7.000000
 8.314634
 7.000001
@@ -30,10 +31,13 @@
 1 8
 1 3
 4 8
-5 7 = unusable
+5 7
+Output:
+unusable
 unusable
 usable
-usable *)
+usable
+*)
 
 (** ** [@hide] Environment *)
 (* @function        farmingmars

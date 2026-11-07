@@ -2,26 +2,26 @@
 
 (** ** Description *)
 
-(** [median values] is the median of the n >= 1 integers of values: once
-    they are sorted, the middle one when n is odd, the mean of the
-    two middle ones when n is even. The float returned denotes
-    exactly that number (an integer or an integer plus one half); no
-    tolerance. *)
+(** Compute the median of an integer sequence, averaging the two middle
+    values when its length is even.
 
-(** [@kattis median]
+    [@kattis median]
     - Difficulty: 2.4
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 integers, each from 0 to 1000000000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 7
-5 4 3 1 6 7 2 = 4 *)
-
-(** Kattis sample: text input and output. *)
-(* 4
-1 3 7 7 = 5 *)
+(** Kattis text input and output. *)
+(* Input:
+7
+5 4 3 1 6 7 2
+Output:
+4
+*)
 
 (** ** [@hide] Environment *)
 (* @function        median

@@ -2,18 +2,36 @@
 
 (** ** Description *)
 
-(** [darkness min_light ceiling_height club] is the
-    least amount, in pounds, of fencing between
-    side-adjacent cells of the club [club] (a grid of
-    bulb strengths under a ceiling of height
-    [ceiling_height]) that cuts every cell whose light
-    level is below [min_light] off from every border
-    cell; a section costs 43 when both its cells are
-    lit, 11 otherwise. The light level of a cell is the
-    exact sum, over every bulb (its own included), of s
-    / (dr^2 + dc^2 + ceiling_height^2).
+(** On a grid, each cell receives light from all bulbs, with contribution s
+    / (dr^2 + dc^2 + h^2) for bulb strength s and height h. Find the
+    cheapest barriers separating cells below a threshold from the boundary.
+    A barrier between adjacent cells costs 43 if both are sufficiently lit,
+    and 11 otherwise.
+
     [@kattis darkness]
-    - Difficulty: 6.0 *)
+    - Difficulty: 6.0
+
+    **Kattis Bounds**
+    - 1 to 30 rows and columns; bulb strengths are digits 0 to 9.
+    - Light threshold from 1 to 9; height from 1 to 5.
+    - Every boundary cell meets the light threshold. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+9
+1
+6 6
+333333
+300003
+300003
+300003
+300003
+333333
+Output:
+176
+*)
 
 (** ** [@hide] Environment *)
 

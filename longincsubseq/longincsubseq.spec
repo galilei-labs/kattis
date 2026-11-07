@@ -2,29 +2,35 @@
 
 (** ** Description *)
 
-(** [lis sequence] returns the positions in sequence, in ascending
-    order, of a longest strictly increasing subsequence of sequence
-    ; any one of them when several exist. *)
+(** Return the positions of a longest strictly increasing subsequence.
 
-(** [@kattis longincsubseq]
+    [@kattis longincsubseq]
     - Difficulty: 3.3
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 entries.
+    - Signed 32-bit integer values. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 10
+(** Kattis text input and output. *)
+(* Input:
+10
 1 2 3 4 5 6 7 8 9 10
 10
 1 1 1 1 1 1 1 1 1 1
 10
-5 19 5 81 50 28 29 1 83 23 = 10
+5 19 5 81 50 28 29 1 83 23
+Output:
+10
 0 1 2 3 4 5 6 7 8 9
 1
 7
 5
-0 1 5 6 8 *)
+0 1 5 6 8
+*)
 
 (** ** [@hide] Environment *)
 (* @function        lis

@@ -2,18 +2,29 @@
 
 (** ** Description *)
 
-(** [chess_consistent player_count first_players wins
-    second_players] reads m reported matches between
-    players 0..player_count-1, match j being
-    "first_players_j beat second_players_j" when wins_j
-    is true and "first_players_j drew with
-    second_players_j" when it is false. It returns true
-    ("consistent") exactly when some skill level per
-    player explains every match, the more skilled player
-    always winning and a draw happening iff the two
-    skills are equal; false ("inconsistent") otherwise.
+(** Decide whether reported wins and draws admit consistent numerical skill
+    levels: a win requires a strictly higher level, and a draw requires
+    equal levels.
+
     [@kattis chesstournament]
-    - Difficulty: 5.0 *)
+    - Difficulty: 5.0
+
+    **Kattis Bounds**
+    - 2 to 50000 players; 1 to 250000 reported matches.
+    - At most one match per pair; every player appears in at least one
+      match. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 3
+0 > 1
+1 = 2
+0 = 2
+Output:
+inconsistent
+*)
 
 (** ** [@hide] Environment *)
 

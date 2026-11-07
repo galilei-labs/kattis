@@ -2,14 +2,31 @@
 
 (** ** Description *)
 
-(** Maintain disjoint sets under union operations and
-    answer whether pairs of elements currently belong to
-    the same set.
+(** Maintain disjoint sets under union operations and answer whether two
+    elements belong to the same set.
 
     [@kattis unionfind]
     - Difficulty: 2.6
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 1000000 elements and 0 to 1000000 operations.
+    - Element indices from 0 to N - 1. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+10 4
+? 1 3
+= 1 8
+= 3 8
+? 1 3
+Output:
+no
+yes
+*)
 
 (** ** [@hide] Environment *)
 

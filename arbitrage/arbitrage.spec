@@ -2,17 +2,58 @@
 
 (** ** Description *)
 
-(** One test case of "Arbitrage?": [currency_count]
-    currencies and the exchange rates k (pay
-    paid_units_k units of currency from_currencies_k,
-    get got_units_k units of currency to_currencies_k).
-    The answer is true ("Arbitrage") exactly when some
-    sequence of exchanges, starting and ending in the
-    same currency, turns a positive amount into a
-    strictly larger one, amounts computed exactly over
-    the rationals; false ("Ok") otherwise.
+(** Decide whether a cycle of currency exchanges can increase the starting
+    amount, using the given exact exchange rates.
+
     [@kattis arbitrage]
-    - Difficulty: 3.2 *)
+    - Difficulty: 3.2
+
+    **Kattis Bounds**
+    - 1 to 200 currencies; at most C * (C - 1) exchange rates.
+    - Each rate exchanges between 1 and 100 units of each of two distinct
+      currencies. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+CZK EUR
+2
+CZK EUR 25:1
+EUR CZK 1:25
+2
+GBP USD
+2
+USD GBP 8:5
+GBP USD 5:9
+3
+BON DEM CZK
+3
+DEM BON 1:6
+BON CZK 1:5
+DEM CZK 1:20
+3
+CZK EUR GBP
+3
+CZK EUR 24:1
+EUR GBP 5:4
+GBP CZK 1:30
+3
+CZK USD GBP
+4
+CZK USD 28:1
+CZK GBP 31:1
+GBP CZK 1:31
+USD GBP 1:1
+0
+Output:
+Ok
+Arbitrage
+Ok
+Ok
+Arbitrage
+*)
 
 (** ** [@hide] Environment *)
 

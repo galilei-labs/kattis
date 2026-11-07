@@ -2,26 +2,33 @@
 
 (** ** Description *)
 
-(** [count_good_shifts sequence] returns the number of cyclic shifts of
-    sequence all of whose prefix sums are nonnegative. *)
+(** Count cyclic shifts of an integer sequence whose every prefix has a
+    nonnegative sum.
 
-(** [@kattis nonnegpartsums]
+    [@kattis nonnegpartsums]
     - Difficulty: 6.3
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 1000000 integers, each from -1000 to 1000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 2 2 1
 3
 -1 1 1
 1
 -1
-0 = 3
+0
+Output:
+3
 2
-0 *)
+0
+*)
 
 (** ** [@hide] Environment *)
 (* @function        count_good_shifts

@@ -2,29 +2,33 @@
 
 (** ** Description *)
 
-(** [largest_triangle x_coordinates y_coordinates] takes the N points
-    (x_coordinates_k, y_coordinates_k) and returns the largest area
-    of a triangle whose three corners are three of the N points
-    (three distinct indices; coincident or collinear corners give
-    area 0, so the answer is 0 when no proper triangle exists), as a
-    finite float within 10^-5 of that area. *)
+(** Find the maximum area of a triangle formed by three input points,
+    returning zero if all such triangles are degenerate.
 
-(** [@kattis largesttriangle]
+    [@kattis largesttriangle]
     - Difficulty: 6.3
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 3 to 5000 points.
+    - Integer coordinates from 0 to 40000000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 7
+(** Kattis text input and output. *)
+(* Input:
+7
 0 0
 0 5
 7 7
 0 10
 0 0
 20 0
-10 10 = 100.00000 *)
+10 10
+Output:
+100.00000
+*)
 
 (** ** [@hide] Environment *)
 (* @function        largest_triangle

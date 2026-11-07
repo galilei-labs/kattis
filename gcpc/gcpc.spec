@@ -2,29 +2,34 @@
 
 (** ** Description *)
 
-(** [gcpc team_count event_teams event_penalties] replays the events
-    "team event_teams_j solved a problem with penalty
-    event_penalties_j", in order, for teams 1..team_count that all
-    start at score (0, 0), and returns, for each i, the rank of team
-    1 after the first i events: one plus the number of teams with
-    more solved problems, or as many and a smaller total penalty. *)
+(** Track one team's rank as scoring events arrive. Rank teams by problems
+    solved in descending order, breaking ties by total penalty in ascending
+    order.
 
-(** [@kattis gcpc]
+    [@kattis gcpc]
     - Difficulty: 4.6
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100000 teams and 1 to 100000 events.
+    - Each event's penalty is from 1 to 1000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3 4
+(** Kattis text input and output. *)
+(* Input:
+3 4
 2 7
 3 5
 1 6
-1 9 = 2
+1 9
+Output:
+2
 3
 2
-1 *)
+1
+*)
 
 (** ** [@hide] Environment *)
 (* @function        gcpc

@@ -2,14 +2,33 @@
 
 (** ** Description *)
 
-(** Compute the maximum flow from a pumping [station] to
-    a mansion, initially and after each pipe-[capacity]
-    improvement.
+(** Compute the maximum flow between two designated vertices of an
+    undirected capacitated network, initially and after each edge-capacity
+    increase.
 
     [@kattis water]
     - Difficulty: 3.9
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 100 vertices; at most n * (n - 1) / 2 initial edges.
+    - 1 to 10000 updates; initial capacities and capacity increases from 1
+      to 1000.
+    - Initial edges have distinct endpoint pairs. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 2 1
+1 3 10
+2 3 1
+2 3 15
+Output:
+1
+10
+*)
 
 (** ** [@hide] Environment *)
 

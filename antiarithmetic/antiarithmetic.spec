@@ -2,15 +2,28 @@
 
 (** ** Description *)
 
-(** [antiarithmetic permutation] decides whether the
-    permutation permutation of 0, 1, ..., n-1 (n its
-    length) is antiarithmetic: it returns true exactly
-    when there are no three indices 0 <= i < j < k < n
-    such that (p_i, p_j, p_k) forms an arithmetic
-    progression, p_i being the i-th value of
-    permutation. One call per test case.
+(** Decide whether a permutation contains no three entries, in their
+    original order, that form an arithmetic progression.
+
     [@kattis antiarithmetic]
-    - Difficulty: 6.3 *)
+    - Difficulty: 6.3
+
+    **Kattis Bounds**
+    - 3 to 10000 entries, forming a permutation of 0 through n - 1. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3: 0 2 1
+5: 2 0 1 3 4
+6: 2 4 3 5 0 1
+0
+Output:
+yes
+no
+yes
+*)
 
 (** ** [@hide] Environment *)
 

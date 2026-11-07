@@ -2,24 +2,27 @@
 
 (** ** Description *)
 
-(** [fillable knapsack_size item_sizes] returns whether items of the
-    sizes item_sizes, in unlimited supply, can fill a knapsack of
-    size knapsack_size exactly. *)
+(** Decide whether a target size is a nonnegative integer combination of the
+    given item sizes, with unlimited copies of each item.
 
-(** [@kattis knapsack2]
+    [@kattis knapsack2]
     - Difficulty: 5.9
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 20 item sizes, each from 1 to 1000.
+    - Target size from 1 to 10^18. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 2 10000000000
-3 6 = impossible *)
-
-(** Kattis sample: text input and output. *)
-(* 2 10000000000
-4 6 = possible *)
+(** Kattis text input and output. *)
+(* Input:
+2 10000000000
+3 6
+Output:
+impossible
+*)
 
 (** ** [@hide] Environment *)
 (* @function        fillable

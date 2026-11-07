@@ -2,18 +2,43 @@
 
 (** ** Description *)
 
-(** [allpairspath node_count edge_sources edge_targets
-    edge_weights] returns, for every pair of nodes
-    (source, target) of the directed graph on the nodes
-    0 .. node_count - 1 with the edges edge_sources[k]
-    -> edge_targets[k] of weight edge_weights[k], the
-    answer at row source, column target : Distance the
-    least cost of a walk from source to target when it
-    exists, Impossible when no walk reaches target from
-    source, NegInfinity when walks from source to target
-    have arbitrarily low costs
+(** Find the minimum walk cost between every pair of vertices in a directed
+    weighted graph, distinguishing unreachable pairs and costs unbounded
+    below by negative cycles.
+
     [@kattis allpairspath]
-    - Difficulty: 2.7 *)
+    - Difficulty: 2.7
+
+    **Kattis Bounds**
+    - 1 to 150 vertices; 0 to 5000 edges.
+    - Edge weights from -1000 to 1000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4 3 4
+0 1 2
+1 2 2
+3 3 1
+0 2
+1 2
+3 0
+3 3
+2 1 2
+0 1 100
+0 1
+1 0
+0 0 0
+Output:
+4
+2
+Impossible
+0
+
+100
+Impossible
+*)
 
 (** ** [@hide] Environment *)
 

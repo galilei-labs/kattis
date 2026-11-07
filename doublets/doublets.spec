@@ -2,23 +2,24 @@
 
 (** ** Description *)
 
-(** [doublets dictionary start_words end_words] answers every query k of
-    one input: entry k is a shortest chain of dictionary words from
-    start_words_k to end_words_k in which consecutive words differ
-    in exactly one letter, or None when no such chain exists. Every
-    word of a chain, endpoints included, is in dictionary; when
-    start_words_k = end_words_k is in dictionary the chain is that
-    one word. *)
+(** For each pair of words, find a shortest chain of dictionary words
+    changing exactly one letter at each step, or report that no chain
+    exists. Both endpoints must belong to the dictionary.
 
-(** [@kattis doublets]
+    [@kattis doublets]
     - Difficulty: 7.7
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - At most 25143 dictionary words, each with 1 to 16 lowercase letters.
+    - At most 10 query pairs. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* booster
+(** Kattis text input and output. *)
+(* Input:
+booster
 rooster
 roaster
 coasted
@@ -27,12 +28,15 @@ coastal
 postal
 
 booster roasted
-coastal postal = booster
+coastal postal
+Output:
+booster
 rooster
 roaster
 roasted
 
-No solution. *)
+No solution.
+*)
 
 (** ** [@hide] Environment *)
 (* @function        doublets

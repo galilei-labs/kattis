@@ -2,14 +2,28 @@
 
 (** ** Description *)
 
-(** Divide people into two teams whose sizes differ by at
-    most one and whose total [weights] are as close as
-    possible.
+(** Partition a sequence of weights into two groups whose sizes differ by at
+    most one, minimizing the difference between their total weights.
 
     [@kattis tugofwar]
     - Difficulty: 5.3
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100 weights, each an integer from 1 to 450. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+100
+90
+200
+Output:
+190 200
+*)
 
 (** ** [@hide] Environment *)
 

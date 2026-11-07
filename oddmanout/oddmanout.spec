@@ -2,26 +2,33 @@
 
 (** ** Description *)
 
-(** [odd_one codes] returns the element of codes that occurs an odd
-    number of times in codes, there being exactly one such element. *)
+(** Find the unique value occurring an odd number of times in a sequence.
 
-(** [@kattis oddmanout]
+    [@kattis oddmanout]
     - Difficulty: 1.5
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 3 to 999 entries, each from 1 to 2^31 - 1.
+    - Exactly one value has odd multiplicity. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 3
+(** Kattis text input and output. *)
+(* Input:
+3
 3
 1 2147483647 2147483647
 5
 3 4 7 4 3
 5
-2 10 2 10 5 = Case #1: 1
+2 10 2 10 5
+Output:
+Case #1: 1
 Case #2: 7
-Case #3: 5 *)
+Case #3: 5
+*)
 
 (** ** [@hide] Environment *)
 (* @function        odd_one

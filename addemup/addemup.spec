@@ -2,16 +2,27 @@
 
 (** ** Description *)
 
-(** [addemup desired_sum cards] is true exactly when two
-    different cards (two distinct positions of cards)
-    can be chosen, each shown either way up, so that the
-    two numbers shown add up to desired_sum. A card can
-    be turned only if every one of its digits still
-    reads as a digit upside down: 0, 1, 2, 5, 8 read as
-    themselves, 6 and 9 as each other, 3, 4, 7 not at
-    all; the digits then read in reverse order.
+(** Decide whether two distinct numbered cards can sum to a target,
+    optionally rotating either card by 180 degrees. Rotation reverses the
+    digits, swaps 6 and 9, preserves 0, 1, 2, 5 and 8, and is invalid for 3,
+    4 or 7.
+
     [@kattis addemup]
-    - Difficulty: 5.5 *)
+    - Difficulty: 5.5
+
+    **Kattis Bounds**
+    - 1 to 100000 cards; values from 1 to 100000000.
+    - Target sum from 2 to 200000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 66
+15 21 22
+Output:
+NO
+*)
 
 (** ** [@hide] Environment *)
 

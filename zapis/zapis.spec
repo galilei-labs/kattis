@@ -2,14 +2,28 @@
 
 (** ** Description *)
 
-(** Count ways to replace question marks to obtain a
-    [regular] bracket [sequence], returning the last five
-    digits and whether the count reaches 100000.
+(** Count substitutions of question marks that produce a balanced sequence
+    of round, square and curly brackets. Return the last five digits and
+    whether the count reaches 100000.
 
     [@kattis zapis]
     - Difficulty: 5.0
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Even string length from 2 to 200.
+    - Characters are round, square or curly brackets, or question marks. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+6
+()()()
+Output:
+1
+*)
 
 (** ** [@hide] Environment *)
 

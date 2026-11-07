@@ -2,13 +2,48 @@
 
 (** ** Description *)
 
-(** Model transfers of strength between forts and find
-    the least defended fort at the chosen attack time.
+(** Evolve quantities on a directed graph by simultaneously transferring
+    specified fractions along edges each time step. After a given number of
+    steps, return the smallest sum of a vertex's quantity and those of its
+    neighbors in either direction.
 
     [@kattis timing]
     - Difficulty: 3.5
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 100 vertices; at most (N - 1)^2 links; 0 to 5000 time steps.
+    - Initial quantities from 0 to 1000; each transfer fraction is greater
+      than zero and at most one.
+    - Outgoing transfers from a vertex total at most its available quantity. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+4 3 1
+100 200 10 305
+0 1 0.25
+1 2 0.1
+2 0 0.75
+4 3 1
+100 200 10 312
+0 1 0.25
+1 2 0.1
+2 0 0.75
+4 4 5
+100 200 300 400
+0 1 0.2
+1 2 0.2
+2 3 0.3
+3 0 0.2
+Output:
+305.000000000
+310.000000000
+659.879000000
+*)
 
 (** ** [@hide] Environment *)
 

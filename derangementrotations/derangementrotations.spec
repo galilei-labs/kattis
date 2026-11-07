@@ -2,13 +2,25 @@
 
 (** ** Description *)
 
-(** [derangement_rotations perm_size prime_modulus] is,
-    modulo the prime prime_modulus, the number of
-    derangements D of {1, ..., perm_size} such that
-    exactly perm_size - 2 of the distinct rotations of D
-    are again derangements.
+(** Count permutations of 1 through n with no fixed points for which exactly
+    n - 2 cyclic rotations also have no fixed points. Return the count
+    modulo a given prime.
+
     [@kattis derangementrotations]
-    - Difficulty: 6.2 *)
+    - Difficulty: 6.2
+
+    **Kattis Bounds**
+    - 3 <= n <= 1000000.
+    - Prime modulus from 100000000 to 1000000007. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3 1000000007
+Output:
+0
+*)
 
 (** ** [@hide] Environment *)
 

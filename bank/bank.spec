@@ -2,14 +2,29 @@
 
 (** ** Description *)
 
-(** [bank closing_time cash_amounts deadlines] is the
-    largest total cash the bank can collect in the
-    closing_time minutes before it closes, serving at
-    most one person per minute, person i bringing
-    cash_amounts_i and having to be served at a minute
-    that starts no later than deadlines_i.
+(** Choose unit-duration jobs to maximize total reward before a closing
+    time. Each job must start no later than its deadline, and only one job
+    can run at a time.
+
     [@kattis bank]
-    - Difficulty: 2.3 *)
+    - Difficulty: 2.3
+
+    **Kattis Bounds**
+    - 1 to 10000 jobs; closing time from 1 to 47.
+    - Rewards from 1 to 100000; deadlines from 0 to closing time - 1. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4 4
+1000 1
+2000 2
+500 2
+1200 0
+Output:
+4200
+*)
 
 (** ** [@hide] Environment *)
 

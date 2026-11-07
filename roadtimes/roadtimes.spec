@@ -2,14 +2,42 @@
 
 (** ** Description *)
 
-(** Find the least and greatest [possible] travel times
-    for queried routes, given past deliveries and unknown
-    [road] speeds between 30 and 60 kilometres per hour.
+(** Given a road network and observed journey durations, find the minimum
+    and maximum possible duration of each queried journey. All journeys use
+    their unique shortest-distance route, and each road has a fixed unknown
+    speed between 30 and 60 km/h consistent with the observations.
 
     [@kattis roadtimes]
     - Difficulty: 6.8
     - CPU time limit: 5 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 30 vertices and at most 100 roads.
+    - Road lengths from 1 to 1000 km; speeds from 30 to 60 km/h.
+    - 1 to 100 observations and 1 to 100 queries; each pair has a unique
+      shortest-distance route.
+    - Some assignment of road speeds is consistent with all observations. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+3
+0 50 -1
+55 0 40
+-1 40 0
+1
+0 2 120
+3
+0 1
+1 2
+1 0
+Output:
+0 1 50.0 80.0
+1 2 40.0 70.0
+1 0 55.0 110.0
+*)
 
 (** ** [@hide] Environment *)
 

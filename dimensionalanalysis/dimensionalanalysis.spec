@@ -2,19 +2,30 @@
 
 (** ** Description *)
 
-(** [valid quantity_count equations] returns true when
-    no physical quantity is forced to be dimensionless
-    by the equations, false otherwise. equations has one
-    row per equation over the quantity_count quantities
-    0 .. quantity_count - 1 ; the entry (i, j) is the
-    exponent of quantity j in equation i, the number of
-    times it is multiplied minus the number of times it
-    is divided on the left side, minus the same count
-    for the right side. The harness turns each equation
-    line into its row, numbering the quantities ; the
-    atom 1 contributes nothing
+(** Given multiplicative equations between quantities, decide whether any
+    quantity is forced to be dimensionless. Each equation is represented by
+    its signed exponent vector.
+
     [@kattis dimensionalanalysis]
-    - Difficulty: 8.1 *)
+    - Difficulty: 8.1
+
+    **Kattis Bounds**
+    - 1 to 100 equations over at most 100 quantities.
+    - At most 100 atoms per equation. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+velocity * time = length
+frequency = 1 / time
+acceleration = velocity / time
+force = mass * acceleration
+force = mass * length / time / time
+Output:
+valid
+*)
 
 (** ** [@hide] Environment *)
 

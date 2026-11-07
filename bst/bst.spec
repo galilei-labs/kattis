@@ -2,15 +2,31 @@
 
 (** ** Description *)
 
-(** The numbers of sequence, a permutation of 1..N, are
-    inserted in order into an initially empty
-    (unbalanced) binary search tree, the first one
-    becoming the root, at depth 0. [bst sequence] has
-    length N and its cell k is the counter C after the
-    (k+1)-th insertion: the sum of the depths at which
-    sequence_0, ..., sequence_k were placed.
+(** Insert a permutation into an initially empty binary search tree. After
+    each insertion, return the sum of all inserted nodes' depths, with root
+    depth zero.
+
     [@kattis bst]
-    - Difficulty: 3.4 *)
+    - Difficulty: 3.4
+
+    **Kattis Bounds**
+    - 1 to 300000 entries, forming a permutation of 1 through N. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+1
+2
+3
+4
+Output:
+0
+1
+3
+6
+*)
 
 (** ** [@hide] Environment *)
 

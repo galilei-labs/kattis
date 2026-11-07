@@ -2,13 +2,36 @@
 
 (** ** Description *)
 
-(** Decide whether a Boolean formula in conjunctive
-    normal form has a satisfying assignment.
+(** Decide whether a Boolean formula in conjunctive normal form has a
+    satisfying assignment.
 
     [@kattis satisfiability]
     - Difficulty: 2.6
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 20 Boolean variables and 1 to 100 clauses. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+3 3
+X1 v X2
+~X1
+~X2 v X3
+3 5
+X1 v X2 v X3
+X1 v ~X2
+X2 v ~X3
+X3 v ~X1
+~X1 v ~X2 v ~X3
+Output:
+satisfiable
+unsatisfiable
+*)
 
 (** ** [@hide] Environment *)
 

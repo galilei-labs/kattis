@@ -2,13 +2,27 @@
 
 (** ** Description *)
 
-(** Find the greatest Euclidean distance between two
-    arrows on a target.
+(** Find the greatest Euclidean distance between any two input points.
 
     [@kattis roberthood]
     - Difficulty: 2.8
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 100000 points.
+    - Integer coordinates with absolute value at most 1000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+2
+2 2
+-1 -2
+Output:
+5.0
+*)
 
 (** ** [@hide] Environment *)
 

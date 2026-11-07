@@ -2,14 +2,42 @@
 
 (** ** Description *)
 
-(** Find the shortest distance from a [source] to every
-    [vertex] of a directed graph with nonnegative [edge]
-    weights, marking unreachable vertices.
+(** Find the shortest distance from a source to every vertex of a directed
+    graph with nonnegative edge weights, identifying unreachable vertices.
 
     [@kattis shortestpath1]
     - Difficulty: 2.0
     - CPU time limit: 3 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 10000 vertices; 0 to 30000 edges.
+    - Edge weights from 0 to 1000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4 3 4 0
+0 1 2
+1 2 2
+3 0 2
+0
+1
+2
+3
+2 1 1 0
+0 1 100
+1
+0 0 0 0
+Output:
+0
+2
+4
+Impossible
+
+100
+*)
 
 (** ** [@hide] Environment *)
 

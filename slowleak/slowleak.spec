@@ -2,14 +2,37 @@
 
 (** ** Description *)
 
-(** Find the [shortest] [trip] home while refilling a
-    leaking tyre often enough to stay within its travel
-    range.
+(** Find the shortest route in a weighted road network subject to a maximum
+    distance between refills at designated vertices. Start with a full
+    supply, or report that no route is possible.
 
     [@kattis slowleak]
     - Difficulty: 5.0
     - CPU time limit: 5 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 500 vertices; 1 to n * (n - 1) / 2 roads, with no repeated pair.
+    - Refill vertices are distinct and exclude the endpoints.
+    - Positive road lengths, travel range and any feasible minimum total
+      distance are below 2^31. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+6 7 2 4
+2 5
+1 2 4
+1 3 5
+2 3 3
+3 4 2
+3 5 1
+4 6 4
+5 6 4
+Output:
+12
+*)
 
 (** ** [@hide] Environment *)
 

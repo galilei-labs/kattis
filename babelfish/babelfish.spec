@@ -2,17 +2,34 @@
 
 (** ** Description *)
 
-(** [babelfish english_words foreign_words
-    message_words] translates the message word by word
-    with the dictionary whose i-th entry pairs the
-    English word english_words[i] with the foreign word
-    foreign_words[i]: the k-th answer is Some
-    english_word when message_words[k] is a foreign word
-    of the dictionary and english_word its English word,
-    and None (printed "eh") when message_words[k] is not
-    in the dictionary.
+(** Translate each query word using a dictionary of word pairs, reporting
+    words that have no translation.
+
     [@kattis babelfish]
-    - Difficulty: 2.0 *)
+    - Difficulty: 2.0
+
+    **Kattis Bounds**
+    - At most 100000 dictionary entries and 100000 query words.
+    - Words contain 1 to 10 lowercase letters; dictionary keys are unique. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+dog ogday
+cat atcay
+pig igpay
+froot ootfray
+loops oopslay
+
+atcay
+ittenkay
+oopslay
+Output:
+cat
+eh
+loops
+*)
 
 (** ** [@hide] Environment *)
 

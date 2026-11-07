@@ -2,26 +2,25 @@
 
 (** ** Description *)
 
-(** [fulltank city_count prices road_starts road_ends road_lengths
-    capacities starts goals]: city_count cities with fuel prices
-    prices, the two-way roads road_starts_j -- road_ends_j of length
-    road_lengths_j, and the queries i (capacity capacities_i, start
-    starts_i, goal goals_i). Answer i is Some price when price is
-    the price of the cheapest trip from starts_i to goals_i with a
-    car of tank capacity capacities_i that starts empty, burns one
-    unit of fuel per unit of distance and buys whole units of fuel
-    at the price of the city it is in; None ("impossible") when
-    there is no such trip. *)
+(** Find the cheapest route in a road network with location-dependent fuel
+    prices and a specified tank capacity. Start with an empty tank, buy
+    whole fuel units, and consume one unit per unit of distance.
 
-(** [@kattis fulltank]
+    [@kattis fulltank]
     - Difficulty: 4.1
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 1 to 1000 vertices; at most 10000 roads; 1 to 100 queries.
+    - Fuel prices, road lengths and tank capacities are integers from 1 to
+      100. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 5 5
+(** Kattis text input and output. *)
+(* Input:
+5 5
 10 10 20 12 13
 0 1 9
 0 2 8
@@ -30,8 +29,11 @@
 2 3 7
 2
 10 0 3
-20 1 4 = 170
-impossible *)
+20 1 4
+Output:
+170
+impossible
+*)
 
 (** ** [@hide] Environment *)
 (* @function        fulltank

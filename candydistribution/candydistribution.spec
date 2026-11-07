@@ -2,16 +2,34 @@
 
 (** ** Description *)
 
-(** [candydistribution kid_count bag_size], for
-    kid_count kids and bags of bag_size candies each,
-    returns [Some bag_count] where buying bag_count
-    bags, at most 10^9 of them, gives exactly kid_count
-    * share + 1 candies for some positive natural number
-    share, and [None] ("IMPOSSIBLE") exactly when no
-    such number of bags exists. When several bag_count
-    work, any of them may be returned.
+(** Given positive integers K and C, find a positive B no greater than
+    1000000000 such that C * B = K * X + 1 for some positive integer X, or
+    report that no solution exists.
+
     [@kattis candydistribution]
-    - Difficulty: 4.7 *)
+    - Difficulty: 4.7
+
+    **Kattis Bounds**
+    - 1 <= K, C <= 1000000000.
+    - The returned B must be at most 1000000000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+10 5
+10 7
+1337 23
+123454321 42
+999999937 142857133
+Output:
+IMPOSSIBLE
+3
+872
+14696943
+166666655
+*)
 
 (** ** [@hide] Environment *)
 

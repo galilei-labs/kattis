@@ -2,14 +2,34 @@
 
 (** ** Description *)
 
-(** Compute the exact intersection of two closed line
-    segments: no intersection, one rational point, or a
-    shared segment.
+(** Compute the exact intersection of two closed line segments: no
+    intersection, one rational point, or a shared segment.
 
     [@kattis segmentintersection]
     - Difficulty: 4.7
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Coordinate absolute values are at most 10000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5
+-10 0 10 0 0 -10 0 10
+-10 0 10 0 -5 0 5 0
+1 1 1 1 1 1 2 1
+1 1 1 1 2 1 2 1
+1871 5789 216 -517 189 -518 3851 1895
+Output:
+0.00 0.00
+-5.00 0.00 5.00 0.00
+1.00 1.00
+none
+221.33 -496.70
+*)
 
 (** ** [@hide] Environment *)
 

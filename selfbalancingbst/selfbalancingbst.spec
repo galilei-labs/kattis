@@ -2,14 +2,42 @@
 
 (** ** Description *)
 
-(** Execute [commands] on ordered key-value maps,
-    including cursor movement and [rank], [lookup] and
-    size queries.
+(** Execute operations on ordered integer key-value maps with a cursor per
+    map, including insertion, deletion, lookup, copying, cursor movement and
+    rank queries. Return the requested query results.
 
     [@kattis selfbalancingbst]
     - Difficulty: 5.3
     - CPU time limit: 3 seconds
-    - Memory limit: 192 MB *)
+    - Memory limit: 192 MB
+
+    **Kattis Bounds**
+    - Map instance IDs from 1 to 1000.
+    - Keys and values are signed 32-bit integers. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+14
+1 i -8 -2
+1 i 4 5
+1 >
+1 i 2 3
+1 e
+1 f
+1 i -7 0
+1 ? 10
+1 s 2
+1 z
+1 i 4 5
+1 i -3 4
+1 g
+1 <
+Output:
+3
+4
+*)
 
 (** ** [@hide] Environment *)
 

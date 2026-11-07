@@ -2,16 +2,34 @@
 
 (** ** Description *)
 
-(** One department: [committees member_count first_names
-    second_names] gets the number member_count of
-    department members and the m pairs of members who do
-    not get along, pair i naming first_names.[i] and
-    second_names.[i]. It returns the minimum number of
-    committees such that everyone sits on exactly one
-    committee and no two members of a pair sit on the
-    same one.
+(** Partition a graph's vertices into as few groups as possible, with no
+    adjacent vertices in the same group.
+
     [@kattis committeeassignment]
-    - Difficulty: 7.0 *)
+    - Difficulty: 7.0
+
+    **Kattis Bounds**
+    - 1 to 15 vertices; at most n * (n - 1) / 2 incompatible pairs.
+    - Names contain at most 20 uppercase or lowercase letters. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+5 0
+5 2
+wally alice
+wally dilbert
+5 3
+greg don
+greg bill
+don bill
+0 0
+Output:
+1
+2
+3
+*)
 
 (** ** [@hide] Environment *)
 

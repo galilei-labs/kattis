@@ -2,19 +2,23 @@
 
 (** ** Description *)
 
-(** [knapsack capacity values weights] returns the greatest total value
-    of a set of items whose total weight is at most capacity, and
-    the indices of such a set ; any one when several exist. *)
+(** Choose a subset of items with maximum total value subject to a weight
+    capacity. Return its value and the selected item indices.
 
-(** [@kattis knapsack]
+    [@kattis knapsack]
     - Difficulty: 3.1
     - CPU time limit: 2 seconds
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Capacity and item count from 1 to 2000.
+    - Integer weights and values from 1 to 10000. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 5 3
+(** Kattis text input and output. *)
+(* Input:
+5 3
 1 5
 10 5
 100 5
@@ -22,10 +26,13 @@
 5 4
 4 3
 3 2
-2 1 = 1
+2 1
+Output:
+1
 2
 3
-1 2 3 *)
+1 2 3
+*)
 
 (** ** [@hide] Environment *)
 (* @function        knapsack

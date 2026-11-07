@@ -2,16 +2,32 @@
 
 (** ** Description *)
 
-(** [basincity drone_count neighbour_lists] decides
-    whether exactly drone_count drones can be placed on
-    drone_count distinct intersections of Basin City so
-    that no two drones sit on neighbouring intersections
-    (true for "possible", false for "impossible"). Row
-    intersection-1 of neighbour_lists is the line of
-    intersection intersection (numbered 1..n): the
-    numbers of its at most four neighbours.
+(** Decide whether an undirected graph contains a set of the requested size
+    with no edge between any two selected vertices.
+
     [@kattis basincity]
-    - Difficulty: 8.2 *)
+    - Difficulty: 8.2
+
+    **Kattis Bounds**
+    - 1 to 100000 vertices; requested set size from 0 to 15.
+    - At most four distinct neighbors per vertex; no self-loops. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+4
+7
+2 2 4
+3 1 3 5
+1 2
+2 1 5
+4 2 6 4 7
+2 5 7
+2 6 5
+Output:
+impossible
+*)
 
 (** ** [@hide] Environment *)
 

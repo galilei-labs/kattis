@@ -2,13 +2,32 @@
 
 (** ** Description *)
 
-(** List the starting [positions] of a [text]'s suffixes
-    in lexicographic order.
+(** Sort a text's suffixes lexicographically and return their starting
+    positions.
 
     [@kattis suffixsorting]
     - Difficulty: 4.3
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Text length from 1 to 100000. *)
+
+(** ** Examples *)
+
+(** Kattis text input and output. *)
+(* Input:
+popup
+5 0 1 2 3 4
+Popup
+5 0 1 2 3 4
+Suffixes are jolly fun, eh old chap?
+7 35 3 18 33 26 6 2
+Output:
+1 4 0 2 3
+0 1 4 2 3
+17 18 19 20 21 22 23
+*)
 
 (** ** [@hide] Environment *)
 

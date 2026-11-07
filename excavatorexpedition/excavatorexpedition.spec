@@ -2,23 +2,25 @@
 
 (** ** Description *)
 
-(** [excavator sites edge_sources edge_targets] takes the V sites of a
-    directed acyclic graph (sites.[i] = 'X' for a construction site,
-    '.' for a boring one) and its E edges edge_sources.[k] ->
-    edge_targets.[k], and returns the largest happiness of a route
-    from location 0 to location V-1: the number of construction
-    sites visited minus the number of boring sites visited, the two
-    ends not counted. It may be negative. *)
+(** Find a maximum-score path from the first vertex to the last in a
+    directed acyclic graph. Each internal vertex contributes either +1 or
+    -1; the endpoints contribute zero.
 
-(** [@kattis excavatorexpedition]
+    [@kattis excavatorexpedition]
     - Difficulty: 4.1
     - CPU time limit: 1 second
-    - Memory limit: 1024 MB *)
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - 2 to 400000 vertices; 1 to 400000 edges.
+    - The graph is acyclic and contains a path from the first vertex to the
+      last. *)
 
 (** ** Examples *)
 
-(** Kattis sample: text input and output. *)
-(* 13 15
+(** Kattis text input and output. *)
+(* Input:
+13 15
 .X...X.X...X.
 0 1
 0 2
@@ -34,7 +36,10 @@
 8 10
 9 11
 10 11
-11 12 = 2 *)
+11 12
+Output:
+2
+*)
 
 (** ** [@hide] Environment *)
 (* @function        excavator
