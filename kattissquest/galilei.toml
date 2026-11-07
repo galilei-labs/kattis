@@ -1,0 +1,13 @@
+[spec]
+file = "kattissquest.spec"
+title = "Kattis's Quest"
+
+[publish]
+path = "/kattis/kattissquest"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["kattissquest_implem.v", "kattissquest.spec"]

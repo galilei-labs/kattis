@@ -1,0 +1,13 @@
+[spec]
+file = "roadtimes.spec"
+title = "Road Times"
+
+[publish]
+path = "/kattis/roadtimes"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["roadtimes_implem.v", "roadtimes.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "isahasa.spec"
+title = "Is-A? Has-A? Who Knowz-A?"
+
+[publish]
+path = "/kattis/isahasa"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["isahasa_implem.v", "isahasa.spec"]

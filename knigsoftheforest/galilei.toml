@@ -1,0 +1,13 @@
+[spec]
+file = "knigsoftheforest.spec"
+title = "Knigs of the Forest"
+
+[publish]
+path = "/kattis/knigsoftheforest"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["knigsoftheforest_implem.v", "knigsoftheforest.spec"]

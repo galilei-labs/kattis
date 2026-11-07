@@ -1,0 +1,13 @@
+[spec]
+file = "roberthood.spec"
+title = "Robert Hood"
+
+[publish]
+path = "/kattis/roberthood"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["roberthood_implem.v", "roberthood.spec"]

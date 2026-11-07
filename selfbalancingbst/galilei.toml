@@ -1,0 +1,13 @@
+[spec]
+file = "selfbalancingbst.spec"
+title = "Self Balancing Binary Search Tree"
+
+[publish]
+path = "/kattis/selfbalancingbst"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["selfbalancingbst_implem.v", "selfbalancingbst.spec"]

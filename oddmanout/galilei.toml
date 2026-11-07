@@ -1,0 +1,13 @@
+[spec]
+file = "oddmanout.spec"
+title = "Odd Man Out"
+
+[publish]
+path = "/kattis/oddmanout"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["oddmanout_implem.v", "oddmanout.spec"]

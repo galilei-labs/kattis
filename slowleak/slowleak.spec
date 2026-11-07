@@ -1,3 +1,18 @@
+(** * Slow Leak *)
+
+(** ** Description *)
+
+(** Find the [shortest] [trip] home while refilling a
+    leaking tyre often enough to stay within its travel
+    range.
+
+    [@kattis slowleak]
+    - Difficulty: 5.0
+    - CPU time limit: 5 seconds
+    - Memory limit: 1024 MB *)
+
+(** ** [@hide] Environment *)
+
 (* @function        slowleak
    @signature       uint -> uint -> array uint -> array uint -> array uint ->
                     array uint -> option uint
@@ -13,88 +28,112 @@
                     the repair stations.  None ("stuck") when no such trip
                     exists.
 *)
-
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  Intersections are numbered 1 to intersection_count as in the
-   statement; the roads are the parallel lists road_starts, road_ends,
+(* Math side. Intersections are numbered 1 to
+   intersection_count as in the statement; the roads are
+   the parallel lists road_starts, road_ends,
    road_lengths (the m lines "i j k"). *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** ** Definitions *)
 
-(* The e-th element of l, e counted from 0. *)
-Definition get (l : list N) (e : N) : N := nth (N.to_nat e) l 0.
+(** The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
 
-(* Some road joins start and finish with length distance, travelled in
-   either direction. *)
-Definition road (road_starts road_ends road_lengths : list N)
+(** The e-th element of l, e counted from 0. *)
+Definition get (l : list N) (e : N) : N :=
+  nth (N.to_nat e) l 0.
+
+(** Some [road] joins start and finish with length
+    distance, travelled in either direction. *)
+Definition road
+  (road_starts road_ends road_lengths : list N)
     (start finish distance : N) : Prop :=
-  exists e, e < len road_starts /\ get road_lengths e = distance /\
-    ((get road_starts e = start /\ get road_ends e = finish) \/
-     (get road_starts e = finish /\ get road_ends e = start)).
+  exists e, e < len road_starts /\ get road_lengths e =
+    distance /\
+    ((get road_starts e = start /\ get road_ends e = finish)
+      \/
+     (get road_starts e = finish /\ get road_ends e = start)
+       ).
 
-(* [walk start finish distance]: a walk along roads from start to finish of
-   total length distance. *)
+(** [walk start finish distance]: a [walk] along roads
+    from start to finish of total length distance. *)
 Inductive walk (road_starts road_ends road_lengths : list N)
     : N -> N -> N -> Prop :=
   | walk_nil : forall start,
       walk road_starts road_ends road_lengths start start 0
-  | walk_cons : forall start next finish step_length rest_length,
-      road road_starts road_ends road_lengths start next step_length ->
-      walk road_starts road_ends road_lengths next finish rest_length ->
+  | walk_cons : forall start next finish step_length
+    rest_length,
+      road road_starts road_ends road_lengths start next
+        step_length ->
+      walk road_starts road_ends road_lengths next finish
+        rest_length ->
       walk road_starts road_ends road_lengths start finish
         (step_length + rest_length).
 
-(* The tire can be refilled at intersection: the school or a repair
-   station. *)
-Definition refill (stations : list N) (intersection : N) : Prop :=
+(** The tire can be refilled at intersection: the school
+    or a repair station. *)
+Definition refill (stations : list N) (intersection : N) :
+  Prop :=
   intersection = 1 \/ In intersection stations.
 
-(* [trip start distance]: leaving start with a full tire, home
-   (intersection_count) is reached after a total length distance, each
-   stretch between two refills, or from the last refill to home, being at
-   most tire_range (arriving exactly as the tire goes flat is fine). *)
+(** [trip start distance]: leaving start with a full
+    tire, home ([intersection_count]) is reached after a
+    total length distance, each stretch between two
+    refills, or from the last [refill] to home, being at
+    most [tire_range] (arriving exactly as the tire goes
+    flat is fine). *)
 Inductive trip (intersection_count tire_range : N)
     (stations road_starts road_ends road_lengths : list N)
     : N -> N -> Prop :=
   | trip_home : forall start distance,
-      walk road_starts road_ends road_lengths start intersection_count
+      walk road_starts road_ends road_lengths start
+        intersection_count
         distance ->
       distance <= tire_range ->
-      trip intersection_count tire_range stations road_starts road_ends
+      trip intersection_count tire_range stations
+        road_starts road_ends
         road_lengths start distance
   | trip_refill : forall start station distance distance',
-      walk road_starts road_ends road_lengths start station distance ->
+      walk road_starts road_ends road_lengths start station
+        distance ->
       distance <= tire_range -> refill stations station ->
-      trip intersection_count tire_range stations road_starts road_ends
+      trip intersection_count tire_range stations
+        road_starts road_ends
         road_lengths station distance' ->
-      trip intersection_count tire_range stations road_starts road_ends
+      trip intersection_count tire_range stations
+        road_starts road_ends
         road_lengths start (distance + distance').
 
-(* distance is the length of a trip from the school, and no such trip is
-   shorter. *)
+(** distance is the length of a [trip] from the school,
+    and no such [trip] is shorter. *)
 Definition shortest (intersection_count tire_range : N)
-    (stations road_starts road_ends road_lengths : list N) (distance : N)
+    (stations road_starts road_ends road_lengths : list N)
+      (distance : N)
     : Prop :=
-  trip intersection_count tire_range stations road_starts road_ends
+  trip intersection_count tire_range stations road_starts
+    road_ends
     road_lengths 1 distance /\
   forall distance',
-    trip intersection_count tire_range stations road_starts road_ends
+    trip intersection_count tire_range stations road_starts
+      road_ends
       road_lengths 1 distance' ->
     distance <= distance'.
 
-(* The statement's bounds. *)
+(** [@inside slowleak_correct] The statement's bounds. *)
 Record valid_input (intersection_count tire_range : N)
-    (stations road_starts road_ends road_lengths : list N) : Prop := {
+    (stations road_starts road_ends road_lengths : list N) :
+      Prop := {
   (* 2 <= n <= 500 *)
   vi_n : 2 <= intersection_count <= 500;
   (* 0 < m <= n(n-1)/2 *)
   vi_m : 0 < len road_starts
-           <= intersection_count * (intersection_count - 1) / 2;
+           <= intersection_count * (intersection_count - 1)
+            / 2;
   (* the next m lines each hold three integers i, j, k *)
   vi_rj : len road_ends = len road_starts;
   vi_rk : len road_lengths = len road_starts;
@@ -102,62 +141,107 @@ Record valid_input (intersection_count tire_range : N)
   vi_t : 0 < len stations < intersection_count;
   (* 0 < d < 2^31 *)
   vi_d : 0 < tire_range < 2 ^ 31;
-  (* the t stations have values between 2 and n-1, inclusive *)
-  vi_st : Forall (fun station => 2 <= station <= intersection_count - 1)
+  (* the t stations have values between 2 and n-1,
+     inclusive *)
+  vi_st : Forall (fun station => 2 <= station <=
+    intersection_count - 1)
             stations;
   (* all integers on this line are unique *)
   vi_st_unique : NoDup stations;
   (* 1 <= i < j <= n *)
   vi_ij : Forall2 (fun start finish =>
-                     1 <= start /\ start < finish <= intersection_count)
+                     1 <= start /\ start < finish <=
+            intersection_count)
             road_starts road_ends;
   (* 0 < k < 2^31 *)
-  vi_k : Forall (fun road_length => 0 < road_length < 2 ^ 31) road_lengths;
-  (* there is at most one road between any two intersections *)
+  vi_k : Forall
+    (fun road_length => 0 < road_length < 2 ^ 31)
+    road_lengths;
+  (* there is at most one road between any two
+     intersections *)
   vi_simple : NoDup (combine road_starts road_ends);
-  (* if the trip is possible, the minimum distance D satisfies 0 < D < 2^31 *)
+  (* if the trip is possible, the minimum distance D
+     satisfies 0 < D < 2^31 *)
   vi_answer : forall distance,
-    shortest intersection_count tire_range stations road_starts road_ends
+    shortest intersection_count tire_range stations
+      road_starts road_ends
       road_lengths distance ->
     0 < distance < 2 ^ 31;
 }.
 
-(* Some distance for the length of a shortest trip; None ("stuck") when no
-   trip exists. *)
-Definition slowleak_spec (intersection_count tire_range : N)
-    (stations road_starts road_ends road_lengths : list N)
-    (output : option N) : Prop :=
+(** ** Correctness *)
+
+(** [@requirement] [@short Find the shortest trip home
+    while refilling a leaking tyre often enough to stay
+    within its travel range.] Some distance for the
+    length of a [shortest] [trip]; None ("stuck") when no
+    [trip] exists. *)
+Definition slowleak_spec
+  (intersection_count tire_range : N)
+  (stations road_starts road_ends road_lengths : list N)
+  (output : option N)
+  : Prop :=
   match output with
   | Some distance =>
-      shortest intersection_count tire_range stations road_starts road_ends
+      shortest intersection_count tire_range stations
+        road_starts road_ends
         road_lengths distance
   | None =>
       forall distance,
-        ~ trip intersection_count tire_range stations road_starts road_ends
+        ~ trip intersection_count tire_range stations
+          road_starts road_ends
             road_lengths 1 distance
   end.
 
+(** ** Interface *)
+
+(** Find the [shortest] [trip] home while refilling a
+    leaking tyre often enough to stay within its travel
+    range.
+    - Input [intersection_count]:
+    - Input [tire_range]:
+    - Input [stations]:
+    - Input [road_starts]:
+    - Input [road_ends]:
+    - Input [road_lengths]:
+    - Output [output]: *)
 Program slowleak :
-  uint -> uint -> array uint -> array uint -> array uint -> array uint ->
+  uint -> uint -> array uint -> array uint -> array uint ->
+    array uint ->
   option uint.
 
+(** ** Bridge *)
+
+(** [@requirement slowleak_spec] [@fold full correctness
+    statement] On valid represented inputs, the program
+    returns a represented [output] satisfying
+    [slowleak_spec]. *)
 Specification slowleak_correct :
   forall (intersection_count tire_range : N)
-         (stations road_starts road_ends road_lengths : list N)
+         (stations road_starts road_ends road_lengths :
+           list N )
          (intersection_count_int tire_range_int : uint)
-         (stations_arr road_starts_arr road_ends_arr road_lengths_arr
+         (stations_arr road_starts_arr road_ends_arr
+           road_lengths_arr
             : array uint),
-  valid_input intersection_count tire_range stations road_starts road_ends
+  valid_input intersection_count tire_range stations
+    road_starts road_ends
     road_lengths ->
   repr intersection_count_int intersection_count ->
-  repr tire_range_int tire_range -> repr stations_arr stations ->
-  repr road_starts_arr road_starts -> repr road_ends_arr road_ends ->
+  repr tire_range_int tire_range -> repr stations_arr
+    stations ->
+  repr road_starts_arr road_starts -> repr road_ends_arr
+    road_ends ->
   repr road_lengths_arr road_lengths ->
   exists output : option N,
-    repr (slowleak intersection_count_int tire_range_int stations_arr
-            road_starts_arr road_ends_arr road_lengths_arr) output /\
-    slowleak_spec intersection_count tire_range stations road_starts road_ends
+    repr (slowleak intersection_count_int tire_range_int
+      stations_arr
+            road_starts_arr road_ends_arr road_lengths_arr)
+            output /\
+    slowleak_spec intersection_count tire_range stations
+      road_starts road_ends
       road_lengths output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The permitted kernel primitives and their
+    axioms. *)
 Allowed Primitive Axioms.

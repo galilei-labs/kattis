@@ -1,0 +1,13 @@
+[spec]
+file = "basincity.spec"
+title = "Basin City Surveillance"
+
+[publish]
+path = "/kattis/basincity"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["basincity_implem.v", "basincity.spec"]

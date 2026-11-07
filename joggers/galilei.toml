@@ -1,0 +1,13 @@
+[spec]
+file = "joggers.spec"
+title = "Chicken Joggers"
+
+[publish]
+path = "/kattis/joggers"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["joggers_implem.v", "joggers.spec"]

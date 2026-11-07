@@ -1,0 +1,13 @@
+[spec]
+file = "allpairspath.spec"
+title = "All Pairs Shortest Path"
+
+[publish]
+path = "/kattis/allpairspath"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["allpairspath_implem.v", "allpairspath.spec"]

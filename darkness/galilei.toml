@@ -1,0 +1,13 @@
+[spec]
+file = "darkness.spec"
+title = "The Darkness"
+
+[publish]
+path = "/kattis/darkness"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["darkness_implem.v", "darkness.spec"]

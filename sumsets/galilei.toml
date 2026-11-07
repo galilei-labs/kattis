@@ -1,0 +1,13 @@
+[spec]
+file = "sumsets.spec"
+title = "Sumsets"
+
+[publish]
+path = "/kattis/sumsets"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["sumsets_implem.v", "sumsets.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "bigfactoring.spec"
+title = "Big Factoring"
+
+[publish]
+path = "/kattis/bigfactoring"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bigfactoring_implem.v", "bigfactoring.spec"]

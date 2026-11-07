@@ -1,0 +1,13 @@
+[spec]
+file = "committeeassignment.spec"
+title = "Committee Assignment"
+
+[publish]
+path = "/kattis/committeeassignment"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["committeeassignment_implem.v", "committeeassignment.spec"]

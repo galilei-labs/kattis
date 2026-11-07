@@ -1,0 +1,13 @@
+[spec]
+file = "vedurspa.spec"
+title = "Weather Forecast"
+
+[publish]
+path = "/kattis/vedurspa"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["vedurspa_implem.v", "vedurspa.spec"]

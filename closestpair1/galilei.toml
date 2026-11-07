@@ -1,0 +1,13 @@
+[spec]
+file = "closestpair1.spec"
+title = "Closest Pair (Uniform)"
+
+[publish]
+path = "/kattis/closestpair1"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["closestpair1_implem.v", "closestpair1.spec"]

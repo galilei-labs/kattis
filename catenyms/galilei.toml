@@ -1,0 +1,13 @@
+[spec]
+file = "catenyms.spec"
+title = "Catenyms"
+
+[publish]
+path = "/kattis/catenyms"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["catenyms_implem.v", "catenyms.spec"]

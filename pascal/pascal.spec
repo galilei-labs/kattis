@@ -1,3 +1,25 @@
+(** * Pascal *)
+
+(** ** Description *)
+
+(** [pascal number] is what Frane's Pascal program prints on input
+    number: the counter after the loop "for i := number-1 downto 1,
+    add one to the counter, stop as soon as number mod i = 0". *)
+
+(** [@kattis pascal]
+    - Difficulty: 3.5
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB *)
+
+(** ** Examples *)
+
+(** Kattis sample: text input and output. *)
+(* 1 = 0 *)
+
+(** Kattis sample: text input and output. *)
+(* 10 = 5 *)
+
+(** ** [@hide] Environment *)
 (* @function        pascal
    @signature       uint -> uint
    @math_signature  N -> N
@@ -12,21 +34,17 @@ From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  Frane's program, line by line:
+(** ** Definitions *)
 
-     readln(N);
-     counter := 0;
-     for i := N - 1 downto 1 do begin
-       counter := counter + 1;
-       if N mod i = 0 then break;
-     end;
-     writeln(counter);                                                    *)
-
-(* [frane_loop number divisor counter]: the loop run from the current value
-   [divisor] of the loop variable i down to 1, the counter being [counter]
-   on entry; it returns the counter on exit (after the break, or after
-   i = 1). *)
-Fixpoint frane_loop (number : N) (divisor : nat) (counter : N) : N :=
+(** Math side. Frane's program, line by line: readln(N); counter := 0;
+    for i := N - 1 downto 1 do begin counter := counter + 1; if N
+    mod i = 0 then break; end; writeln(counter); [frane_loop number
+    divisor counter]: the loop run from the current value [divisor]
+    of the loop variable i down to 1, the counter being [counter] on
+    entry; it returns the counter on exit (after the break, or after
+    i = 1). *)
+Fixpoint frane_loop (number : N) (divisor : nat)
+  (counter : N) : N :=
   match divisor with
   | O => counter
   | S smaller =>
@@ -35,26 +53,43 @@ Fixpoint frane_loop (number : N) (divisor : nat) (counter : N) : N :=
       else frane_loop number smaller counter'
   end.
 
-(* readln(N); counter := 0; the loop from N - 1; writeln(counter). *)
+(** readln(N); counter := 0; the loop from N - 1; writeln(counter). *)
 Definition frane_output (number : N) : N :=
   frane_loop number (N.to_nat (number - 1)) 0.
 
-(* The statement's bounds. *)
+(** [@inside pascal_correct] The statement's bounds. *)
 Record valid_input (number : N) : Prop := {
-  (* The first and only line of input contains the integer 1 <= N <= 10^9. *)
+  (* The first and only line of input contains the
+     integer 1 <= N <= 10^9. *)
   vi_n : 1 <= number <= 10 ^ 9;
 }.
 
-(* The answer is the output of Frane's program. *)
+(** ** Correctness *)
+
+(** [@requirement] [@short The answer is the output of Frane's program.]
+    The answer is the output of Frane's program. *)
 Definition pascal_spec (number : N) (output : N) : Prop :=
   output = frane_output number.
 
+(** ** Interface *)
+
+(** The [pascal] program on machine values.
+    - Input [number]:
+    - Output [output]: *)
 Program pascal : uint -> uint.
 
-Specification pascal_correct : forall (number : N) (number_int : uint),
+(** ** Bridge *)
+
+(** [@requirement pascal_spec] [@fold full correctness statement] On
+    valid represented inputs, [pascal] returns a represented output
+    satisfying [pascal_spec]. *)
+Specification pascal_correct : forall (number : N)
+  (number_int : uint),
   valid_input number -> repr number_int number ->
   exists output : N,
-    repr (pascal number_int) output /\ pascal_spec number output.
+    repr (pascal number_int) output /\ pascal_spec number
+      output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The kernel primitives (int, array, float, string) and their
+    axioms. *)
 Allowed Primitive Axioms.

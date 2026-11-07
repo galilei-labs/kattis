@@ -1,0 +1,13 @@
+[spec]
+file = "unionfind.spec"
+title = "Union-Find"
+
+[publish]
+path = "/kattis/unionfind"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["unionfind_implem.v", "unionfind.spec"]

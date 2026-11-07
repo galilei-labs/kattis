@@ -1,0 +1,13 @@
+[spec]
+file = "purplerain.spec"
+title = "Purple Rain"
+
+[publish]
+path = "/kattis/purplerain"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["purplerain_implem.v", "purplerain.spec"]

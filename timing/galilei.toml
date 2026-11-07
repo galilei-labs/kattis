@@ -1,0 +1,13 @@
+[spec]
+file = "timing.spec"
+title = "Timing"
+
+[publish]
+path = "/kattis/timing"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["timing_implem.v", "timing.spec"]

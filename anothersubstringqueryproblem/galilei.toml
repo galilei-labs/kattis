@@ -1,0 +1,13 @@
+[spec]
+file = "anothersubstringqueryproblem.spec"
+title = "Another Substring Query Problem"
+
+[publish]
+path = "/kattis/anothersubstringqueryproblem"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["anothersubstringqueryproblem_implem.v", "anothersubstringqueryproblem.spec"]

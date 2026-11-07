@@ -1,0 +1,13 @@
+[spec]
+file = "derangementrotations.spec"
+title = "Derangement Rotations"
+
+[publish]
+path = "/kattis/derangementrotations"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["derangementrotations_implem.v", "derangementrotations.spec"]

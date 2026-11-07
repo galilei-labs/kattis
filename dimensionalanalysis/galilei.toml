@@ -1,0 +1,13 @@
+[spec]
+file = "dimensionalanalysis.spec"
+title = "Dimensional Analysis"
+
+[publish]
+path = "/kattis/dimensionalanalysis"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["dimensionalanalysis_implem.v", "dimensionalanalysis.spec"]

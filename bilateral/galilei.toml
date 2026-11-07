@@ -1,0 +1,13 @@
+[spec]
+file = "bilateral.spec"
+title = "Bilateral Projects"
+
+[publish]
+path = "/kattis/bilateral"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bilateral_implem.v", "bilateral.spec"]

@@ -1,0 +1,1006 @@
+{
+  "repository": "galilei-labs/kattis-private",
+  "commit": "5de4caf82d10ad3d48544c55c9123c264d78edaa",
+  "implementations": [
+    {
+      "problem": "ada",
+      "directory": "100_problems_run_new/ada/implem-bens-1",
+      "files": {
+        "ada_implem.v": "66717000a6c5406fa4529131a2de3b4d740e4493bc9d133d3b58509a54d4aace"
+      },
+      "local_files": [
+        "ada/ada_implem.v"
+      ]
+    },
+    {
+      "problem": "addemup",
+      "directory": "100_problems_run_new/addemup/implem-bens-1",
+      "files": {
+        "addemup_implem.v": "45891d5c4196f88bff0ac6fa9bd277a88c6f9f325bf62ac66d2149f4983e93bd"
+      },
+      "local_files": [
+        "addemup/addemup_implem.v"
+      ]
+    },
+    {
+      "problem": "allpairspath",
+      "directory": "100_problems_run_new/allpairspath/implem-bens-1",
+      "files": {
+        "allpairspath_implem.v": "fb27cd9c6d4e5c31edee2da378ead6081e5c963b3be6369e934040c7b957e61f"
+      },
+      "local_files": [
+        "allpairspath/allpairspath_implem.v"
+      ]
+    },
+    {
+      "problem": "anothersubstringqueryproblem",
+      "directory": "100_problems_run_new/anothersubstringqueryproblem/implem-bens-1",
+      "files": {
+        "anothersubstringqueryproblem_implem.v": "a5548917fc2d2a157c03d7b8865a3d79f6edcde5a4149d74863e23d57a8c027c"
+      },
+      "local_files": [
+        "anothersubstringqueryproblem/anothersubstringqueryproblem_implem.v"
+      ]
+    },
+    {
+      "problem": "antiarithmetic",
+      "directory": "100_problems_run_new/antiarithmetic/implem-bens-2",
+      "files": {
+        "antiarithmetic_implem.v": "0721094abce689bb6493d0d8b48f4cdc06384c270716413df31d5caa57352bd6"
+      },
+      "local_files": [
+        "antiarithmetic/antiarithmetic_implem.v"
+      ]
+    },
+    {
+      "problem": "arbitrage",
+      "directory": "100_problems_run_new/arbitrage/implem-bens-2",
+      "files": {
+        "arbitrage_implem.v": "591c3d1ce6b0e76364f3dc9ade9f7603e53c20124a6e53745d6a5f3cd6ec83f1"
+      },
+      "local_files": [
+        "arbitrage/arbitrage_implem.v"
+      ]
+    },
+    {
+      "problem": "atrivialpursuit",
+      "directory": "100_problems_run_new/atrivialpursuit/implem-bens-2",
+      "files": {
+        "atrivialpursuit_implem.v": "d0019f7dde7455efe857c2421e5d50183878fbc014c7e16fec83dfa7ef20546f"
+      },
+      "local_files": [
+        "atrivialpursuit/atrivialpursuit_implem.v"
+      ]
+    },
+    {
+      "problem": "babelfish",
+      "directory": "100_problems_run_new/babelfish/implem-bens-1",
+      "files": {
+        "babelfish_implem.v": "6f2d355121107e71d3671fd8b1f33313f6415d3543dcb67418073d07fb2ea5f2"
+      },
+      "local_files": [
+        "babelfish/babelfish_implem.v"
+      ]
+    },
+    {
+      "problem": "bank",
+      "directory": "100_problems_run_new/bank/implem-bens-1",
+      "files": {
+        "bank_implem.v": "235a8c3e3331fc72136d36d805d65caa46978cb2e155e7d5e1d057b2604716ba"
+      },
+      "local_files": [
+        "bank/bank_implem.v"
+      ]
+    },
+    {
+      "problem": "basincity",
+      "directory": "100_problems_run_new/basincity/implem-bens-2",
+      "files": {
+        "basincity_implem.v": "e10976ab4a3077356df9f5e3b34cadfe978a53c593b9c55b6794990fc7d6b490"
+      },
+      "local_files": [
+        "basincity/basincity_implem.v"
+      ]
+    },
+    {
+      "problem": "baza",
+      "directory": "100_problems_run_new/baza/implem-bens-1",
+      "files": {
+        "baza_implem.v": "94f35ddbb74bae6ca3565335cec8cb75be73013b646ca41e4ff444ad354fd1fd"
+      },
+      "local_files": [
+        "baza/baza_implem.v"
+      ]
+    },
+    {
+      "problem": "bigfactoring",
+      "directory": "100_problems_run_new/bigfactoring/implem-bens-1",
+      "files": {
+        "bigfactoring_implem.v": "d48c5744c91547e50cbb4d9c7b1a8c4e77ce859e623609b3da3292c9d401f0a6"
+      },
+      "local_files": [
+        "bigfactoring/bigfactoring_implem.v"
+      ]
+    },
+    {
+      "problem": "bilateral",
+      "directory": "100_problems_run_new/bilateral/implem-bens-1",
+      "files": {
+        "bilateral_implem.v": "deb2b17d11319f92a8e2ec0246d1cf1c1293625936d90304d4a3727faa9f7d6a"
+      },
+      "local_files": [
+        "bilateral/bilateral_implem.v"
+      ]
+    },
+    {
+      "problem": "bitwise",
+      "directory": "100_problems_run_new/bitwise/implem-bens-2",
+      "files": {
+        "bitwise_implem.v": "aee20adc52620a5b45aadbeb05dfb94b328dd5b43562cea8b26ce69ee6b35a66"
+      },
+      "local_files": [
+        "bitwise/bitwise_implem.v"
+      ]
+    },
+    {
+      "problem": "booking",
+      "directory": "100_problems_run_new/booking/implem-bens-1",
+      "files": {
+        "booking_implem.v": "a43afc6017c9c25dc90e6acbb194fa4d8a5463df875a58c4a47ed8d37518a397"
+      },
+      "local_files": [
+        "booking/booking_implem.v"
+      ]
+    },
+    {
+      "problem": "bracketsequence",
+      "directory": "100_problems_run_new/bracketsequence/implem-bens-1",
+      "files": {
+        "bracketsequence_implem.v": "2744490d8eadce9c255c1fd5c0431a8b0aee2df2f7ce37a62d16a9c9509cd695"
+      },
+      "local_files": [
+        "bracketsequence/bracketsequence_implem.v"
+      ]
+    },
+    {
+      "problem": "bst",
+      "directory": "100_problems_run_new/bst/implem-bens-1",
+      "files": {
+        "bst_implem.v": "1c624673c148ac03a94be2208d50d66e827457e5808af777f2a0b7c0126a6100"
+      },
+      "local_files": [
+        "bst/bst_implem.v"
+      ]
+    },
+    {
+      "problem": "candydistribution",
+      "directory": "100_problems_run_new/candydistribution/implem-bens-1",
+      "files": {
+        "candydistribution_implem.v": "7c55db0972bffaded5165bfcd60f2067bb0d8ca79bf009ef610afe13429a7e1a"
+      },
+      "local_files": [
+        "candydistribution/candydistribution_implem.v"
+      ]
+    },
+    {
+      "problem": "canonical",
+      "directory": "100_problems_run_new/canonical/implem-bens-1",
+      "files": {
+        "canonical_implem.v": "a045ca8099e48a314f14343b8f2e94a519b30daa495891e4d0f59ba07f719499"
+      },
+      "local_files": [
+        "canonical/canonical_implem.v"
+      ]
+    },
+    {
+      "problem": "canvas",
+      "directory": "100_problems_run_new/canvas/implem-bens-1",
+      "files": {
+        "canvas_implem.v": "0832d524ea1b05e37c075f0111809820da86f0e8a5d9b4d1bb276685e04c4e91"
+      },
+      "local_files": [
+        "canvas/canvas_implem.v"
+      ]
+    },
+    {
+      "problem": "cardhand",
+      "directory": "100_problems_run_new/cardhand/implem-bens-1",
+      "files": {
+        "cardhand_implem.v": "1c519cb4edec92eae0702a4773e7d5b64be71007407322a1c4ba39dd4be761ee"
+      },
+      "local_files": [
+        "cardhand/cardhand_implem.v"
+      ]
+    },
+    {
+      "problem": "catenyms",
+      "directory": "100_problems_run_new/catenyms/implem-bens-1",
+      "files": {
+        "catenyms_implem.v": "69b1f14f91897f28966167ed9d4cdaddfffdd3fead6e3b78b6273734b1ae76f5"
+      },
+      "local_files": [
+        "catenyms/catenyms_implem.v"
+      ]
+    },
+    {
+      "problem": "chatter",
+      "directory": "100_problems_run_new/chatter/implem-bens-1",
+      "files": {
+        "chatter_implem.v": "3b9dbb00aec2af45b815e66d2298819a2f6bf44da66385fec4459d9d36d64ceb"
+      },
+      "local_files": [
+        "chatter/chatter_implem.v"
+      ]
+    },
+    {
+      "problem": "chesstournament",
+      "directory": "100_problems_run_new/chesstournament/implem-bens-1",
+      "files": {
+        "chesstournament_implem.v": "3a9d4c96064ce17511fd98fbac333ac7a72d681aa36bf99d549107dbe837cb9f"
+      },
+      "local_files": [
+        "chesstournament/chesstournament_implem.v"
+      ]
+    },
+    {
+      "problem": "closestpair1",
+      "directory": "100_problems_run_new/closestpair1/implem-bens-1",
+      "files": {
+        "closestpair1_implem.v": "c217018169afc0978e107f5f98834e82086bcbf0471f8d37f8efe6125638064f"
+      },
+      "local_files": [
+        "closestpair1/closestpair1_implem.v"
+      ]
+    },
+    {
+      "problem": "closestpair2",
+      "directory": "100_problems_run_new/closestpair2/implem-bens-1",
+      "files": {
+        "closestpair2_implem.v": "5e6cfdfe80fd37609f791a91a735943728af9df34e324df44aee23e83d9bcafa"
+      },
+      "local_files": [
+        "closestpair2/closestpair2_implem.v"
+      ]
+    },
+    {
+      "problem": "cold",
+      "directory": "100_problems_run_new/cold/implem-bens-1",
+      "files": {
+        "cold_implem.v": "a6b340d8f81e760b85538dd6b67e4ac03ceace902282035717a9ab22aa5e6a6d"
+      },
+      "local_files": [
+        "cold/cold_implem.v"
+      ]
+    },
+    {
+      "problem": "committeeassignment",
+      "directory": "100_problems_run_new/committeeassignment/implem-bens-1",
+      "files": {
+        "committeeassignment_implem.v": "ad350209b05076b52201edf0ecf58b723bf61d082909151dd5a2c5213574a530"
+      },
+      "local_files": [
+        "committeeassignment/committeeassignment_implem.v"
+      ]
+    },
+    {
+      "problem": "communicationssatellite",
+      "directory": "100_problems_run_new/communicationssatellite/implem-bens-1",
+      "files": {
+        "communicationssatellite_implem.v": "926c939a117acc26275f71a16965569578ed2c810f7956ae24c1478c8f26d6b4"
+      },
+      "local_files": [
+        "communicationssatellite/communicationssatellite_implem.v"
+      ]
+    },
+    {
+      "problem": "convexhull",
+      "directory": "100_problems_run_new/convexhull/implem-bens-1",
+      "files": {
+        "convexhull_implem.v": "1180e5dee41f05701e5c3969292f203629329c2724def7a24f6fe8dc6e2132b4"
+      },
+      "local_files": [
+        "convexhull/convexhull_implem.v"
+      ]
+    },
+    {
+      "problem": "cuboidslicinggame",
+      "directory": "100_problems_run_new/cuboidslicinggame/implem-bens-2",
+      "files": {
+        "cuboidslicinggame_implem.v": "a39fcab41b2ff2e6740e210a07c0bd16bbedca2b402e4caf82cf473572c761a6"
+      },
+      "local_files": [
+        "cuboidslicinggame/cuboidslicinggame_implem.v"
+      ]
+    },
+    {
+      "problem": "cudak",
+      "directory": "100_problems_run_new/cudak/implem-bens-1",
+      "files": {
+        "cudak_implem.v": "b4057a7b09ed7f9f63606c10792cbf99396d74b07d49d0482d80e6f0ef9df2be"
+      },
+      "local_files": [
+        "cudak/cudak_implem.v"
+      ]
+    },
+    {
+      "problem": "darkness",
+      "directory": "100_problems_run_new/darkness/implem-bens-1",
+      "files": {
+        "darkness_implem.v": "c2ab3c89c55768924dd9838fde5c79f41d5481d17f3a7eafe1edf8c09badeb03"
+      },
+      "local_files": [
+        "darkness/darkness_implem.v"
+      ]
+    },
+    {
+      "problem": "derangementrotations",
+      "directory": "100_problems_run_new/derangementrotations/implem-bens-1",
+      "files": {
+        "derangementrotations_implem.v": "2963b39bb7bf94f0e0292cfca72d908694c85e86e6f6ed637dd78aa81df983e0"
+      },
+      "local_files": [
+        "derangementrotations/derangementrotations_implem.v"
+      ]
+    },
+    {
+      "problem": "dimensionalanalysis",
+      "directory": "100_problems_run_new/dimensionalanalysis/implem-bens-1",
+      "files": {
+        "dimensionalanalysis_implem.v": "2f2c102684b4e3d3af94764070b435157062930f6db776d6d1103a7069313030"
+      },
+      "local_files": [
+        "dimensionalanalysis/dimensionalanalysis_implem.v"
+      ]
+    },
+    {
+      "problem": "dirtydriving",
+      "directory": "100_problems_run_new/dirtydriving/implem-bens-1",
+      "files": {
+        "dirtydriving_implem.v": "d82df60e17be2e1aa1198a0bcc92377457d2ffa22bc6e1ceba96bca6d6f1ee83"
+      },
+      "local_files": [
+        "dirtydriving/dirtydriving_implem.v"
+      ]
+    },
+    {
+      "problem": "doublets",
+      "directory": "100_problems_run_new/doublets/implem-bens-2",
+      "files": {
+        "doublets_implem.v": "12bf5e5b4136ef839f8e0b28827a18fbf3b035b1fac2fde04b33b1404af42366"
+      },
+      "local_files": [
+        "doublets/doublets_implem.v"
+      ]
+    },
+    {
+      "problem": "equationsolver_exact",
+      "directory": "100_problems_run_new/equationsolver_exact/implem-bens-4",
+      "files": {
+        "equationsolver_exact_implem.v": "fd7101fc27f59657ccaed7057c6d756f6afb9a510cd8e39bb4eec340d1c35763"
+      },
+      "local_files": [
+        "equationsolver_exact/equationsolver_exact_implem.v"
+      ]
+    },
+    {
+      "problem": "excavatorexpedition",
+      "directory": "100_problems_run_new/excavatorexpedition/implem-bens-1",
+      "files": {
+        "excavatorexpedition_implem.v": "b1ba1627b42bab61246feed88562c369fc8508e978edca0967d09485cd5962eb"
+      },
+      "local_files": [
+        "excavatorexpedition/excavatorexpedition_implem.v"
+      ]
+    },
+    {
+      "problem": "farmingmars",
+      "directory": "100_problems_run_new/farmingmars/implem-bens-1",
+      "files": {
+        "farmingmars_implem.v": "48de0bb1cf3a9b8d18ab07e6ff99741386d3e76569dde08a98909e4e27c1956b"
+      },
+      "local_files": [
+        "farmingmars/farmingmars_implem.v"
+      ]
+    },
+    {
+      "problem": "fulltank",
+      "directory": "100_problems_run_new/fulltank/implem-bens-1",
+      "files": {
+        "fulltank_implem.v": "f7b7082fe92915c7adaf041edc6a835b9f3e4146d8d63cc37e3d0b76cd692281"
+      },
+      "local_files": [
+        "fulltank/fulltank_implem.v"
+      ]
+    },
+    {
+      "problem": "gcpc",
+      "directory": "100_problems_run_new/gcpc/implem-bens-1",
+      "files": {
+        "gcpc_implem.v": "e3392d04a8bab138f75b1056201a3cfb10ea7d80f0f48e21a07052ef670644ac"
+      },
+      "local_files": [
+        "gcpc/gcpc_implem.v"
+      ]
+    },
+    {
+      "problem": "generalchineseremainder",
+      "directory": "100_problems_run_new/generalchineseremainder/implem-bens-1",
+      "files": {
+        "generalchineseremainder_implem.v": "fc77db7259cdf695ddcbac12819ab74e0e9d292473629c6dc2ae7bb896267caf"
+      },
+      "local_files": [
+        "generalchineseremainder/generalchineseremainder_implem.v"
+      ]
+    },
+    {
+      "problem": "hashing",
+      "directory": "100_problems_run_new/hashing/implem-bens-1",
+      "files": {
+        "hashing_implem.v": "3913a9cfdcca7d04be2879d6ec2520cc65fe91f3789316afe880ed4854817206"
+      },
+      "local_files": [
+        "hashing/hashing_implem.v"
+      ]
+    },
+    {
+      "problem": "helpfulcurrents",
+      "directory": "100_problems_run_new/helpfulcurrents/implem-bens-1",
+      "files": {
+        "helpfulcurrents_implem.v": "1cd4b4ee757a7d0106debe83d87151a654497b5b82843f54126a82af1f43894e"
+      },
+      "local_files": [
+        "helpfulcurrents/helpfulcurrents_implem.v"
+      ]
+    },
+    {
+      "problem": "indoorienteering",
+      "directory": "100_problems_run_new/indoorienteering/implem-bens-2",
+      "files": {
+        "indoorienteering_implem.v": "ea89406bffa484a639f4d57ef11a3ccd6e365e727128439a311c00af49f34bc1"
+      },
+      "local_files": [
+        "indoorienteering/indoorienteering_implem.v"
+      ]
+    },
+    {
+      "problem": "intersectingrectangles",
+      "directory": "100_problems_run_new/intersectingrectangles/implem-bens-1",
+      "files": {
+        "intersectingrectangles_implem.v": "d4b3cb8928618ed82a3ea009ce23d57685720403d9af3c6c7a24268524ab22f6"
+      },
+      "local_files": [
+        "intersectingrectangles/intersectingrectangles_implem.v"
+      ]
+    },
+    {
+      "problem": "intervalcover",
+      "directory": "100_problems_run_new/intervalcover/implem-bens-1",
+      "files": {
+        "intervalcover_implem.v": "86c6a435313b9e901ed7037a9a6a5a1d202512d2c273382ae1ce93d45bdfaf39"
+      },
+      "local_files": [
+        "intervalcover/intervalcover_implem.v"
+      ]
+    },
+    {
+      "problem": "isahasa",
+      "directory": "100_problems_run_new/isahasa/implem-bens-2",
+      "files": {
+        "isahasa_implem.v": "fd22808070b38017a2ebcd5670af5bbf3411ba92a852e97ab226c47d80915bef"
+      },
+      "local_files": [
+        "isahasa/isahasa_implem.v"
+      ]
+    },
+    {
+      "problem": "joggers",
+      "directory": "100_problems_run_new/joggers/implem-bens-1",
+      "files": {
+        "joggers_implem.v": "d2539ced31eb81ff11bac77154285d66f3663494d3d6eb30579ee148f9e978b5"
+      },
+      "local_files": [
+        "joggers/joggers_implem.v"
+      ]
+    },
+    {
+      "problem": "joinstrings",
+      "directory": "100_problems_run_new/joinstrings/implem-bens-1",
+      "files": {
+        "joinstrings_implem.v": "f94eb49576c70b55a39faabf5aa00ba095a9ca7ac353045619223a45f60da720"
+      },
+      "local_files": [
+        "joinstrings/joinstrings_implem.v"
+      ]
+    },
+    {
+      "problem": "kattissquest",
+      "directory": "100_problems_run_new/kattissquest/implem-bens-1",
+      "files": {
+        "kattissquest_implem.v": "ab1ca7b05bcb3a652f2ced56beeb40fb5619311e722a76d5f4e8333a57d7b3d7"
+      },
+      "local_files": [
+        "kattissquest/kattissquest_implem.v"
+      ]
+    },
+    {
+      "problem": "kingpinescape",
+      "directory": "100_problems_run_new/kingpinescape/implem-bens-1",
+      "files": {
+        "kingpinescape_implem.v": "bade083b7f77274ae66d483766b2951dc3d1ced07f3dc7438b43620053c1402f"
+      },
+      "local_files": [
+        "kingpinescape/kingpinescape_implem.v"
+      ]
+    },
+    {
+      "problem": "knapsack",
+      "directory": "100_problems_run_new/knapsack/implem-bens-1",
+      "files": {
+        "knapsack_implem.v": "ba0caae7064507d89f4f3d9f0dd690eaf906c04ba3e2153582c851c69ae9c27e"
+      },
+      "local_files": [
+        "knapsack/knapsack_implem.v"
+      ]
+    },
+    {
+      "problem": "knapsack2",
+      "directory": "100_problems_run_new/knapsack2/implem-bens-1",
+      "files": {
+        "knapsack2_implem.v": "68bc3fa30f2bd137d5711243f11306cd49bf0f84a2443b3f092c835b5cc512bb"
+      },
+      "local_files": [
+        "knapsack2/knapsack2_implem.v"
+      ]
+    },
+    {
+      "problem": "knigsoftheforest",
+      "directory": "100_problems_run_new/knigsoftheforest/implem-bens-1",
+      "files": {
+        "knigsoftheforest_implem.v": "95db01030280b71032aefaac5a0a51e2f0bbb6d42a9a3d2b25c04d418d586601"
+      },
+      "local_files": [
+        "knigsoftheforest/knigsoftheforest_implem.v"
+      ]
+    },
+    {
+      "problem": "largesttriangle",
+      "directory": "100_problems_run_new/largesttriangle/implem-bens-1",
+      "files": {
+        "largesttriangle_implem.v": "f876f51f6dc972735bdbab23120ef9cc5b5d51e0ad8114f20d63ddf3d833ca50"
+      },
+      "local_files": [
+        "largesttriangle/largesttriangle_implem.v"
+      ]
+    },
+    {
+      "problem": "longincsubseq",
+      "directory": "100_problems_run_new/longincsubseq/implem-bens-1",
+      "files": {
+        "longincsubseq_implem.v": "e9564fad826466cd10a5e52b4f50515755da76e73f02033130e30670a2362bbb"
+      },
+      "local_files": [
+        "longincsubseq/longincsubseq_implem.v"
+      ]
+    },
+    {
+      "problem": "loopycabdrivers",
+      "directory": "100_problems_run_new/loopycabdrivers/implem-bens-1",
+      "files": {
+        "loopycabdrivers_implem.v": "b9a0f85b656fd4413944c143a2c35510ed2971729563d37f11af20bbe7bd1eb3"
+      },
+      "local_files": [
+        "loopycabdrivers/loopycabdrivers_implem.v"
+      ]
+    },
+    {
+      "problem": "magicsequence",
+      "directory": "100_problems_run_new/magicsequence/implem-bens-2",
+      "files": {
+        "magicsequence_implem.v": "82e9fc391ccdfbd7ef624dd8c69c0da48fb27ab0477002f295c9bd26edee1abf"
+      },
+      "local_files": [
+        "magicsequence/magicsequence_implem.v"
+      ]
+    },
+    {
+      "problem": "mazemovement",
+      "directory": "100_problems_run_new/mazemovement/implem-bens-2",
+      "files": {
+        "mazemovement_implem.v": "4a67b78c91aa1bc5dfee036e84b7158bf774b7c2ddbb2cad8c47108341245e94"
+      },
+      "local_files": [
+        "mazemovement/mazemovement_implem.v"
+      ]
+    },
+    {
+      "problem": "median",
+      "directory": "100_problems_run_new/median/implem-bens-1",
+      "files": {
+        "median_implem.v": "d4a6ca9fac06b03d3a7c6a781080833b38f90b8151758e47acadddacc2a49be1"
+      },
+      "local_files": [
+        "median/median_implem.v"
+      ]
+    },
+    {
+      "problem": "minspantree",
+      "directory": "100_problems_run_new/minspantree/implem-bens-1",
+      "files": {
+        "minspantree_implem.v": "34ea3b59cf1a0e05f2b0a433ed8c598beb6dd97bf84e0ce32b2c7dade5416406"
+      },
+      "local_files": [
+        "minspantree/minspantree_implem.v"
+      ]
+    },
+    {
+      "problem": "nonnegpartsums",
+      "directory": "100_problems_run_new/nonnegpartsums/implem-bens-1",
+      "files": {
+        "nonnegpartsums_implem.v": "42876c0fe4ca7214ed77175bf324a2313b294bd1ef0c4177a4ae41b6806c23f5"
+      },
+      "local_files": [
+        "nonnegpartsums/nonnegpartsums_implem.v"
+      ]
+    },
+    {
+      "problem": "numbersetshard",
+      "directory": "100_problems_run_new/numbersetshard/implem-bens-1",
+      "files": {
+        "numbersetshard_implem.v": "0c7bd64d7ac10404a8e91abbe34a7a5a6b22393540e82b3fa36462693dbc0d90"
+      },
+      "local_files": [
+        "numbersetshard/numbersetshard_implem.v"
+      ]
+    },
+    {
+      "problem": "oddmanout",
+      "directory": "100_problems_run_new/oddmanout/implem-bens-1",
+      "files": {
+        "oddmanout_implem.v": "63abc13223f938e68a34876b4810915ddf44e2c12e55e2175229d42eccc45352"
+      },
+      "local_files": [
+        "oddmanout/oddmanout_implem.v"
+      ]
+    },
+    {
+      "problem": "palindromes",
+      "directory": "100_problems_run_new/palindromes/implem-bens-1",
+      "files": {
+        "palindromes_implem.v": "c43c70233229ffd700ca816ee4c8caaef778f49ff6145550f3770fe304ad4512"
+      },
+      "local_files": [
+        "palindromes/palindromes_implem.v"
+      ]
+    },
+    {
+      "problem": "pascal",
+      "directory": "100_problems_run_new/pascal/implem-bens-1",
+      "files": {
+        "pascal_implem.v": "97aeb5e23458ce2dd9c6083a38109f9ea28ea83a403cbf5f69141cb694e8ee1c"
+      },
+      "local_files": [
+        "pascal/pascal_implem.v"
+      ]
+    },
+    {
+      "problem": "plot",
+      "directory": "100_problems_run_new/plot/implem-bens-1",
+      "files": {
+        "plot_implem.v": "d639d3cd46702e38ec8eabf2ee9038534ed1a02e462907cb96c2b9ba0bd4b3a2"
+      },
+      "local_files": [
+        "plot/plot_implem.v"
+      ]
+    },
+    {
+      "problem": "polygonarea",
+      "directory": "100_problems_run_new/polygonarea/implem-bens-1",
+      "files": {
+        "polygonarea_implem.v": "a24a84c37a427efc71717f7313e800870a5b5f3962ec06365de92facbe87262a"
+      },
+      "local_files": [
+        "polygonarea/polygonarea_implem.v"
+      ]
+    },
+    {
+      "problem": "polymul1",
+      "directory": "100_problems_run_new/polymul1/implem-bens-1",
+      "files": {
+        "polymul1_implem.v": "1205d64348274b2c23d46be970abc2019939ee02522fa4b47d75328a7f40e0e1"
+      },
+      "local_files": [
+        "polymul1/polymul1_implem.v"
+      ]
+    },
+    {
+      "problem": "polymul2",
+      "directory": "100_problems_run_new/polymul2/implem-bens-1",
+      "files": {
+        "polymul2_implem.v": "0c47f8fe0088b7dc97efa7ac56611782ec77af8eef5523af551ee97b5744d17b"
+      },
+      "local_files": [
+        "polymul2/polymul2_implem.v"
+      ]
+    },
+    {
+      "problem": "primepower",
+      "directory": "100_problems_run_new/primepower/implem-bens-1",
+      "files": {
+        "primepower_implem.v": "1d66bc9a89452f1a034041bcecbb060d1dc285d5f85ff587b194da348ac104ee"
+      },
+      "local_files": [
+        "primepower/primepower_implem.v"
+      ]
+    },
+    {
+      "problem": "purplerain",
+      "directory": "100_problems_run_new/purplerain/implem-bens-1",
+      "files": {
+        "purplerain_implem.v": "ed15762085cff32691b6664c21e046d90e6c5e5aaf14bb9d1fbe8c7a522a6d2e"
+      },
+      "local_files": [
+        "purplerain/purplerain_implem.v"
+      ]
+    },
+    {
+      "problem": "relatives",
+      "directory": "100_problems_run_new/relatives/implem-bens-1",
+      "files": {
+        "relatives_implem.v": "bfd844c63ff1d7dacd4a66a2899cb8f3cff8197db737a7bcbce7fe1e09b42c6b"
+      },
+      "local_files": [
+        "relatives/relatives_implem.v"
+      ]
+    },
+    {
+      "problem": "remainderreminder",
+      "directory": "100_problems_run_new/remainderreminder/implem-bens-1",
+      "files": {
+        "remainderreminder_implem.v": "def25404e4655f90a87a486c25018b8379b03b27ae14a41519578b249f2d6043"
+      },
+      "local_files": [
+        "remainderreminder/remainderreminder_implem.v"
+      ]
+    },
+    {
+      "problem": "roadtimes",
+      "directory": "100_problems_run_new/roadtimes/implem-bens-1",
+      "files": {
+        "roadtimes_implem.v": "ea5b59ef7b2ee343d3a91dcdd574e8e5a27bdcf6f9927d584a2df9fe6df8ba5b"
+      },
+      "local_files": [
+        "roadtimes/roadtimes_implem.v"
+      ]
+    },
+    {
+      "problem": "roberthood",
+      "directory": "100_problems_run_new/roberthood/implem-bens-1",
+      "files": {
+        "roberthood_implem.v": "055d5ad01d80818036b1f9f20d494fdd8b597f5c5dcab0d5e4be65dd7b79cc62"
+      },
+      "local_files": [
+        "roberthood/roberthood_implem.v"
+      ]
+    },
+    {
+      "problem": "satisfiability",
+      "directory": "100_problems_run_new/satisfiability/implem-bens-1",
+      "files": {
+        "satisfiability_implem.v": "6a295368bf1c0338e2a948bd39812d162ebbe36b4ad016f18cee7285be47e54d"
+      },
+      "local_files": [
+        "satisfiability/satisfiability_implem.v"
+      ]
+    },
+    {
+      "problem": "securitybadge",
+      "directory": "100_problems_run_new/securitybadge/implem-bens-1",
+      "files": {
+        "securitybadge_implem.v": "24470397b77d53c3f30027f55d7782b5039638eb362ea1c53e1a2f16efa4d178"
+      },
+      "local_files": [
+        "securitybadge/securitybadge_implem.v"
+      ]
+    },
+    {
+      "problem": "segmentintersection",
+      "directory": "100_problems_run_new/segmentintersection/implem-bens-1",
+      "files": {
+        "segmentintersection_implem.v": "c082018ded96540d91a486464b4fb477ae1777f6fadfb8abcf2482281c813f0d"
+      },
+      "local_files": [
+        "segmentintersection/segmentintersection_implem.v"
+      ]
+    },
+    {
+      "problem": "selfbalancingbst",
+      "directory": "100_problems_run_new/selfbalancingbst/implem-bens-1",
+      "files": {
+        "selfbalancingbst_implem.v": "e234f3e2cb92146a75533092afc3f1b6e8f23164b1d7287013e1bec5f69eeab9"
+      },
+      "local_files": [
+        "selfbalancingbst/selfbalancingbst_implem.v"
+      ]
+    },
+    {
+      "problem": "shortestpath1",
+      "directory": "100_problems_run_new/shortestpath1/implem-bens-1",
+      "files": {
+        "shortestpath1_implem.v": "7eda46120485e210e554240f336cd5543742d723fbd9e6ca727e87ea8643e8c0"
+      },
+      "local_files": [
+        "shortestpath1/shortestpath1_implem.v"
+      ]
+    },
+    {
+      "problem": "shortestpath3",
+      "directory": "100_problems_run_new/shortestpath3/implem-bens-1",
+      "files": {
+        "shortestpath3_implem.v": "8c34851bc0719054a8fa381013484ed32fdd330b03cfbf091019b654cdc7a978"
+      },
+      "local_files": [
+        "shortestpath3/shortestpath3_implem.v"
+      ]
+    },
+    {
+      "problem": "slowleak",
+      "directory": "100_problems_run_new/slowleak/implem-bens-1",
+      "files": {
+        "slowleak_implem.v": "1428651e761f441f8086f70ad422961b84ba1ce2cfaf0e058b92bdca7df2c753"
+      },
+      "local_files": [
+        "slowleak/slowleak_implem.v"
+      ]
+    },
+    {
+      "problem": "stringmatching",
+      "directory": "100_problems_run_new/stringmatching/implem-bens-1",
+      "files": {
+        "stringmatching_implem.v": "6785a615136d5f862876734095436d15ea2e3483003c3ca8ca47a858cbb8fbf8"
+      },
+      "local_files": [
+        "stringmatching/stringmatching_implem.v"
+      ]
+    },
+    {
+      "problem": "stringmultimatching",
+      "directory": "100_problems_run_new/stringmultimatching/implem-bens-1",
+      "files": {
+        "stringmultimatching_implem.v": "242d98567c51a10eb2ef863b207c12ce563e95f7ef38703345977c0c0d94f744"
+      },
+      "local_files": [
+        "stringmultimatching/stringmultimatching_implem.v"
+      ]
+    },
+    {
+      "problem": "suffixsorting",
+      "directory": "100_problems_run_new/suffixsorting/implem-bens-2",
+      "files": {
+        "suffixsorting_implem.v": "ffd34efcd3b32b57b7ceabd3135768c22d9bde77ea31718e2d528f1d6e8a875e"
+      },
+      "local_files": [
+        "suffixsorting/suffixsorting_implem.v"
+      ]
+    },
+    {
+      "problem": "sumsets",
+      "directory": "100_problems_run_new/sumsets/implem-bens-1",
+      "files": {
+        "sumsets_implem.v": "6ab1e506beadbdc392a5793d084de8f4ef8196c635581de914ffa4ce35a2c113"
+      },
+      "local_files": [
+        "sumsets/sumsets_implem.v"
+      ]
+    },
+    {
+      "problem": "timing",
+      "directory": "100_problems_run_new/timing/implem-bens-3",
+      "files": {
+        "timing_implem.v": "328200354dd129342e30a79912869d2bd65431a3b7f682b50c407ed565acfe24"
+      },
+      "local_files": [
+        "timing/timing_implem.v"
+      ]
+    },
+    {
+      "problem": "tsp",
+      "directory": "100_problems_run_new/tsp/implem-bens-1",
+      "files": {
+        "tsp_implem.v": "f3326cb5c155242b26afd098fb6d4cc8dd4d2a9134c64ee5993ea1c14fb35c71"
+      },
+      "local_files": [
+        "tsp/tsp_implem.v"
+      ]
+    },
+    {
+      "problem": "tugofwar",
+      "directory": "100_problems_run_new/tugofwar/implem-bens-1",
+      "files": {
+        "tugofwar_implem.v": "ee23dbdcaa3b3213b96bee2e11ce4c74ed19fdf8346a6d318ebd95cff73314da"
+      },
+      "local_files": [
+        "tugofwar/tugofwar_implem.v"
+      ]
+    },
+    {
+      "problem": "ultraquicksort",
+      "directory": "100_problems_run_new/ultraquicksort/implem-bens-1",
+      "files": {
+        "ultraquicksort_implem.v": "d608294f56a883b02bc9e55803093b4c0b2d158f58caca988a836b30389b4e7e"
+      },
+      "local_files": [
+        "ultraquicksort/ultraquicksort_implem.v"
+      ]
+    },
+    {
+      "problem": "unionfind",
+      "directory": "100_problems_run_new/unionfind/implem-bens-1",
+      "files": {
+        "unionfind_implem.v": "58d9a8e41d7003177d3492c5c76550b73639e8c5fbbea59718344a6b2a9ab656"
+      },
+      "local_files": [
+        "unionfind/unionfind_implem.v"
+      ]
+    },
+    {
+      "problem": "vedurspa",
+      "directory": "100_problems_run_new/vedurspa/implem-bens-1",
+      "files": {
+        "vedurspa_implem.v": "2e252573dfc56574a1929158402dd7e387eead256bdc5f7733c68c9ef324def0"
+      },
+      "local_files": [
+        "vedurspa/vedurspa_implem.v"
+      ]
+    },
+    {
+      "problem": "water",
+      "directory": "100_problems_run_new/water/implem-bens-1",
+      "files": {
+        "water_implem.v": "8ace123f37ffcc44d9f7574467046bf3b2cdc83fd483d77cba6cb3e1b33f75ec"
+      },
+      "local_files": [
+        "water/water_implem.v"
+      ]
+    },
+    {
+      "problem": "worstweather",
+      "directory": "100_problems_run_new/worstweather/implem-bens-1",
+      "files": {
+        "worstweather_implem.v": "b49be4edc6f41786136de9809c2aa417927103509ca4a377725a529e3b00af16"
+      },
+      "local_files": [
+        "worstweather/worstweather_implem.v"
+      ]
+    },
+    {
+      "problem": "xormax",
+      "directory": "100_problems_run_new/xormax/implem-bens-1",
+      "files": {
+        "xormax_implem.v": "de2d0e671fdc58925ad8e040bc3c77bd3e275b510b7abea2da836f1653847ee2"
+      },
+      "local_files": [
+        "xormax/xormax_implem.v"
+      ]
+    },
+    {
+      "problem": "yatp",
+      "directory": "100_problems_run_new/yatp/implem-bens-1",
+      "files": {
+        "yatp_implem.v": "e5efc0a08393bccc5f399bd3c619e8b9616d331229deb8355f05495237683dd6"
+      },
+      "local_files": [
+        "yatp/yatp_implem.v"
+      ]
+    },
+    {
+      "problem": "zapis",
+      "directory": "100_problems_run_new/zapis/implem-bens-1",
+      "files": {
+        "zapis_implem.v": "00155011c305ad5b0c5542d1a49d5602b0879af0197b2ddff402127e8bc38e70"
+      },
+      "local_files": [
+        "zapis/zapis_implem.v"
+      ]
+    }
+  ]
+}

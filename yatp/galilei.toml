@@ -1,0 +1,13 @@
+[spec]
+file = "yatp.spec"
+title = "YATP"
+
+[publish]
+path = "/kattis/yatp"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["yatp_implem.v", "yatp.spec"]

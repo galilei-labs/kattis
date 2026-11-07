@@ -1,0 +1,13 @@
+[spec]
+file = "fulltank.spec"
+title = "Full Tank?"
+
+[publish]
+path = "/kattis/fulltank"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["fulltank_implem.v", "fulltank.spec"]

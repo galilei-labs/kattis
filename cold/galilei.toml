@@ -1,5 +1,5 @@
 # galilei.toml: page for cold.spec.
-#   cd ../../galilei && PORT=3001 uv run python scripts/serve.py ../kattis/cold
+#   cd ../../focus && PORT=3001 uv run python scripts/serve.py ../kattis/cold
 
 [spec]
 file = "cold.spec"
@@ -7,7 +7,7 @@ title = "Cold-puter Science"
 check = "opam exec --switch=rocq-9.2 -- make -C extraction check"
 
 [publish]
-path = "/kattis2/cold"
+path = "/kattis/cold"
 
 [presentation]
 brand = "focus"

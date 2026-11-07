@@ -1,0 +1,13 @@
+[spec]
+file = "generalchineseremainder.spec"
+title = "Chinese Remainder Theorem (non-relatively prime moduli)"
+
+[publish]
+path = "/kattis/generalchineseremainder"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["generalchineseremainder_implem.v", "generalchineseremainder.spec"]

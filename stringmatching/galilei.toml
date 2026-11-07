@@ -1,0 +1,13 @@
+[spec]
+file = "stringmatching.spec"
+title = "String Matching"
+
+[publish]
+path = "/kattis/stringmatching"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["stringmatching_implem.v", "stringmatching.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "stringmultimatching.spec"
+title = "String Multimatching"
+
+[publish]
+path = "/kattis/stringmultimatching"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["stringmultimatching_implem.v", "stringmultimatching.spec"]

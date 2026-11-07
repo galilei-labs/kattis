@@ -1,0 +1,13 @@
+[spec]
+file = "equationsolver_exact.spec"
+title = "Linear Equation Solver"
+
+[publish]
+path = "/kattis/equationsolver"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["equationsolver_exact_implem.v", "equationsolver_exact.spec"]

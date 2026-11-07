@@ -1,0 +1,13 @@
+[spec]
+file = "tsp.spec"
+title = "Travelling Salesperson 2D"
+
+[publish]
+path = "/kattis/tsp"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["tsp_implem.v", "tsp.spec"]

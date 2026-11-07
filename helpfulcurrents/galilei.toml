@@ -1,0 +1,13 @@
+[spec]
+file = "helpfulcurrents.spec"
+title = "Helpful Currents"
+
+[publish]
+path = "/kattis/helpfulcurrents"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["helpfulcurrents_implem.v", "helpfulcurrents.spec"]

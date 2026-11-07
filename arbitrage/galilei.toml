@@ -1,0 +1,13 @@
+[spec]
+file = "arbitrage.spec"
+title = "Arbitrage?"
+
+[publish]
+path = "/kattis/arbitrage"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["arbitrage_implem.v", "arbitrage.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "mazemovement.spec"
+title = "Maze Movement"
+
+[publish]
+path = "/kattis/mazemovement"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["mazemovement_implem.v", "mazemovement.spec"]

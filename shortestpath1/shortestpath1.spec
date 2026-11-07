@@ -1,3 +1,18 @@
+(** * Single source shortest path, non-negative weights *)
+
+(** ** Description *)
+
+(** Find the shortest distance from a [source] to every
+    [vertex] of a directed graph with nonnegative [edge]
+    weights, marking unreachable vertices.
+
+    [@kattis shortestpath1]
+    - Difficulty: 2.0
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB *)
+
+(** ** [@hide] Environment *)
+
 (* @function        dijkstra
    @signature       uint -> array uint -> array uint -> array uint -> uint
                     -> array (option uint)
@@ -9,7 +24,6 @@
                     edge_weights[k], Some the least cost of a path from
                     source to that node, or None when there is no such path
 *)
-
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Respeced Require Import Repr.
 Import ListNotations.
@@ -17,57 +31,80 @@ Open Scope N_scope.
 
 (* Math side *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** ** Definitions *)
 
-(* The k-th element of l, for k < len l (0, or None, outside : never
-   relied on). *)
-Definition get_list_N (l : list N) (k : N) : N := nth (N.to_nat k) l 0.
-Definition get_list_option (l : list (option N)) (k : N) : option N :=
+(** The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
+
+(** The k-th element of l, for k < [len] l (0, or None,
+    outside : never relied on). *)
+Definition get_list_N (l : list N ) (k : N) : N := nth
+  (N.to_nat k) l 0.
+(** Get list option. *)
+Definition get_list_option (l : list (option N)) (k : N) :
+  option N :=
   nth (N.to_nat k) l None.
 
-(* node is in [0, node_count - 1]. *)
-Definition vertex (node_count node : N) : Prop := node < node_count.
+(** node is in [0, node_count - 1]. *)
+Definition vertex (node_count node : N) : Prop :=
+  node < node_count.
 
-(* k is in [0, m - 1]. *)
-Definition edge_index (edge_sources : list N) (k : N) : Prop :=
+(** k is in [0, m - 1]. *)
+Definition edge_index (edge_sources : list N) (k : N) : Prop
+  :=
   k < len edge_sources.
 
-(* There is an edge from from_node to to_node of weight weight. *)
-Definition edge (edge_sources edge_targets edge_weights : list N)
+(** There is an [edge] from from_node to to_node of
+    weight weight. *)
+Definition edge
+  (edge_sources edge_targets edge_weights : list N)
     (from_node to_node weight : N) : Prop :=
   exists k, edge_index edge_sources k /\
     get_list_N edge_sources k = from_node /\
     get_list_N edge_targets k = to_node /\
     get_list_N edge_weights k = weight.
 
-(* path source node cost : there is a path from source to node of total
-   weight cost. *)
-Inductive path (edge_sources edge_targets edge_weights : list N)
+(** [path] [source] node cost : there is a [path] from
+    [source] to node of total weight cost. *)
+Inductive path (edge_sources edge_targets edge_weights :
+  list N )
     (source : N) : N -> N -> Prop :=
   | path_refl :
-      path edge_sources edge_targets edge_weights source source 0
+      path edge_sources edge_targets edge_weights source
+        source 0
   | path_step : forall from_node to_node weight cost,
-      path edge_sources edge_targets edge_weights source from_node cost ->
-      edge edge_sources edge_targets edge_weights from_node to_node weight ->
-      path edge_sources edge_targets edge_weights source to_node
+      path edge_sources edge_targets edge_weights source
+        from_node cost ->
+      edge edge_sources edge_targets edge_weights from_node
+        to_node weight ->
+      path edge_sources edge_targets edge_weights source
+        to_node
         (cost + weight).
 
-Definition reachable (edge_sources edge_targets edge_weights : list N)
+(** Reachable. *)
+Definition reachable (edge_sources edge_targets edge_weights
+  : list N )
     (source node : N) : Prop :=
-  exists cost, path edge_sources edge_targets edge_weights source node cost.
+  exists cost, path edge_sources edge_targets edge_weights
+    source node cost.
 
-(* cost is the cost of a path from source to node and no path from source
-   to node costs less. *)
-Definition shortest_distance (edge_sources edge_targets edge_weights : list N)
+(** cost is the cost of a [path] from [source] to node
+    and no [path] from [source] to node costs less. *)
+Definition shortest_distance
+  (edge_sources edge_targets edge_weights : list N)
     (source node cost : N) : Prop :=
-  path edge_sources edge_targets edge_weights source node cost /\
-  forall cost', path edge_sources edge_targets edge_weights source node cost' ->
+  path edge_sources edge_targets edge_weights source node
+    cost /\
+  forall cost', path edge_sources edge_targets edge_weights
+    source node cost' ->
     cost <= cost'.
 
-(* The statement's bounds, for one test case. *)
+(** [@inside dijkstra_correct] The statement's bounds,
+    for one test case. *)
 Record valid_input (node_count : N)
-    (edge_sources edge_targets edge_weights : list N) (source : N) : Prop := {
+    (edge_sources edge_targets edge_weights : list N)
+      (source : N) : Prop := {
   (* 1 <= n <= 10000 *)
   vi_n : 1 <= node_count <= 10 ^ 4;
   (* 0 <= m <= 30000 *)
@@ -80,50 +117,86 @@ Record valid_input (node_count : N)
     vertex node_count (get_list_N edge_sources k) /\
     vertex node_count (get_list_N edge_targets k);
   (* 0 <= w <= 1000 *)
-  vi_weights : Forall (fun weight => weight <= 1000) edge_weights;
+  vi_weights : Forall (fun weight => weight <= 1000)
+    edge_weights;
   (* 0 <= s < n *)
   vi_source : vertex node_count source;
 }.
 
-(* The entry for node : Some the shortest distance from source when a path
-   reaches node, None otherwise. *)
-Definition distance_of (edge_sources edge_targets edge_weights : list N)
+(** The entry for node : Some the shortest distance from
+    [source] when a [path] reaches node, None otherwise. *)
+Definition distance_of
+  (edge_sources edge_targets edge_weights : list N)
     (source node : N) (entry : option N) : Prop :=
   match entry with
   | Some cost =>
-      shortest_distance edge_sources edge_targets edge_weights source node cost
-  | None => ~ reachable edge_sources edge_targets edge_weights source node
+      shortest_distance edge_sources edge_targets
+        edge_weights source node cost
+  | None => ~ reachable edge_sources edge_targets
+    edge_weights source node
   end.
 
-(* The distances have one entry per vertex. *)
-Definition dijkstra_spec (node_count : N)
-    (edge_sources edge_targets edge_weights : list N) (source : N)
-    (output : list (option N)) : Prop :=
+(** ** Correctness *)
+
+(** [@requirement] [@short Find the shortest distance
+    from a source to every vertex of a directed graph
+    with nonnegative edge weights, marking unreachable
+    vertices.] The distances have one entry per [vertex]. *)
+Definition dijkstra_spec
+  (node_count : N)
+  (edge_sources edge_targets edge_weights : list N)
+  (source : N)
+  (output : list (option N))
+  : Prop :=
   len output = node_count /\
   forall node, vertex node_count node ->
-    distance_of edge_sources edge_targets edge_weights source node
+    distance_of edge_sources edge_targets edge_weights
+      source node
       (get_list_option output node).
 
-(* machine side : the only thing that gets extracted *)
-Program dijkstra : uint -> array uint -> array uint -> array uint ->
+(** ** Interface *)
+
+(** Find the shortest distance from a [source] to every
+    [vertex] of a directed graph with nonnegative [edge]
+    weights, marking unreachable vertices.
+    - Input [node_count]:
+    - Input [edge_sources]:
+    - Input [edge_targets]:
+    - Input [edge_weights]:
+    - Input [source]:
+    - Output [output]: *)
+Program dijkstra : uint -> array uint -> array uint -> array
+  uint ->
                      uint -> array (option uint).
 
-(* the one line : repr on the inputs (universal), repr on the output
-   (existential) *)
+(** ** Bridge *)
+
+(** [@requirement dijkstra_spec] [@fold full correctness
+    statement] On valid represented inputs, the program
+    returns a represented [output] satisfying
+    [dijkstra_spec]. *)
 Specification dijkstra_correct :
-  forall (node_count : N) (edge_sources edge_targets edge_weights : list N)
+  forall (node_count : N)
+    (edge_sources edge_targets edge_weights : list N)
          (source : N) (node_count_int : uint)
-         (edge_sources_arr edge_targets_arr edge_weights_arr : array uint)
+         (edge_sources_arr edge_targets_arr edge_weights_arr
+           : array uint)
          (source_int : uint),
-  valid_input node_count edge_sources edge_targets edge_weights source ->
-  repr node_count_int node_count -> repr edge_sources_arr edge_sources ->
-  repr edge_targets_arr edge_targets -> repr edge_weights_arr edge_weights ->
+  valid_input node_count edge_sources edge_targets
+    edge_weights source ->
+  repr node_count_int node_count -> repr edge_sources_arr
+    edge_sources ->
+  repr edge_targets_arr edge_targets -> repr
+    edge_weights_arr edge_weights ->
   repr source_int source ->
   exists output : list (option N),
-    repr (dijkstra node_count_int edge_sources_arr edge_targets_arr
+    repr (dijkstra node_count_int edge_sources_arr
+      edge_targets_arr
                    edge_weights_arr source_int) output /\
-    dijkstra_spec node_count edge_sources edge_targets edge_weights source
+    dijkstra_spec node_count edge_sources edge_targets
+      edge_weights source
       output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The permitted kernel primitives and their
+    axioms. *)
 Allowed Primitive Axioms.

@@ -1,0 +1,13 @@
+[spec]
+file = "ultraquicksort.spec"
+title = "Ultra-QuickSort"
+
+[publish]
+path = "/kattis/ultraquicksort"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["ultraquicksort_implem.v", "ultraquicksort.spec"]

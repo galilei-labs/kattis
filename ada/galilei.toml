@@ -1,0 +1,13 @@
+[spec]
+file = "ada.spec"
+title = "The Calculus of Ada"
+
+[publish]
+path = "/kattis/ada"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["ada_implem.v", "ada.spec"]

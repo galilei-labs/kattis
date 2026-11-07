@@ -1,0 +1,13 @@
+[spec]
+file = "communicationssatellite.spec"
+title = "Communications Satellite"
+
+[publish]
+path = "/kattis/communicationssatellite"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["communicationssatellite_implem.v", "communicationssatellite.spec"]

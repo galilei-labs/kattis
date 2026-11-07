@@ -1,3 +1,18 @@
+(** * Canonical Coin Systems *)
+
+(** ** Description *)
+
+(** [canonical denominations] takes a coin system given
+    as its denominations in increasing order, the first
+    being 1, and returns true exactly when the system is
+    canonical: no positive amount has a minimum number
+    of coins strictly smaller than the number of coins
+    the greedy algorithm uses for it.
+    [@kattis canonical]
+    - Difficulty: 4.7 *)
+
+(** ** [@hide] Environment *)
+
 (* @function        canonical
    @signature       array uint -> bool
    @math_signature  list N -> bool
@@ -14,61 +29,78 @@ From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  A coin system is the list of its denominations, c_1 first. *)
+(* Math side.  A coin system is the list of its
+  denominations, c_1 first. *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** ** Definitions *)
 
-(* The denomination c_(k+1) (index k, from 0). *)
+(** The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
+
+(** The denomination c_(k+1) (index k, from 0). *)
 Definition coin (denominations : list N) (k : N) : N :=
   nth (N.to_nat k) denominations 0.
 
-(* amount is the sum of exactly coin_count coins of
-   denominations, each denomination usable any number of times. *)
-Inductive sums_to (denominations : list N) : N -> N -> Prop :=
+(** amount is the sum of exactly coin_count coins of
+    denominations, each denomination usable any number
+    of times. *)
+Inductive sums_to (denominations : list N) : N -> N
+  -> Prop :=
 | sums_nil : sums_to denominations 0 0
 | sums_cons : forall denomination amount coin_count,
     In denomination denominations ->
     sums_to denominations amount coin_count ->
-    sums_to denominations (amount + denomination) (coin_count + 1).
+    sums_to denominations (amount + denomination)
+      (coin_count + 1).
 
-(* coin_count is the smallest number of coins required to dispense exactly
-   amount. *)
-Definition min_coins (denominations : list N) (amount coin_count : N)
+(** coin_count is the smallest number of coins required
+    to dispense exactly amount. *)
+Definition min_coins (denominations : list N)
+  (amount coin_count : N)
   : Prop :=
   sums_to denominations amount coin_count /\
-  forall coin_count', sums_to denominations amount coin_count' ->
+  forall coin_count', sums_to denominations amount
+    coin_count' ->
     coin_count <= coin_count'.
 
-(* denomination is a coin of the largest denomination that is at most
-   amount. *)
-Definition largest_le (denominations : list N) (amount denomination : N)
+(** denomination is a coin of the largest denomination
+    that is at most amount. *)
+Definition largest_le (denominations : list N)
+  (amount denomination : N)
   : Prop :=
   In denomination denominations /\ denomination <= amount /\
   forall other, In other denominations -> other <= amount ->
     other <= denomination.
 
-(* The greedy algorithm, repeatedly choosing a coin of the largest
-   denomination at most the amount still owed until it reaches zero,
-   dispenses amount with greedy_count coins. *)
-Inductive greedy_uses (denominations : list N) : N -> N -> Prop :=
+(** The greedy algorithm, repeatedly choosing a coin of
+    the largest denomination at most the amount still
+    owed until it reaches zero, dispenses amount with
+    greedy_count coins. *)
+Inductive greedy_uses (denominations : list N) : N -> N
+  -> Prop :=
 | greedy_nil : greedy_uses denominations 0 0
 | greedy_step : forall amount denomination greedy_count,
-    0 < amount -> largest_le denominations amount denomination ->
-    greedy_uses denominations (amount - denomination) greedy_count ->
+    0 < amount
+      -> largest_le denominations amount denomination ->
+    greedy_uses denominations
+      (amount - denomination) greedy_count ->
     greedy_uses denominations amount (greedy_count + 1).
 
-(* A counterexample: a positive integer amount such that the minimum number
-   of coins required to dispense exactly amount is less than the number of
-   coins used by the greedy algorithm. *)
-Definition counterexample (denominations : list N) (amount : N) : Prop :=
+(** A counterexample: a positive integer amount such
+    that the minimum number of coins required to
+    dispense exactly amount is less than the number of
+    coins used by the greedy algorithm. *)
+Definition counterexample (denominations : list N)
+  (amount : N) : Prop :=
   0 < amount /\
   exists coin_count greedy_count,
     min_coins denominations amount coin_count /\
     greedy_uses denominations amount greedy_count /\
     coin_count < greedy_count.
 
-(* The statement's input guarantees. *)
+(** [@inside canonical_correct] The statement's input
+    guarantees. *)
 Record valid_input (denominations : list N) : Prop := {
   (* 2 <= n <= 100, the number of denominations *)
   vi_n : 2 <= len denominations <= 100;
@@ -77,27 +109,52 @@ Record valid_input (denominations : list N) : Prop := {
   (* c_1 < c_2 < ... < c_n *)
   vi_increasing : forall k, k + 1 < len denominations ->
     coin denominations k < coin denominations (k + 1);
-  (* c_n <= 10^6 (each denomination, the largest being c_n) *)
-  vi_max : Forall (fun denomination => denomination <= 10 ^ 6) denominations;
+  (* c_n <= 10^6
+    (each denomination, the largest being c_n) *)
+  vi_max : Forall
+    (fun denomination => denomination <= 10 ^ 6)
+    denominations;
 }.
 
-(* "canonical" (true) exactly when S has no counterexample, i.e. the greedy
-   algorithm is always optimal; "non-canonical" (false) otherwise. *)
-Definition canonical_spec (denominations : list N) (output : bool)
+(** ** Correctness *)
+
+(** [@requirement] [@short must decide whether the coin
+    system is canonical.] "canonical" (true) exactly
+    when S has no counterexample, i.e. the greedy
+    algorithm is always optimal; "non-canonical" (false)
+    otherwise. *)
+Definition canonical_spec (denominations : list N)
+  (output : bool)
   : Prop :=
   match output with
-  | true => forall amount, ~ counterexample denominations amount
-  | false => ~ forall amount, ~ counterexample denominations amount
+  | true =>
+    forall amount, ~ counterexample denominations amount
+  | false => ~
+    forall amount, ~ counterexample denominations amount
   end.
 
+(** ** Interface *)
+
+(** The machine-level interface.
+    - Input [denominations]:
+    - Output [output]: *)
 Program canonical : array uint -> bool.
 
+(** ** Bridge *)
+
+(** [@requirement canonical_spec] [@fold full
+    correctness statement] On valid represented inputs,
+    the program returns a represented output satisfying
+    [canonical_spec]. *)
 Specification canonical_correct :
-  forall (denominations : list N) (denominations_arr : array uint),
-  valid_input denominations -> repr denominations_arr denominations ->
+  forall (denominations : list N)
+    (denominations_arr : array uint),
+  valid_input denominations
+    -> repr denominations_arr denominations ->
   exists output : bool,
     repr (canonical denominations_arr) output /\
     canonical_spec denominations output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The kernel primitives (int, array, float,
+    string) and their axioms. *)
 Allowed Primitive Axioms.

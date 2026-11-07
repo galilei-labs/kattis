@@ -1,0 +1,13 @@
+[spec]
+file = "segmentintersection.spec"
+title = "Line Segment Intersection"
+
+[publish]
+path = "/kattis/segmentintersection"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["segmentintersection_implem.v", "segmentintersection.spec"]

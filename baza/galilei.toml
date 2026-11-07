@@ -1,0 +1,13 @@
+[spec]
+file = "baza.spec"
+title = "Baza"
+
+[publish]
+path = "/kattis/baza"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["baza_implem.v", "baza.spec"]

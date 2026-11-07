@@ -1,0 +1,13 @@
+[spec]
+file = "suffixsorting.spec"
+title = "Suffix Sorting"
+
+[publish]
+path = "/kattis/suffixsorting"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["suffixsorting_implem.v", "suffixsorting.spec"]

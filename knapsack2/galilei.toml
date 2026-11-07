@@ -1,0 +1,13 @@
+[spec]
+file = "knapsack2.spec"
+title = "Knapsack in a Globalized World"
+
+[publish]
+path = "/kattis/knapsack2"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["knapsack2_implem.v", "knapsack2.spec"]

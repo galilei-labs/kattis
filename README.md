@@ -28,8 +28,8 @@ on linear use of arrays.
 Preview from the sibling Galilei tooling checkout:
 
 ```sh
-cd ../galilei
+cd ../focus
 PORT=3001 uv run python scripts/serve.py ../kattis/cold
 ```
 
-The existing published page path `/kattis2/cold/` is retained for compatibility.
+The local preview and page path is `/kattis/cold/`.

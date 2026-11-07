@@ -1,0 +1,13 @@
+[spec]
+file = "numbersetshard.spec"
+title = "Number Sets (Hard)"
+
+[publish]
+path = "/kattis/numbersetshard"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["numbersetshard_implem.v", "numbersetshard.spec"]

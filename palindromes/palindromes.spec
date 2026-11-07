@@ -1,3 +1,35 @@
+(** * Palindromes *)
+
+(** ** Description *)
+
+(** [palindromes name left_ends right_ends] answers every customer of
+    the company name: customer k remembers the letters left_end ..
+    right_end of name (1-based, left_end = left_ends_k, right_end =
+    right_ends_k), and answer k is the number of pairs (i, j) with
+    left_end <= i <= j <= right_end such that the letters i .. j of
+    name form a palindrome. *)
+
+(** [@kattis palindromes]
+    - Difficulty: 7.2
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB *)
+
+(** ** Examples *)
+
+(** Kattis sample: text input and output. *)
+(* aabacab
+5
+1 7
+1 4
+3 7
+2 5
+5 7 = 11
+6
+7
+5
+3 *)
+
+(** ** [@hide] Environment *)
 (* @function        palindromes
    @signature       PrimString.string -> array uint -> array uint -> array uint
    @math_signature  String.string -> list N -> list N -> list N
@@ -16,52 +48,66 @@ From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The m lines "l r" of the input are two parallel lists. *)
+(** ** Definitions *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** Math side. The m lines "l r" of the input are two parallel lists.
+    The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
 
-(* The number of letters of name. *)
-Definition slen (name : String.string) : N := N.of_nat (String.length name).
+(** The number of letters of name. *)
+Definition slen (name : String.string) : N :=
+  N.of_nat (String.length name).
 
-(* Element k of l, 0-based. *)
-Definition at_ (l : list N) (k : N) : N := nth (N.to_nat k) l 0.
+(** Element k of l, 0-based. *)
+Definition at_ (l : list N) (k : N) : N :=
+  nth (N.to_nat k) l 0.
 
-(* Every letter of name is a lowercase letter, 'a' (97) .. 'z' (122). *)
+(** Every letter of name is a lowercase letter, 'a' (97) .. 'z' (122). *)
 Definition lowercase (name : String.string) : Prop :=
   forall k letter, String.get k name = Some letter ->
     97 <= Ascii.N_of_ascii letter <= 122.
 
-(* name_i name_(i+1) .. name_j, 1-based, i <= j. *)
-Definition sub (name : String.string) (i j : N) : String.string :=
-  String.substring (N.to_nat (i - 1)) (N.to_nat (j - i + 1)) name.
+(** name_i name_(i+1) .. name_j, 1-based, i <= j. *)
+Definition sub (name : String.string)
+  (i j : N) : String.string :=
+  String.substring (N.to_nat (i - 1)) (N.to_nat (j - i + 1))
+    name.
 
-(* text read backwards. *)
+(** text read backwards. *)
 Definition reverse (text : String.string) : String.string :=
-  String.string_of_list_ascii (rev (String.list_ascii_of_string text)).
+  String.string_of_list_ascii (rev
+    (String.list_ascii_of_string text)).
 
-(* text reads the same forwards and backwards. *)
+(** text reads the same forwards and backwards. *)
 Definition palindrome (text : String.string) : bool :=
   String.eqb text (reverse text).
 
-(* The integers low, low+1, ..., high (empty when high < low). *)
+(** The integers low, low+1, ..., high (empty when high < low). *)
 Definition range (low high : N) : list N :=
-  map N.of_nat (seq (N.to_nat low) (N.to_nat (high + 1 - low))).
+  map N.of_nat (seq (N.to_nat low) (N.to_nat (high + 1 -
+    low))).
 
-(* The pairs (i, j) with left_end <= i <= j <= right_end. *)
-Definition index_pairs (left_end right_end : N) : list (N * N) :=
-  flat_map (fun i => map (fun j => (i, j)) (range i right_end))
+(** The pairs (i, j) with left_end <= i <= j <= right_end. *)
+Definition index_pairs (left_end right_end : N) : list
+  (N * N) :=
+  flat_map (fun i => map (fun j => (i, j)) (range i
+    right_end))
            (range left_end right_end).
 
-(* The statement's answer for the customer remembering name_left_end ..
-   name_right_end: the number of pairs (i, j), left_end <= i <= j <=
-   right_end, with name_i .. name_j a palindrome. *)
-Definition palindromic_count (name : String.string) (left_end right_end : N)
+(** The statement's answer for the customer remembering name_left_end ..
+    name_right_end: the number of pairs (i, j), left_end <= i <= j
+    <= right_end, with name_i .. name_j a palindrome. *)
+Definition palindromic_count (name : String.string)
+  (left_end right_end : N)
     : N :=
-  len (filter (fun span => palindrome (sub name (fst span) (snd span)))
+  len (filter (fun span => palindrome (sub name (fst span)
+    (snd span)))
               (index_pairs left_end right_end)).
 
-Record valid_input (name : String.string) (left_ends right_ends : list N)
+(** [@inside palindromes_correct] The [valid_input] datatype. *)
+Record valid_input (name : String.string)
+  (left_ends right_ends : list N)
     : Prop := {
   (* a string s consisting of n lowercase letters *)
   vi_lower : lowercase name;
@@ -69,31 +115,56 @@ Record valid_input (name : String.string) (left_ends right_ends : list N)
   vi_n : 1 <= slen name <= 100000;
   (* 1 <= m <= 100 000, the number of customers *)
   vi_m : 1 <= len left_ends <= 100000;
-  (* m lines, each a pair l r with 1 <= l <= r <= n (one l and one r per
-     line: the two lists have the same length) *)
+  (* m lines, each a pair l r with 1 <= l <= r <= n (one
+     l and one r per line: the two lists have the same
+     length) *)
   vi_lr : Forall2 (fun left_end right_end =>
-                     1 <= left_end <= right_end /\ right_end <= slen name)
+            1 <= left_end <= right_end /\ right_end
+            <= slen name)
             left_ends right_ends;
 }.
 
-(* One answer per customer, in input order. *)
+(** ** Correctness *)
+
+(** [@requirement] [@short One answer per customer, in input order.] One
+    answer per customer, in input order. *)
 Definition palindromes_spec (name : String.string)
-    (left_ends right_ends : list N) (output : list N) : Prop :=
+    (left_ends right_ends : list N) (output : list N) : Prop
+      :=
   len output = len left_ends /\
   forall k, k < len output ->
-    at_ output k = palindromic_count name (at_ left_ends k) (at_ right_ends k).
+    at_ output k = palindromic_count name (at_ left_ends k)
+      (at_ right_ends k).
 
-Program palindromes : PrimString.string -> array uint -> array uint -> array uint.
+(** ** Interface *)
 
+(** The [palindromes] program on machine values.
+    - Input [name]:
+    - Input [left_ends]:
+    - Input [right_ends]:
+    - Output [output]: *)
+Program palindromes : PrimString.string -> array uint ->
+  array uint -> array uint.
+
+(** ** Bridge *)
+
+(** [@requirement palindromes_spec] [@fold full correctness statement]
+    On valid represented inputs, [palindromes] returns a represented
+    output satisfying [palindromes_spec]. *)
 Specification palindromes_correct :
-  forall (name : String.string) (left_ends right_ends : list N)
+  forall (name : String.string) (left_ends right_ends : list
+    N)
          (name_str : PrimString.string)
          (left_ends_arr right_ends_arr : array uint),
-  valid_input name left_ends right_ends -> repr name_str name ->
-  repr left_ends_arr left_ends -> repr right_ends_arr right_ends ->
+  valid_input name left_ends right_ends ->
+    repr name_str name ->
+  repr left_ends_arr left_ends ->
+    repr right_ends_arr right_ends ->
   exists output : list N,
-    repr (palindromes name_str left_ends_arr right_ends_arr) output /\
+    repr (palindromes name_str left_ends_arr right_ends_arr)
+      output /\
     palindromes_spec name left_ends right_ends output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The kernel primitives (int, array, float, string) and their
+    axioms. *)
 Allowed Primitive Axioms.

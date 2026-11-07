@@ -1,0 +1,13 @@
+[spec]
+file = "doublets.spec"
+title = "Doublets"
+
+[publish]
+path = "/kattis/doublets"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["doublets_implem.v", "doublets.spec"]

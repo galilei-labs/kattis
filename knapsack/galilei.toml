@@ -1,0 +1,13 @@
+[spec]
+file = "knapsack.spec"
+title = "Knapsack"
+
+[publish]
+path = "/kattis/knapsack"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["knapsack_implem.v", "knapsack.spec"]

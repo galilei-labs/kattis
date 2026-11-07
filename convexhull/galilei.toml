@@ -1,0 +1,13 @@
+[spec]
+file = "convexhull.spec"
+title = "Convex Hull"
+
+[publish]
+path = "/kattis/convexhull"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["convexhull_implem.v", "convexhull.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "pascal.spec"
+title = "Pascal"
+
+[publish]
+path = "/kattis/pascal"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["pascal_implem.v", "pascal.spec"]

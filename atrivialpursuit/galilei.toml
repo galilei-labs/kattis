@@ -1,0 +1,13 @@
+[spec]
+file = "atrivialpursuit.spec"
+title = "A Trivial Pursuit"
+
+[publish]
+path = "/kattis/atrivialpursuit"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["atrivialpursuit_implem.v", "atrivialpursuit.spec"]

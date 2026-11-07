@@ -1,0 +1,13 @@
+[spec]
+file = "remainderreminder.spec"
+title = "Remainder Reminder"
+
+[publish]
+path = "/kattis/remainderreminder"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["remainderreminder_implem.v", "remainderreminder.spec"]

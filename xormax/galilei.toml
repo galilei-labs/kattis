@@ -1,0 +1,13 @@
+[spec]
+file = "xormax.spec"
+title = "Xor Maximization"
+
+[publish]
+path = "/kattis/xormax"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["xormax_implem.v", "xormax.spec"]

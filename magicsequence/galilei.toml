@@ -1,0 +1,13 @@
+[spec]
+file = "magicsequence.spec"
+title = "Magic Sequence"
+
+[publish]
+path = "/kattis/magicsequence"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["magicsequence_implem.v", "magicsequence.spec"]

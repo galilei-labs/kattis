@@ -1,0 +1,13 @@
+[spec]
+file = "securitybadge.spec"
+title = "Security Badge"
+
+[publish]
+path = "/kattis/securitybadge"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["securitybadge_implem.v", "securitybadge.spec"]

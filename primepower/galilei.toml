@@ -1,0 +1,13 @@
+[spec]
+file = "primepower.spec"
+title = "Prime Powers"
+
+[publish]
+path = "/kattis/primepower"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["primepower_implem.v", "primepower.spec"]

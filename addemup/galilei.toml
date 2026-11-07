@@ -1,0 +1,13 @@
+[spec]
+file = "addemup.spec"
+title = "Add 'Em Up!"
+
+[publish]
+path = "/kattis/addemup"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["addemup_implem.v", "addemup.spec"]

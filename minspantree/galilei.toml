@@ -1,0 +1,13 @@
+[spec]
+file = "minspantree.spec"
+title = "Minimum Spanning Tree"
+
+[publish]
+path = "/kattis/minspantree"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["minspantree_implem.v", "minspantree.spec"]

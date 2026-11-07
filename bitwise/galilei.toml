@@ -1,0 +1,13 @@
+[spec]
+file = "bitwise.spec"
+title = "Bitwise"
+
+[publish]
+path = "/kattis/bitwise"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bitwise_implem.v", "bitwise.spec"]

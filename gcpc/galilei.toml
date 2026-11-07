@@ -1,0 +1,13 @@
+[spec]
+file = "gcpc.spec"
+title = "Galactic Collegiate Programming Contest"
+
+[publish]
+path = "/kattis/gcpc"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["gcpc_implem.v", "gcpc.spec"]

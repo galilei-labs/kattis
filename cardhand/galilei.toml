@@ -1,0 +1,13 @@
+[spec]
+file = "cardhand.spec"
+title = "Card Hand Sorting"
+
+[publish]
+path = "/kattis/cardhand"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["cardhand_implem.v", "cardhand.spec"]

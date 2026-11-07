@@ -1,3 +1,18 @@
+(** * Zapis *)
+
+(** ** Description *)
+
+(** Count ways to replace question marks to obtain a
+    [regular] bracket [sequence], returning the last five
+    digits and whether the count reaches 100000.
+
+    [@kattis zapis]
+    - Difficulty: 5.0
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB *)
+
+(** ** [@hide] Environment *)
+
 (* @function        zapis
    @signature       PrimString.string -> uint * bool
    @math_signature  String.string -> N * bool
@@ -9,81 +24,121 @@
                     answer printed is the residue, padded with leading zeros
                     to 5 digits when the flag is set (the last 5 digits).
 *)
-
-From Stdlib Require Import ZArith NArith List Uint63 PArray PrimString.
+From Stdlib Require Import ZArith NArith List Uint63 PArray
+  PrimString.
 From Stdlib Require Import String Ascii.
 From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  A string is a String.string, a character an ascii. *)
+(* Math side. A string is a String.string, a character an
+   ascii. *)
 
-(* The number of characters of text. *)
-Definition slen (text : string) : N := N.of_nat (String.length text).
+(** ** Definitions *)
 
-(* [opening] is the opening bracket that [closing] closes. *)
+(** The number of characters of text. *)
+Definition slen (text : string) : N :=
+  N.of_nat (String.length text).
+
+(** [opening] is the opening bracket that [closing]
+    closes. *)
 Definition matching (opening closing : ascii) : Prop :=
      (opening = "("%char /\ closing = ")"%char)
   \/ (opening = "["%char /\ closing = "]"%char)
   \/ (opening = "{"%char /\ closing = "}"%char).
 
-(* The statement's grammar: the empty string; (A), [A] and {A} for a
-   regular A; AB for regular A and B. *)
+(** The statement's grammar: the empty string; (A), [A]
+    and {A} for a [regular] A; AB for [regular] A and B. *)
 Inductive regular : string -> Prop :=
   | regular_empty : regular ""
   | regular_wrap  : forall opening closing inner,
       matching opening closing -> regular inner ->
       regular (String opening (inner ++ String closing ""))
   | regular_cat   : forall prefix suffix,
-      regular prefix -> regular suffix -> regular (prefix ++ suffix).
+      regular prefix -> regular suffix -> regular
+        (prefix ++ suffix).
 
-(* candidate is sequence with each '?' replaced by some character: same
-   length, and at every position sequence has '?' or the character of
-   candidate. *)
-Definition completion (sequence candidate : string) : Prop :=
+(** candidate is [sequence] with each '?' replaced by
+    some character: same length, and at every position
+    [sequence] has '?' or the character of candidate. *)
+Definition completion (sequence candidate : string) : Prop
+  :=
   String.length candidate = String.length sequence /\
   forall k, (k < String.length sequence)%nat ->
     String.get k sequence = Some "?"%char \/
     String.get k candidate = String.get k sequence.
 
-(* The characters that can appear in the input string. *)
+(** The characters that can appear in the input string. *)
 Definition input_char (character : ascii) : Prop :=
   In character ["("; ")"; "["; "]"; "{"; "}"; "?"]%char.
 
+(** [@inside zapis_correct] Valid input. *)
 Record valid_input (sequence : string) : Prop := {
-  (* an even integer N (2 <= N <= 200), the length of the string *)
+  (* an even integer N (2 <= N <= 200), the length of the
+     string *)
   vi_len  : 2 <= slen sequence <= 200;
   vi_even : N.even (slen sequence) = true;
-  (* the string is a bracket-sequence some of whose characters are
-     illegible, represented by the '?' character *)
+  (* the string is a bracket-sequence some of whose
+     characters are illegible, represented by the '?'
+     character *)
   vi_chars : forall k character,
-    String.get k sequence = Some character -> input_char character;
+    String.get k sequence = Some character -> input_char
+      character;
 }.
 
-(* The answer: completions lists, without repetition, exactly the regular
-   completions of sequence; the output is their number modulo 100000 and
-   whether that number is at least 100000, so that its last 5 digits are
-   the residue written with 5 digits (leading zeros included) when the flag
-   is set, and the residue itself (the whole number) otherwise.  The
-   residue alone would print 05292 as 5292. *)
-Definition zapis_spec (sequence : string) (output : N * bool) : Prop :=
+(** ** Correctness *)
+
+(** [@requirement] [@short Count ways to replace question
+    marks to obtain a regular bracket sequence, returning
+    the last five digits and whether the count reaches
+    100000.] The answer: completions lists, without
+    repetition, exactly the [regular] completions of
+    [sequence]; the [output] is their number modulo
+    100000 and whether that number is at least 100000, so
+    that its last 5 digits are the residue written with 5
+    digits (leading zeros included) when the flag is set,
+    and the residue itself (the whole number) otherwise.
+    The residue alone would print 05292 as 5292. *)
+Definition zapis_spec
+  (sequence : string)
+  (output : N * bool)
+  : Prop :=
   exists completions : list string,
     NoDup completions /\
     (forall candidate, In candidate completions <->
-       completion sequence candidate /\ regular candidate) /\
+       completion sequence candidate /\ regular candidate)
+         /\
     match output with
     | (residue, wrapped) =>
-        residue = N.of_nat (List.length completions) mod 100000 /\
-        wrapped = (100000 <=? N.of_nat (List.length completions))
+        residue = N.of_nat (List.length completions) mod
+          100000 /\
+        wrapped = (100000 <=? N.of_nat (List.length
+          completions))
     end.
 
+(** ** Interface *)
+
+(** Count ways to replace question marks to obtain a
+    [regular] bracket [sequence], returning the last five
+    digits and whether the count reaches 100000.
+    - Input [sequence]:
+    - Output [output]: *)
 Program zapis : PrimString.string -> uint * bool.
 
+(** ** Bridge *)
+
+(** [@requirement zapis_spec] [@fold full correctness
+    statement] On valid represented inputs, the program
+    returns a represented [output] satisfying
+    [zapis_spec]. *)
 Specification zapis_correct :
-  forall (sequence : string) (sequence_str : PrimString.string),
+  forall (sequence : string) (sequence_str :
+    PrimString.string),
   valid_input sequence -> repr sequence_str sequence ->
   exists output : N * bool,
-    repr (zapis sequence_str) output /\ zapis_spec sequence output.
+    repr (zapis sequence_str) output /\ zapis_spec sequence
+      output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The permitted kernel primitives and their
+    axioms. *)
 Allowed Primitive Axioms.

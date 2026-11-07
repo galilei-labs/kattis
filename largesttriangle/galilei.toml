@@ -1,0 +1,13 @@
+[spec]
+file = "largesttriangle.spec"
+title = "Largest Triangle"
+
+[publish]
+path = "/kattis/largesttriangle"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["largesttriangle_implem.v", "largesttriangle.spec"]

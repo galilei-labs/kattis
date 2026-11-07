@@ -1,0 +1,13 @@
+[spec]
+file = "excavatorexpedition.spec"
+title = "Excavator Expedition"
+
+[publish]
+path = "/kattis/excavatorexpedition"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["excavatorexpedition_implem.v", "excavatorexpedition.spec"]

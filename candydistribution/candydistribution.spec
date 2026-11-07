@@ -1,3 +1,20 @@
+(** * Candy Distribution *)
+
+(** ** Description *)
+
+(** [candydistribution kid_count bag_size], for
+    kid_count kids and bags of bag_size candies each,
+    returns [Some bag_count] where buying bag_count
+    bags, at most 10^9 of them, gives exactly kid_count
+    * share + 1 candies for some positive natural number
+    share, and [None] ("IMPOSSIBLE") exactly when no
+    such number of bags exists. When several bag_count
+    work, any of them may be returned.
+    [@kattis candydistribution]
+    - Difficulty: 4.7 *)
+
+(** ** [@hide] Environment *)
+
 (* @function        candydistribution
    @signature       uint -> uint -> option uint
    @math_signature  N -> N -> option N
@@ -18,45 +35,69 @@ Open Scope N_scope.
 
 (* Math side. *)
 
-(* "you will never buy more than 10^9 candy bags" *)
+(** ** Definitions *)
+
+(** "you will never buy more than 10^9 candy bags" *)
 Definition max_bags : N := 10 ^ 9.
 
-(* Buying bag_count bags of bag_size candies, within the bag limit, gives
-   (kid_count * share) + 1 candies for a positive natural number share: a
-   fair distribution of share candies to each of the kid_count kids, plus
-   exactly one spare candy. *)
-Definition fair_bags (kid_count bag_size bag_count : N) : Prop :=
+(** Buying bag_count bags of bag_size candies, within
+    the bag limit, gives (kid_count * share) + 1 candies
+    for a positive natural number share: a fair
+    distribution of share candies to each of the
+    kid_count kids, plus exactly one spare candy. *)
+Definition fair_bags
+  (kid_count bag_size bag_count : N) : Prop :=
   1 <= bag_count <= max_bags /\
-  exists share : N, 1 <= share /\ bag_count * bag_size = kid_count * share + 1.
+  exists share : N, 1 <= share
+    /\ bag_count * bag_size = kid_count * share + 1.
 
-(* The statement's bounds, for one test case. *)
+(** [@inside candydistribution_correct] The statement's
+    bounds, for one test case. *)
 Record valid_input (kid_count bag_size : N) : Prop := {
   (* "1 <= K, C <= 10^9" *)
   vi_k : 1 <= kid_count <= 10 ^ 9;
   vi_c : 1 <= bag_size <= 10 ^ 9;
 }.
 
-(* Some bag_count: bag_count bags are a fair purchase; None: no number of
-   bags is. *)
+(** ** Correctness *)
+
+(** [@requirement] [@short must return a valid bag
+    count, or report impossibility.] Some bag_count:
+    bag_count bags are a fair purchase; None: no number
+    of bags is. *)
 Definition candydistribution_spec (kid_count bag_size : N)
   (output : option N) : Prop :=
   match output with
   | Some bag_count => fair_bags kid_count bag_size bag_count
-  | None => ~ exists bag_count, fair_bags kid_count bag_size bag_count
+  | None => ~
+    exists bag_count, fair_bags kid_count bag_size bag_count
   end.
 
-(* machine side: the only thing that gets extracted *)
+(** ** Interface *)
+
+(** The machine-level interface.
+    - Input [kid_count]:
+    - Input [bag_size]:
+    - Output [output]: *)
 Program candydistribution : uint -> uint -> option uint.
 
-(* the one line: repr on the inputs (universal), repr on the output
-   (existential) *)
+(** ** Bridge *)
+
+(** [@requirement candydistribution_spec] [@fold full
+    correctness statement] On valid represented inputs,
+    the program returns a represented output satisfying
+    [candydistribution_spec]. *)
 Specification candydistribution_correct :
-  forall (kid_count bag_size : N) (kid_count_int bag_size_int : uint),
+  forall (kid_count bag_size : N)
+    (kid_count_int bag_size_int : uint),
   valid_input kid_count bag_size ->
-  repr kid_count_int kid_count -> repr bag_size_int bag_size ->
+  repr kid_count_int kid_count
+    -> repr bag_size_int bag_size ->
   exists output : option N,
-    repr (candydistribution kid_count_int bag_size_int) output /\
+    repr (candydistribution kid_count_int bag_size_int)
+      output /\
     candydistribution_spec kid_count bag_size output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The kernel primitives (int, array, float,
+    string) and their axioms. *)
 Allowed Primitive Axioms.

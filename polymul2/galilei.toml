@@ -1,0 +1,13 @@
+[spec]
+file = "polymul2.spec"
+title = "Polynomial Multiplication 2"
+
+[publish]
+path = "/kattis/polymul2"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["polymul2_implem.v", "polymul2.spec"]

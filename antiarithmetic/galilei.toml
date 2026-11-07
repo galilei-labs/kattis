@@ -1,0 +1,13 @@
+[spec]
+file = "antiarithmetic.spec"
+title = "Antiarithmetic?"
+
+[publish]
+path = "/kattis/antiarithmetic"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["antiarithmetic_implem.v", "antiarithmetic.spec"]

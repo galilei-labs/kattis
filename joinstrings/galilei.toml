@@ -1,0 +1,13 @@
+[spec]
+file = "joinstrings.spec"
+title = "Join Strings"
+
+[publish]
+path = "/kattis/joinstrings"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["joinstrings_implem.v", "joinstrings.spec"]

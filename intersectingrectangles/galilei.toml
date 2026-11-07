@@ -1,0 +1,13 @@
+[spec]
+file = "intersectingrectangles.spec"
+title = "Intersecting Rectangles"
+
+[publish]
+path = "/kattis/intersectingrectangles"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["intersectingrectangles_implem.v", "intersectingrectangles.spec"]

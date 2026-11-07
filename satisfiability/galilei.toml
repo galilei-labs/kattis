@@ -1,0 +1,13 @@
+[spec]
+file = "satisfiability.spec"
+title = "Yet Satisfiability Again!"
+
+[publish]
+path = "/kattis/satisfiability"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["satisfiability_implem.v", "satisfiability.spec"]

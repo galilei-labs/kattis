@@ -1,0 +1,13 @@
+[spec]
+file = "water.spec"
+title = "Water"
+
+[publish]
+path = "/kattis/water"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["water_implem.v", "water.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "tugofwar.spec"
+title = "Tug of War"
+
+[publish]
+path = "/kattis/tugofwar"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["tugofwar_implem.v", "tugofwar.spec"]

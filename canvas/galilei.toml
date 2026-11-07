@@ -1,0 +1,13 @@
+[spec]
+file = "canvas.spec"
+title = "Canvas Painting"
+
+[publish]
+path = "/kattis/canvas"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["canvas_implem.v", "canvas.spec"]

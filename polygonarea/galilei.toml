@@ -1,0 +1,13 @@
+[spec]
+file = "polygonarea.spec"
+title = "Polygon Area"
+
+[publish]
+path = "/kattis/polygonarea"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["polygonarea_implem.v", "polygonarea.spec"]

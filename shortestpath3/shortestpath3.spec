@@ -1,3 +1,18 @@
+(** * Single source shortest path, negative weights *)
+
+(** ** Description *)
+
+(** Answer shortest-path [queries] in a directed weighted
+    graph, distinguishing unreachable vertices and paths
+    whose cost is unbounded below.
+
+    [@kattis shortestpath3]
+    - Difficulty: 1.9
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB *)
+
+(** ** [@hide] Environment *)
+
 (* @function        shortestpath3
    @signature       uint -> uint -> array uint -> array uint -> array sint ->
                     array uint -> array (answer sint)
@@ -14,14 +29,16 @@
                     distance when distance is the minimum distance from
                     source to it.
 *)
-
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope Z_scope.
 
-(* One output line per query, the same inductive on both sides: the machine
-   answer carries a sint, the math answer a Z. *)
+(** ** Definitions *)
+
+(** One [output] line per query, the same inductive on
+    both sides: the machine [answer] carries a sint, the
+    math [answer] a Z. *)
 Inductive answer (D : Type) : Type :=
 | Dist (distance : D)
 | Impossible
@@ -30,61 +47,79 @@ Arguments Dist {D} distance.
 Arguments Impossible {D}.
 Arguments MinusInfinity {D}.
 
-Instance repr_answer A M `{Repr A M} : Repr (answer A) (answer M) :=
+Instance repr_answer A M `{Repr A M} : Repr (answer A)
+  (answer M) :=
   fun machine math => match machine, math with
-             | Dist distance, Dist distance' => repr distance distance'
+             | Dist distance, Dist distance' => repr
+            distance distance'
              | Impossible, Impossible => True
              | MinusInfinity, MinusInfinity => True
              | _, _ => False
              end.
 
-(* Math side.  The edge list is three parallel lists, one per column of the
-   input lines "u v w". *)
+(* Math side. The edge list is three parallel lists, one
+   per column of the input lines "u v w". *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
 
-(* The j-th element of l (fallback past the end). *)
-Definition get {A} (l : list A) (fallback : A) (j : N) : A :=
+(** The j-th element of l (fallback past the end). *)
+Definition get {A} (l : list A) (fallback : A) (j : N) : A
+  :=
   nth (N.to_nat j) l fallback.
 
-(* [walk edge_sources edge_targets edge_weights start target cost]:
-   following edges of the graph from node start, one reaches node target
-   with total weight cost (a path in the statement's sense: edges and nodes
-   may repeat; the empty path goes from start to start, weight 0). *)
-Inductive walk (edge_sources edge_targets : list N) (edge_weights : list Z)
+(** [walk edge_sources edge_targets edge_weights start
+    target cost]: following edges of the graph from node
+    start, one reaches node target with total weight cost
+    (a path in the statement's sense: edges and nodes may
+    repeat; the empty path goes from start to start,
+    weight 0). *)
+Inductive walk (edge_sources edge_targets : list N)
+  (edge_weights : list Z)
     : N -> N -> Z -> Prop :=
 | walk_nil : forall node,
     walk edge_sources edge_targets edge_weights node node 0
 | walk_cons : forall j target cost,
     (j < len edge_sources)%N ->
-    walk edge_sources edge_targets edge_weights (get edge_targets 0%N j)
+    walk edge_sources edge_targets edge_weights
+      (get edge_targets 0%N j)
       target cost ->
-    walk edge_sources edge_targets edge_weights (get edge_sources 0%N j)
+    walk edge_sources edge_targets edge_weights
+      (get edge_sources 0%N j)
       target (get edge_weights 0 j + cost).
 
-(* There is a path from source to target. *)
+(** There is a path from [source] to target. *)
 Definition reachable edge_sources edge_targets edge_weights
     (source target : N) : Prop :=
-  exists cost, walk edge_sources edge_targets edge_weights source target cost.
+  exists cost, walk edge_sources edge_targets edge_weights
+    source target cost.
 
-(* There are arbitrarily short paths from source to target. *)
-Definition arbitrarily_short edge_sources edge_targets edge_weights
+(** There are arbitrarily short paths from [source] to
+    target. *)
+Definition arbitrarily_short edge_sources edge_targets
+  edge_weights
     (source target : N) : Prop :=
   forall bound : Z, exists cost,
-    walk edge_sources edge_targets edge_weights source target cost /\
+    walk edge_sources edge_targets edge_weights source
+      target cost /\
     cost < bound.
 
-(* distance is the minimum distance from source to target: some path has
-   weight distance, none less. *)
-Definition min_distance edge_sources edge_targets edge_weights
+(** distance is the minimum distance from [source] to
+    target: some path has weight distance, none less. *)
+Definition min_distance edge_sources edge_targets
+  edge_weights
     (source target : N) (distance : Z) : Prop :=
-  walk edge_sources edge_targets edge_weights source target distance /\
-  forall cost, walk edge_sources edge_targets edge_weights source target cost ->
+  walk edge_sources edge_targets edge_weights source target
+    distance /\
+  forall cost, walk edge_sources edge_targets edge_weights
+    source target cost ->
     distance <= cost.
 
-(* The statement's guarantees on one test case. *)
-Record valid_input (node_count source : N) (edge_sources edge_targets : list N)
+(** [@inside shortestpath3_correct] The statement's
+    guarantees on one test case. *)
+Record valid_input (node_count source : N)
+  (edge_sources edge_targets : list N)
     (edge_weights : list Z) (queries : list N) : Prop := {
   (* 1 <= n <= 1000 *)
   vi_n : (1 <= node_count <= 1000)%N;
@@ -96,51 +131,99 @@ Record valid_input (node_count source : N) (edge_sources edge_targets : list N)
   vi_q : (1 <= len queries <= 100)%N;
   (* 0 <= s < n *)
   vi_s : (source < node_count)%N;
-  (* Nodes are numbered from 0 to n-1: the ends of every edge ... *)
-  vi_us : Forall (fun node => (node < node_count)%N) edge_sources;
-  vi_vs_range : Forall (fun node => (node < node_count)%N) edge_targets;
+  (* Nodes are numbered from 0 to n-1: the ends of every
+     edge ... *)
+  vi_us : Forall (fun node => (node < node_count)%N)
+    edge_sources;
+  vi_vs_range : Forall (fun node => (node < node_count)%N)
+    edge_targets;
   (* ... and the node number given on each query line *)
-  vi_qs : Forall (fun target => (target < node_count)%N) queries;
+  vi_qs : Forall (fun target => (target < node_count)%N)
+    queries;
   (* -2000 <= w <= 2000 *)
-  vi_w : Forall (fun weight => -2000 <= weight <= 2000) edge_weights;
+  vi_w : Forall (fun weight => -2000 <= weight <= 2000)
+    edge_weights;
 }.
 
-(* One answer per query, in order; each answer is the case that holds. *)
-Definition shortestpath3_spec (node_count source : N)
-    (edge_sources edge_targets : list N) (edge_weights : list Z)
-    (queries : list N) (output : list (answer Z)) : Prop :=
+(** ** Correctness *)
+
+(** [@requirement] [@short Answer shortest-path queries
+    in a directed weighted graph, distinguishing
+    unreachable vertices and paths whose cost is
+    unbounded below.] One [answer] per query, in order;
+    each [answer] is the case that holds. *)
+Definition shortestpath3_spec
+  (node_count source : N)
+  (edge_sources edge_targets : list N )
+  (edge_weights : list Z )
+  (queries : list N)
+  (output : list (answer Z))
+  : Prop :=
   len output = len queries /\
   forall i, (i < len queries)%N ->
     let target := get queries 0%N i in
     (get output Impossible i = Impossible <->
-       ~ reachable edge_sources edge_targets edge_weights source target) /\
+       ~ reachable edge_sources edge_targets edge_weights
+         source target) /\
     (get output Impossible i = MinusInfinity <->
-       arbitrarily_short edge_sources edge_targets edge_weights source
+       arbitrarily_short edge_sources edge_targets
+         edge_weights source
          target) /\
-    (forall distance, get output Impossible i = Dist distance <->
-       min_distance edge_sources edge_targets edge_weights source target
+    (forall distance, get output Impossible i = Dist
+      distance <->
+       min_distance edge_sources edge_targets edge_weights
+         source target
          distance).
 
+(** ** Interface *)
+
+(** Answer shortest-path [queries] in a directed weighted
+    graph, distinguishing unreachable vertices and paths
+    whose cost is unbounded below.
+    - Input [node_count]:
+    - Input [source]:
+    - Input [edge_sources]:
+    - Input [edge_targets]:
+    - Input [edge_weights]:
+    - Input [queries]:
+    - Output [output]: *)
 Program shortestpath3 :
-  uint -> uint -> array uint -> array uint -> array sint -> array uint ->
+  uint -> uint -> array uint -> array uint -> array sint ->
+    array uint ->
   array (answer sint).
 
+(** ** Bridge *)
+
+(** [@requirement shortestpath3_spec] [@fold full
+    correctness statement] On valid represented inputs,
+    the program returns a represented [output] satisfying
+    [shortestpath3_spec]. *)
 Specification shortestpath3_correct :
-  forall (node_count source : N) (edge_sources edge_targets : list N)
+  forall (node_count source : N) (edge_sources edge_targets
+    : list N )
          (edge_weights : list Z) (queries : list N)
          (node_count_int source_int : uint)
          (edge_sources_arr edge_targets_arr : array uint)
-         (edge_weights_arr : array sint) (queries_arr : array uint),
-  valid_input node_count source edge_sources edge_targets edge_weights
+         (edge_weights_arr : array sint ) (queries_arr :
+           array uint ),
+  valid_input node_count source edge_sources edge_targets
+    edge_weights
     queries ->
-  repr node_count_int node_count -> repr source_int source ->
-  repr edge_sources_arr edge_sources -> repr edge_targets_arr edge_targets ->
-  repr edge_weights_arr edge_weights -> repr queries_arr queries ->
+  repr node_count_int node_count -> repr source_int source
+    ->
+  repr edge_sources_arr edge_sources -> repr
+    edge_targets_arr edge_targets ->
+  repr edge_weights_arr edge_weights -> repr queries_arr
+    queries ->
   exists output : list (answer Z),
-    repr (shortestpath3 node_count_int source_int edge_sources_arr
-            edge_targets_arr edge_weights_arr queries_arr) output /\
-    shortestpath3_spec node_count source edge_sources edge_targets
+    repr (shortestpath3 node_count_int source_int
+      edge_sources_arr
+            edge_targets_arr edge_weights_arr queries_arr)
+            output /\
+    shortestpath3_spec node_count source edge_sources
+      edge_targets
       edge_weights queries output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The permitted kernel primitives and their
+    axioms. *)
 Allowed Primitive Axioms.

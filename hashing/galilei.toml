@@ -1,0 +1,13 @@
+[spec]
+file = "hashing.spec"
+title = "String Hashing"
+
+[publish]
+path = "/kattis/hashing"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["hashing_implem.v", "hashing.spec"]

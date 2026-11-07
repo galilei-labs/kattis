@@ -1,0 +1,13 @@
+[spec]
+file = "indoorienteering.spec"
+title = "Indoorienteering"
+
+[publish]
+path = "/kattis/indoorienteering"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["indoorienteering_implem.v", "indoorienteering.spec"]

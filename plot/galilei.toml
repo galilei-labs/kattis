@@ -1,0 +1,13 @@
+[spec]
+file = "plot.spec"
+title = "Plotting Polynomials"
+
+[publish]
+path = "/kattis/plot"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["plot_implem.v", "plot.spec"]

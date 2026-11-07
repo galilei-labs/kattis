@@ -1,0 +1,13 @@
+[spec]
+file = "nonnegpartsums.spec"
+title = "Non-negative Partial Sums"
+
+[publish]
+path = "/kattis/nonnegpartsums"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["nonnegpartsums_implem.v", "nonnegpartsums.spec"]

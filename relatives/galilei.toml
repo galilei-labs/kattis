@@ -1,0 +1,13 @@
+[spec]
+file = "relatives.spec"
+title = "Relatives"
+
+[publish]
+path = "/kattis/relatives"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["relatives_implem.v", "relatives.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "babelfish.spec"
+title = "Babelfish"
+
+[publish]
+path = "/kattis/babelfish"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["babelfish_implem.v", "babelfish.spec"]

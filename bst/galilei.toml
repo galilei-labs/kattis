@@ -1,0 +1,13 @@
+[spec]
+file = "bst.spec"
+title = "Binary search tree"
+
+[publish]
+path = "/kattis/bst"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bst_implem.v", "bst.spec"]

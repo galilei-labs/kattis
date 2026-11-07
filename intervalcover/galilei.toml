@@ -1,0 +1,13 @@
+[spec]
+file = "intervalcover.spec"
+title = "Interval Cover"
+
+[publish]
+path = "/kattis/intervalcover"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["intervalcover_implem.v", "intervalcover.spec"]

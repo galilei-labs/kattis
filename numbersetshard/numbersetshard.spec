@@ -1,3 +1,27 @@
+(** * Number Sets (Hard) *)
+
+(** ** Description *)
+
+(** [numbersets interval_start interval_end min_prime] is the number of
+    sets left when every integer of [interval_start, interval_end]
+    starts in a set of its own and the sets of any two integers of
+    that interval sharing a prime factor at least min_prime are
+    merged. One call per test case. *)
+
+(** [@kattis numbersetshard]
+    - Difficulty: 6.6
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB *)
+
+(** ** Examples *)
+
+(** Kattis sample: text input and output. *)
+(* 2
+10 20 5
+10 20 3 = Case #1: 9
+Case #2: 7 *)
+
+(** ** [@hide] Environment *)
 (* @function        numbersets
    @signature       uint -> uint -> uint -> uint
    @math_signature  N -> N -> N -> N
@@ -9,56 +33,73 @@
                     per test case.
 *)
 
-From Stdlib Require Import ZArith NArith List Uint63 PArray Znumtheory Relations.
+From Stdlib Require Import ZArith NArith List Uint63 PArray
+  Znumtheory Relations.
 From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. *)
+(** ** Definitions *)
 
-(* The number of elements of l. *)
-Definition len {A} (l : list A) : N := N.of_nat (List.length l).
+(** Math side. The number of elements of l. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
 
-Definition in_interval (interval_start interval_end number : N) : Prop :=
+(** The [in_interval] definition. *)
+Definition in_interval
+  (interval_start interval_end number : N) : Prop :=
   interval_start <= number <= interval_end.
 
-(* Some prime factor >= min_prime divides both number and number'. *)
-Definition share_prime_at_least (min_prime number number' : N) : Prop :=
-  exists factor : N, prime (Z.of_N factor) /\ min_prime <= factor /\
+(** Some prime factor >= min_prime divides both number and number'. *)
+Definition share_prime_at_least
+  (min_prime number number' : N) : Prop :=
+  exists factor : N, prime (Z.of_N factor) /\ min_prime <=
+    factor /\
     N.divide factor number /\ N.divide factor number'.
 
-(* One merge of the statement: two integers of the interval sharing such a
-   prime factor. *)
-Definition merge (interval_start interval_end min_prime number number' : N)
+(** One merge of the statement: two integers of the interval sharing
+    such a prime factor. *)
+Definition merge
+  (interval_start interval_end min_prime number number' : N)
     : Prop :=
   in_interval interval_start interval_end number /\
   in_interval interval_start interval_end number' /\
   share_prime_at_least min_prime number number'.
 
-(* number and number' end in the same set: they are linked by a chain of
-   merges. *)
-Definition same_set (interval_start interval_end min_prime : N)
+(** number and number' end in the same set: they are linked by a chain
+    of merges. *)
+Definition same_set
+  (interval_start interval_end min_prime : N)
     : N -> N -> Prop :=
-  clos_refl_sym_trans N (merge interval_start interval_end min_prime).
+  clos_refl_sym_trans N (merge interval_start interval_end
+    min_prime).
 
-(* There are final_set_count sets at the end: final_set_count integers of
-   the interval, no two in the same set, such that every integer of the
-   interval is in the set of one of them. *)
-Definition set_count (interval_start interval_end min_prime final_set_count
+(** There are final_set_count sets at the end: final_set_count integers
+    of the interval, no two in the same set, such that every integer
+    of the interval is in the set of one of them. *)
+Definition set_count
+  (interval_start interval_end min_prime final_set_count
     : N) : Prop :=
   exists representatives : list N,
     len representatives = final_set_count /\
-    Forall (in_interval interval_start interval_end) representatives /\
-    ForallOrdPairs (fun member other =>
-        ~ same_set interval_start interval_end min_prime member other)
+    Forall (in_interval interval_start interval_end)
       representatives /\
-    (forall number, in_interval interval_start interval_end number ->
-       exists representative, In representative representatives /\
-         same_set interval_start interval_end min_prime number
+    ForallOrdPairs (fun member other =>
+        ~ same_set interval_start interval_end min_prime
+          member other)
+      representatives /\
+    (forall number, in_interval interval_start interval_end
+      number ->
+       exists representative, In representative
+         representatives /\
+         same_set interval_start interval_end min_prime
+           number
            representative).
 
-(* The statement's bounds, for one test case. *)
-Record valid_input (interval_start interval_end min_prime : N) : Prop := {
+(** [@inside numbersets_correct] The statement's bounds, for one test
+    case. *)
+Record valid_input
+  (interval_start interval_end min_prime : N) : Prop := {
   (* 1 <= A <= B <= 10^12 *)
   vi_a : 1 <= interval_start;
   vi_ab : interval_start <= interval_end;
@@ -69,23 +110,44 @@ Record valid_input (interval_start interval_end min_prime : N) : Prop := {
   vi_p : 2 <= min_prime <= interval_end;
 }.
 
-(* The answer: the number of sets at the end. *)
-Definition numbersets_spec (interval_start interval_end min_prime : N)
+(** ** Correctness *)
+
+(** [@requirement] [@short The answer: the number of sets at the end.]
+    The answer: the number of sets at the end. *)
+Definition numbersets_spec
+  (interval_start interval_end min_prime : N)
     (output : N) : Prop :=
   set_count interval_start interval_end min_prime output.
 
+(** ** Interface *)
+
+(** The [numbersets] program on machine values.
+    - Input [interval_start]:
+    - Input [interval_end]:
+    - Input [min_prime]:
+    - Output [output]: *)
 Program numbersets : uint -> uint -> uint -> uint.
 
+(** ** Bridge *)
+
+(** [@requirement numbersets_spec] [@fold full correctness statement] On
+    valid represented inputs, [numbersets] returns a represented
+    output satisfying [numbersets_spec]. *)
 Specification numbersets_correct :
   forall (interval_start interval_end min_prime : N)
-         (interval_start_int interval_end_int min_prime_int : uint),
+         (interval_start_int interval_end_int min_prime_int
+           : uint),
   valid_input interval_start interval_end min_prime ->
   repr interval_start_int interval_start ->
-  repr interval_end_int interval_end -> repr min_prime_int min_prime ->
+  repr interval_end_int interval_end ->
+    repr min_prime_int min_prime ->
   exists output : N,
-    repr (numbersets interval_start_int interval_end_int min_prime_int)
+    repr (numbersets interval_start_int interval_end_int
+      min_prime_int)
       output /\
-    numbersets_spec interval_start interval_end min_prime output.
+    numbersets_spec interval_start interval_end min_prime
+      output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The kernel primitives (int, array, float, string) and their
+    axioms. *)
 Allowed Primitive Axioms.

@@ -1,0 +1,13 @@
+[spec]
+file = "canonical.spec"
+title = "Canonical Coin Systems"
+
+[publish]
+path = "/kattis/canonical"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["canonical_implem.v", "canonical.spec"]

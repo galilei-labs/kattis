@@ -1,0 +1,13 @@
+[spec]
+file = "worstweather.spec"
+title = "Worst Weather Ever"
+
+[publish]
+path = "/kattis/worstweather"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["worstweather_implem.v", "worstweather.spec"]

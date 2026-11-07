@@ -1,0 +1,13 @@
+[spec]
+file = "bank.spec"
+title = "Bank Queue"
+
+[publish]
+path = "/kattis/bank"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bank_implem.v", "bank.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "median.spec"
+title = "Median"
+
+[publish]
+path = "/kattis/median"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["median_implem.v", "median.spec"]

@@ -1,3 +1,17 @@
+(** * Prime Powers *)
+
+(** ** Description *)
+
+(** Multiply the given power of every prime in an
+    inclusive interval, modulo 1000000007.
+
+    [@kattis primepower]
+    - Difficulty: 4.5
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB *)
+
+(** ** [@hide] Environment *)
+
 (* @function        primepower
    @signature       uint -> uint -> uint -> uint
    @math_signature  N -> N -> N -> N
@@ -7,34 +21,42 @@
                     three arguments are the three integers of the input, in
                     the order E, L, R; the result is the integer printed.
 *)
-
-From Stdlib Require Import ZArith NArith List Uint63 PArray Znumtheory.
+From Stdlib Require Import ZArith NArith List Uint63 PArray
+  Znumtheory.
 From Respeced Require Import Repr.
 Import ListNotations.
 Open Scope N_scope.
 
 (* Math side. *)
 
-(* The modulus of the output, 10^9 + 7. *)
+(** ** Definitions *)
+
+(** The [modulus] of the [output], 10^9 + 7. *)
 Definition modulus : N := 1000000007.
 
-(* The product of prime^exponent over the primes of
-   [start, start + remaining - 1] (1 when there are none). *)
-Fixpoint prime_power_product_from (exponent start : N) (remaining : nat)
+(** The product of prime^[exponent] over the primes of
+    [start, start + remaining - 1] (1 when there are
+    none). *)
+Fixpoint prime_power_product_from (exponent start : N)
+  (remaining : nat)
     : N :=
   match remaining with
   | O => 1
   | S remaining' =>
-      (if prime_dec (Z.of_N start) then start ^ exponent else 1)
-      * prime_power_product_from exponent (start + 1) remaining'
+      (if prime_dec (Z.of_N start) then start ^ exponent
+        else 1)
+      * prime_power_product_from exponent (start + 1)
+        remaining'
   end.
 
-(* The product of prime^exponent over the primes with
-   low <= prime <= high. *)
-Definition prime_power_product (exponent low high : N) : N :=
-  prime_power_product_from exponent low (N.to_nat (high + 1 - low)).
+(** The product of prime^[exponent] over the primes with
+    [low] <= prime <= [high]. *)
+Definition prime_power_product (exponent low high : N) : N
+  :=
+  prime_power_product_from exponent low
+    (N.to_nat (high + 1 - low)).
 
-(* The statement's bounds. *)
+(** [@inside primepower_correct] The statement's bounds. *)
 Record valid_input (exponent low high : N) : Prop := {
   (* E (1 <= E <= 1,000,000) *)
   vi_e : 1 <= exponent <= 10 ^ 6;
@@ -44,19 +66,45 @@ Record valid_input (exponent low high : N) : Prop := {
   vi_r : high <= 10 ^ 6;
 }.
 
-(* The answer: the product modulo 10^9 + 7. *)
-Definition primepower_spec (exponent low high : N) (output : N) : Prop :=
-  output = prime_power_product exponent low high mod modulus.
+(** ** Correctness *)
 
+(** [@requirement] [@short Multiply the given power of
+    every prime in an inclusive interval, modulo
+    1000000007.] The answer: the product modulo 10^9 + 7. *)
+Definition primepower_spec
+  (exponent low high : N)
+  (output : N)
+  : Prop :=
+  output = prime_power_product exponent low high mod
+    modulus.
+
+(** ** Interface *)
+
+(** Multiply the given power of every prime in an
+    inclusive interval, modulo 1000000007.
+    - Input [exponent]:
+    - Input [low]:
+    - Input [high]:
+    - Output [output]: *)
 Program primepower : uint -> uint -> uint -> uint.
 
+(** ** Bridge *)
+
+(** [@requirement primepower_spec] [@fold full
+    correctness statement] On valid represented inputs,
+    the program returns a represented [output] satisfying
+    [primepower_spec]. *)
 Specification primepower_correct :
-  forall (exponent low high : N) (exponent_int low_int high_int : uint),
+  forall (exponent low high : N) (exponent_int low_int
+    high_int : uint),
   valid_input exponent low high ->
-  repr exponent_int exponent -> repr low_int low -> repr high_int high ->
+  repr exponent_int exponent -> repr low_int low -> repr
+    high_int high ->
   exists output : N,
-    repr (primepower exponent_int low_int high_int) output /\
+    repr (primepower exponent_int low_int high_int) output
+      /\
     primepower_spec exponent low high output.
 
-(* The kernel primitives (int, array, float, string) and their axioms. *)
+(** [@hide] The permitted kernel primitives and their
+    axioms. *)
 Allowed Primitive Axioms.

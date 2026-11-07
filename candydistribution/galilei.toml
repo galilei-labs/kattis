@@ -1,0 +1,13 @@
+[spec]
+file = "candydistribution.spec"
+title = "Candy Distribution"
+
+[publish]
+path = "/kattis/candydistribution"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["candydistribution_implem.v", "candydistribution.spec"]

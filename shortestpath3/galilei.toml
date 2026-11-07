@@ -1,0 +1,13 @@
+[spec]
+file = "shortestpath3.spec"
+title = "Single source shortest path, negative weights"
+
+[publish]
+path = "/kattis/shortestpath3"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["shortestpath3_implem.v", "shortestpath3.spec"]

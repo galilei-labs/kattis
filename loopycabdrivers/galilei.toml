@@ -1,0 +1,13 @@
+[spec]
+file = "loopycabdrivers.spec"
+title = "Loopy Cab Drivers"
+
+[publish]
+path = "/kattis/loopycabdrivers"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["loopycabdrivers_implem.v", "loopycabdrivers.spec"]

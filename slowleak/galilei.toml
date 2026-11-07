@@ -1,0 +1,13 @@
+[spec]
+file = "slowleak.spec"
+title = "Slow Leak"
+
+[publish]
+path = "/kattis/slowleak"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["slowleak_implem.v", "slowleak.spec"]

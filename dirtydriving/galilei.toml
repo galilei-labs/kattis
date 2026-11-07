@@ -1,0 +1,13 @@
+[spec]
+file = "dirtydriving.spec"
+title = "Dirty Driving"
+
+[publish]
+path = "/kattis/dirtydriving"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["dirtydriving_implem.v", "dirtydriving.spec"]

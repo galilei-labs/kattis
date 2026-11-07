@@ -1,0 +1,13 @@
+[spec]
+file = "chesstournament.spec"
+title = "Chess Tournament"
+
+[publish]
+path = "/kattis/chesstournament"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["chesstournament_implem.v", "chesstournament.spec"]

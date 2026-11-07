@@ -1,0 +1,13 @@
+[spec]
+file = "cudak.spec"
+title = "Cudak"
+
+[publish]
+path = "/kattis/cudak"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["cudak_implem.v", "cudak.spec"]

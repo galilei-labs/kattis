@@ -1,0 +1,13 @@
+[spec]
+file = "chatter.spec"
+title = "Chatter"
+
+[publish]
+path = "/kattis/chatter"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["chatter_implem.v", "chatter.spec"]

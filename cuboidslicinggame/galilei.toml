@@ -1,0 +1,13 @@
+[spec]
+file = "cuboidslicinggame.spec"
+title = "Cuboid Slicing Game"
+
+[publish]
+path = "/kattis/cuboidslicinggame"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["cuboidslicinggame_implem.v", "cuboidslicinggame.spec"]

@@ -1,0 +1,13 @@
+[spec]
+file = "farmingmars.spec"
+title = "Farming Mars"
+
+[publish]
+path = "/kattis/farmingmars"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["farmingmars_implem.v", "farmingmars.spec"]

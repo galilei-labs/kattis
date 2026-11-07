@@ -1,0 +1,13 @@
+[spec]
+file = "longincsubseq.spec"
+title = "Longest Increasing Subsequence"
+
+[publish]
+path = "/kattis/longincsubseq"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["longincsubseq_implem.v", "longincsubseq.spec"]

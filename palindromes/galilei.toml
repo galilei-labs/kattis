@@ -1,0 +1,13 @@
+[spec]
+file = "palindromes.spec"
+title = "Palindromes"
+
+[publish]
+path = "/kattis/palindromes"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["palindromes_implem.v", "palindromes.spec"]

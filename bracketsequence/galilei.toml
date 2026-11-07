@@ -1,0 +1,13 @@
+[spec]
+file = "bracketsequence.spec"
+title = "Bracket Sequence"
+
+[publish]
+path = "/kattis/bracketsequence"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["bracketsequence_implem.v", "bracketsequence.spec"]

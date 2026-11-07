@@ -1,0 +1,13 @@
+[spec]
+file = "booking.spec"
+title = "Booking"
+
+[publish]
+path = "/kattis/booking"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["booking_implem.v", "booking.spec"]
