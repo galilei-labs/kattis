@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 1000 vertices; 1 to 5000 directed edges.
-    - Labels from 1 to B, where B <= 1000000000.
+    - 2 to 1,000 vertices; 1 to 5,000 directed edges.
+    - Labels from 1 to B, where B $\le$ $10^{9}$.
     - Source and destination differ; each ordered vertex pair has at most
       one edge, with an allowed interval inside 1 through B. *)
 

@@ -6,8 +6,18 @@ title = "Weather Forecast"
 path = "/kattis/vedurspa"
 
 [presentation]
+subtitle = "Exact least-squares regression"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["vedurspa_implem.v", "vedurspa.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/vedurspa_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "vedurspa_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/vedurspa_extracted_marray.ml"

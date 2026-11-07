@@ -6,8 +6,18 @@ title = "Bilateral Projects"
 path = "/kattis/bilateral"
 
 [presentation]
+subtitle = "Bipartite matching and vertex cover"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["bilateral_implem.v", "bilateral.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/bilateral_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "bilateral_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/bilateral_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "Dirty Driving"
 path = "/kattis/dirtydriving"
 
 [presentation]
+subtitle = "Sorting and greedy scan"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["dirtydriving_implem.v", "dirtydriving.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/dirtydriving_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "dirtydriving_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/dirtydriving_extracted_marray.ml"

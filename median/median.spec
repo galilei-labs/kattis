@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 integers, each from 0 to 1000000000. *)
+    - 1 to $10^{5}$ integers, each from 0 to $10^{9}$. *)
 
 (** ** Examples *)
 

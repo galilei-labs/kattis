@@ -6,8 +6,18 @@ title = "Prime Powers"
 path = "/kattis/primepower"
 
 [presentation]
+subtitle = "Sieve and modular exponentiation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["primepower_implem.v", "primepower.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/primepower_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "primepower_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/primepower_extracted_marray.ml"

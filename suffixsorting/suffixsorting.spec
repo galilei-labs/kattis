@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Text length from 1 to 100000. *)
+    - Text length from 1 to 100,000. *)
 
 (** ** Examples *)
 

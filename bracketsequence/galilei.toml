@@ -6,8 +6,18 @@ title = "Bracket Sequence"
 path = "/kattis/bracketsequence"
 
 [presentation]
+subtitle = "Stack-based expression evaluation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["bracketsequence_implem.v", "bracketsequence.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/bracketsequence_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "bracketsequence_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/bracketsequence_extracted_marray.ml"

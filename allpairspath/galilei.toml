@@ -6,8 +6,18 @@ title = "All Pairs Shortest Path"
 path = "/kattis/allpairspath"
 
 [presentation]
+subtitle = "Johnson\u2019s all-pairs shortest paths"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["allpairspath_implem.v", "allpairspath.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/allpairspath_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "allpairspath_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/allpairspath_extracted_marray.ml"

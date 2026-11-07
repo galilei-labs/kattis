@@ -6,8 +6,18 @@ title = "String Multimatching"
 path = "/kattis/stringmultimatching"
 
 [presentation]
+subtitle = "Aho\u2013Corasick multi-pattern matching"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["stringmultimatching_implem.v", "stringmultimatching.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/stringmultimatching_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "stringmultimatching_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/stringmultimatching_extracted_marray.ml"

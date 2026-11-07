@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 teams and 1 to 100000 events.
-    - Each event's penalty is from 1 to 1000. *)
+    - 1 to $10^{5}$ teams and 1 to $10^{5}$ events.
+    - Each event's penalty is from 1 to 1,000. *)
 
 (** ** Examples *)
 

@@ -6,8 +6,18 @@ title = "String Hashing"
 path = "/kattis/hashing"
 
 [presentation]
+subtitle = "Polynomial prefix hashing"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["hashing_implem.v", "hashing.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/hashing_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "hashing_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/hashing_extracted_marray.ml"

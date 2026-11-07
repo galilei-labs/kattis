@@ -6,8 +6,18 @@ title = "Polynomial Multiplication 2"
 path = "/kattis/polymul2"
 
 [presentation]
+subtitle = "Split-coefficient FFT convolution"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["polymul2_implem.v", "polymul2.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/polymul2_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "polymul2_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/polymul2_extracted_marray.ml"

@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 <= E <= 1000000.
-    - 1 <= lower bound <= upper bound <= 1000000. *)
+    - 1 $\le$ E $\le$ 1,000,000.
+    - 1 $\le$ lower bound $\le$ upper bound $\le$ 1,000,000. *)
 
 (** ** Examples *)
 

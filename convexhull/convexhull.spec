@@ -9,8 +9,8 @@
     - Difficulty: 2.4
 
     **Kattis Bounds**
-    - 1 to 10000 points.
-    - Integer coordinates with absolute value at most 10000. *)
+    - 1 to 10,000 points.
+    - Integer coordinates with absolute value at most 10,000. *)
 
 (** ** Examples *)
 

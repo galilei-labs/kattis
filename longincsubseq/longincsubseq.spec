@@ -10,7 +10,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 entries.
+    - 1 to 100,000 entries.
     - Signed 32-bit integer values. *)
 
 (** ** Examples *)

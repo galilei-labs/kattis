@@ -1,0 +1,507 @@
+{
+  "repository": "galilei-labs/kattis-private",
+  "commit": "5de4caf82d10ad3d48544c55c9123c264d78edaa",
+  "variant": "marray",
+  "files": [
+    {
+      "problem": "ada",
+      "source": "100_problems_run_new/ada/implem-bens-1/benchmark/extracted/ada_extracted_marray.ml",
+      "sha256": "a715c7e9f136ea32e83a9ba18e649befd2c30de40b4e11e5e08c08f6f650a4e3"
+    },
+    {
+      "problem": "addemup",
+      "source": "100_problems_run_new/addemup/implem-bens-1/benchmark/extracted/addemup_extracted_marray.ml",
+      "sha256": "2a40cb0046a44f93e8cce82ca371dad487fc0927b71e68cd342314a689f9677e"
+    },
+    {
+      "problem": "allpairspath",
+      "source": "100_problems_run_new/allpairspath/implem-bens-1/benchmark/extracted/allpairspath_extracted_marray.ml",
+      "sha256": "2781ebc518f2b921588fe8b33039f45361dfcf0d710d20690237fb6f19ac165a"
+    },
+    {
+      "problem": "anothersubstringqueryproblem",
+      "source": "100_problems_run_new/anothersubstringqueryproblem/implem-bens-1/benchmark/extracted/anothersubstringqueryproblem_extracted_marray.ml",
+      "sha256": "b7e56b7c5ddda0fcece756fb78fee848afa91debf3a664173752ff563df2c492"
+    },
+    {
+      "problem": "antiarithmetic",
+      "source": "100_problems_run_new/antiarithmetic/implem-bens-2/benchmark/extracted/antiarithmetic_extracted_marray.ml",
+      "sha256": "f7255760e35f7abae77acb8fbd57d7c811121ae2822723f1e3ba9f49894ee4aa"
+    },
+    {
+      "problem": "arbitrage",
+      "source": "100_problems_run_new/arbitrage/implem-bens-2/benchmark/extracted/arbitrage_extracted_marray.ml",
+      "sha256": "affdb491db82efcdf3b78f0a895905e256f6ab409b05ba0937173a765e94279d"
+    },
+    {
+      "problem": "atrivialpursuit",
+      "source": "100_problems_run_new/atrivialpursuit/implem-bens-2/benchmark/extracted/atrivialpursuit_extracted_marray.ml",
+      "sha256": "fccddce2d62a1c626b8f4f521a239d670a5175e25a0a9cfe6bb23e7f87f065a7"
+    },
+    {
+      "problem": "babelfish",
+      "source": "100_problems_run_new/babelfish/implem-bens-1/benchmark/extracted/babelfish_extracted_marray.ml",
+      "sha256": "1249bda7fb9b100030b374b6f85334a1050252946b1ec67dc14565e8ce8c47a5"
+    },
+    {
+      "problem": "bank",
+      "source": "100_problems_run_new/bank/implem-bens-1/benchmark/extracted/bank_extracted_marray.ml",
+      "sha256": "6644c2cb3d709887d5cf7f0d9d5e07a763abb4d465d6e19fe21f10ccdaa89be0"
+    },
+    {
+      "problem": "basincity",
+      "source": "100_problems_run_new/basincity/implem-bens-2/benchmark/extracted/basincity_extracted_marray.ml",
+      "sha256": "6cf4a960e566033b1ccf51504edcc8cce1ecf2e080229fef889f57191c699264"
+    },
+    {
+      "problem": "baza",
+      "source": "100_problems_run_new/baza/implem-bens-1/benchmark/extracted/baza_extracted_marray.ml",
+      "sha256": "6f5e68aa2b8ae02ccb6d7f84bcef7439a3851bae6d5d5035b706f11e9c5dc197"
+    },
+    {
+      "problem": "bigfactoring",
+      "source": "100_problems_run_new/bigfactoring/implem-bens-1/benchmark/extracted/bigfactoring_extracted_marray.ml",
+      "sha256": "372eb9d3854efdcd6663705f7ca8d34af47d6c5a614e48baf04070e61b697c65"
+    },
+    {
+      "problem": "bilateral",
+      "source": "100_problems_run_new/bilateral/implem-bens-1/benchmark/extracted/bilateral_extracted_marray.ml",
+      "sha256": "bb90fed6cbf858748438f4d09f7a445589e84a473fc9787d2017bb00595ad278"
+    },
+    {
+      "problem": "bitwise",
+      "source": "100_problems_run_new/bitwise/implem-bens-2/benchmark/extracted/bitwise_extracted_marray.ml",
+      "sha256": "0e047090fc309dc51cb24f95bb660d985e72abb0f816082ee4820e167a1e6e29"
+    },
+    {
+      "problem": "booking",
+      "source": "100_problems_run_new/booking/implem-bens-1/benchmark/extracted/booking_extracted_marray.ml",
+      "sha256": "b6c7360e7c2897c074dee6b28a924a739bb7f4a769ffdfd782fd42a78c0ca7d0"
+    },
+    {
+      "problem": "bracketsequence",
+      "source": "100_problems_run_new/bracketsequence/implem-bens-1/benchmark/extracted/bracketsequence_extracted_marray.ml",
+      "sha256": "1f2d7463d7ec771cbcc59d02544d4f2338a0571d3f4ddde5c44db6f551b83e57"
+    },
+    {
+      "problem": "bst",
+      "source": "100_problems_run_new/bst/implem-bens-1/benchmark/extracted/bst_extracted_marray.ml",
+      "sha256": "01ea76e28a55e09919564d0f9ed78ed7a30e382346305ed8736b7f8405224f31"
+    },
+    {
+      "problem": "candydistribution",
+      "source": "100_problems_run_new/candydistribution/implem-bens-1/benchmark/extracted/candydistribution_extracted_marray.ml",
+      "sha256": "348209c6f0ec75ded9913646dfe00a93feb8a212d7a74afc67b370d4f1f4b7b6"
+    },
+    {
+      "problem": "canonical",
+      "source": "100_problems_run_new/canonical/implem-bens-1/benchmark/extracted/canonical_extracted_marray.ml",
+      "sha256": "4affd4147dbf5100e1982bc0f6124fc0ef727f0012749d6da26e1ce5d6386b9c"
+    },
+    {
+      "problem": "canvas",
+      "source": "100_problems_run_new/canvas/implem-bens-1/benchmark/extracted/canvas_extracted_marray.ml",
+      "sha256": "ec0a95b40d8c2eeea45a39ef811f3cbedc28ac2de27ddded5ff9e29b777e3c76"
+    },
+    {
+      "problem": "cardhand",
+      "source": "100_problems_run_new/cardhand/implem-bens-1/benchmark/extracted/cardhand_extracted_marray.ml",
+      "sha256": "e89a60293775d90db60ec08aff72d074ac43f83a2337ae5dc5edddcdae3fa51f"
+    },
+    {
+      "problem": "catenyms",
+      "source": "100_problems_run_new/catenyms/implem-bens-1/benchmark/extracted/catenyms_extracted_marray.ml",
+      "sha256": "d3e11d44673dbcdf87aa381d197a9165d8d925bdb546bb424863bbe3b30c52e8"
+    },
+    {
+      "problem": "chatter",
+      "source": "100_problems_run_new/chatter/implem-bens-1/benchmark/extracted/chatter_extracted_marray.ml",
+      "sha256": "c9d6d06e07c4e8ba689ce53fd0ce2c4a145a56b529a17a62926ed17e6dab8155"
+    },
+    {
+      "problem": "chesstournament",
+      "source": "100_problems_run_new/chesstournament/implem-bens-1/benchmark/extracted/chesstournament_extracted_marray.ml",
+      "sha256": "30189e9798da3e10c91e62a5f86bf111ce595f28f43c463c14a117b0d38e153d"
+    },
+    {
+      "problem": "closestpair1",
+      "source": "100_problems_run_new/closestpair1/implem-bens-1/benchmark/extracted/closestpair1_extracted_marray.ml",
+      "sha256": "08a6ee959d96353dd682a19f34e22dbd9638912f6c9665fbf3dceeec9b5ecdd3"
+    },
+    {
+      "problem": "closestpair2",
+      "source": "100_problems_run_new/closestpair2/implem-bens-1/benchmark/extracted/closestpair2_extracted_marray.ml",
+      "sha256": "8402e5fceb7121d2a50be08f91547b46a9e81b61b89e844e886a56099cd5b8b6"
+    },
+    {
+      "problem": "cold",
+      "source": "100_problems_run_new/cold/implem-bens-1/benchmark/extracted/cold_extracted_marray.ml",
+      "sha256": "d6caeef91f936267f3e03c8d9d978271bb72a4e9190b6886baa31ff3bc131345"
+    },
+    {
+      "problem": "committeeassignment",
+      "source": "100_problems_run_new/committeeassignment/implem-bens-1/benchmark/extracted/committeeassignment_extracted_marray.ml",
+      "sha256": "231dffefdf249a079ce368092976b70e16363dd76118c71bde45c96da6a504ce"
+    },
+    {
+      "problem": "communicationssatellite",
+      "source": "100_problems_run_new/communicationssatellite/implem-bens-1/benchmark/extracted/communicationssatellite_extracted_marray.ml",
+      "sha256": "4944afca8cc6fc287b42b5e066a35f70077595166da699da448f65c9de33a0fe"
+    },
+    {
+      "problem": "convexhull",
+      "source": "100_problems_run_new/convexhull/implem-bens-1/benchmark/extracted/convexhull_extracted_marray.ml",
+      "sha256": "827d2eba829eff70a5baee212b54085ee16abd974bf533a6812a962fdb926ec7"
+    },
+    {
+      "problem": "cuboidslicinggame",
+      "source": "100_problems_run_new/cuboidslicinggame/implem-bens-2/benchmark/extracted/cuboidslicinggame_extracted_marray.ml",
+      "sha256": "4be7703569ff99bbbbd49ed5086836b5ae656b53bb48679c3f689c79c9d87957"
+    },
+    {
+      "problem": "cudak",
+      "source": "100_problems_run_new/cudak/implem-bens-1/benchmark/extracted/cudak_extracted_marray.ml",
+      "sha256": "6c0b60b66b4159db4880090650f7f37702d712de9b5fbdc9e1d0e7655b5d18af"
+    },
+    {
+      "problem": "darkness",
+      "source": "100_problems_run_new/darkness/implem-bens-1/benchmark/extracted/darkness_extracted_marray.ml",
+      "sha256": "6d8dd0440f88fc9cc098dac298fb2a28ee3fb0bf3babde9f0ff95db1f4b7fcb8"
+    },
+    {
+      "problem": "derangementrotations",
+      "source": "100_problems_run_new/derangementrotations/implem-bens-1/benchmark/extracted/derangementrotations_extracted_marray.ml",
+      "sha256": "6d22af2de81ebf249eab083196f29b1aa88f5baf388d3a912d6d078b3d0f6c19"
+    },
+    {
+      "problem": "dimensionalanalysis",
+      "source": "100_problems_run_new/dimensionalanalysis/implem-bens-1/benchmark/extracted/dimensionalanalysis_extracted_marray.ml",
+      "sha256": "758966162374298d9c6377dee878aacfd450db58e10b106c0cc51b7b5a8be119"
+    },
+    {
+      "problem": "dirtydriving",
+      "source": "100_problems_run_new/dirtydriving/implem-bens-1/benchmark/extracted/dirtydriving_extracted_marray.ml",
+      "sha256": "a8eb585f5c27c3983f015304346e2a7cf369e026545fa74967cc3955d2444d4b"
+    },
+    {
+      "problem": "doublets",
+      "source": "100_problems_run_new/doublets/implem-bens-2/benchmark/extracted/doublets_extracted_marray.ml",
+      "sha256": "ac78b1dd9bc5d59830d887f5430edaef61d5f29fc7598774ac4a9f3ae4b99245"
+    },
+    {
+      "problem": "equationsolver_exact",
+      "source": "100_problems_run_new/equationsolver_exact/implem-bens-4/benchmark/extracted/equationsolver_exact_extracted_marray.ml",
+      "sha256": "63001acec678ad9566db6bd2b9779c5e681b75b010995a94097b88fa5f3b9783"
+    },
+    {
+      "problem": "excavatorexpedition",
+      "source": "100_problems_run_new/excavatorexpedition/implem-bens-1/benchmark/extracted/excavatorexpedition_extracted_marray.ml",
+      "sha256": "ee850f567642aec9912a89e5343a3c63ad274bab8aa6e88584c92473819de17d"
+    },
+    {
+      "problem": "farmingmars",
+      "source": "100_problems_run_new/farmingmars/implem-bens-1/benchmark/extracted/farmingmars_extracted_marray.ml",
+      "sha256": "8e42f28539aa344299af67cd27642f9bc6e9ab2e5659b45b2fcc1d7345461d15"
+    },
+    {
+      "problem": "fulltank",
+      "source": "100_problems_run_new/fulltank/implem-bens-1/benchmark/extracted/fulltank_extracted_marray.ml",
+      "sha256": "fa44a1515dbd29f7a6907e0c64ef9b3bbe2f8e3ba15e4ef013f1d9741997278f"
+    },
+    {
+      "problem": "gcpc",
+      "source": "100_problems_run_new/gcpc/implem-bens-1/benchmark/extracted/gcpc_extracted_marray.ml",
+      "sha256": "ba8737e775450247e4e9fb19a964adfc532bee99e234895cacf38d0b207ff1c7"
+    },
+    {
+      "problem": "generalchineseremainder",
+      "source": "100_problems_run_new/generalchineseremainder/implem-bens-1/benchmark/extracted/generalchineseremainder_extracted_marray.ml",
+      "sha256": "c92e3ba2a91255f1dec3d6369d2aa5e26d377029f841bc78420dbe98541155ed"
+    },
+    {
+      "problem": "hashing",
+      "source": "100_problems_run_new/hashing/implem-bens-1/benchmark/extracted/hashing_extracted_marray.ml",
+      "sha256": "e47c73f79deef4ff4c70ae1ed1e3e30bb99fae982b0e1d5e65a5dd982f18854e"
+    },
+    {
+      "problem": "helpfulcurrents",
+      "source": "100_problems_run_new/helpfulcurrents/implem-bens-1/benchmark/extracted/helpfulcurrents_extracted_marray.ml",
+      "sha256": "4c3b2b8f9cea0f470cc8a5a9426162e34dcb25ae15448aed3ae807261e3638ad"
+    },
+    {
+      "problem": "indoorienteering",
+      "source": "100_problems_run_new/indoorienteering/implem-bens-2/benchmark/extracted/indoorienteering_extracted_marray.ml",
+      "sha256": "816ac3f3e6668ca8d5793f4d13e072e7916728da95db8946f05133541887bc70"
+    },
+    {
+      "problem": "intersectingrectangles",
+      "source": "100_problems_run_new/intersectingrectangles/implem-bens-1/benchmark/extracted/intersectingrectangles_extracted_marray.ml",
+      "sha256": "7d5b05963b2d2068e6d811185f7b6a03c86eee2bd479d46f0bcb1687c0165515"
+    },
+    {
+      "problem": "intervalcover",
+      "source": "100_problems_run_new/intervalcover/implem-bens-1/benchmark/extracted/intervalcover_extracted_marray.ml",
+      "sha256": "b5142ddaf196e9b6bf2f4ed186c138db808d5fec0fb6cb21ef903a4867d62649"
+    },
+    {
+      "problem": "isahasa",
+      "source": "100_problems_run_new/isahasa/implem-bens-2/benchmark/extracted/isahasa_extracted_marray.ml",
+      "sha256": "9fc243512d1594c9954520f61db9e9fe9c7efbfcedafa92f5061b4867e40e672"
+    },
+    {
+      "problem": "joggers",
+      "source": "100_problems_run_new/joggers/implem-bens-1/benchmark/extracted/joggers_extracted_marray.ml",
+      "sha256": "18e2faa42f14576dbc1da54c686c0ca8ff99e1488380c52f5284ca375efc324b"
+    },
+    {
+      "problem": "joinstrings",
+      "source": "100_problems_run_new/joinstrings/implem-bens-1/benchmark/extracted/joinstrings_extracted_marray.ml",
+      "sha256": "85ed471a9024c65c59dbaa0170d2123d4529b4aaf4dd502eb43587a9d0284b83"
+    },
+    {
+      "problem": "kattissquest",
+      "source": "100_problems_run_new/kattissquest/implem-bens-1/benchmark/extracted/kattissquest_extracted_marray.ml",
+      "sha256": "08cc634aab4d19bf982353f2b74d5a6aebd850b3f39fd9c2fd59301e834c5c60"
+    },
+    {
+      "problem": "kingpinescape",
+      "source": "100_problems_run_new/kingpinescape/implem-bens-1/benchmark/extracted/kingpinescape_extracted_marray.ml",
+      "sha256": "b16addaf7aad4156e12a42cda44483ea2aa21c20b04b4ffb0bee3661588d6394"
+    },
+    {
+      "problem": "knapsack",
+      "source": "100_problems_run_new/knapsack/implem-bens-1/benchmark/extracted/knapsack_extracted_marray.ml",
+      "sha256": "938cdb670843fcbb1e08e9a2ede668e7d6f8460f59a70aa81af20853f63d7bd5"
+    },
+    {
+      "problem": "knapsack2",
+      "source": "100_problems_run_new/knapsack2/implem-bens-1/benchmark/extracted/knapsack2_extracted_marray.ml",
+      "sha256": "94beb5f4c6b3012e3a2a2fd1b8c12ae364ede74bc2dbae74eb25ee85d00873f7"
+    },
+    {
+      "problem": "knigsoftheforest",
+      "source": "100_problems_run_new/knigsoftheforest/implem-bens-1/benchmark/extracted/knigsoftheforest_extracted_marray.ml",
+      "sha256": "5d429648afef0b46afae4f31f866a326811808ba536c7159a2e22b83bd76be6c"
+    },
+    {
+      "problem": "largesttriangle",
+      "source": "100_problems_run_new/largesttriangle/implem-bens-1/benchmark/extracted/largesttriangle_extracted_marray.ml",
+      "sha256": "c347c6654c2a12c9f9a47ab1f024e57662e65460354740510be6ee48c4a048cd"
+    },
+    {
+      "problem": "longincsubseq",
+      "source": "100_problems_run_new/longincsubseq/implem-bens-1/benchmark/extracted/longincsubseq_extracted_marray.ml",
+      "sha256": "453c986c410532c1180ed59f8944380865ee3bbe01d3b98f867776602c2d15f7"
+    },
+    {
+      "problem": "loopycabdrivers",
+      "source": "100_problems_run_new/loopycabdrivers/implem-bens-1/benchmark/extracted/loopycabdrivers_extracted_marray.ml",
+      "sha256": "a3f0a92ad9f71b76914ddb2ef94472c002db5f142a3be50c01d96e7ddb432402"
+    },
+    {
+      "problem": "magicsequence",
+      "source": "100_problems_run_new/magicsequence/implem-bens-2/benchmark/extracted/magicsequence_extracted_marray.ml",
+      "sha256": "ed660983c70e7beaf15be7162df41af8e51bfdb77c316193f4415255f266190f"
+    },
+    {
+      "problem": "mazemovement",
+      "source": "100_problems_run_new/mazemovement/implem-bens-2/benchmark/extracted/mazemovement_extracted_marray.ml",
+      "sha256": "408e2776739a21c3793b51e5cfcb78d6ad51c6428dbee03f3be59e1f38f6af77"
+    },
+    {
+      "problem": "median",
+      "source": "100_problems_run_new/median/implem-bens-1/benchmark/extracted/median_extracted_marray.ml",
+      "sha256": "6e3152c9f411f7950f53fdd93e2ccfd1077dec7690773f8e7cf6e4a8e975fb09"
+    },
+    {
+      "problem": "minspantree",
+      "source": "100_problems_run_new/minspantree/implem-bens-1/benchmark/extracted/minspantree_extracted_marray.ml",
+      "sha256": "f21dc228585020f32541886721221a5d56b2fb6f584142ab51a7b1441fd86408"
+    },
+    {
+      "problem": "nonnegpartsums",
+      "source": "100_problems_run_new/nonnegpartsums/implem-bens-1/benchmark/extracted/nonnegpartsums_extracted_marray.ml",
+      "sha256": "bb04b8e71eb70e4b67e01f367b01adf524466bba8adba542ee59265d0bf5948e"
+    },
+    {
+      "problem": "numbersetshard",
+      "source": "100_problems_run_new/numbersetshard/implem-bens-1/benchmark/extracted/numbersetshard_extracted_marray.ml",
+      "sha256": "9cf63a31ac8f9bb32a9169e099a7f067aa6c693389e5690d53b1c7d9eb8ae193"
+    },
+    {
+      "problem": "oddmanout",
+      "source": "100_problems_run_new/oddmanout/implem-bens-1/benchmark/extracted/oddmanout_extracted_marray.ml",
+      "sha256": "1e04cec1d9e27092edb512cd490d90d2a26b12027f8f01e1c3ef580bce3550de"
+    },
+    {
+      "problem": "palindromes",
+      "source": "100_problems_run_new/palindromes/implem-bens-1/benchmark/extracted/palindromes_extracted_marray.ml",
+      "sha256": "ceb7f5d2c026df9a5cc734a2483f1043aa7ce0efe65a6e7b70d8db120d2c4dce"
+    },
+    {
+      "problem": "pascal",
+      "source": "100_problems_run_new/pascal/implem-bens-1/benchmark/extracted/pascal_extracted_marray.ml",
+      "sha256": "1f8c81f45abb1265b927de136d78fbbe22852624ccb4f70d5b785cb6a1ad3826"
+    },
+    {
+      "problem": "plot",
+      "source": "100_problems_run_new/plot/implem-bens-1/benchmark/extracted/plot_extracted_marray.ml",
+      "sha256": "8b85b4a23e233b030ce8ab9c78812ec2bc7a0cb82714917357ef5a337e6ebca9"
+    },
+    {
+      "problem": "polygonarea",
+      "source": "100_problems_run_new/polygonarea/implem-bens-1/benchmark/extracted/polygonarea_extracted_marray.ml",
+      "sha256": "a5e3daa5f93fcf00000a4e22818b4ee2c2ff9836cd4aa59783564460f1916e4f"
+    },
+    {
+      "problem": "polymul1",
+      "source": "100_problems_run_new/polymul1/implem-bens-1/benchmark/extracted/polymul1_extracted_marray.ml",
+      "sha256": "b4dbc4ee3de39c692306bfb3e88a2155a010e3c9c796f025bef6cf8265344a0f"
+    },
+    {
+      "problem": "polymul2",
+      "source": "100_problems_run_new/polymul2/implem-bens-1/benchmark/extracted/polymul2_extracted_marray.ml",
+      "sha256": "c87db8c15336e6ded773323d890e5cff86c1ac9035409f5af44eda273d4a7da0"
+    },
+    {
+      "problem": "primepower",
+      "source": "100_problems_run_new/primepower/implem-bens-1/benchmark/extracted/primepower_extracted_marray.ml",
+      "sha256": "6efa2f684706d7d51f600c02134675fc2b5782918c87790e4bc8f1bbe1aa447b"
+    },
+    {
+      "problem": "purplerain",
+      "source": "100_problems_run_new/purplerain/implem-bens-1/benchmark/extracted/purplerain_extracted_marray.ml",
+      "sha256": "dd7d142199e93cdbd8f9805227f8ea2668dd5b55e84ab87e74a9cdf7f2cec21a"
+    },
+    {
+      "problem": "relatives",
+      "source": "100_problems_run_new/relatives/implem-bens-1/benchmark/extracted/relatives_extracted_marray.ml",
+      "sha256": "312b4c53333a0027957736fde9ae0a3455a4940fe89112c435aec82f51b0795c"
+    },
+    {
+      "problem": "remainderreminder",
+      "source": "100_problems_run_new/remainderreminder/implem-bens-1/benchmark/extracted/remainderreminder_extracted_marray.ml",
+      "sha256": "2f4b26455a5d91f4d6657b92b60a020d4ec98e036b2a50ce4e6540778284d5fc"
+    },
+    {
+      "problem": "roadtimes",
+      "source": "100_problems_run_new/roadtimes/implem-bens-1/benchmark/extracted/roadtimes_extracted_marray.ml",
+      "sha256": "8e1651ea5cf3cf2a62c4ed96245e0dfab530cf34a3accad6bd1c1d7c14405653"
+    },
+    {
+      "problem": "roberthood",
+      "source": "100_problems_run_new/roberthood/implem-bens-1/benchmark/extracted/roberthood_extracted_marray.ml",
+      "sha256": "b72314a2322d75fa5683abf11a23ecc0b02945fb21e4e7c7cc3e8471b231199c"
+    },
+    {
+      "problem": "satisfiability",
+      "source": "100_problems_run_new/satisfiability/implem-bens-1/benchmark/extracted/satisfiability_extracted_marray.ml",
+      "sha256": "8446910c7baf385515807f487e81cfee446df6fdce4d86ca9f284f3a0b615ac8"
+    },
+    {
+      "problem": "securitybadge",
+      "source": "100_problems_run_new/securitybadge/implem-bens-1/benchmark/extracted/securitybadge_extracted_marray.ml",
+      "sha256": "c9dfc2d28039181865455e9ee74321f57fb53bbfafbbfe99eb7031081f84bc96"
+    },
+    {
+      "problem": "segmentintersection",
+      "source": "100_problems_run_new/segmentintersection/implem-bens-1/benchmark/extracted/segmentintersection_extracted_marray.ml",
+      "sha256": "9270924fae32338e0eab81cddfeb342cb2e573e8f011c53cc7618257a582496a"
+    },
+    {
+      "problem": "selfbalancingbst",
+      "source": "100_problems_run_new/selfbalancingbst/implem-bens-1/benchmark/extracted/selfbalancingbst_extracted_marray.ml",
+      "sha256": "a095f6d2950cdbb9de148e3acff8f64dbb72286c9a7f380280ca72fcee1db454"
+    },
+    {
+      "problem": "shortestpath1",
+      "source": "100_problems_run_new/shortestpath1/implem-bens-1/benchmark/extracted/shortestpath1_extracted_marray.ml",
+      "sha256": "b7cdff52c8853d2188ad84412a4f13d0aee2572192c237806921a9237397e1e5"
+    },
+    {
+      "problem": "shortestpath3",
+      "source": "100_problems_run_new/shortestpath3/implem-bens-1/benchmark/extracted/shortestpath3_extracted_marray.ml",
+      "sha256": "021758377a773855b8e2af993b5d89afcf2d7a7392be422618fd9f5623b52a4d"
+    },
+    {
+      "problem": "slowleak",
+      "source": "100_problems_run_new/slowleak/implem-bens-1/benchmark/extracted/slowleak_extracted_marray.ml",
+      "sha256": "a028eb03831837b1e1ad706802d2a49a76d3bb449ce5960a49cbc1499ba8097a"
+    },
+    {
+      "problem": "stringmatching",
+      "source": "100_problems_run_new/stringmatching/implem-bens-1/benchmark/extracted/stringmatching_extracted_marray.ml",
+      "sha256": "d44fb5dd6444ee4520446e58581fe4fe4d7ba6427da294d21d6ee89d45c39351"
+    },
+    {
+      "problem": "stringmultimatching",
+      "source": "100_problems_run_new/stringmultimatching/implem-bens-1/benchmark/extracted/stringmultimatching_extracted_marray.ml",
+      "sha256": "487cad95472a35d72b0a815a2dea2358977458d0dbb5d643890e121ab8c090d7"
+    },
+    {
+      "problem": "suffixsorting",
+      "source": "100_problems_run_new/suffixsorting/implem-bens-2/benchmark/extracted/suffixsorting_extracted_marray.ml",
+      "sha256": "7c2516b64c8027687c78d7ece54deacb69c04c5e8af064d7b935aa5be683561d"
+    },
+    {
+      "problem": "sumsets",
+      "source": "100_problems_run_new/sumsets/implem-bens-1/benchmark/extracted/sumsets_extracted_marray.ml",
+      "sha256": "53499e148cba627bdc97c9126fcb6fa616cc9a04a07075cc48a499aed4ba7fd2"
+    },
+    {
+      "problem": "timing",
+      "source": "100_problems_run_new/timing/implem-bens-3/benchmark/extracted/timing_extracted_marray.ml",
+      "sha256": "4bc1dba4a24cc98ced2c57cffc7f73876db0b2bc7840ebef6b1e5fe87a2eb726"
+    },
+    {
+      "problem": "tsp",
+      "source": "100_problems_run_new/tsp/implem-bens-1/benchmark/extracted/tsp_extracted_marray.ml",
+      "sha256": "a111689b91269d6391ada9b75af8f717ccf927ba4f2ff3af23e46906ed5ee7f9"
+    },
+    {
+      "problem": "tugofwar",
+      "source": "100_problems_run_new/tugofwar/implem-bens-1/benchmark/extracted/tugofwar_extracted_marray.ml",
+      "sha256": "71034a9d8de04e9f2871f673970ff24974c4b1d01c07759dbe4f578db3d95f34"
+    },
+    {
+      "problem": "ultraquicksort",
+      "source": "100_problems_run_new/ultraquicksort/implem-bens-1/benchmark/extracted/ultraquicksort_extracted_marray.ml",
+      "sha256": "d73c53bf44a3787e2d6fb069adbc766b31703dc059ef59e38a5391bbd4939998"
+    },
+    {
+      "problem": "unionfind",
+      "source": "100_problems_run_new/unionfind/implem-bens-1/benchmark/extracted/unionfind_extracted_marray.ml",
+      "sha256": "dcf342312e160014c9d85f7d0e3b80027ecfa14bf00924f8aba41aa3f3fe75f8"
+    },
+    {
+      "problem": "vedurspa",
+      "source": "100_problems_run_new/vedurspa/implem-bens-1/benchmark/extracted/vedurspa_extracted_marray.ml",
+      "sha256": "24a6e0f1f14e0bb8a44ea3256bcd20471f65846939381821ff5a7ab225c3363f"
+    },
+    {
+      "problem": "water",
+      "source": "100_problems_run_new/water/implem-bens-1/benchmark/extracted/water_extracted_marray.ml",
+      "sha256": "cccc45d8dac8e04f291442fd3446530c91b2e6beca25d5e7db2987f4ef761d33"
+    },
+    {
+      "problem": "worstweather",
+      "source": "100_problems_run_new/worstweather/implem-bens-1/benchmark/extracted/worstweather_extracted_marray.ml",
+      "sha256": "28965e44ede6250de337e6371b8bbe3e45fd900c48bf4aaefd0256cf490cbc04"
+    },
+    {
+      "problem": "xormax",
+      "source": "100_problems_run_new/xormax/implem-bens-1/benchmark/extracted/xormax_extracted_marray.ml",
+      "sha256": "2b07bd435b81f56caf8bb4a04931c51207f42999dd05ca754adda6b39a52da0e"
+    },
+    {
+      "problem": "yatp",
+      "source": "100_problems_run_new/yatp/implem-bens-1/benchmark/extracted/yatp_extracted_marray.ml",
+      "sha256": "758a094b4dd794fc04511fcdb08628501ff39ad6e9b6f08315f40ef5778c4446"
+    },
+    {
+      "problem": "zapis",
+      "source": "100_problems_run_new/zapis/implem-bens-1/benchmark/extracted/zapis_extracted_marray.ml",
+      "sha256": "b23d883af6621b8f226f925e23cc54d4a5c89551cdb4a9479d659a7de4687417"
+    }
+  ]
+}

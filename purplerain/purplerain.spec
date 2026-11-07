@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 characters, each R or B. *)
+    - 1 to $10^{5}$ characters, each R or B. *)
 
 (** ** Examples *)
 

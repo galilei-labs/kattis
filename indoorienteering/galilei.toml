@@ -6,8 +6,18 @@ title = "Indoorienteering"
 path = "/kattis/indoorienteering"
 
 [presentation]
+subtitle = "Meet-in-the-middle tour search"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["indoorienteering_implem.v", "indoorienteering.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/indoorienteering_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "indoorienteering_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/indoorienteering_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "Single source shortest path, negative weights"
 path = "/kattis/shortestpath3"
 
 [presentation]
+subtitle = "Bellman\u2013Ford with negative-cycle propagation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["shortestpath3_implem.v", "shortestpath3.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/shortestpath3_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "shortestpath3_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/shortestpath3_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "YATP"
 path = "/kattis/yatp"
 
 [presentation]
+subtitle = "Centroid decomposition, Li Chao trees"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["yatp_implem.v", "yatp.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/yatp_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "yatp_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/yatp_extracted_marray.ml"

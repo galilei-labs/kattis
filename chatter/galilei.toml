@@ -6,8 +6,18 @@ title = "Chatter"
 path = "/kattis/chatter"
 
 [presentation]
+subtitle = "Weighted-union linked lists"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["chatter_implem.v", "chatter.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/chatter_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "chatter_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/chatter_extracted_marray.ml"

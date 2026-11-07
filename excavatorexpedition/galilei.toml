@@ -6,8 +6,18 @@ title = "Excavator Expedition"
 path = "/kattis/excavatorexpedition"
 
 [presentation]
+subtitle = "DAG longest-path dynamic programming"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["excavatorexpedition_implem.v", "excavatorexpedition.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/excavatorexpedition_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "excavatorexpedition_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/excavatorexpedition_extracted_marray.ml"

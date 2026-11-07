@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 50000 vertices forming a tree; edge lengths from 1 to 100.
-    - Walk length from 1 to 10000; at most one existing mark per vertex. *)
+    - 2 to 50,000 vertices forming a tree; edge lengths from 1 to 100.
+    - Walk length from 1 to $10^{4}$; at most one existing mark per vertex. *)
 
 (** ** Examples *)
 

@@ -13,8 +13,8 @@
 
     **Kattis Bounds**
     - 2 to 100 vertices; at most n * (n - 1) / 2 initial edges.
-    - 1 to 10000 updates; initial capacities and capacity increases from 1
-      to 1000.
+    - 1 to 10,000 updates; initial capacities and capacity increases from 1
+      to 1,000.
     - Initial edges have distinct endpoint pairs. *)
 
 (** ** Examples *)

@@ -9,7 +9,7 @@
     - Difficulty: 2.0
 
     **Kattis Bounds**
-    - At most 100000 dictionary entries and 100000 query words.
+    - At most 100,000 dictionary entries and 100,000 query words.
     - Words contain 1 to 10 lowercase letters; dictionary keys are unique. *)
 
 (** ** Examples *)

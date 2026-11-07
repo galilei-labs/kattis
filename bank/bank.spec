@@ -10,8 +10,8 @@
     - Difficulty: 2.3
 
     **Kattis Bounds**
-    - 1 to 10000 jobs; closing time from 1 to 47.
-    - Rewards from 1 to 100000; deadlines from 0 to closing time - 1. *)
+    - 1 to 10,000 jobs; closing time from 1 to 47.
+    - Rewards from 1 to 100,000; deadlines from 0 to closing time - 1. *)
 
 (** ** Examples *)
 

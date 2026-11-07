@@ -6,8 +6,18 @@ title = "Helpful Currents"
 path = "/kattis/helpfulcurrents"
 
 [presentation]
+subtitle = "Grid-DAG path counting"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["helpfulcurrents_implem.v", "helpfulcurrents.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/helpfulcurrents_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "helpfulcurrents_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/helpfulcurrents_extracted_marray.ml"

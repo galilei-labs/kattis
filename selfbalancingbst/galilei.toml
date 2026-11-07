@@ -6,8 +6,18 @@ title = "Self Balancing Binary Search Tree"
 path = "/kattis/selfbalancingbst"
 
 [presentation]
+subtitle = "Persistent order-statistic red-black trees"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["selfbalancingbst_implem.v", "selfbalancingbst.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/selfbalancingbst_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "selfbalancingbst_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/selfbalancingbst_extracted_marray.ml"

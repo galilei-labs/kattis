@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 1000 vertices.
-    - Integer coordinates with absolute value at most 10000. *)
+    - 3 to 1,000 vertices.
+    - Integer coordinates with absolute value at most 10,000. *)
 
 (** ** Examples *)
 

@@ -6,8 +6,18 @@ title = "Water"
 path = "/kattis/water"
 
 [presentation]
+subtitle = "Incremental Edmonds\u2013Karp flow"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["water_implem.v", "water.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/water_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "water_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/water_extracted_marray.ml"

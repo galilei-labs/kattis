@@ -13,8 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 vertices; at most (N - 1)^2 links; 0 to 5000 time steps.
-    - Initial quantities from 0 to 1000; each transfer fraction is greater
+    - 1 to 100 vertices; at most (N - 1)^2 links; 0 to 5,000 time steps.
+    - Initial quantities from 0 to 1,000; each transfer fraction is greater
       than zero and at most one.
     - Outgoing transfers from a vertex total at most its available quantity. *)
 

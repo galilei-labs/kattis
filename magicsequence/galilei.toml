@@ -6,8 +6,18 @@ title = "Magic Sequence"
 path = "/kattis/magicsequence"
 
 [presentation]
+subtitle = "Radix sort"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["magicsequence_implem.v", "magicsequence.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/magicsequence_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "magicsequence_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/magicsequence_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "The Calculus of Ada"
 path = "/kattis/ada"
 
 [presentation]
+subtitle = "Newton forward differences"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["ada_implem.v", "ada.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/ada_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "ada_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/ada_extracted_marray.ml"

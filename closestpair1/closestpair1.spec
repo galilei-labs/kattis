@@ -9,8 +9,8 @@
     - Difficulty: 3.4
 
     **Kattis Bounds**
-    - 2 to 100000 points.
-    - Each coordinate has absolute value at most 100000. *)
+    - 2 to 100,000 points.
+    - Each coordinate has absolute value at most 100,000. *)
 
 (** ** Examples *)
 

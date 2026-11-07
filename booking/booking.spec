@@ -10,7 +10,7 @@
     - Difficulty: 4.5
 
     **Kattis Bounds**
-    - 1 to 5000 intervals; cleanup time from 0 to 360 minutes.
+    - 1 to 5,000 intervals; cleanup time from 0 to 360 minutes.
     - Valid dates from 2013 through 2016; each interval ends no earlier than
       it starts. *)
 

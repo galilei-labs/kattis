@@ -6,8 +6,18 @@ title = "Doublets"
 path = "/kattis/doublets"
 
 [presentation]
+subtitle = "Wildcard indexing and BFS"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["doublets_implem.v", "doublets.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/doublets_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "doublets_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/doublets_extracted_marray.ml"

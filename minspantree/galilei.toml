@@ -6,8 +6,18 @@ title = "Minimum Spanning Tree"
 path = "/kattis/minspantree"
 
 [presentation]
+subtitle = "Kruskal\u2019s algorithm"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["minspantree_implem.v", "minspantree.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/minspantree_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "minspantree_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/minspantree_extracted_marray.ml"

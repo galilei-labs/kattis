@@ -6,8 +6,18 @@ title = "Line Segment Intersection"
 path = "/kattis/segmentintersection"
 
 [presentation]
+subtitle = "Exact cross-product intersection tests"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["segmentintersection_implem.v", "segmentintersection.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/segmentintersection_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "segmentintersection_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/segmentintersection_extracted_marray.ml"

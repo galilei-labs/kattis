@@ -6,8 +6,18 @@ title = "Cuboid Slicing Game"
 path = "/kattis/cuboidslicinggame"
 
 [presentation]
+subtitle = "Sprague\u2013Grundy dynamic programming"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["cuboidslicinggame_implem.v", "cuboidslicinggame.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/cuboidslicinggame_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "cuboidslicinggame_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/cuboidslicinggame_extracted_marray.ml"

@@ -10,8 +10,8 @@
     - Difficulty: 2.7
 
     **Kattis Bounds**
-    - 1 to 150 vertices; 0 to 5000 edges.
-    - Edge weights from -1000 to 1000. *)
+    - 1 to 150 vertices; 0 to 5,000 edges.
+    - Edge weights from -1,000 to 1,000. *)
 
 (** ** Examples *)
 

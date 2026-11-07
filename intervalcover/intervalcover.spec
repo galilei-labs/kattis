@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20000 intervals; each left endpoint is no greater than its right
+    - 1 to 20,000 intervals; each left endpoint is no greater than its right
       endpoint.
     - Input coordinates have at most six digits after the decimal point. *)
 

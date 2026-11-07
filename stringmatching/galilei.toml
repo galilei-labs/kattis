@@ -6,8 +6,18 @@ title = "String Matching"
 path = "/kattis/stringmatching"
 
 [presentation]
+subtitle = "Knuth\u2013Morris\u2013Pratt string matching"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["stringmatching_implem.v", "stringmatching.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/stringmatching_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "stringmatching_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/stringmatching_extracted_marray.ml"

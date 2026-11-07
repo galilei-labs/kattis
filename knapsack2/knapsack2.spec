@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20 item sizes, each from 1 to 1000.
-    - Target size from 1 to 10^18. *)
+    - 1 to 20 item sizes, each from 1 to $10^{3}$.
+    - Target size from 1 to $10^{18}$. *)
 
 (** ** Examples *)
 

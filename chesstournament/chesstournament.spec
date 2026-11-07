@@ -10,7 +10,7 @@
     - Difficulty: 5.0
 
     **Kattis Bounds**
-    - 2 to 50000 players; 1 to 250000 reported matches.
+    - 2 to 50,000 players; 1 to 250,000 reported matches.
     - At most one match per pair; every player appears in at least one
       match. *)
 

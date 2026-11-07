@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - At most 25143 dictionary words, each with 1 to 16 lowercase letters.
+    - At most 25,143 dictionary words, each with 1 to 16 lowercase letters.
     - At most 10 query pairs. *)
 
 (** ** Examples *)

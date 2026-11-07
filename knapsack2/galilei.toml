@@ -6,8 +6,18 @@ title = "Knapsack in a Globalized World"
 path = "/kattis/knapsack2"
 
 [presentation]
+subtitle = "Residue-class cyclic relaxation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["knapsack2_implem.v", "knapsack2.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/knapsack2_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "knapsack2_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/knapsack2_extracted_marray.ml"

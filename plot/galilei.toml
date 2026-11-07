@@ -6,8 +6,18 @@ title = "Plotting Polynomials"
 path = "/kattis/plot"
 
 [presentation]
+subtitle = "Horner evaluation and forward differences"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["plot_implem.v", "plot.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/plot_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "plot_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/plot_extracted_marray.ml"

@@ -10,7 +10,7 @@
     - Difficulty: 6.5
 
     **Kattis Bounds**
-    - 3 to 1000 distinct words, each containing 1 to 20 lowercase letters. *)
+    - 3 to 1,000 distinct words, each containing 1 to 20 lowercase letters. *)
 
 (** ** Examples *)
 

@@ -9,9 +9,9 @@
     - Difficulty: 5.2
 
     **Kattis Bounds**
-    - 2 to 100000 points.
+    - 2 to 100,000 points.
     - Coordinates have at most two decimal places and absolute value at most
-      100000. *)
+      100,000. *)
 
 (** ** Examples *)
 

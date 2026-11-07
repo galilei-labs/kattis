@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Pool size and observed year count from 1 to 100000.
+    - Pool size and observed year count from 1 to $10^{5}$.
     - Entry years span 2011 through 2011 + year count - 1.
-    - Distinct strengths from 0 to 2^31 - 1; a full pool enters initially
+    - Distinct strengths from 0 to $2^{31}$ - 1; a full pool enters initially
       and one new participant enters each subsequent year. *)
 
 (** ** Examples *)

@@ -6,8 +6,18 @@ title = "Maze Movement"
 path = "/kattis/mazemovement"
 
 [presentation]
+subtitle = "Push\u2013relabel maximum flow"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["mazemovement_implem.v", "mazemovement.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/mazemovement_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "mazemovement_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/mazemovement_extracted_marray.ml"

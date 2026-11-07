@@ -10,8 +10,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 <= n <= 100.
-    - -1000000 <= each value <= 1000000. *)
+    - $1 \le n \le 100$.
+    - $-10^6 \le t_i \le 10^6$ for every value $t_i$. *)
 
 (** ** Examples *)
 (* count_negatives [5; -10; 15] = 1 *)

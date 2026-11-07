@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1000 vertices; at most 10000 roads; 1 to 100 queries.
+    - 1 to 1,000 vertices; at most 10,000 roads; 1 to 100 queries.
     - Fuel prices, road lengths and tank capacities are integers from 1 to
       100. *)
 

@@ -6,8 +6,18 @@ title = "Cudak"
 path = "/kattis/cudak"
 
 [presentation]
+subtitle = "Digit dynamic programming"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["cudak_implem.v", "cudak.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/cudak_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "cudak_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/cudak_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "Median"
 path = "/kattis/median"
 
 [presentation]
+subtitle = "Randomised quickselect"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["median_implem.v", "median.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/median_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "median_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/median_extracted_marray.ml"

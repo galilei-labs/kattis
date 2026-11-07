@@ -11,9 +11,9 @@
     - Difficulty: 3.4
 
     **Kattis Bounds**
-    - 2 to 10000 vertices.
-    - Seed from 0 to 10000; multiplier and increment from 1 to 10000.
-    - Generator modulus from 2 to 50000. *)
+    - 2 to 10,000 vertices.
+    - Seed from 0 to 10,000; multiplier and increment from 1 to 10,000.
+    - Generator modulus from 2 to 50,000. *)
 
 (** ** Examples *)
 

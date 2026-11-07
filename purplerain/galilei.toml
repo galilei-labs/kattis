@@ -6,8 +6,18 @@ title = "Purple Rain"
 path = "/kattis/purplerain"
 
 [presentation]
+subtitle = "Prefix-sum extrema"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["purplerain_implem.v", "purplerain.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/purplerain_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "purplerain_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/purplerain_extracted_marray.ml"

@@ -13,7 +13,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 0 to 10000 directed edges, with no repeated edge or self-loop.
+    - 0 to 10,000 directed edges, with no repeated edge or self-loop.
     - Vertex names contain 1 to 20 uppercase or lowercase letters. *)
 
 (** ** Examples *)

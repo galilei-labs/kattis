@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 200000 commands.
-    - Task energy, reward and query budget are from 1 to 100000. *)
+    - 1 to 200,000 commands.
+    - Task energy, reward and query budget are from 1 to $10^{5}$. *)
 
 (** ** Examples *)
 

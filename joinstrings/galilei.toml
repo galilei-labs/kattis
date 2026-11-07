@@ -6,8 +6,18 @@ title = "Join Strings"
 path = "/kattis/joinstrings"
 
 [presentation]
+subtitle = "Linked-list splicing"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["joinstrings_implem.v", "joinstrings.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/joinstrings_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "joinstrings_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/joinstrings_extracted_marray.ml"

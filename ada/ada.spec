@@ -9,7 +9,7 @@
     - Difficulty: 2.2
 
     **Kattis Bounds**
-    - 2 to 10 values; each between -2000000 and 2000000.
+    - 2 to 10 values; each between -2,000,000 and 2,000,000.
     - At least two values differ. *)
 
 (** ** Examples *)

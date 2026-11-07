@@ -13,10 +13,10 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 50000 recorded years and 1 to 10000 queries.
-    - Years from -1000000000 to 1000000000; recorded years are strictly
+    - 1 to 50,000 recorded years and 1 to 10,000 queries.
+    - Years from -$10^{9}$ to $10^{9}$; recorded years are strictly
       increasing.
-    - Rainfall from 1 to 1000000000; each query's first year precedes its
+    - Rainfall from 1 to $10^{9}$; each query's first year precedes its
       second. *)
 
 (** ** Examples *)

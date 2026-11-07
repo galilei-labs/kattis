@@ -9,7 +9,7 @@
     - Difficulty: 5.4
 
     **Kattis Bounds**
-    - 1 <= lower bound <= upper bound < 10^15.
+    - 1 $\le$ lower bound $\le$ upper bound < $10^{15}$.
     - Target digit sum from 1 to 135; at least one matching integer exists. *)
 
 (** ** Examples *)

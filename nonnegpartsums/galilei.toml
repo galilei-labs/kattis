@@ -6,8 +6,18 @@ title = "Non-negative Partial Sums"
 path = "/kattis/nonnegpartsums"
 
 [presentation]
+subtitle = "Prefix sums and monotone deque"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["nonnegpartsums_implem.v", "nonnegpartsums.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/nonnegpartsums_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "nonnegpartsums_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/nonnegpartsums_extracted_marray.ml"

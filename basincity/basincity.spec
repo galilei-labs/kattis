@@ -9,7 +9,7 @@
     - Difficulty: 8.2
 
     **Kattis Bounds**
-    - 1 to 100000 vertices; requested set size from 0 to 15.
+    - 1 to 100,000 vertices; requested set size from 0 to 15.
     - At most four distinct neighbors per vertex; no self-loops. *)
 
 (** ** Examples *)

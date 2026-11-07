@@ -6,8 +6,18 @@ title = "Card Hand Sorting"
 path = "/kattis/cardhand"
 
 [presentation]
+subtitle = "Suit enumeration and LCS"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["cardhand_implem.v", "cardhand.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/cardhand_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "cardhand_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/cardhand_extracted_marray.ml"

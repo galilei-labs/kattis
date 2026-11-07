@@ -6,8 +6,18 @@ title = "Closest Pair (Uniform)"
 path = "/kattis/closestpair1"
 
 [presentation]
+subtitle = "Bucket sort and geometric sweep"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["closestpair1_implem.v", "closestpair1.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/closestpair1_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "closestpair1_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/closestpair1_extracted_marray.ml"

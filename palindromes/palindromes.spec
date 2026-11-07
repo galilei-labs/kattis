@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 lowercase characters; 1 to 100000 queries.
+    - 1 to 100,000 lowercase characters; 1 to 100,000 queries.
     - Each query is a nonempty interval within the string. *)
 
 (** ** Examples *)

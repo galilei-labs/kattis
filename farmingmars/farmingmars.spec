@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10000 values and 1 to 10000 queries.
+    - 1 to 10,000 values and 1 to 10,000 queries.
     - Values from 0 to 14; each query is a nonempty interval within the
       sequence. *)
 

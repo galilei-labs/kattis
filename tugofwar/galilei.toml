@@ -6,8 +6,18 @@ title = "Tug of War"
 path = "/kattis/tugofwar"
 
 [presentation]
+subtitle = "Cardinality-aware subset-sum dynamic programming"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["tugofwar_implem.v", "tugofwar.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/tugofwar_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "tugofwar_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/tugofwar_extracted_marray.ml"

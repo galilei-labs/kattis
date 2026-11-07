@@ -6,8 +6,18 @@ title = "Linear Equation Solver"
 path = "/kattis/equationsolver"
 
 [presentation]
+subtitle = "Certified Gaussian elimination"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["equationsolver_exact_implem.v", "equationsolver_exact.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/equationsolver_exact_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "equationsolver_exact_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/equationsolver_exact_extracted_marray.ml"

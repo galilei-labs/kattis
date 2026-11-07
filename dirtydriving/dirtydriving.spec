@@ -10,7 +10,7 @@
     - Difficulty: 3.3
 
     **Kattis Bounds**
-    - 1 to 100000 distinct distances, each from 1 to 10000000.
+    - 1 to 100,000 distinct distances, each from 1 to $10^{7}$.
     - Spacing constant from 1 to 20. *)
 
 (** ** Examples *)

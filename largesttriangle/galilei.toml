@@ -6,8 +6,18 @@ title = "Largest Triangle"
 path = "/kattis/largesttriangle"
 
 [presentation]
+subtitle = "Convex hull and rotating calipers"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["largesttriangle_implem.v", "largesttriangle.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/largesttriangle_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "largesttriangle_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/largesttriangle_extracted_marray.ml"

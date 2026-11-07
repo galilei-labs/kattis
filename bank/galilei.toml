@@ -6,8 +6,18 @@ title = "Bank Queue"
 path = "/kattis/bank"
 
 [presentation]
+subtitle = "Greedy scheduling with disjoint sets"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["bank_implem.v", "bank.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/bank_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "bank_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/bank_extracted_marray.ml"

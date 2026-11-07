@@ -6,8 +6,18 @@ title = "Another Substring Query Problem"
 path = "/kattis/anothersubstringqueryproblem"
 
 [presentation]
+subtitle = "Suffix array, persistent segment tree"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["anothersubstringqueryproblem_implem.v", "anothersubstringqueryproblem.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/anothersubstringqueryproblem_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "anothersubstringqueryproblem_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/anothersubstringqueryproblem_extracted_marray.ml"

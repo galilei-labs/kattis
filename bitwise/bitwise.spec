@@ -10,8 +10,8 @@
     - Difficulty: 6.2
 
     **Kattis Bounds**
-    - 1 <= section count <= sequence length <= 500000.
-    - Entries from 0 to 1000000000. *)
+    - 1 $\le$ section count $\le$ sequence length $\le$ 500,000.
+    - Entries from 0 to $10^{9}$. *)
 
 (** ** Examples *)
 

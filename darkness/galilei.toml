@@ -6,8 +6,18 @@ title = "The Darkness"
 path = "/kattis/darkness"
 
 [presentation]
+subtitle = "Illumination filtering and minimum cut"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["darkness_implem.v", "darkness.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/darkness_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "darkness_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/darkness_extracted_marray.ml"

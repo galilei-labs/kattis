@@ -12,7 +12,7 @@
     - Memory limit: 192 MB
 
     **Kattis Bounds**
-    - Map instance IDs from 1 to 1000.
+    - Map instance IDs from 1 to 1,000.
     - Keys and values are signed 32-bit integers. *)
 
 (** ** Examples *)

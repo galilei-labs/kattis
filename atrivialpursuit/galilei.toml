@@ -6,8 +6,18 @@ title = "A Trivial Pursuit"
 path = "/kattis/atrivialpursuit"
 
 [presentation]
+subtitle = "Prime factorisation and inclusion-exclusion"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["atrivialpursuit_implem.v", "atrivialpursuit.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/atrivialpursuit_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "atrivialpursuit_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/atrivialpursuit_extracted_marray.ml"

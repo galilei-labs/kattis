@@ -9,7 +9,7 @@
     - Difficulty: 6.3
 
     **Kattis Bounds**
-    - 3 to 10000 entries, forming a permutation of 0 through n - 1. *)
+    - 3 to 10,000 entries, forming a permutation of 0 through n - 1. *)
 
 (** ** Examples *)
 

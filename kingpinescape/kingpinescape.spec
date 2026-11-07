@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 100000 vertices, initially connected by exactly n - 1 edges
+    - 2 to $10^{5}$ vertices, initially connected by exactly n - 1 edges
       forming a tree. *)
 
 (** ** Examples *)

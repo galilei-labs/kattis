@@ -15,7 +15,7 @@
     - 2 to 500 vertices; 1 to n * (n - 1) / 2 roads, with no repeated pair.
     - Refill vertices are distinct and exclude the endpoints.
     - Positive road lengths, travel range and any feasible minimum total
-      distance are below 2^31. *)
+      distance are below $2^{31}$. *)
 
 (** ** Examples *)
 

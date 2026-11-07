@@ -6,8 +6,18 @@ title = "Sumsets"
 path = "/kattis/sumsets"
 
 [presentation]
+subtitle = "Meet-in-the-middle pair-sum hashing"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["sumsets_implem.v", "sumsets.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/sumsets_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "sumsets_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/sumsets_extracted_marray.ml"

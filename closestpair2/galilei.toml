@@ -6,8 +6,18 @@ title = "Closest Pair"
 path = "/kattis/closestpair2"
 
 [presentation]
+subtitle = "Divide-and-conquer closest pair"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["closestpair2_implem.v", "closestpair2.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/closestpair2_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "closestpair2_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/closestpair2_extracted_marray.ml"

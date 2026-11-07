@@ -6,8 +6,18 @@ title = "Booking"
 path = "/kattis/booking"
 
 [presentation]
+subtitle = "Sorted event sweep"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["booking_implem.v", "booking.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/booking_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "booking_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/booking_extracted_marray.ml"

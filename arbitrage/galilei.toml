@@ -6,8 +6,18 @@ title = "Arbitrage?"
 path = "/kattis/arbitrage"
 
 [presentation]
+subtitle = "Max-product Floyd\u2013Warshall"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["arbitrage_implem.v", "arbitrage.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/arbitrage_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "arbitrage_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/arbitrage_extracted_marray.ml"

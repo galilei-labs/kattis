@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10000 vertices; 0 to 30000 edges.
-    - Edge weights from 0 to 1000. *)
+    - 1 to 10,000 vertices; 0 to 30,000 edges.
+    - Edge weights from 0 to 1,000. *)
 
 (** ** Examples *)
 

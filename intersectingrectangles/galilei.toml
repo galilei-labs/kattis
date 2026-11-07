@@ -6,8 +6,18 @@ title = "Intersecting Rectangles"
 path = "/kattis/intersectingrectangles"
 
 [presentation]
+subtitle = "Plane sweep with AVL trees"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["intersectingrectangles_implem.v", "intersectingrectangles.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/intersectingrectangles_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "intersectingrectangles_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/intersectingrectangles_extracted_marray.ml"

@@ -6,8 +6,18 @@ title = "Polynomial Multiplication 1"
 path = "/kattis/polymul1"
 
 [presentation]
+subtitle = "Schoolbook polynomial convolution"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["polymul1_implem.v", "polymul1.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/polymul1_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "polymul1_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/polymul1_extracted_marray.ml"

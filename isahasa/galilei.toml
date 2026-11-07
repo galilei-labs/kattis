@@ -6,8 +6,18 @@ title = "Is-A? Has-A? Who Knowz-A?"
 path = "/kattis/isahasa"
 
 [presentation]
+subtitle = "Bitset transitive closure"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["isahasa_implem.v", "isahasa.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/isahasa_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "isahasa_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/isahasa_extracted_marray.ml"

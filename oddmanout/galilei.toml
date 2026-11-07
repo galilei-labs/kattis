@@ -6,8 +6,18 @@ title = "Odd Man Out"
 path = "/kattis/oddmanout"
 
 [presentation]
+subtitle = "XOR reduction"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["oddmanout_implem.v", "oddmanout.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/oddmanout_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "oddmanout_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/oddmanout_extracted_marray.ml"

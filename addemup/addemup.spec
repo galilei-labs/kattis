@@ -11,8 +11,8 @@
     - Difficulty: 5.5
 
     **Kattis Bounds**
-    - 1 to 100000 cards; values from 1 to 100000000.
-    - Target sum from 2 to 200000000. *)
+    - 1 to 100,000 cards; values from 1 to 100,000,000.
+    - Target sum from 2 to 200,000,000. *)
 
 (** ** Examples *)
 

@@ -13,7 +13,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 300 rows and 1 to 50000 columns.
+    - 1 to 300 rows and 1 to 50,000 columns.
     - Exactly one destination; the start is not an obstacle.
     - Arrows stay within the grid and point to neither an obstacle nor an
       opposing arrow. *)

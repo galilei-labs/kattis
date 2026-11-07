@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Capacity and item count from 1 to 2000.
-    - Integer weights and values from 1 to 10000. *)
+    - Capacity and item count from 1 to 2,000.
+    - Integer weights and values from 1 to 10,000. *)
 
 (** ** Examples *)
 

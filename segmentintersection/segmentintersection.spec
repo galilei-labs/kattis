@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Coordinate absolute values are at most 10000. *)
+    - Coordinate absolute values are at most 10,000. *)
 
 (** ** Examples *)
 

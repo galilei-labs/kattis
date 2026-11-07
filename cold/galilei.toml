@@ -10,6 +10,7 @@ check = "opam exec --switch=rocq-9.2 -- make -C extraction check"
 path = "/kattis/cold"
 
 [presentation]
+subtitle = "Single-pass counting"
 brand = "focus"
 collapsible = ["Definitions"]
 
@@ -17,11 +18,10 @@ collapsible = ["Definitions"]
 files = ["cold_implem.v", "cold.spec"]
 
 [extraction]
-languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
+languages = ["OCaml"]
 extracted = ["OCaml"]
-files = ["extraction/cold_extracted_marray.ml", "extraction/cold_extracted_marray.mli", "extraction/marray.ml"]
+files = ["extraction/ocaml/cold_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
 archive = "cold_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/cold_extracted_marray.mli"
-Rust = ""
+OCaml = "extraction/ocaml/cold_extracted_marray.ml"

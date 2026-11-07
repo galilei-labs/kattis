@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 <= N <= 1000000.
-    - 1 <= A, B, C, X, Y <= 1000000000. *)
+    - 1 $\le$ N $\le$ $10^{6}$.
+    - 1 $\le$ A, B, C, X, Y $\le$ $10^{9}$. *)
 
 (** ** Examples *)
 

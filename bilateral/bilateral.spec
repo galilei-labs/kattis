@@ -10,8 +10,8 @@
     - Difficulty: 5.6
 
     **Kattis Bounds**
-    - 1 to 10000 distinct edges.
-    - The two vertex sets use IDs 1000 to 1999 and 2000 to 2999. *)
+    - 1 to 10,000 distinct edges.
+    - The two vertex sets use IDs 1,000 to 1,999 and 2,000 to 2,999. *)
 
 (** ** Examples *)
 

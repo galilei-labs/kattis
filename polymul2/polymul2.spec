@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Each polynomial has degree from 1 to 131071.
+    - Each polynomial has degree from 1 to 131,071.
     - Input and output coefficients are signed 32-bit integers. *)
 
 (** ** Examples *)

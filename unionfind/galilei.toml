@@ -6,8 +6,18 @@ title = "Union-Find"
 path = "/kattis/unionfind"
 
 [presentation]
+subtitle = "Union by rank, path compression"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["unionfind_implem.v", "unionfind.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/unionfind_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "unionfind_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/unionfind_extracted_marray.ml"

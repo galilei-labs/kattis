@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 nonempty lowercase strings, totaling at most 1000000
+    - 1 to $10^{5}$ nonempty lowercase strings, totaling at most $10^{6}$
       characters.
     - Exactly N - 1 operations on distinct source and target indices; an
       emptied source is never accessed again. *)

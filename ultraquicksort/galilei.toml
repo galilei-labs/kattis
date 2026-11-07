@@ -6,8 +6,18 @@ title = "Ultra-QuickSort"
 path = "/kattis/ultraquicksort"
 
 [presentation]
+subtitle = "Merge-sort inversion counting"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["ultraquicksort_implem.v", "ultraquicksort.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/ultraquicksort_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "ultraquicksort_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/ultraquicksort_extracted_marray.ml"

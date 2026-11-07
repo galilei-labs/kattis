@@ -10,8 +10,8 @@
     - Difficulty: 9.1
 
     **Kattis Bounds**
-    - Sequence length from 1 to 10^18.
-    - Each factor list has 1 to 400 entries, each from 1 to 10^18. *)
+    - Sequence length from 1 to $10^{18}$.
+    - Each factor list has 1 to 400 entries, each from 1 to $10^{18}$. *)
 
 (** ** Examples *)
 

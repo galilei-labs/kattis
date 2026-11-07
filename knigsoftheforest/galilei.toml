@@ -6,8 +6,18 @@ title = "Knigs of the Forest"
 path = "/kattis/knigsoftheforest"
 
 [presentation]
+subtitle = "Max-heap tournament simulation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["knigsoftheforest_implem.v", "knigsoftheforest.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/knigsoftheforest_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "knigsoftheforest_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/knigsoftheforest_extracted_marray.ml"

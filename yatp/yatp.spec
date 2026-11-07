@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 200000 vertices forming a tree.
-    - Vertex penalties and edge weights from 1 to 1000000. *)
+    - 1 to 200,000 vertices forming a tree.
+    - Vertex penalties and edge weights from 1 to 1,000,000. *)
 
 (** ** Examples *)
 

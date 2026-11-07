@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1000000 elements and 0 to 1000000 operations.
+    - 1 to 1,000,000 elements and 0 to 1,000,000 operations.
     - Element indices from 0 to N - 1. *)
 
 (** ** Examples *)

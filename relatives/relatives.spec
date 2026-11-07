@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 <= n <= 1000000000. *)
+    - 1 $\le$ n $\le$ 1,000,000,000. *)
 
 (** ** Examples *)
 

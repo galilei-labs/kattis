@@ -6,8 +6,18 @@ title = "Canvas Painting"
 path = "/kattis/canvas"
 
 [presentation]
+subtitle = "Huffman-style greedy merging"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["canvas_implem.v", "canvas.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/canvas_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "canvas_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/canvas_extracted_marray.ml"

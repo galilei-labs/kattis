@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100000 rectangles.
-    - Integer coordinates from -10^9 to 10^9; each rectangle has positive
+    - 1 to $10^{5}$ rectangles.
+    - Integer coordinates from -$10^{9}$ to $10^{9}$; each rectangle has positive
       width and height.
     - All horizontal coordinates are distinct, as are all vertical
       coordinates. *)

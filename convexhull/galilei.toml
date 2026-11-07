@@ -6,8 +6,18 @@ title = "Convex Hull"
 path = "/kattis/convexhull"
 
 [presentation]
+subtitle = "Andrew\u2019s monotone chain"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["convexhull_implem.v", "convexhull.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/convexhull_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "convexhull_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/convexhull_extracted_marray.ml"

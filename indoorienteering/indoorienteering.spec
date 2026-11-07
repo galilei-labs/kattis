@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 14 vertices; target length from 1 to 10^15.
+    - 2 to 14 vertices; target length from 1 to $10^{15}$.
     - Distances are symmetric, zero on the diagonal, and otherwise from 1 to
       the target length; they satisfy the triangle inequality. *)
 

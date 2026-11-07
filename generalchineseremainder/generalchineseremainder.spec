@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Both moduli are from 1 to 1000000000.
+    - Both moduli are from 1 to $10^{9}$.
     - Each residue is nonnegative and smaller than its modulus. *)
 
 (** ** Examples *)

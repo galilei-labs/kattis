@@ -10,7 +10,7 @@
     - Difficulty: 5.5
 
     **Kattis Bounds**
-    - 1 to 30000 dictionary words and 1 to 30000 queries.
+    - 1 to 30,000 dictionary words and 1 to 30,000 queries.
     - Words contain fewer than 30 lowercase letters; dictionary entries are
       distinct. *)
 

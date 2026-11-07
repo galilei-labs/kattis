@@ -9,8 +9,8 @@
     - Difficulty: 7.7
 
     **Kattis Bounds**
-    - Text length and query count from 1 to 200000.
-    - Nonempty lowercase patterns, with total length at most 200000.
+    - Text length and query count from 1 to 200,000.
+    - Nonempty lowercase patterns, with total length at most 200,000.
     - Occurrence ranks from 1 to the text length. *)
 
 (** ** Examples *)

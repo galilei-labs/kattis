@@ -6,8 +6,18 @@ title = "Palindromes"
 path = "/kattis/palindromes"
 
 [presentation]
+subtitle = "Manacher\u2019s algorithm, Fenwick sweeps"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["palindromes_implem.v", "palindromes.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/palindromes_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "palindromes_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/palindromes_extracted_marray.ml"

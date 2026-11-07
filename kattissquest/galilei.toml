@@ -6,8 +6,18 @@ title = "Kattis's Quest"
 path = "/kattis/kattissquest"
 
 [presentation]
+subtitle = "Van Emde Boas tree, heaps"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["kattissquest_implem.v", "kattissquest.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/kattissquest_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "kattissquest_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/kattissquest_extracted_marray.ml"

@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10000 given relationships and 1 to 10000 queries.
+    - 1 to 10,000 given relationships and 1 to 10,000 queries.
     - At most 500 distinct class names; query names occur in the given
       relationships.
     - No nontrivial is-a cycles. *)

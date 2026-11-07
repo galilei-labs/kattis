@@ -6,8 +6,18 @@ title = "Worst Weather Ever"
 path = "/kattis/worstweather"
 
 [presentation]
+subtitle = "Binary search and range-max queries"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["worstweather_implem.v", "worstweather.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/worstweather_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "worstweather_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/worstweather_extracted_marray.ml"

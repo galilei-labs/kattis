@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Nonempty patterns with total length at most 100000.
-    - Nonempty text of length at most 200000. *)
+    - Nonempty patterns with total length at most 100,000.
+    - Nonempty text of length at most 200,000. *)
 
 (** ** Examples *)
 

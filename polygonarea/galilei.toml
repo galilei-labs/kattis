@@ -6,8 +6,18 @@ title = "Polygon Area"
 path = "/kattis/polygonarea"
 
 [presentation]
+subtitle = "Shoelace formula"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["polygonarea_implem.v", "polygonarea.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/polygonarea_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "polygonarea_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/polygonarea_extracted_marray.ml"

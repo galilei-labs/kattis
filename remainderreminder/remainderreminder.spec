@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 7 <= a <= b <= 100.
-    - Each remainder is from 1 to 1000000000.
-    - Search interval endpoints satisfy 1 <= lower < upper <= 1000000000;
+    - 7 $\le$ a $\le$ b $\le$ 100.
+    - Each remainder is from 1 to $10^{9}$.
+    - Search interval endpoints satisfy 1 $\le$ lower < upper $\le$ $10^{9}$;
       exactly one answer exists. *)
 
 (** ** Examples *)

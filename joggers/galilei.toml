@@ -6,8 +6,18 @@ title = "Chicken Joggers"
 path = "/kattis/joggers"
 
 [presentation]
+subtitle = "Greedy tree vertex cover (BFS order, bottom-up)"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["joggers_implem.v", "joggers.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/joggers_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "joggers_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/joggers_extracted_marray.ml"

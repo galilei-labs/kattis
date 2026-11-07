@@ -10,7 +10,7 @@
 
     **Kattis Bounds**
     - 2 to 100 strictly increasing denominations.
-    - The first denomination is 1; the largest is at most 1000000. *)
+    - The first denomination is 1; the largest is at most $10^{6}$. *)
 
 (** ** Examples *)
 

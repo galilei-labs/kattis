@@ -6,8 +6,18 @@ title = "Galactic Collegiate Programming Contest"
 path = "/kattis/gcpc"
 
 [presentation]
+subtitle = "Order-statistic AVL tree"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["gcpc_implem.v", "gcpc.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/gcpc_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "gcpc_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/gcpc_extracted_marray.ml"

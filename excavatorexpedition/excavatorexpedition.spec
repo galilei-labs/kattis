@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 400000 vertices; 1 to 400000 edges.
+    - 2 to 400,000 vertices; 1 to 400,000 edges.
     - The graph is acyclic and contains a path from the first vertex to the
       last. *)
 

@@ -6,8 +6,18 @@ title = "Number Sets (Hard)"
 path = "/kattis/numbersetshard"
 
 [presentation]
+subtitle = "Prime sieve and union\u2013find"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["numbersetshard_implem.v", "numbersetshard.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/numbersetshard_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "numbersetshard_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/numbersetshard_extracted_marray.ml"

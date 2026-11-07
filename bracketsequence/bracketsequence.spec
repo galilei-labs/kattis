@@ -10,8 +10,8 @@
     - Difficulty: 3.9
 
     **Kattis Bounds**
-    - 1 to 300000 tokens forming a valid bracket sequence.
-    - Integer tokens from 0 to 1000000006. *)
+    - 1 to 300,000 tokens forming a valid bracket sequence.
+    - Integer tokens from 0 to 1,000,000,006. *)
 
 (** ** Examples *)
 

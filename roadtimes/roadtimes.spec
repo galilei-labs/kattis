@@ -14,7 +14,7 @@
 
     **Kattis Bounds**
     - 1 to 30 vertices and at most 100 roads.
-    - Road lengths from 1 to 1000 km; speeds from 30 to 60 km/h.
+    - Road lengths from 1 to 1,000 km; speeds from 30 to 60 km/h.
     - 1 to 100 observations and 1 to 100 queries; each pair has a unique
       shortest-distance route.
     - Some assignment of road speeds is consistent with all observations. *)

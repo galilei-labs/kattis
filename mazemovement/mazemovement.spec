@@ -13,8 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 1000 distinct labels, each from 2 to 2000000000.
-    - The maximum flow is at most 1000000000. *)
+    - 2 to 1,000 distinct labels, each from 2 to 2,000,000,000.
+    - The maximum flow is at most $10^{9}$. *)
 
 (** ** Examples *)
 

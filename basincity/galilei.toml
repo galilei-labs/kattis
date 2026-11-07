@@ -6,8 +6,18 @@ title = "Basin City Surveillance"
 path = "/kattis/basincity"
 
 [presentation]
+subtitle = "Kernelisation and branching"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["basincity_implem.v", "basincity.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/basincity_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "basincity_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/basincity_extracted_marray.ml"

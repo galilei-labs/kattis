@@ -10,7 +10,7 @@
     - Difficulty: 3.5
 
     **Kattis Bounds**
-    - 1 to 100000 items; each weight from 1 to 100000. *)
+    - 1 to 100,000 items; each weight from 1 to 100,000. *)
 
 (** ** Examples *)
 

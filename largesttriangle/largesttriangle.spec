@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 5000 points.
-    - Integer coordinates from 0 to 40000000. *)
+    - 3 to 5,000 points.
+    - Integer coordinates from 0 to 40,000,000. *)
 
 (** ** Examples *)
 

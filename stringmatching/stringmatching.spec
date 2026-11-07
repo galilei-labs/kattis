@@ -12,7 +12,7 @@
 
     **Kattis Bounds**
     - Nonempty pattern and text; the input file is at most 5 MB.
-    - This specification additionally caps text length at 4194303 so all
+    - This specification additionally caps text length at 4,194,303 so all
       match positions fit the output array. *)
 
 (** ** Examples *)

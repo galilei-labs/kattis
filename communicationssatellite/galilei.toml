@@ -6,8 +6,18 @@ title = "Communications Satellite"
 path = "/kattis/communicationssatellite"
 
 [presentation]
+subtitle = "Dense Prim\u2019s algorithm"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["communicationssatellite_implem.v", "communicationssatellite.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/communicationssatellite_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "communicationssatellite_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/communicationssatellite_extracted_marray.ml"

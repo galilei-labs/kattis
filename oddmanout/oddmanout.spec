@@ -10,7 +10,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 999 entries, each from 1 to 2^31 - 1.
+    - 3 to 999 entries, each from 1 to $2^{31}$ - 1.
     - Exactly one value has odd multiplicity. *)
 
 (** ** Examples *)

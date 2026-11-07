@@ -6,8 +6,18 @@ title = "Babelfish"
 path = "/kattis/babelfish"
 
 [presentation]
+subtitle = "FKS perfect hashing"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["babelfish_implem.v", "babelfish.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/babelfish_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "babelfish_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/babelfish_extracted_marray.ml"

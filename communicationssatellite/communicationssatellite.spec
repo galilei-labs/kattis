@@ -10,8 +10,8 @@
     - Difficulty: 2.9
 
     **Kattis Bounds**
-    - 1 to 2000 circles with no overlaps.
-    - Integer center coordinates from -1000 to 1000; radii from 1 to 100. *)
+    - 1 to 2,000 circles with no overlaps.
+    - Integer center coordinates from -1,000 to 1,000; radii from 1 to 100. *)
 
 (** ** Examples *)
 

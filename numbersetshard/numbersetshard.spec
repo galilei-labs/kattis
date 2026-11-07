@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 <= lower bound <= upper bound <= 10^12; interval width at most
-      1000000.
+    - 1 $\le$ lower bound $\le$ upper bound $\le$ $10^{12}$; interval width at most
+      1,000,000.
     - Prime-factor threshold from 2 to the upper bound. *)
 
 (** ** Examples *)

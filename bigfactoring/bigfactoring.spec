@@ -9,7 +9,7 @@
     - Difficulty: 7.2
 
     **Kattis Bounds**
-    - Integer from 2 to 10^24. *)
+    - Integer from 2 to $10^{24}$. *)
 
 (** ** Examples *)
 

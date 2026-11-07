@@ -6,8 +6,18 @@ title = "Derangement Rotations"
 path = "/kattis/derangementrotations"
 
 [presentation]
+subtitle = "GCD counting and modular exponentiation"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["derangementrotations_implem.v", "derangementrotations.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/derangementrotations_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "derangementrotations_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/derangementrotations_extracted_marray.ml"

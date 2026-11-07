@@ -10,8 +10,8 @@
     - Difficulty: 4.7
 
     **Kattis Bounds**
-    - 1 <= K, C <= 1000000000.
-    - The returned B must be at most 1000000000. *)
+    - 1 $\le$ K, C $\le$ $10^{9}$.
+    - The returned B must be at most $10^{9}$. *)
 
 (** ** Examples *)
 

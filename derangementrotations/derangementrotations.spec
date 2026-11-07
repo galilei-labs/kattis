@@ -10,8 +10,8 @@
     - Difficulty: 6.2
 
     **Kattis Bounds**
-    - 3 <= n <= 1000000.
-    - Prime modulus from 100000000 to 1000000007. *)
+    - 3 $\le$ n $\le$ $10^{6}$.
+    - Prime modulus from $10^{8}$ to 1,000,000,007. *)
 
 (** ** Examples *)
 

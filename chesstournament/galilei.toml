@@ -6,8 +6,18 @@ title = "Chess Tournament"
 path = "/kattis/chesstournament"
 
 [presentation]
+subtitle = "Union\u2013find and topological sorting"
 brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
 files = ["chesstournament_implem.v", "chesstournament.spec"]
+
+[extraction]
+languages = ["OCaml"]
+extracted = ["OCaml"]
+files = ["extraction/ocaml/chesstournament_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+archive = "chesstournament_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/ocaml/chesstournament_extracted_marray.ml"
