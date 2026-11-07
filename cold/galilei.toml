@@ -1,0 +1,27 @@
+# galilei.toml: page for cold.spec.
+#   cd ../../galilei && PORT=3001 uv run python scripts/serve.py ../kattis/cold
+
+[spec]
+file = "cold.spec"
+title = "Cold-puter Science"
+check = "opam exec --switch=rocq-9.2 -- make -C extraction check"
+
+[publish]
+path = "/kattis2/cold"
+
+[presentation]
+brand = "focus"
+collapsible = ["Definitions"]
+
+[implementation]
+files = ["cold_implem.v", "cold.spec"]
+
+[extraction]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
+extracted = ["OCaml"]
+files = ["extraction/cold_extracted_marray.ml", "extraction/cold_extracted_marray.mli", "extraction/marray.ml"]
+archive = "cold_ocaml.zip"
+
+[extraction.interface]
+OCaml = "extraction/cold_extracted_marray.mli"
+Rust = ""

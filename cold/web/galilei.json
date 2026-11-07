@@ -1,0 +1,17 @@
+{
+ "galilei": "0.1.0",
+ "published": "2026-11-07T21:48:13+00:00",
+ "title": "Cold-puter Science",
+ "source": "cold",
+ "spec": "cold.spec",
+ "sha256": "57d011f5ec518ebb6aa7c42c40a36b523b76e7b133fb4cdab3092a6bd9e3c03d",
+ "checked_with": "The Rocq Prover, version 9.2",
+ "presentation_draft": false,
+ "path": "/kattis2/cold",
+ "files": [
+  "index.html",
+  "spec.json",
+  "cold.spec",
+  "galilei.json"
+ ]
+}

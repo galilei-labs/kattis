@@ -1,0 +1,188 @@
+{
+ "file": "cold.spec",
+ "source": "(** * Cold-puter Science *)\n\n(** ** Description *)\n\n(** Given [n] integers [t_1, ..., t_n], count how many are strictly below zero.\n\n    [@kattis cold]\n    - Difficulty: 1.2\n    - CPU time limit: 1 second\n    - Memory limit: 1024 MB\n\n    **Kattis Bounds**\n    - [1 <= n <= 100]\n    - [-1000000 <= t_i <= 1000000] for every [i] *)\n\n(** ** Examples *)\n(* count_negatives [5; -10; 15] = 1 *)\n(* count_negatives [-14; -5; -39; -5; -7] = 5 *)\n\n(** ** [@hide] Environment *)\n(* @function        count_negatives\n   @signature       array sint -> uint\n   @math_signature  list Z -> N\n   @summary         [count_negatives temperatures] returns the number of\n                    elements of temperatures that are strictly below zero\n*)\n\nFrom Stdlib Require Import ZArith NArith List Uint63 PArray.\nFrom Respeced Require Import Repr.\nImport ListNotations.\nOpen Scope Z_scope.\n\n(** ** Definitions *)\n\n(** The number of elements of [l]. *)\nDefinition len {A} (l : list A) : N :=\n  N.of_nat (List.length l).\n\n(** [temperature] is strictly below zero. *)\nDefinition is_negative (temperature : Z) : bool :=\n  temperature <? 0.\n\n(** [@inside count_negatives_correct] The statement's bounds. *)\nRecord valid_input (temperatures : list Z) : Prop := {\n  (* 1 <= n <= 100 *)\n  vi_length : (1 <= len temperatures <= 100)%N;\n  (* -10^6 <= t <= 10^6 *)\n  vi_values :\n    Forall\n      (fun temperature => - 10 ^ 6 <= temperature <= 10 ^ 6)\n      temperatures;\n}.\n\n(** ** Correctness *)\n\n(** [@requirement] [@short must output the number of negative entries of [temperatures].]\n    The result [output] is the number of negative entries of [temperatures]. *)\nDefinition count_negatives_spec\n  (temperatures : list Z) (output : N) : Prop :=\n  output = len (filter is_negative temperatures).\n\n(** ** Interface *)\n\n(** Count the integers strictly below zero, on machine types.\n    - Input [temperatures]:\n    - Output [output]: *)\nProgram count_negatives : array sint -> uint.\n\n(** ** Bridge *)\n\n(** [@requirement count_negatives_spec] [@fold full correctness statement]\n    Every valid input is machine-representable and, on its machine\n    representation, the program returns a machine-representable output\n    satisfying the specification. *)\nSpecification count_negatives_correct :\n  forall (temperatures : list Z)\n         (temperatures_arr : array sint),\n  valid_input temperatures ->\n  repr temperatures_arr temperatures ->\n  exists output : N,\n    repr (count_negatives temperatures_arr) output /\\\n    count_negatives_spec temperatures output.\n\n(** [@hide] The kernel primitives (int, array, float, string) and their axioms. *)\nAllowed Primitive Axioms.\n",
+ "css": ".src .hll { background-color: #ffffcc }\n.src { background: #ffffff; }\n.src .c { color: #177500 } /* Comment */\n.src .err { color: #000 } /* Error */\n.src .k { color: #A90D91 } /* Keyword */\n.src .l { color: #1C01CE } /* Literal */\n.src .n { color: #000 } /* Name */\n.src .o { color: #000 } /* Operator */\n.src .ch { color: #177500 } /* Comment.Hashbang */\n.src .cm { color: #177500 } /* Comment.Multiline */\n.src .cp { color: #633820 } /* Comment.Preproc */\n.src .cpf { color: #177500 } /* Comment.PreprocFile */\n.src .c1 { color: #177500 } /* Comment.Single */\n.src .cs { color: #177500 } /* Comment.Special */\n.src .kc { color: #A90D91 } /* Keyword.Constant */\n.src .kd { color: #A90D91 } /* Keyword.Declaration */\n.src .kn { color: #A90D91 } /* Keyword.Namespace */\n.src .kp { color: #A90D91 } /* Keyword.Pseudo */\n.src .kr { color: #A90D91 } /* Keyword.Reserved */\n.src .kt { color: #A90D91 } /* Keyword.Type */\n.src .ld { color: #1C01CE } /* Literal.Date */\n.src .m { color: #1C01CE } /* Literal.Number */\n.src .s { color: #C41A16 } /* Literal.String */\n.src .na { color: #836C28 } /* Name.Attribute */\n.src .nb { color: #A90D91 } /* Name.Builtin */\n.src .nc { color: #3F6E75 } /* Name.Class */\n.src .no { color: #000 } /* Name.Constant */\n.src .nd { color: #000 } /* Name.Decorator */\n.src .ni { color: #000 } /* Name.Entity */\n.src .ne { color: #000 } /* Name.Exception */\n.src .nf { color: #000 } /* Name.Function */\n.src .nl { color: #000 } /* Name.Label */\n.src .nn { color: #000 } /* Name.Namespace */\n.src .nx { color: #000 } /* Name.Other */\n.src .py { color: #000 } /* Name.Property */\n.src .nt { color: #000 } /* Name.Tag */\n.src .nv { color: #000 } /* Name.Variable */\n.src .ow { color: #000 } /* Operator.Word */\n.src .mb { color: #1C01CE } /* Literal.Number.Bin */\n.src .mf { color: #1C01CE } /* Literal.Number.Float */\n.src .mh { color: #1C01CE } /* Literal.Number.Hex */\n.src .mi { color: #1C01CE } /* Literal.Number.Integer */\n.src .mo { color: #1C01CE } /* Literal.Number.Oct */\n.src .sa { color: #C41A16 } /* Literal.String.Affix */\n.src .sb { color: #C41A16 } /* Literal.String.Backtick */\n.src .sc { color: #2300CE } /* Literal.String.Char */\n.src .dl { color: #C41A16 } /* Literal.String.Delimiter */\n.src .sd { color: #C41A16 } /* Literal.String.Doc */\n.src .s2 { color: #C41A16 } /* Literal.String.Double */\n.src .se { color: #C41A16 } /* Literal.String.Escape */\n.src .sh { color: #C41A16 } /* Literal.String.Heredoc */\n.src .si { color: #C41A16 } /* Literal.String.Interpol */\n.src .sx { color: #C41A16 } /* Literal.String.Other */\n.src .sr { color: #C41A16 } /* Literal.String.Regex */\n.src .s1 { color: #C41A16 } /* Literal.String.Single */\n.src .ss { color: #C41A16 } /* Literal.String.Symbol */\n.src .bp { color: #5B269A } /* Name.Builtin.Pseudo */\n.src .fm { color: #000 } /* Name.Function.Magic */\n.src .vc { color: #000 } /* Name.Variable.Class */\n.src .vg { color: #000 } /* Name.Variable.Global */\n.src .vi { color: #000 } /* Name.Variable.Instance */\n.src .vm { color: #000 } /* Name.Variable.Magic */\n.src .il { color: #1C01CE } /* Literal.Number.Integer.Long */",
+ "lines": [
+  "<span class=\"c\">(** * Cold-puter Science *)</span>",
+  "",
+  "<span class=\"c\">(** ** Description *)</span>",
+  "",
+  "<span class=\"c\">(** Given [n] integers [t_1, ..., t_n], count how many are strictly below zero.</span>",
+  "",
+  "<span class=\"c\">    [@kattis cold]</span>",
+  "<span class=\"c\">    - Difficulty: 1.2</span>",
+  "<span class=\"c\">    - CPU time limit: 1 second</span>",
+  "<span class=\"c\">    - Memory limit: 1024 MB</span>",
+  "",
+  "<span class=\"c\">    **Kattis Bounds**</span>",
+  "<span class=\"c\">    - [1 &lt;= n &lt;= 100]</span>",
+  "<span class=\"c\">    - [-1000000 &lt;= t_i &lt;= 1000000] for every [i] *)</span>",
+  "",
+  "<span class=\"c\">(** ** Examples *)</span>",
+  "<span class=\"c\">(* count_negatives [5; -10; 15] = 1 *)</span>",
+  "<span class=\"c\">(* count_negatives [-14; -5; -39; -5; -7] = 5 *)</span>",
+  "",
+  "<span class=\"c\">(** ** [@hide] Environment *)</span>",
+  "<span class=\"c\">(* @function        count_negatives</span>",
+  "<span class=\"c\">   @signature       array sint -&gt; uint</span>",
+  "<span class=\"c\">   @math_signature  list Z -&gt; N</span>",
+  "<span class=\"c\">   @summary         [count_negatives temperatures] returns the number of</span>",
+  "<span class=\"c\">                    elements of temperatures that are strictly below zero</span>",
+  "<span class=\"c\">*)</span>",
+  "",
+  "<span class=\"kn\">From</span> <span class=\"n\">Stdlib</span> <span class=\"kn\">Require</span> <span class=\"kn\">Import</span> <span class=\"n\">ZArith</span> <span class=\"n\">NArith</span> <span class=\"n\">List</span> <span class=\"n\">Uint63</span> <span class=\"n\">PArray</span><span class=\"o\">.</span>",
+  "<span class=\"kn\">From</span> <span class=\"n\">Respeced</span> <span class=\"kn\">Require</span> <span class=\"kn\">Import</span> <span class=\"n\">Repr</span><span class=\"o\">.</span>",
+  "<span class=\"kn\">Import</span> <span class=\"n\">ListNotations</span><span class=\"o\">.</span>",
+  "<span class=\"kn\">Open</span> <span class=\"kn\">Scope</span> <span class=\"n\">Z_scope</span><span class=\"o\">.</span>",
+  "",
+  "<span class=\"c\">(** ** Definitions *)</span>",
+  "",
+  "<span class=\"c\">(** The number of elements of [l]. *)</span>",
+  "<span class=\"kn\">Definition</span> <span class=\"n\">len</span> <span class=\"o\">{</span><span class=\"n\">A</span><span class=\"o\">}</span> <span class=\"o\">(</span><span class=\"n\">l</span> <span class=\"o\">:</span> <span class=\"n\">list</span> <span class=\"n\">A</span><span class=\"o\">)</span> <span class=\"o\">:</span> <span class=\"n\">N</span> <span class=\"o\">:=</span>",
+  "  <span class=\"n\">N.of_nat</span> <span class=\"o\">(</span><span class=\"n\">List.length</span> <span class=\"n\">l</span><span class=\"o\">).</span>",
+  "",
+  "<span class=\"c\">(** [temperature] is strictly below zero. *)</span>",
+  "<span class=\"kn\">Definition</span> <span class=\"n\">is_negative</span> <span class=\"o\">(</span><span class=\"n\">temperature</span> <span class=\"o\">:</span> <span class=\"n\">Z</span><span class=\"o\">)</span> <span class=\"o\">:</span> <span class=\"n\">bool</span> <span class=\"o\">:=</span>",
+  "  <span class=\"n\">temperature</span> <span class=\"o\">&lt;?</span> <span class=\"mi\">0</span><span class=\"o\">.</span>",
+  "",
+  "<span class=\"c\">(** [@inside count_negatives_correct] The statement's bounds. *)</span>",
+  "<span class=\"kn\">Record</span> <span class=\"n\">valid_input</span> <span class=\"o\">(</span><span class=\"n\">temperatures</span> <span class=\"o\">:</span> <span class=\"n\">list</span> <span class=\"n\">Z</span><span class=\"o\">)</span> <span class=\"o\">:</span> <span class=\"kt\">Prop</span> <span class=\"o\">:=</span> <span class=\"o\">{</span>",
+  "  <span class=\"c\">(* 1 &lt;= n &lt;= 100 *)</span>",
+  "  <span class=\"n\">vi_length</span> <span class=\"o\">:</span> <span class=\"o\">(</span><span class=\"mi\">1</span> <span class=\"o\">&lt;=</span> <span class=\"n\">len</span> <span class=\"n\">temperatures</span> <span class=\"o\">&lt;=</span> <span class=\"mi\">100</span><span class=\"o\">)%</span><span class=\"n\">N</span><span class=\"o\">;</span>",
+  "  <span class=\"c\">(* -10^6 &lt;= t &lt;= 10^6 *)</span>",
+  "  <span class=\"n\">vi_values</span> <span class=\"o\">:</span>",
+  "    <span class=\"n\">Forall</span>",
+  "      <span class=\"o\">(</span><span class=\"k\">fun</span> <span class=\"n\">temperature</span> <span class=\"o\">=&gt;</span> <span class=\"o\">-</span> <span class=\"mi\">10</span> <span class=\"o\">^</span> <span class=\"mi\">6</span> <span class=\"o\">&lt;=</span> <span class=\"n\">temperature</span> <span class=\"o\">&lt;=</span> <span class=\"mi\">10</span> <span class=\"o\">^</span> <span class=\"mi\">6</span><span class=\"o\">)</span>",
+  "      <span class=\"n\">temperatures</span><span class=\"o\">;</span>",
+  "<span class=\"o\">}.</span>",
+  "",
+  "<span class=\"c\">(** ** Correctness *)</span>",
+  "",
+  "<span class=\"c\">(** [@requirement] [@short must output the number of negative entries of [temperatures].]</span>",
+  "<span class=\"c\">    The result [output] is the number of negative entries of [temperatures]. *)</span>",
+  "<span class=\"kn\">Definition</span> <span class=\"n\">count_negatives_spec</span>",
+  "  <span class=\"o\">(</span><span class=\"n\">temperatures</span> <span class=\"o\">:</span> <span class=\"n\">list</span> <span class=\"n\">Z</span><span class=\"o\">)</span> <span class=\"o\">(</span><span class=\"n\">output</span> <span class=\"o\">:</span> <span class=\"n\">N</span><span class=\"o\">)</span> <span class=\"o\">:</span> <span class=\"kt\">Prop</span> <span class=\"o\">:=</span>",
+  "  <span class=\"n\">output</span> <span class=\"o\">=</span> <span class=\"n\">len</span> <span class=\"o\">(</span><span class=\"n\">filter</span> <span class=\"n\">is_negative</span> <span class=\"n\">temperatures</span><span class=\"o\">).</span>",
+  "",
+  "<span class=\"c\">(** ** Interface *)</span>",
+  "",
+  "<span class=\"c\">(** Count the integers strictly below zero, on machine types.</span>",
+  "<span class=\"c\">    - Input [temperatures]:</span>",
+  "<span class=\"c\">    - Output [output]: *)</span>",
+  "<span class=\"kn\">Program</span> <span class=\"n\">count_negatives</span> <span class=\"o\">:</span> <span class=\"n\">array</span> <span class=\"n\">sint</span> <span class=\"o\">-&gt;</span> <span class=\"n\">uint</span><span class=\"o\">.</span>",
+  "",
+  "<span class=\"c\">(** ** Bridge *)</span>",
+  "",
+  "<span class=\"c\">(** [@requirement count_negatives_spec] [@fold full correctness statement]</span>",
+  "<span class=\"c\">    Every valid input is machine-representable and, on its machine</span>",
+  "<span class=\"c\">    representation, the program returns a machine-representable output</span>",
+  "<span class=\"c\">    satisfying the specification. *)</span>",
+  "<span class=\"n\">Specification</span> <span class=\"n\">count_negatives_correct</span> <span class=\"o\">:</span>",
+  "  <span class=\"k\">forall</span> <span class=\"o\">(</span><span class=\"n\">temperatures</span> <span class=\"o\">:</span> <span class=\"n\">list</span> <span class=\"n\">Z</span><span class=\"o\">)</span>",
+  "         <span class=\"o\">(</span><span class=\"n\">temperatures_arr</span> <span class=\"o\">:</span> <span class=\"n\">array</span> <span class=\"n\">sint</span><span class=\"o\">),</span>",
+  "  <span class=\"n\">valid_input</span> <span class=\"n\">temperatures</span> <span class=\"o\">-&gt;</span>",
+  "  <span class=\"n\">repr</span> <span class=\"n\">temperatures_arr</span> <span class=\"n\">temperatures</span> <span class=\"o\">-&gt;</span>",
+  "  <span class=\"k\">exists</span> <span class=\"n\">output</span> <span class=\"o\">:</span> <span class=\"n\">N</span><span class=\"o\">,</span>",
+  "    <span class=\"n\">repr</span> <span class=\"o\">(</span><span class=\"n\">count_negatives</span> <span class=\"n\">temperatures_arr</span><span class=\"o\">)</span> <span class=\"n\">output</span> <span class=\"o\">/\\</span>",
+  "    <span class=\"n\">count_negatives_spec</span> <span class=\"n\">temperatures</span> <span class=\"n\">output</span><span class=\"o\">.</span>",
+  "",
+  "<span class=\"c\">(** [@hide] The kernel primitives (int, array, float, string) and their axioms. *)</span>",
+  "<span class=\"n\">Allowed</span> <span class=\"n\">Primitive</span> <span class=\"kn\">Axioms</span><span class=\"o\">.</span>"
+ ],
+ "hidden": [
+  [
+   1,
+   1
+  ],
+  [
+   3,
+   3
+  ],
+  [
+   5,
+   14
+  ],
+  [
+   16,
+   16
+  ],
+  [
+   20,
+   20
+  ],
+  [
+   33,
+   33
+  ],
+  [
+   35,
+   35
+  ],
+  [
+   39,
+   39
+  ],
+  [
+   43,
+   43
+  ],
+  [
+   54,
+   54
+  ],
+  [
+   56,
+   57
+  ],
+  [
+   62,
+   62
+  ],
+  [
+   64,
+   66
+  ],
+  [
+   69,
+   69
+  ],
+  [
+   71,
+   74
+  ],
+  [
+   84,
+   84
+  ]
+ ],
+ "items": [
+  {
+   "kind": "item",
+   "name": "len",
+   "prose": "The number of elements of <code>l</code>.",
+   "start": 36,
+   "end": 37
+  },
+  {
+   "kind": "item",
+   "name": "is_negative",
+   "prose": "<code>temperature</code> is strictly below zero.",
+   "start": 40,
+   "end": 41
+  },
+  {
+   "kind": "item",
+   "name": "valid_input",
+   "prose": "<code>@inside count_negatives_correct</code> The statement&#x27;s bounds.",
+   "start": 44,
+   "end": 52
+  },
+  {
+   "kind": "requirement",
+   "name": "count_negatives_spec",
+   "prose": "<code>@short must output the number of negative entries of [temperatures].</code>\n    The result <code>output</code> is the number of negative entries of <code>temperatures</code>.",
+   "start": 58,
+   "end": 60
+  }
+ ]
+}
