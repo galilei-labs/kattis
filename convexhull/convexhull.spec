@@ -7,6 +7,8 @@
 
     [@kattis convexhull]
     - Difficulty: 2.4
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 10,000 points.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: point count and integer coordinate pairs; a zero count ends input.
+    - Output convention: Hull vertex count followed by counterclockwise coordinates, excluding collinear intermediate vertices. *)
 (* Input:
 3
 0 0
@@ -157,8 +160,7 @@ Definition encloses (x_coordinates y_coordinates : list Z)
   | _ => left_of_edges x_coordinates y_coordinates polygon
   end.
 
-(** [@inside convex_hull_correct] The statement's
-    bounds, for one test case. *)
+(** [@inside convex_hull_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list Z) : Prop := {
   (* 1 <= n <= 10000 *)
@@ -177,11 +179,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the vertices of
-    the convex hull.] The answer : a non-empty polygon
-    of distinct input points, strictly convex and
-    counterclockwise when it has three vertices or more,
-    that encloses every input point. *)
+(** [@requirement]
+    The output lists convex-hull vertices counterclockwise, without duplicate
+    coordinates or intermediate collinear vertices, and encloses every input point. *)
 Definition convex_hull_spec
   (x_coordinates y_coordinates : list Z)
     (output : list N) : Prop :=
@@ -195,7 +195,8 @@ Definition convex_hull_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Return the vertices of a point set's convex hull in counterclockwise order, omitting
+    collinear intermediate vertices.
     - Input [x_coordinates]:
     - Input [y_coordinates]:
     - Output [output]: *)

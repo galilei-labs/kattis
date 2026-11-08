@@ -6,7 +6,7 @@
     Euclidean length at most twice the optimum.
 
     [@kattis tsp]
-    - Difficulty: 1.5
+    - Difficulty: 9.8
     - CPU time limit: 2 seconds
     - Memory limit: 1024 MB
 
@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Point count, followed by one x y coordinate pair per line.
+    - Output convention: Zero-based point indices in tour order, one per line; the last point connects to the first. *)
 (* Input:
 10
 95.0129 61.5432
@@ -115,8 +116,7 @@ Definition tour_length (x_coords y_coords : list R)
                 (nth ((k + 1) mod stop_count) tour 0))
     stop_count.
 
-(** [@inside tsp_correct] The statement's bounds on one
-    test case. *)
+(** [@inside tsp_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (x_coords y_coords : list R) : Prop := {
   (* 1 <= N <= 1000, the number of points *)
   vi_n : 1 <= len x_coords <= 1000;
@@ -133,12 +133,9 @@ Record valid_input (x_coords y_coords : list R) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Return a tour through all
-    points whose length is at most twice the length of
-    any tour, using exact Euclidean distances for the
-    specification.] The answer: a tour of the point_count
-    points, at most twice as long as any tour (hence as a
-    shortest one). Any such tour. *)
+(** [@requirement]
+    The output is a closed tour visiting every input point exactly once, with total
+    Euclidean length at most twice the optimal tour length. *)
 Definition tsp_spec
   (x_coords y_coords : list R )
   (output : list N )
@@ -150,9 +147,8 @@ Definition tsp_spec
 
 (** ** Interface *)
 
-(** Return a tour through all points whose length is at
-    most twice the length of any tour, using exact
-    Euclidean distances for the specification.
+(** Construct a closed tour visiting every point exactly once, with total Euclidean length
+    at most twice the optimum.
     - Input [x_coords]:
     - Input [y_coords]:
     - Output [output]: *)

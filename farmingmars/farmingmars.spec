@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Value and query counts, one decimal value per line, then inclusive 1-based query intervals.
+    - Output convention: usable if the interval has a strict majority value; unusable otherwise. *)
 (* Input:
 8 4
 7.000000
@@ -94,10 +95,7 @@ Definition usable (ph_values : list R)
     count_ph shared_ph (acres ph_values first_acre
       last_acre).
 
-(** [@inside farmingmars_correct] The statement's bounds. "Exactly six
-    decimal digits" is a property of the input text, gone once
-    parsed: the contract is exact on the reals the parsed floats
-    denote. *)
+(** [@inside farmingmars_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (ph_values : list R)
   (left_ends right_ends : list N)
     : Prop := {
@@ -119,9 +117,9 @@ Record valid_input (ph_values : list R)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short One answer per query, in query order: true
-    iff the interval is usable.] One answer per query, in query
-    order: true iff the interval is usable. *)
+(** [@requirement]
+    Each output entry is true exactly when a value occupies strictly more than half of
+    the corresponding inclusive interval. *)
 Definition farmingmars_spec (ph_values : list R)
   (left_ends right_ends
     : list N) (output : list bool) : Prop :=
@@ -133,7 +131,8 @@ Definition farmingmars_spec (ph_values : list R)
 
 (** ** Interface *)
 
-(** The [farmingmars] program on machine values.
+(** For each interval of a sequence, decide whether one value occurs in strictly more than
+    half its positions.
     - Input [ph_values]:
     - Input [left_ends]:
     - Input [right_ends]:

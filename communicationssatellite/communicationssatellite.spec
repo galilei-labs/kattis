@@ -8,6 +8,8 @@
 
     [@kattis communicationssatellite]
     - Difficulty: 2.9
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 2,000 circles with no overlaps.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Circle count, followed by one center-coordinate pair and radius per line.
+    - Output convention: Minimum total connection length, with absolute or relative error below $10^{-6}$. *)
 (* Input:
 4
 3 4 3
@@ -180,8 +183,7 @@ Definition minimum_cost (best_cost : R) : Prop :=
 
 End Dishes.
 
-(** [@inside communicationssatellite_correct] The
-    statement's bounds. *)
+(** [@inside communicationssatellite_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (x_coordinates y_coordinates : list Z)
   (radii : list N)
   : Prop := {
@@ -206,8 +208,7 @@ Record valid_input (x_coordinates y_coordinates : list Z)
     radii;
 }.
 
-(** The answer is correct if the absolute or relative
-    error is less than 10^-6. *)
+(** Absolute or relative error below $10^{-6}$. *)
 Definition within_tolerance
   (printed_cost best_cost : R) : Prop :=
   Rabs (printed_cost - best_cost) < / 10 ^ 6 \/
@@ -215,9 +216,9 @@ Definition within_tolerance
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum
-    connection cost within tolerance.] The result
-    satisfies the mathematical requirements. *)
+(** [@requirement]
+    The output approximates the minimum total length of a valid connection of the
+    circles, within the specified absolute or relative tolerance. *)
 Definition communicationssatellite_spec
     (x_coordinates y_coordinates : list Z) (radii : list N)
     (output : R) : Prop :=
@@ -227,7 +228,9 @@ Definition communicationssatellite_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Connect nonoverlapping circles with straight segments of minimum total length. Segments
+    must join circle boundaries without crossing each other or entering any circle's
+    interior.
     - Input [x_coordinates]:
     - Input [y_coordinates]:
     - Input [radii]:

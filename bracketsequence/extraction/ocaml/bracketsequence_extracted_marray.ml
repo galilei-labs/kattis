@@ -105,10 +105,7 @@ let bracketsequence_impl x =
   loop x n (Uint63.of_int (0)) (Uint63.of_int (0)) true
     (make (add n (Uint63.of_int (1))) (Uint63.of_int (0)))
 
-module BracketsequenceImpl =
- struct
-  (** val bracketsequence : uint token Marray.t -> uint **)
+(** val bracketsequence : uint token Marray.t -> uint **)
 
-  let bracketsequence =
-    bracketsequence_impl
- end
+let bracketsequence =
+  bracketsequence_impl

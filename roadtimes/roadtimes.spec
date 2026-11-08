@@ -8,7 +8,7 @@
     speed between 30 and 60 km/h consistent with the observations.
 
     [@kattis roadtimes]
-    - Difficulty: 6.8
+    - Difficulty: 6.9
     - CPU time limit: 5 seconds
     - Memory limit: 1024 MB
 
@@ -21,7 +21,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Distance matrix, observed source-destination-duration triples, then source-destination queries.
+    - Output convention: Query endpoints followed by the tight lower and upper travel-time bounds. *)
 (* Input:
 3
 0 50 -1
@@ -223,7 +224,7 @@ Definition close (approx exact : R) : Prop :=
   (Rabs (approx - exact) <= / 1000000 \/
    Rabs (approx - exact) <= Rabs exact / 1000000)%R.
 
-(** [@inside roadtimes_correct] Valid input. *)
+(** [@inside roadtimes_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (distances : list (list Z))
     (past_sources past_destinations past_minutes : list N)
     (query_sources query_destinations : list N) : Prop := {
@@ -284,11 +285,9 @@ Record valid_input (distances : list (list Z))
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the least and greatest
-    possible travel times for queried routes, given past
-    deliveries and unknown road speeds between 30 and 60
-    kilometres per hour.] One cell per query: the best
-    low and high bounds on its travel time. *)
+(** [@requirement]
+    Each output entry approximates the tight minimum and maximum travel times consistent
+    with all observations and speed constraints, within the specified tolerance. *)
 Definition roadtimes_spec
   (distances : list (list Z))
   (past_sources past_destinations past_minutes : list N)
@@ -316,9 +315,10 @@ Definition roadtimes_spec
 
 (** ** Interface *)
 
-(** Find the least and greatest [possible] travel times
-    for queried routes, given past deliveries and unknown
-    [road] speeds between 30 and 60 kilometres per hour.
+(** Given a road network and observed journey durations, find the minimum and maximum
+    possible duration of each queried journey. All journeys use their unique shortest-
+    distance route, and each road has a fixed unknown speed between 30 and 60 km/h
+    consistent with the observations.
     - Input [distances]:
     - Input [past_sources]:
     - Input [past_destinations]:

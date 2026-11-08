@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count, followed by remainder-modulus pairs a n b m for each case.
+    - Output convention: Least nonnegative solution and combined modulus, or no solution if inconsistent. *)
 (* Input:
 3
 10000 23000 9000 23000
@@ -59,7 +60,7 @@ Definition solves
   (candidate mod Z.of_N modulus1 = Z.of_N residue1)%Z /\
   (candidate mod Z.of_N modulus2 = Z.of_N residue2)%Z.
 
-(** [@inside crt_correct] The statement's bounds, for one test case. *)
+(** [@inside crt_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (residue1 modulus1 residue2 modulus2 : N) : Prop := {
   (* 1 <= n, m <= 10^9 *)
@@ -72,12 +73,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Some (value, period): period = lcm(modulus1,
-    modulus2) and value is the    solution in [0, period).    None:
-    no integer solves the system ("no solution").] Some (value,
-    period): period = lcm(modulus1, modulus2) and value is the
-    solution in [0, period). None: no integer solves the system ("no
-    solution"). *)
+(** [@requirement]
+    The output gives the least nonnegative simultaneous solution and the least common
+    multiple of the moduli, or None exactly when the congruences are inconsistent. *)
 Definition crt_spec
   (residue1 modulus1 residue2 modulus2 : N)
     (output : option (N * N)) : Prop :=
@@ -94,7 +92,9 @@ Definition crt_spec
 
 (** ** Interface *)
 
-(** The [crt] program on machine values.
+(** Solve two modular congruences whose moduli need not be coprime. Return the least
+    nonnegative solution and its period, or report that the congruences are
+    inconsistent.
     - Input [residue1]:
     - Input [modulus1]:
     - Input [residue2]:

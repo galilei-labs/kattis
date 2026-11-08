@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: A single positive integer n.
+    - Output convention: The number of descending divisor candidates examined. *)
 (* Input:
 1
 Output:
@@ -60,7 +61,7 @@ Fixpoint frane_loop (number : N) (divisor : nat)
 Definition frane_output (number : N) : N :=
   frane_loop number (N.to_nat (number - 1)) 0.
 
-(** [@inside pascal_correct] The statement's bounds. *)
+(** [@inside pascal_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (number : N) : Prop := {
   (* The first and only line of input contains the
      integer 1 <= N <= 10^9. *)
@@ -69,14 +70,16 @@ Record valid_input (number : N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer is the output of Frane's program.]
-    The answer is the output of Frane's program. *)
+(** [@requirement]
+    The output counts descending candidate divisors from n - 1 through the first divisor
+    of n; for n = 1, it is zero. *)
 Definition pascal_spec (number : N) (output : N) : Prop :=
   output = frane_output number.
 
 (** ** Interface *)
 
-(** The [pascal] program on machine values.
+(** Starting at n - 1 and counting downward, stop at the first divisor of n. Return the
+    number of candidate integers examined.
     - Input [number]:
     - Output [output]: *)
 Program pascal : uint -> uint.

@@ -19,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex, edge and update counts, followed by initial capacities and capacity-increase triples.
+    - Output convention: Maximum flow from vertex 1 to 2 initially and after each update, one value per line. *)
 (* Input:
 3 2 1
 1 3 10
@@ -151,7 +152,7 @@ Definition max_flow (station_count : N) (capacity_of : N ->
   (forall flow, is_flow station_count capacity_of flow ->
      (net_out station_count flow 1 <= Z.of_N amount)%Z).
 
-(** [@inside water_correct] Valid input. *)
+(** [@inside water_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (station_count : N)
     (pipe_starts pipe_ends pipe_capacities : list N)
     (improvement_starts improvement_ends improvement_amounts
@@ -190,11 +191,9 @@ Record valid_input (station_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Compute the maximum flow from
-    a pumping station to a mansion, initially and after
-    each pipe-capacity improvement.] k + 1 values; value
-    t is the maximum flow from 1 to 2 after the first t
-    improvements (value 0: the initial configuration). *)
+(** [@requirement]
+    The output gives the maximum flow initially and after each capacity increase, in
+    update order. *)
 Definition water_spec
   (station_count : N)
   (pipe_starts pipe_ends pipe_capacities : list N)
@@ -212,9 +211,8 @@ Definition water_spec
 
 (** ** Interface *)
 
-(** Compute the maximum flow from a pumping [station] to
-    a mansion, initially and after each pipe-[capacity]
-    improvement.
+(** Compute the maximum flow between two designated vertices of an undirected capacitated
+    network, initially and after each edge-capacity increase.
     - Input [station_count]:
     - Input [pipe_starts]:
     - Input [pipe_ends]:

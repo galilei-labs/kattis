@@ -503,12 +503,9 @@ let loopy_impl x y =
   in
   (groups, avoid)
 
-module LoopycabdriversImpl =
- struct
-  (** val loopy_regions :
-      string Marray.t -> string Marray.t -> string Marray.t Marray.t * string
-      Marray.t **)
+(** val loopy_regions :
+    string Marray.t -> string Marray.t -> string Marray.t Marray.t * string
+    Marray.t **)
 
-  let loopy_regions =
-    loopy_impl
- end
+let loopy_regions =
+  loopy_impl

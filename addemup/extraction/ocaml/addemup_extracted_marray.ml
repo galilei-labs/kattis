@@ -220,10 +220,7 @@ let addemup_impl s y =
   let s0 = fst (msort t (make m (Uint63.of_int (0))) (Uint63.of_int (0)) m) in
   scan y s0 s m n (Uint63.of_int (0))
 
-module AddemupImpl =
- struct
-  (** val addemup : uint -> uint Marray.t -> bool **)
+(** val addemup : uint -> uint Marray.t -> bool **)
 
-  let addemup =
-    addemup_impl
- end
+let addemup =
+  addemup_impl

@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: One positive integer per case; a zero ends input.
+    - Output convention: One count of smaller positive coprime integers per case. *)
 (* Input:
 7
 12
@@ -49,13 +50,7 @@ Open Scope N_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The statement's definition: first and second are
-    relatively prime when there are no integers
-    common_factor >= 2, first_cofactor >= 1,
-    second_cofactor >= 1 such that first = common_factor
-    * first_cofactor and second = common_factor *
-    second_cofactor (all three are positive, so they
-    range over N). *)
+(** The two integers have no common integer divisor greater than one. *)
 Definition relatively_prime (first second : N) : Prop :=
   ~ exists common_factor first_cofactor second_cofactor,
       2 <= common_factor /\ 1 <= first_cofactor /\ 1 <=
@@ -80,8 +75,7 @@ Definition count_of (property : N -> Prop) (count : N) :
       candidate) /\
     len members = count.
 
-(** [@inside relatives_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside relatives_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (number : N) : Prop := {
   (* a line with 1 <= n <= 1 000 000 000 *)
   vi_n : 1 <= number <= 10^9;
@@ -89,10 +83,8 @@ Record valid_input (number : N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Count the positive integers
-    smaller than a given number that are relatively prime
-    to it.] The answer: how many positive integers less
-    than [number] are relatively prime to [number]. *)
+(** [@requirement]
+    The output counts positive integers smaller than the input that are coprime to it. *)
 Definition relatives_spec
   (number : N)
   (output : N)
@@ -101,8 +93,7 @@ Definition relatives_spec
 
 (** ** Interface *)
 
-(** Count the positive integers smaller than a given
-    [number] that are relatively prime to it.
+(** Count the positive integers smaller than n that are relatively prime to n.
     - Input [number]:
     - Output [output]: *)
 Program relatives : uint -> uint.

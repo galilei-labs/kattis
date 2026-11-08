@@ -690,12 +690,9 @@ let arbitrage_impl c xs xd xa xb =
     (loop c (fun _ s -> negb (snd s)) (fw_k c) (Uint63.of_int (0)) (t1,
       false))
 
-module ArbitrageImpl =
- struct
-  (** val arbitrage :
-      uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> bool **)
+(** val arbitrage :
+    uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t
+    -> bool **)
 
-  let arbitrage =
-    arbitrage_impl
- end
+let arbitrage =
+  arbitrage_impl

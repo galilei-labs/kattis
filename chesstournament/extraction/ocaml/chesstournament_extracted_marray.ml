@@ -229,11 +229,8 @@ let chess_impl n ks wins ls =
   let t = kahn adj (fst sp) (Uint63.of_int (0)) (snd dg) (fst qi) (snd qi) in
   eqb t n
 
-module ChesstournamentImpl =
- struct
-  (** val chess_consistent :
-      uint -> uint Marray.t -> bool Marray.t -> uint Marray.t -> bool **)
+(** val chess_consistent :
+    uint -> uint Marray.t -> bool Marray.t -> uint Marray.t -> bool **)
 
-  let chess_consistent =
-    chess_impl
- end
+let chess_consistent =
+  chess_impl

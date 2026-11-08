@@ -593,12 +593,3 @@ let closestpair x y =
        in
        let (_, i) = p0 in (i, j)
   else ((Uint63.of_int (0)), (Uint63.of_int (1)))
-
-module Closestpair1Impl =
- struct
-  (** val closestpair :
-      Float64.t Marray.t -> Float64.t Marray.t -> uint * uint **)
-
-  let closestpair =
-    closestpair
- end

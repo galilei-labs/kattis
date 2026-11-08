@@ -554,10 +554,7 @@ let atp_impl p x y =
   in
   snd r3
 
-module AtrivialpursuitImpl =
- struct
-  (** val atrivialpursuit : uint -> uint Marray.t -> uint Marray.t -> uint **)
+(** val atrivialpursuit : uint -> uint Marray.t -> uint Marray.t -> uint **)
 
-  let atrivialpursuit =
-    atp_impl
- end
+let atrivialpursuit =
+  atp_impl

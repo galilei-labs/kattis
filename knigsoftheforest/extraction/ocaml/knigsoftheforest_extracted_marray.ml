@@ -144,12 +144,9 @@ let knigs_impl _ n y p ys ps =
   let (p0, t) = fill ys ps m (Uint63.of_int (0)) st0 in
   let (h, s) = p0 in sim t h n p s (Uint63.of_int (0))
 
-module KnigsoftheforestImpl =
- struct
-  (** val knigsoftheforest :
-      uint -> uint -> uint -> uint -> uint Marray.t -> uint Marray.t -> uint
-      option **)
+(** val knigsoftheforest :
+    uint -> uint -> uint -> uint -> uint Marray.t -> uint Marray.t -> uint
+    option **)
 
-  let knigsoftheforest =
-    knigs_impl
- end
+let knigsoftheforest =
+  knigs_impl

@@ -108,10 +108,7 @@ let find_all_impl xp xt =
          (make (add (sub n m) (Uint63.of_int (1))) (Uint63.of_int (0)))
          (Uint63.of_int (0)) (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module StringmatchingImpl =
- struct
-  (** val find_all : string -> string -> uint Marray.t **)
+(** val find_all : string -> string -> uint Marray.t **)
 
-  let find_all =
-    find_all_impl
- end
+let find_all =
+  find_all_impl

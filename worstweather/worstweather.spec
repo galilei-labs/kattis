@@ -8,7 +8,7 @@
     when records are missing.
 
     [@kattis worstweather]
-    - Difficulty: 6.5
+    - Difficulty: 6.6
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -21,7 +21,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: year-rainfall records followed by year-pair queries; zero record and query counts end input.
+    - Output convention: true, false or maybe per query; a blank line separates cases. *)
 (* Input:
 4
 2002 4920
@@ -117,9 +118,7 @@ Definition most_rain_since (rain_of : Z -> N)
   (forall year, since_year < year < record_year ->
      (rain_of year < rain_of record_year)%N).
 
-(** The statement is true: the rain of since_year,
-    record_year and every year between them is [known],
-    and the statement holds of the [known] amounts. *)
+(** The rainfall claim holds and every year in the inclusive interval has a recorded value. *)
 Definition is_true (years : list Z) (rainfalls : list N)
     (since_year record_year : Z) : Prop :=
   (forall year, since_year <= year <= record_year -> known
@@ -127,8 +126,7 @@ Definition is_true (years : list Z) (rainfalls : list N)
   (forall rain_of, assignment years rainfalls rain_of ->
      most_rain_since rain_of since_year record_year).
 
-(** The statement might be true: some [assignment] makes
-    it hold. *)
+(** At least one assignment of missing rainfall values satisfies the claim. *)
 Definition might_be_true (years : list Z)
   (rainfalls : list N)
     (since_year record_year : Z) : Prop :=
@@ -150,8 +148,7 @@ Definition answers (years : list Z) (rainfalls : list N)
      ~ might_be_true years rainfalls since_year
        record_year).
 
-(** [@inside worstweather_correct] The statement's
-    guarantees, for one test case. *)
+(** [@inside worstweather_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (years : list Z) (rainfalls : list N)
     (since_years record_years : list Z) : Prop := {
   (* 1 <= n <= 50 000, the number of years for which
@@ -182,12 +179,9 @@ Record valid_input (years : list Z) (rainfalls : list N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Classify rainfall claims as
-    true, false or possibly true, accounting for years
-    with missing records.] One [answer] per query, in
-    order: [answer] k is the [answer] to "year
-    record_years_k had the most rain since year
-    since_years_k". *)
+(** [@requirement]
+    Each output entry classifies the rainfall claim as confirmed by complete records,
+    contradicted by the records or possible given missing records. *)
 Definition worstweather_spec
   (years : list Z )
   (rainfalls : list N )
@@ -202,8 +196,9 @@ Definition worstweather_spec
 
 (** ** Interface *)
 
-(** Classify rainfall claims as true, false or possibly
-    true, accounting for [years] with missing records.
+(** For each queried pair of years, test whether the later rainfall is no greater than the
+    earlier rainfall and exceeds every intervening year's rainfall. Classify the claim
+    as confirmed, impossible or still possible when records are missing.
     - Input [years]:
     - Input [rainfalls]:
     - Input [since_years]:

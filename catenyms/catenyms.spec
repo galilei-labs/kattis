@@ -8,13 +8,16 @@
 
     [@kattis catenyms]
     - Difficulty: 6.5
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 3 to 1,000 distinct words, each containing 1 to 20 lowercase letters. *)
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives a word count followed by one word per line.
+    - Output convention: The smallest valid period-separated word chain, or *** if none exists. *)
 (* Input:
 2
 6
@@ -99,8 +102,7 @@ Definition is_answer (words chain : list string) : Prop :=
 Definition text (chain : list string) : string :=
   String.concat "." chain.
 
-(** [@inside catenyms_correct] The statement's
-    guarantees, for one test case. *)
+(** [@inside catenyms_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (words : list string) : Prop := {
   (* 3 <= n <= 1000, the number of words in the dictionary
     *)
@@ -116,11 +118,9 @@ Record valid_input (words : list string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the first
-    compound catenym, if one exists.] "***" (None)
-    exactly when no compound catenym uses each word once
-    ; otherwise the lexicographically smallest one, by
-    its printed line. *)
+(** [@requirement]
+    The output is the lexicographically smallest period-separated chain using every word
+    once with matching endpoint letters, or None if no chain exists. *)
 Definition catenyms_spec (words : list string)
   (output : option (list string))
   : Prop :=
@@ -134,7 +134,9 @@ Definition catenyms_spec (words : list string)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Arrange all given words exactly once so each word's last letter matches the next word's
+    first letter. Return the lexicographically smallest period-separated arrangement, or
+    report that none exists.
     - Input [words]:
     - Output [output]: *)
 Program catenyms : array PrimString.string -> option

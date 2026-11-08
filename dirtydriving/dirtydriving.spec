@@ -8,6 +8,8 @@
 
     [@kattis dirtydriving]
     - Difficulty: 3.3
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100,000 distinct distances, each from 1 to $10^{7}$.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Object count and spacing constant, followed by distinct current distances.
+    - Output convention: The minimum required distance to the nearest object. *)
 (* Input:
 3 1
 1 2 4
@@ -51,8 +54,7 @@ Open Scope N_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The number of cars between you and the car at
-    distance car: the cars strictly closer than car. *)
+(** The number of objects at distances strictly smaller than [car]. *)
 Definition cars_between (distances : list N)
   (car : N) : N :=
   len (filter (fun other => other <? car) distances).
@@ -72,8 +74,7 @@ Definition keeps_distance (deceleration : N)
       (cars_between distances car + 1) + front_car <= gap +
       car.
 
-(** [@inside dirtydriving_correct] The statement's
-    bounds, for one test case; n is len distances. *)
+(** [@inside dirtydriving_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (deceleration : N)
   (distances : list N) : Prop := {
   (* 1 <= n <= 100 000 - the number of cars ahead of you *)
@@ -89,9 +90,9 @@ Record valid_input (deceleration : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum safe
-    distance to the first car.] The answer is the least
-    distance that keeps every car far enough. *)
+(** [@requirement]
+    The output is the minimum distance to the nearest object for which the k-th nearest
+    object is at least k times the spacing constant away. *)
 Definition dirtydriving_spec (deceleration : N)
   (distances : list N)
     (output : N) : Prop :=
@@ -102,7 +103,9 @@ Definition dirtydriving_spec (deceleration : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Given distinct distances to objects ahead and a spacing constant p, find the smallest
+    new distance to the nearest object such that the k-th nearest object is at least k *
+    p away.
     - Input [deceleration]:
     - Input [distances]:
     - Output [output]: *)

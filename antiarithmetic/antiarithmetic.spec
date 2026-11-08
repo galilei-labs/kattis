@@ -7,13 +7,16 @@
 
     [@kattis antiarithmetic]
     - Difficulty: 6.3
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 3 to 10,000 entries, forming a permutation of 0 through n - 1. *)
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Each case gives n, a colon and a permutation of 0 through n - 1; 0 ends input.
+    - Output convention: yes for an antiarithmetic permutation; no otherwise, one line per case. *)
 (* Input:
 3: 0 2 1
 5: 2 0 1 3 4
@@ -81,8 +84,7 @@ Definition is_antiarithmetic
   (permutation : list N) : Prop :=
   ~ has_progression permutation.
 
-(** [@inside antiarithmetic_correct] The statement's
-    guarantees, for one test case (n = len permutation). *)
+(** [@inside antiarithmetic_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (permutation : list N) : Prop := {
   (* a natural number 3 <= n <= 10 000 *)
   vi_n : 3 <= len permutation <= 10000;
@@ -96,11 +98,9 @@ Record valid_input (permutation : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether the
-    permutation is antiarithmetic.] The answer: yes
-    (true) exactly when permutation is antiarithmetic,
-    no (false) exactly when some three of its terms, in
-    order, form a progression. *)
+(** [@requirement]
+    The output is true exactly when no three entries in increasing index order form an
+    arithmetic progression. *)
 Definition antiarithmetic_spec (permutation : list N)
   (output : bool)
     : Prop :=
@@ -111,7 +111,8 @@ Definition antiarithmetic_spec (permutation : list N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether a permutation contains no three entries, in their original order, that
+    form an arithmetic progression.
     - Input [permutation]:
     - Output [output]: *)
 Program antiarithmetic : array uint -> bool.

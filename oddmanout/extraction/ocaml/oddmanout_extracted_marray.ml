@@ -40,10 +40,7 @@ let rec xor_loop a n i acc =
 let odd_one_impl a =
   xor_loop a (length a) (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module OddmanoutImpl =
- struct
-  (** val odd_one : uint Marray.t -> uint **)
+(** val odd_one : uint Marray.t -> uint **)
 
-  let odd_one =
-    odd_one_impl
- end
+let odd_one =
+  odd_one_impl

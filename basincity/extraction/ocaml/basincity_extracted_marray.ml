@@ -320,10 +320,7 @@ let basincity_impl k y =
   in
   fst (search n nb dg k (make n (Uint63.of_int (0))))
 
-module BasincityImpl =
- struct
-  (** val basincity : uint -> uint Marray.t Marray.t -> bool **)
+(** val basincity : uint -> uint Marray.t Marray.t -> bool **)
 
-  let basincity =
-    basincity_impl
- end
+let basincity =
+  basincity_impl

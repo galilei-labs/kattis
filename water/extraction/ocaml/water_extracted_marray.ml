@@ -180,12 +180,9 @@ let water_impl n pa pb pc ia ib ic =
     (set (make (add k (Uint63.of_int (1))) (Uint63.of_int (0)))
       (Uint63.of_int (0)) v0)
 
-module WaterImpl =
- struct
-  (** val water :
-      uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
+(** val water :
+    uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t
+    -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
 
-  let water =
-    water_impl
- end
+let water =
+  water_impl

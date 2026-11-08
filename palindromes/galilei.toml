@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["palindromes_implem.v", "palindromes.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/palindromes_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/palindromes_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "palindromes_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/palindromes_extracted_marray.ml"
+Rust = ""

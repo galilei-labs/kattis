@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex, edge and query counts and source; weighted edges and query vertices; four zeros end input.
+    - Output convention: One shortest distance or Impossible per query. *)
 (* Input:
 4 3 4 0
 0 1 2
@@ -128,8 +129,7 @@ Definition shortest_distance
     source node cost' ->
     cost <= cost'.
 
-(** [@inside dijkstra_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside dijkstra_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (node_count : N)
     (edge_sources edge_targets edge_weights : list N)
       (source : N) : Prop := {
@@ -166,10 +166,9 @@ Definition distance_of
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the shortest distance
-    from a source to every vertex of a directed graph
-    with nonnegative edge weights, marking unreachable
-    vertices.] The distances have one entry per [vertex]. *)
+(** [@requirement]
+    Each output entry gives the shortest distance from the source to its vertex, or None
+    if that vertex is unreachable. *)
 Definition dijkstra_spec
   (node_count : N)
   (edge_sources edge_targets edge_weights : list N)
@@ -184,9 +183,8 @@ Definition dijkstra_spec
 
 (** ** Interface *)
 
-(** Find the shortest distance from a [source] to every
-    [vertex] of a directed graph with nonnegative [edge]
-    weights, marking unreachable vertices.
+(** Find the shortest distance from a source to every vertex of a directed graph with
+    nonnegative edge weights, identifying unreachable vertices.
     - Input [node_count]:
     - Input [edge_sources]:
     - Input [edge_targets]:

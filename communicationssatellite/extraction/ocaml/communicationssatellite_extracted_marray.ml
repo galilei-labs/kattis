@@ -153,11 +153,8 @@ let comsat x y r =
   in
   tot
 
-module CommunicationssatelliteImpl =
- struct
-  (** val communicationssatellite :
-      sint Marray.t -> sint Marray.t -> uint Marray.t -> Float64.t **)
+(** val communicationssatellite :
+    sint Marray.t -> sint Marray.t -> uint Marray.t -> Float64.t **)
 
-  let communicationssatellite =
-    comsat
- end
+let communicationssatellite =
+  comsat

@@ -197,10 +197,7 @@ let gcpc_impl n xt xp =
   in
   ev_loop xt xp m (Uint63.of_int (0)) keys t (make m (Uint63.of_int (0)))
 
-module GcpcImpl =
- struct
-  (** val gcpc : uint -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
+(** val gcpc : uint -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
 
-  let gcpc =
-    gcpc_impl
- end
+let gcpc =
+  gcpc_impl

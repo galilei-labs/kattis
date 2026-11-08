@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["roberthood_implem.v", "roberthood.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/roberthood_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/roberthood_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "roberthood_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/roberthood_extracted_marray.ml"
+Rust = ""

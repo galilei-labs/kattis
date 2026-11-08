@@ -94,10 +94,7 @@ let canvas_impl x =
   let h = build (copy x) sz (div sz (Uint63.of_int (2))) in
   huff h sz (Uint63.of_int (0))
 
-module CanvasImpl =
- struct
-  (** val canvas : uint Marray.t -> uint **)
+(** val canvas : uint Marray.t -> uint **)
 
-  let canvas =
-    canvas_impl
- end
+let canvas =
+  canvas_impl

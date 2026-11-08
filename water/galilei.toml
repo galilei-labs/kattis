@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["water_implem.v", "water.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/water_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/water_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "water_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/water_extracted_marray.ml"
+Rust = ""

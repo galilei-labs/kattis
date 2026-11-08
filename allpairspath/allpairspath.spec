@@ -8,6 +8,8 @@
 
     [@kattis allpairspath]
     - Difficulty: 2.7
+    - CPU time limit: 2 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 150 vertices; 0 to 5,000 edges.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex, edge and query counts; weighted directed edges; vertex-pair queries; 0 0 0 ends input.
+    - Output convention: One minimum distance, Impossible or -Infinity per query; a blank line separates cases. *)
 (* Input:
 4 3 4
 0 1 2
@@ -65,8 +68,7 @@ Open Scope Z_scope.
 
 (** ** Definitions *)
 
-(** The answer for one pair of vertices, on both sides :
-    A is sint on the machine side, Z on the math side. *)
+(** A distance classification, parameterized by the numeric type: sint for machine values and Z for mathematical values. *)
 Inductive answer (A : Type) : Type :=
   | Impossible : answer A
   | NegInfinity : answer A
@@ -178,8 +180,7 @@ Definition arbitrarily_short
       target cost /\
     cost < bound.
 
-(** [@inside allpairspath_correct] The statement's
-    bounds, for one test case. *)
+(** [@inside allpairspath_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (node_count : N)
   (edge_sources edge_targets : list N)
     (edge_weights : list Z) : Prop := {
@@ -199,11 +200,7 @@ Record valid_input (node_count : N)
     (fun weight => - 1000 <= weight <= 1000) edge_weights;
 }.
 
-(** The answer for the pair (source, target) : the
-    shortest distance when there is one, Impossible when
-    target is not reachable from source, NegInfinity
-    when the walks from source to target have
-    arbitrarily low costs. Exactly one case holds. *)
+(** The classification of walks from source to target: minimum distance, unreachable destination or cost unbounded below. *)
 Definition answer_of (edge_sources edge_targets : list N)
     (edge_weights : list Z) (source target : N)
       (pair_answer : answer Z)
@@ -223,10 +220,9 @@ Definition answer_of (edge_sources edge_targets : list N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must classify every pair by
-    its shortest-path distance.] node_count rows of
-    node_count answers, the one at row source, column
-    target being for the pair (source, target). *)
+(** [@requirement]
+    Each output entry gives the minimum walk cost for its vertex pair, or identifies an
+    unreachable pair or a cost unbounded below. *)
 Definition allpairspath_spec (node_count : N)
     (edge_sources edge_targets : list N)
       (edge_weights : list Z)
@@ -242,7 +238,8 @@ Definition allpairspath_spec (node_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Find the minimum walk cost between every pair of vertices in a directed weighted graph,
+    distinguishing unreachable pairs and costs unbounded below by negative cycles.
     - Input [node_count]:
     - Input [edge_sources]:
     - Input [edge_targets]:

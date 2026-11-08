@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["longincsubseq_implem.v", "longincsubseq.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/longincsubseq_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/longincsubseq_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "longincsubseq_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/longincsubseq_extracted_marray.ml"
+Rust = ""

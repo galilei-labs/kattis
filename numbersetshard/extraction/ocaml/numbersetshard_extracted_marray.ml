@@ -166,10 +166,7 @@ let numbersets_impl x y z =
   let (par, _) = uprimes c x w n par0 rk0 z in
   count par n (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module NumbersetshardImpl =
- struct
-  (** val numbersets : uint -> uint -> uint -> uint **)
+(** val numbersets : uint -> uint -> uint -> uint **)
 
-  let numbersets =
-    numbersets_impl
- end
+let numbersets =
+  numbersets_impl

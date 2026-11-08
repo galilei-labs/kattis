@@ -7,6 +7,8 @@
 
     [@kattis committeeassignment]
     - Difficulty: 7.0
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 15 vertices; at most n * (n - 1) / 2 incompatible pairs.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex and edge counts, followed by pairs of names; 0 0 ends input.
+    - Output convention: One minimum number of independent groups per case. *)
 (* Input:
 5 0
 5 2
@@ -111,8 +114,7 @@ Definition feasible
       committee_of /\
     separates first_names second_names committee_of.
 
-(** [@inside committees_correct] The statement's
-    guarantees on one department. *)
+(** [@inside committees_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (member_count : N)
     (first_names second_names : list String.string) : Prop
       := {
@@ -143,9 +145,9 @@ Record valid_input (member_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum
-    number of committees.] The minimum number of
-    committees. *)
+(** [@requirement]
+    The output is the minimum number of groups in a partition of the vertices with no
+    adjacent vertices in the same group. *)
 Definition committees_spec (member_count : N)
     (first_names second_names : list String.string)
       (output : N)
@@ -157,7 +159,8 @@ Definition committees_spec (member_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Partition a graph's vertices into as few groups as possible, with no adjacent vertices
+    in the same group.
     - Input [member_count]:
     - Input [first_names]:
     - Input [second_names]:

@@ -132,12 +132,8 @@ let isect_m x1 y1 x2 y2 x3 y3 x4 y4 =
                  else Empty
   else crossing_m x1 y1 rx ry den (sub (mul qx sy) (mul qy sx)) un
 
-module SegmentintersectionImpl =
- struct
-  (** val intersect :
-      sint -> sint -> sint -> sint -> sint -> sint -> sint -> sint -> sint
-      inter **)
+(** val intersect :
+    sint -> sint -> sint -> sint -> sint -> sint -> sint -> sint -> sint inter **)
 
-  let intersect =
-    isect_m
- end
+let intersect =
+  isect_m

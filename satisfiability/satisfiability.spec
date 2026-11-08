@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives variable/clause counts and clauses using Xi, ~Xi and v.
+    - Output convention: satisfiable if an assignment exists; unsatisfiable otherwise. *)
 (* Input:
 2
 3 3
@@ -52,10 +53,7 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** A [literal] as the statement writes it: [X i] for Xi,
-    [NotX i] for ~Xi. Declared once for both sides:
-    [literal uint] on the machine side, [literal N] on
-    the math side. *)
+(** A positive or negated variable, parameterized by uint for machine indices or N for mathematical indices. *)
 Inductive literal (A : Type) : Type :=
 | X : A -> literal A
 | NotX : A -> literal A.
@@ -109,8 +107,7 @@ Definition is_satisfiable
   exists assignment : N -> bool, Forall
     (clause_true assignment) clauses.
 
-(** [@inside satisfiable_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside satisfiable_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (variable_count : N)
   (clauses : list (list (literal N)))
     : Prop := {
@@ -125,10 +122,8 @@ Record valid_input (variable_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Decide whether a Boolean
-    formula in conjunctive normal form has a satisfying
-    assignment.] The answer: true iff the formula is
-    [satisfiable]. *)
+(** [@requirement]
+    The output is true exactly when the Boolean formula has a satisfying assignment. *)
 Definition satisfiable_spec
   (variable_count : N)
   (clauses : list (list (literal N)))
@@ -141,8 +136,7 @@ Definition satisfiable_spec
 
 (** ** Interface *)
 
-(** Decide whether a Boolean formula in conjunctive
-    normal form has a satisfying assignment.
+(** Decide whether a Boolean formula in conjunctive normal form has a satisfying assignment.
     - Input [variable_count]:
     - Input [clauses]:
     - Output [output]: *)

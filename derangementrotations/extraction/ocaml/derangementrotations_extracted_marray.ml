@@ -84,10 +84,7 @@ let derangement_rotations_impl n p =
   sum_loop n (sub n (Uint63.of_int (1))) p (Uint63.of_int (1))
     (Uint63.of_int (0))
 
-module DerangementrotationsImpl =
- struct
-  (** val derangement_rotations : uint -> uint -> uint **)
+(** val derangement_rotations : uint -> uint -> uint **)
 
-  let derangement_rotations =
-    derangement_rotations_impl
- end
+let derangement_rotations =
+  derangement_rotations_impl

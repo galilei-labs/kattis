@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["convexhull_implem.v", "convexhull.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/convexhull_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/convexhull_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "convexhull_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/convexhull_extracted_marray.ml"
+Rust = ""

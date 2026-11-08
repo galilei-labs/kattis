@@ -7,6 +7,8 @@
 
     [@kattis arbitrage]
     - Difficulty: 3.2
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 200 currencies; at most C * (C - 1) exchange rates.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: currency count and names, then exchange rates written as source destination A:B; 0 ends input.
+    - Output convention: Arbitrage if a profitable exchange cycle exists; Ok otherwise. *)
 (* Input:
 2
 CZK EUR
@@ -139,8 +142,7 @@ Definition profitable
     (amount < amount_after paid_units got_units exchanges
       amount)%Q.
 
-(** [@inside arbitrage_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside arbitrage_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (currency_count : N)
     (from_currencies to_currencies paid_units got_units :
       list N) : Prop := {
@@ -173,10 +175,9 @@ Record valid_input (currency_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether a
-    profitable currency-exchange cycle exists.]
-    "Arbitrage" (true) exactly when some exchange
-    sequence gives a profit. *)
+(** [@requirement]
+    The output is true exactly when a cycle of exchanges strictly increases the initial
+    amount of a currency. *)
 Definition arbitrage_spec (currency_count : N)
     (from_currencies to_currencies paid_units got_units :
       list N)
@@ -190,7 +191,8 @@ Definition arbitrage_spec (currency_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether a cycle of currency exchanges can increase the starting amount, using the
+    given exact exchange rates.
     - Input [currency_count]:
     - Input [from_currencies]:
     - Input [to_currencies]:

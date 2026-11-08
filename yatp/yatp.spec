@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex count, vertex penalties, then weighted tree edges with 1-based endpoints.
+    - Output convention: The sum of the minimum path costs over all starting vertices. *)
 (* Input:
 5
 9 7 1 1 9
@@ -134,7 +135,7 @@ Fixpoint sum_nodes (term : N -> N) (count : nat) : N :=
     count)
   end.
 
-(** [@inside yatp_correct] Valid input. *)
+(** [@inside yatp_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (penalties edge_sources edge_targets
   edge_weights : list N )
     : Prop := {
@@ -170,12 +171,9 @@ Record valid_input (penalties edge_sources edge_targets
 
 (** ** Correctness *)
 
-(** [@requirement] [@short For each node of a weighted
-    tree, find the cheapest path starting there,
-    including the endpoint-penalty product, and sum these
-    minimum costs.] The answer: the sum over the nodes of
-    the smallest [cost] of a simple path starting at that
-    node. *)
+(** [@requirement]
+    The output sums, over all starting vertices, the minimum of path distance plus the
+    product of endpoint penalties. *)
 Definition yatp_spec
   (penalties edge_sources edge_targets edge_weights : list N
     )
@@ -190,9 +188,8 @@ Definition yatp_spec
 
 (** ** Interface *)
 
-(** For each node of a weighted tree, find the cheapest
-    path starting there, including the endpoint-[penalty]
-    product, and sum these minimum costs.
+(** For each vertex u of a weighted tree, minimize distance(u, v) + penalty(u) * penalty(v)
+    over all vertices v, then sum these minimum costs.
     - Input [penalties]:
     - Input [edge_sources]:
     - Input [edge_targets]:

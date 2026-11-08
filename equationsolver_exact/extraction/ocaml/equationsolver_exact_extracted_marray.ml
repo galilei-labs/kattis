@@ -1839,13 +1839,3 @@ let solve n xa xb =
                  if chk_mult xa xb n p q (fst (ratvec v n))
                  then Multiple
                  else solve_exact n xa xb
-
-module EquationsolverExactImpl =
- struct
-  (** val solve :
-      uint -> Float64.t Marray.t Marray.t -> Float64.t Marray.t -> Float64.t
-      Marray.t outcome **)
-
-  let solve =
-    solve
- end

@@ -7,6 +7,8 @@
 
     [@kattis ada]
     - Difficulty: 2.2
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 2 to 10 values; each between -2,000,000 and 2,000,000.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Number of observations, followed by polynomial values at equally spaced inputs.
+    - Output convention: Minimum polynomial degree and predicted next value, separated by a space. *)
 (* Input:
 5 3 6 9 12 15
 Output:
@@ -90,7 +93,7 @@ Definition minimal_degree (start spacing : R)
     ->
     (degree <= degree')%N.
 
-(** [@inside ada_correct] The statement's bounds. *)
+(** [@inside ada_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (values : list Z) : Prop := {
   (* a value n, the number of polynomial evaluations, with 2
     <= n <= 10 *)
@@ -105,12 +108,9 @@ Record valid_input (values : list Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimal
-    polynomial degree and next value.] Whatever the
-    start and the spacing > 0 of the inputs: degree is
-    the minimal degree, and every polynomial of degree
-    at most degree producing values takes the value
-    next_value at the next input start + n spacing. *)
+(** [@requirement]
+    The output gives the minimum degree of a polynomial fitting the equally spaced
+    observations and its value at the next input. *)
 Definition ada_spec (values : list Z)
   (output : N * Z) : Prop :=
   match output with
@@ -127,7 +127,8 @@ Definition ada_spec (values : list Z)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Given polynomial values at equally spaced inputs, find the smallest possible degree and
+    predict the next value.
     - Input [values]:
     - Output [output]: *)
 Program ada : array sint -> uint * sint.

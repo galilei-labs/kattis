@@ -6,7 +6,7 @@
     positions.
 
     [@kattis suffixsorting]
-    - Difficulty: 4.3
+    - Difficulty: 4.4
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: text, followed by a query count and 0-based suffix ranks.
+    - Output convention: Starting positions of the requested suffixes, using 0-based indices. *)
 (* Input:
 popup
 5 0 1 2 3 4
@@ -78,8 +79,7 @@ Definition lex_lt (earlier later : string) : Prop :=
 Definition positions (text : string) : list N :=
   map N.of_nat (seq 0 (String.length text)).
 
-(** [@inside suffix_array_correct] The statement's
-    bounds, for one test case. *)
+(** [@inside suffix_array_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (text : string) : Prop := {
   (* a non-empty string of length at most 100000 *)
   vi_s : 1 <= slen text <= 10 ^ 5;
@@ -87,9 +87,9 @@ Record valid_input (text : string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short List the starting positions of
-    a text's suffixes in lexicographic order.] Every
-    position exactly once, each [suffix] before the next. *)
+(** [@requirement]
+    The output is a permutation of all starting positions that orders the corresponding
+    suffixes lexicographically. *)
 Definition suffix_array_spec
   (text : string)
   (output : list N)
@@ -101,8 +101,7 @@ Definition suffix_array_spec
 
 (** ** Interface *)
 
-(** List the starting [positions] of a [text]'s suffixes
-    in lexicographic order.
+(** Sort a text's suffixes lexicographically and return their starting positions.
     - Input [text]:
     - Output [output]: *)
 Program suffix_array : PrimString.string -> array uint.

@@ -20,7 +20,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives graph size and step count, initial quantities and fractional transfer edges.
+    - Output convention: The minimum final neighborhood sum, with absolute or relative error below $10^{-6}$. *)
 (* Input:
 3
 4 3 1
@@ -161,9 +162,7 @@ Section Galaxy.
 
 End Galaxy.
 
-(** [@inside timing_correct] The statement's bounds, for
-    one test case (1 <= T <= 10 test cases: one call per
-    test case). *)
+(** [@inside timing_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (attack_time : N)
   (initial_strengths : list R)
     (link_sources link_targets : list N)
@@ -208,11 +207,10 @@ Record valid_input (attack_time : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Model transfers of strength
-    between forts and find the least defended fort at the
-    chosen attack time.] The answer: within absolute or
-    relative error less than 10^-6 of what a weakest fort
-    faces at time [attack_time]. *)
+(** [@requirement]
+    The output approximates the minimum final vertex-and-neighbor quantity sum after the
+    specified number of transfer steps, within the specified absolute or relative
+    tolerance. *)
 Definition timing_spec
   (attack_time : N)
   (initial_strengths : list R )
@@ -237,8 +235,9 @@ Definition timing_spec
 
 (** ** Interface *)
 
-(** Model transfers of strength between forts and find
-    the least defended fort at the chosen attack time.
+(** Evolve quantities on a directed graph by simultaneously transferring specified fractions
+    along edges each time step. After a given number of steps, return the smallest sum
+    of a vertex's quantity and those of its neighbors in either direction.
     - Input [attack_time]:
     - Input [initial_strengths]:
     - Input [link_sources]:

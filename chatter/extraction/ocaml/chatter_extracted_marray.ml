@@ -187,11 +187,8 @@ let chatter_impl n r a b c =
   (fill n (Uint63.of_int (0)) (Uint63.of_int (0)) cnt
     (make d ((Uint63.of_int (0)), (Uint63.of_int (0))))))
 
-module ChatterImpl =
- struct
-  (** val chatter :
-      uint -> uint -> uint -> uint -> uint -> uint * (uint * uint) Marray.t **)
+(** val chatter :
+    uint -> uint -> uint -> uint -> uint -> uint * (uint * uint) Marray.t **)
 
-  let chatter =
-    chatter_impl
- end
+let chatter =
+  chatter_impl

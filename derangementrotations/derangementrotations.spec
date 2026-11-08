@@ -8,6 +8,8 @@
 
     [@kattis derangementrotations]
     - Difficulty: 6.2
+    - CPU time limit: 1 second
+    - Memory limit: 2048 MB
 
     **Kattis Bounds**
     - 3 $\le$ n $\le$ $10^{6}$.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Permutation size n and prime modulus p.
+    - Output convention: The qualifying derangement count modulo p. *)
 (* Input:
 3 1000000007
 Output:
@@ -103,8 +106,7 @@ Definition counted (perm_size : N)
   derangement perm_size candidate /\
   f_is perm_size candidate (perm_size - 2).
 
-(** [@inside derangement_rotations_correct] The
-    statement's bounds. *)
+(** [@inside derangement_rotations_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (perm_size prime_modulus : N) : Prop := {
   (* 3 <= n <= 10^6 *)
   vi_n : 3 <= perm_size <= 10 ^ 6;
@@ -116,10 +118,9 @@ Record valid_input (perm_size prime_modulus : N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must count the required
-    rotations modulo the given prime.] The answer : the
-    number of counted derangements, reduced modulo
-    prime_modulus. *)
+(** [@requirement]
+    The output counts derangements having exactly n - 2 cyclic rotations that are also
+    derangements, modulo the given prime. *)
 Definition derangement_rotations_spec
   (perm_size prime_modulus : N)
     (output : N) : Prop :=
@@ -128,7 +129,8 @@ Definition derangement_rotations_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Count permutations of 1 through n with no fixed points for which exactly n - 2 cyclic
+    rotations also have no fixed points. Return the count modulo a given prime.
     - Input [perm_size]:
     - Input [prime_modulus]:
     - Output [output]: *)

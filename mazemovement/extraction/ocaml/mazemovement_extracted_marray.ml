@@ -466,10 +466,7 @@ let mazemovement_impl x =
          s.s_qh s.s_ql s.s_cu s.s_rl
   else (Uint63.of_int (0))
 
-module MazemovementImpl =
- struct
-  (** val mazemovement : uint Marray.t -> uint **)
+(** val mazemovement : uint Marray.t -> uint **)
 
-  let mazemovement =
-    mazemovement_impl
- end
+let mazemovement =
+  mazemovement_impl

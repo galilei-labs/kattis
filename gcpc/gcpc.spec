@@ -7,7 +7,7 @@
     order.
 
     [@kattis gcpc]
-    - Difficulty: 4.6
+    - Difficulty: 4.7
     - CPU time limit: 2 seconds
     - Memory limit: 1024 MB
 
@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Team and event counts, followed by team-penalty pairs in chronological order.
+    - Output convention: Team 1's rank after each event, one rank per line. *)
 (* Input:
 3 4
 2 7
@@ -105,7 +106,7 @@ Definition rank (team_count : N)
             event_penalties))
                   (teams team_count)).
 
-(** [@inside gcpc_correct] The [valid_input] datatype. *)
+(** [@inside gcpc_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (team_count : N)
   (event_teams event_penalties : list N)
     : Prop := {
@@ -128,9 +129,9 @@ Record valid_input (team_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Output m lines: the i-th is the rank of team
-    1 after the first i    events.] Output m lines: the i-th is the
-    rank of team 1 after the first i events. *)
+(** [@requirement]
+    Each output entry is team 1's rank after the corresponding event, ordered by
+    decreasing solved count and increasing penalty. *)
 Definition gcpc_spec (team_count : N)
   (event_teams event_penalties : list N)
     (output : list N) : Prop :=
@@ -142,7 +143,8 @@ Definition gcpc_spec (team_count : N)
 
 (** ** Interface *)
 
-(** The [gcpc] program on machine values.
+(** Track one team's rank as scoring events arrive. Rank teams by problems solved in
+    descending order, breaking ties by total penalty in ascending order.
     - Input [team_count]:
     - Input [event_teams]:
     - Input [event_penalties]:

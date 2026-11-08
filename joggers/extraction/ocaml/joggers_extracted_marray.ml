@@ -199,12 +199,9 @@ let joggers_impl n s xa xb xd xl =
   sweep_loop s inl st.ord st.par st.dst (sub st.tl (Uint63.of_int (1)))
     (make v false) (Uint63.of_int (0))
 
-module JoggersImpl =
- struct
-  (** val joggers :
-      uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint **)
+(** val joggers :
+    uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
+    Marray.t -> uint **)
 
-  let joggers =
-    joggers_impl
- end
+let joggers =
+  joggers_impl

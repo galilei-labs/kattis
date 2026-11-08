@@ -345,12 +345,9 @@ let babelfish_impl e f m =
   let l = length m in
   fill_loop e f m n ok t l (Uint63.of_int (0)) (make l None)
 
-module BabelfishImpl =
- struct
-  (** val babelfish :
-      string Marray.t -> string Marray.t -> string Marray.t -> string option
-      Marray.t **)
+(** val babelfish :
+    string Marray.t -> string Marray.t -> string Marray.t -> string option
+    Marray.t **)
 
-  let babelfish =
-    babelfish_impl
- end
+let babelfish =
+  babelfish_impl

@@ -155,11 +155,8 @@ let hashes_impl r s xl xr =
   let q = length xl in
   q_loop pre pw xl xr q (Uint63.of_int (0)) (make q (Uint63.of_int (0)))
 
-module HashingImpl =
- struct
-  (** val hashes :
-      uint -> string -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
+(** val hashes :
+    uint -> string -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
 
-  let hashes =
-    hashes_impl
- end
+let hashes =
+  hashes_impl

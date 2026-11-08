@@ -104,10 +104,7 @@ let ada_impl a =
   (sum_loop t (sub n (Uint63.of_int (1))) (add d (Uint63.of_int (1)))
     (Uint63.of_int (0)) (Uint63.of_int (0))))
 
-module AdaImpl =
- struct
-  (** val ada : sint Marray.t -> uint * sint **)
+(** val ada : sint Marray.t -> uint * sint **)
 
-  let ada =
-    ada_impl
- end
+let ada =
+  ada_impl

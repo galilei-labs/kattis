@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["minspantree_implem.v", "minspantree.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/minspantree_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/minspantree_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "minspantree_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/minspantree_extracted_marray.ml"
+Rust = ""

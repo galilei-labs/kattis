@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Text, query count, then 0-based half-open substring intervals L R.
+    - Output convention: One integer substring hash per query. *)
 (* Input:
 abba
 6
@@ -87,9 +88,7 @@ Definition window (str : string)
   (start stop : N) : string :=
   substring (N.to_nat start) (N.to_nat (stop - start)) str.
 
-(** The keys : 0 .. key_count - 1. The statement leaves the hash free ;
-    key_count is our choice, the number of residues modulo the
-    Mersenne prime 2^61 - 1. *)
+(** The number of possible keys, $2^{61} - 1$, corresponding to residues modulo this Mersenne prime. *)
 Definition key_count : N := 2 ^ 61 - 1.
 (** The [key] definition. *)
 Definition key (candidate : N) : Prop :=
@@ -121,8 +120,7 @@ Definition separating
       (fun candidate => hash_family candidate word =
             hash_family candidate word').
 
-(** [@inside hashes_correct] The statement's bounds, for the one test
-    case, and the range of the key. *)
+(** [@inside hashes_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (hash_key : N) (text : string)
     (query_lefts query_rights : list N) : Prop := {
   (* the key, our own argument *)
@@ -145,21 +143,10 @@ Record valid_input (hash_key : N) (text : string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer of one call, for the family
-    hash_family : hash_family is    separating, and there is one
-    hash per query, the family's hash under    the key of the
-    queried substring.  That hash depends on the key and    the
-    spelled substring only, so two queries on equal substrings get
-    equal hashes : the statement's first half.  Its second half,
-    different    substrings get different hashes with high
-    probability, is    [separating hash_family].] The answer of one
-    call, for the family hash_family : hash_family is separating,
-    and there is one hash per query, the family's hash under the key
-    of the queried substring. That hash depends on the key and the
-    spelled substring only, so two queries on equal substrings get
-    equal hashes : the statement's first half. Its second half,
-    different substrings get different hashes with high probability,
-    is [separating hash_family]. *)
+(** [@requirement]
+    The output hashes each queried substring using the supplied key and a common hash
+    family. Equal substrings have equal hashes; distinct substrings collide for at most
+    their maximum length in keys among $2^{61} - 1$ keys. *)
 Definition hashes_spec (hash_family : N -> string -> N)
   (hash_key : N)
     (text : string) (query_lefts query_rights : list N)
@@ -175,7 +162,9 @@ Definition hashes_spec (hash_family : N -> string -> N)
 
 (** ** Interface *)
 
-(** The [hashes] program on machine values.
+(** Compute keyed hashes for queried substrings. Equal substrings must always hash equally;
+    distinct substrings may collide for at most as many keys as their maximum length,
+    among 2^61 - 1 possible keys.
     - Input [hash_key]:
     - Input [text]:
     - Input [query_lefts]:

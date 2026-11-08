@@ -134,10 +134,7 @@ let antiarithmetic_impl x =
   scan x n (make k (Uint63.of_int (0))) (make k (Uint63.of_int (0)))
     (Uint63.of_int (0))
 
-module AntiarithmeticImpl =
- struct
-  (** val antiarithmetic : uint Marray.t -> bool **)
+(** val antiarithmetic : uint Marray.t -> bool **)
 
-  let antiarithmetic =
-    antiarithmetic_impl
- end
+let antiarithmetic =
+  antiarithmetic_impl

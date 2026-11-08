@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Repeated pairs of lines: pattern first, then text; input ends at EOF.
+    - Output convention: All 0-based match positions in ascending order, on one line per case. *)
 (* Input:
 p
 Popup
@@ -82,9 +83,7 @@ Definition ascending (positions : list N) : Prop :=
   forall j k, j < k < len positions ->
     get_list_N positions j < get_list_N positions k.
 
-(** [@inside find_all_correct] The statement's bounds,
-    for one test case -- plus one bound that is NOT
-    Kattis's, vi_txt_parray. *)
+(** [@inside find_all_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. The additional array-size constraint is specific to the implementation. *)
 Record valid_input (pattern text : string) : Prop := {
   (* a non-empty pattern, a non-empty text *)
   vi_pat : 1 <= slen pattern;
@@ -107,11 +106,9 @@ Record valid_input (pattern text : string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find every occurrence of a
-    pattern in a text, including overlaps, and list the
-    starting positions in ascending order.] The positions
-    of the occurrences of [pattern] in [text], each once,
-    in [ascending] order. *)
+(** [@requirement]
+    The output lists every starting position of a pattern occurrence, including
+    overlaps, exactly once in ascending order. *)
 Definition find_all_spec
   (pattern text : string)
   (output : list N)
@@ -122,9 +119,8 @@ Definition find_all_spec
 
 (** ** Interface *)
 
-(** Find every occurrence of a [pattern] in a [text],
-    including overlaps, and list the starting positions
-    in [ascending] order.
+(** Find every occurrence of a pattern in a text, including overlaps, and return the
+    starting positions in ascending order.
     - Input [pattern]:
     - Input [text]:
     - Output [output]: *)

@@ -202,12 +202,9 @@ let shortestpath3_impl n s us vs ws qs =
   let q0 = length qs in
   ans_loop d mk' qs q0 (Uint63.of_int (0)) (make q0 Impossible)
 
-module Shortestpath3Impl =
- struct
-  (** val shortestpath3 :
-      uint -> uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> uint
-      Marray.t -> sint answer Marray.t **)
+(** val shortestpath3 :
+    uint -> uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> uint
+    Marray.t -> sint answer Marray.t **)
 
-  let shortestpath3 =
-    shortestpath3_impl
- end
+let shortestpath3 =
+  shortestpath3_impl

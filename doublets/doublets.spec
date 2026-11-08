@@ -7,7 +7,7 @@
     exists. Both endpoints must belong to the dictionary.
 
     [@kattis doublets]
-    - Difficulty: 7.7
+    - Difficulty: 7.8
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Dictionary words, a blank line, then source-destination word pairs.
+    - Output convention: One shortest chain with a word per line, or No solution.; blank lines separate cases. *)
 (* Input:
 booster
 rooster
@@ -100,9 +101,7 @@ Definition is_chain (dictionary : list string)
     nth_error chain (S k) = Some word' ->
       doublet word word'.
 
-(** The answer to the pair (start_word, end_word): Some chain with chain
-    no longer than any other chain, or None exactly when there is no
-    chain at all. *)
+(** Some shortest word chain between the endpoints, or None exactly when no chain exists. *)
 Definition answer (dictionary : list string)
   (start_word end_word : string)
     (chain_option : option (list string)) : Prop :=
@@ -116,8 +115,7 @@ Definition answer (dictionary : list string)
     end_word chain
   end.
 
-(** [@inside doublets_correct] The statement's guarantees, for one
-    input. *)
+(** [@inside doublets_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (dictionary start_words end_words : list string)
     : Prop := {
@@ -150,8 +148,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short One answer per pair, in order.] One answer
-    per pair, in order. *)
+(** [@requirement]
+    Each output entry is a shortest dictionary-word chain between the corresponding
+    endpoints, changing one letter at each step, or None if no chain exists. *)
 Definition doublets_spec
   (dictionary start_words end_words : list string)
     (output : list (option (list string))) : Prop :=
@@ -162,7 +161,9 @@ Definition doublets_spec
 
 (** ** Interface *)
 
-(** The [doublets] program on machine values.
+(** For each pair of words, find a shortest chain of dictionary words changing exactly one
+    letter at each step, or report that no chain exists. Both endpoints must belong to
+    the dictionary.
     - Input [dictionary]:
     - Input [start_words]:
     - Input [end_words]:

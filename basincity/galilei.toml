@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["basincity_implem.v", "basincity.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/basincity_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/basincity_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "basincity_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/basincity_extracted_marray.ml"
+Rust = ""

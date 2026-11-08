@@ -8,6 +8,8 @@
 
     [@kattis chesstournament]
     - Difficulty: 5.0
+    - CPU time limit: 4 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 2 to 50,000 players; 1 to 250,000 reported matches.
@@ -16,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Participant and relation counts, followed by relations of the form K = L or K > L.
+    - Output convention: consistent if the relations admit skill levels; inconsistent otherwise. *)
 (* Input:
 3 3
 0 > 1
@@ -95,8 +98,7 @@ Definition consistent (first_players : list N)
   exists skills : N -> Z, forall j, j < len first_players ->
     explains skills first_players wins second_players j.
 
-(** [@inside chess_consistent_correct] The statement's
-    input bounds and guarantees. *)
+(** [@inside chess_consistent_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (player_count : N)
   (first_players : list N)
     (wins : list bool) (second_players : list N) : Prop := {
@@ -129,9 +131,9 @@ Record valid_input (player_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether the
-    reported matches are consistent.] The answer: true
-    ("consistent") iff the list is consistent. *)
+(** [@requirement]
+    The output is true exactly when numerical skill levels can satisfy every equality
+    and strict-order relation. *)
 Definition chess_consistent_spec (player_count : N)
   (first_players : list N)
     (wins : list bool) (second_players : list N)
@@ -144,7 +146,8 @@ Definition chess_consistent_spec (player_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether reported wins and draws admit consistent numerical skill levels: a win
+    requires a strictly higher level, and a draw requires equal levels.
     - Input [player_count]:
     - Input [first_players]:
     - Input [wins]:

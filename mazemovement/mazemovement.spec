@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex count, followed by distinct integer labels, one per line.
+    - Output convention: The maximum flow from the smallest label to the largest. *)
 (* Input:
 4
 4
@@ -126,7 +127,7 @@ Definition entering (rooms : list N) (entry_position : N)
   (Z.of_N (outflow rooms pattern entry_position)
    - Z.of_N (inflow rooms pattern entry_position))%Z.
 
-(** [@inside mazemovement_correct] The statement's bounds. *)
+(** [@inside mazemovement_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (rooms : list N) : Prop := {
   (* an integer 2 <= n <= 1000 indicating the number of
      rooms *)
@@ -147,10 +148,9 @@ Record valid_input (rooms : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer is the maximum number of people
-    entering: some walking    pattern reaches it, and none exceeds
-    it.] The answer is the maximum number of people entering: some
-    walking pattern reaches it, and none exceeds it. *)
+(** [@requirement]
+    The output is the maximum flow from the smallest to the largest vertex label, using
+    the specified GCD-based edge capacities. *)
 Definition mazemovement_spec (rooms : list N)
   (output : N) : Prop :=
   forall entry_position exit_position,
@@ -167,7 +167,9 @@ Definition mazemovement_spec (rooms : list N)
 
 (** ** Interface *)
 
-(** The [mazemovement] program on machine values.
+(** Build a network on distinct integer labels, joining two vertices when their greatest
+    common divisor exceeds one and using that divisor as capacity in each direction.
+    Find the maximum flow from the smallest label to the largest.
     - Input [rooms]:
     - Output [output]: *)
 Program mazemovement : array uint -> uint.

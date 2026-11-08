@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: String length, followed by brackets and ? placeholders.
+    - Output convention: The completion count; counts of at least 100,000 use their last five digits, including leading zeros. *)
 (* Input:
 6
 ()()()
@@ -61,8 +62,7 @@ Definition matching (opening closing : ascii) : Prop :=
   \/ (opening = "["%char /\ closing = "]"%char)
   \/ (opening = "{"%char /\ closing = "}"%char).
 
-(** The statement's grammar: the empty string; (A), [A]
-    and {A} for a [regular] A; AB for [regular] A and B. *)
+(** A balanced bracket sequence: empty, a balanced sequence enclosed by matching brackets, or a concatenation of balanced sequences. *)
 Inductive regular : string -> Prop :=
   | regular_empty : regular ""
   | regular_wrap  : forall opening closing inner,
@@ -86,7 +86,7 @@ Definition completion (sequence candidate : string) : Prop
 Definition input_char (character : ascii) : Prop :=
   In character ["("; ")"; "["; "]"; "{"; "}"; "?"]%char.
 
-(** [@inside zapis_correct] Valid input. *)
+(** [@inside zapis_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : string) : Prop := {
   (* an even integer N (2 <= N <= 200), the length of the
      string *)
@@ -102,17 +102,9 @@ Record valid_input (sequence : string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Count ways to replace question
-    marks to obtain a regular bracket sequence, returning
-    the last five digits and whether the count reaches
-    100000.] The answer: completions lists, without
-    repetition, exactly the [regular] completions of
-    [sequence]; the [output] is their number modulo
-    100000 and whether that number is at least 100000, so
-    that its last 5 digits are the residue written with 5
-    digits (leading zeros included) when the flag is set,
-    and the residue itself (the whole number) otherwise.
-    The residue alone would print 05292 as 5292. *)
+(** [@requirement]
+    The output gives the number of balanced-bracket completions modulo 100,000 and a
+    flag indicating whether the full count is at least 100,000. *)
 Definition zapis_spec
   (sequence : string)
   (output : N * bool)
@@ -132,9 +124,9 @@ Definition zapis_spec
 
 (** ** Interface *)
 
-(** Count ways to replace question marks to obtain a
-    [regular] bracket [sequence], returning the last five
-    digits and whether the count reaches 100000.
+(** Count substitutions of question marks that produce a balanced sequence of round, square
+    and curly brackets. Return the last five digits and whether the count reaches
+    100000.
     - Input [sequence]:
     - Output [output]: *)
 Program zapis : PrimString.string -> uint * bool.

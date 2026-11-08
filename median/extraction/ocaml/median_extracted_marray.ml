@@ -141,10 +141,7 @@ let median_impl x =
   else let w = maxl y k (Uint63.of_int (1)) (get y (Uint63.of_int (0))) in
        div0 (of_uint63 (add w u)) (of_uint63 (Uint63.of_int (2)))
 
-module MedianImpl =
- struct
-  (** val median : uint Marray.t -> Float64.t **)
+(** val median : uint Marray.t -> Float64.t **)
 
-  let median =
-    median_impl
- end
+let median =
+  median_impl

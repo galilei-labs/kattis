@@ -268,10 +268,7 @@ let bilateral_impl x y =
      then set mk1 (Uint63.of_int (9)) (Uint63.of_int (1))
      else mk0)
 
-module BilateralImpl =
- struct
-  (** val bilateral : uint Marray.t -> uint Marray.t -> uint Marray.t **)
+(** val bilateral : uint Marray.t -> uint Marray.t -> uint Marray.t **)
 
-  let bilateral =
-    bilateral_impl
- end
+let bilateral =
+  bilateral_impl

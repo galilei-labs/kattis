@@ -9,6 +9,8 @@
 
     [@kattis chatter]
     - Difficulty: 3.4
+    - CPU time limit: 2 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 2 to 10,000 vertices.
@@ -17,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: One case per line: vertex count, random seed and three generator parameters.
+    - Output convention: Component count followed by descending sizes, using size x count without spaces for repeated sizes. *)
 (* Input:
 10 5 1 2 200
 100 311 523 39 101
@@ -177,8 +180,7 @@ Definition num_groups_of_size (people_count : N)
                         member_count)
     occurrences.
 
-(** [@inside chatter_correct] The statement's bounds,
-    for one day. *)
+(** [@inside chatter_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (people_count seed multiplier increment modulus : N)
   : Prop := {
@@ -203,11 +205,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the
-    connected-group size distribution.] The number of
-    groups group_count, and the table size_table of the
-    distinct group sizes, largest first, each with the
-    number of groups of that size. *)
+(** [@requirement]
+    The output gives the connected-component count and the frequency of each component
+    size in descending size order, after the specified generated connections. *)
 Definition chatter_spec
   (people_count seed multiplier increment modulus : N)
   (output : N * list (N * N)) : Prop :=
@@ -228,7 +228,9 @@ Definition chatter_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Generate distinct endpoint pairs using a linear congruential generator, joining them
+    until the number of edges equals the number of vertices. Return the connected-
+    component count and the frequency of each component size, largest first.
     - Input [people_count]:
     - Input [seed]:
     - Input [multiplier]:

@@ -87,10 +87,7 @@ let xormax_impl x =
   in
   greedy b (Uint63.of_int (0)) (Uint63.of_int (63))
 
-module XormaxImpl =
- struct
-  (** val xormax : uint Marray.t -> uint **)
+(** val xormax : uint Marray.t -> uint **)
 
-  let xormax =
-    xormax_impl
- end
+let xormax =
+  xormax_impl

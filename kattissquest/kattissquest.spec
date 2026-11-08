@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Command count, followed by add energy reward or query budget commands.
+    - Output convention: One total reward per query command. *)
 (* Input:
 9
 add 8 10
@@ -139,7 +140,7 @@ Inductive runs : list
     runs pool' commands answers ->
     runs pool (query energy :: commands) (gold :: answers).
 
-(** [@inside kattissquest_correct] The statement's bounds. *)
+(** [@inside kattissquest_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (commands : list op) : Prop := {
   (* 1 <= N <= 2 * 10^5, the number of commands *)
   vi_n : 1 <= len commands <= 2 * 10 ^ 5;
@@ -155,9 +156,9 @@ Record valid_input (commands : list op) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The output is what the commands print,
-    starting from the empty    pool.] The output is what the
-    commands print, starting from the empty pool. *)
+(** [@requirement]
+    The output gives the total reward for each budget query under the specified greedy
+    task-selection rule, starting with an empty task collection. *)
 Definition kattissquest_spec (commands : list op)
   (output : list N)
     : Prop :=
@@ -165,7 +166,9 @@ Definition kattissquest_spec (commands : list op)
 
 (** ** Interface *)
 
-(** The [kattissquest] program on machine values.
+(** Maintain tasks with energy costs and rewards. For each budget query, repeatedly remove
+    the affordable task with greatest cost, breaking ties by greatest reward, and return
+    the total reward earned.
     - Input [commands]:
     - Output [output]: *)
 Program kattissquest : array command -> array uint.

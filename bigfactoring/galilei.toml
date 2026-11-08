@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["bigfactoring_implem.v", "bigfactoring.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/bigfactoring_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/bigfactoring_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "bigfactoring_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/bigfactoring_extracted_marray.ml"
+Rust = ""

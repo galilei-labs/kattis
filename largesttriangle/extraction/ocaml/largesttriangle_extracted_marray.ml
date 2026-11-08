@@ -318,10 +318,7 @@ let largest_triangle_impl x y =
             let best = sweep hX hY h in
             div0 (of_uint63 (sub best oFF)) (of_uint63 (Uint63.of_int (2)))
 
-module LargesttriangleImpl =
- struct
-  (** val largest_triangle : uint Marray.t -> uint Marray.t -> Float64.t **)
+(** val largest_triangle : uint Marray.t -> uint Marray.t -> Float64.t **)
 
-  let largest_triangle =
-    largest_triangle_impl
- end
+let largest_triangle =
+  largest_triangle_impl

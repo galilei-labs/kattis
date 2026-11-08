@@ -73,10 +73,7 @@ let candy_impl k c =
        if leb b2 (Uint63.of_int (1000000000)) then Some b2 else None
   else None
 
-module CandydistributionImpl =
- struct
-  (** val candydistribution : uint -> uint -> uint option **)
+(** val candydistribution : uint -> uint -> uint option **)
 
-  let candydistribution =
-    candy_impl
- end
+let candydistribution =
+  candy_impl

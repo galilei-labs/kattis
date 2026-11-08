@@ -204,10 +204,7 @@ let excavator_impl xs xsrc xdst =
   let dist0 = kahn_loop xs v off adj (Uint63.of_int (0)) d dist q t in
   get dist0 (sub v (Uint63.of_int (1)))
 
-module ExcavatorexpeditionImpl =
- struct
-  (** val excavator : string -> uint Marray.t -> uint Marray.t -> sint **)
+(** val excavator : string -> uint Marray.t -> uint Marray.t -> sint **)
 
-  let excavator =
-    excavator_impl
- end
+let excavator =
+  excavator_impl

@@ -168,12 +168,9 @@ let mst_impl n us vs ws =
     (make (sub n (Uint63.of_int (1))) (Uint63.of_int (0)))
     (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module MinspantreeImpl =
- struct
-  (** val mst :
-      uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> (sint * uint
-      Marray.t) option **)
+(** val mst :
+    uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> (sint * uint
+    Marray.t) option **)
 
-  let mst =
-    mst_impl
- end
+let mst =
+  mst_impl

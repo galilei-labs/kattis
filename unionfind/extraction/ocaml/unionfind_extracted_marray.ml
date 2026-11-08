@@ -108,11 +108,8 @@ let run_ops_impl xn xu xa xb =
   scan xu xa xb q (Uint63.of_int (0)) (init_par xn)
     (make xn (Uint63.of_int (0))) (make q false)
 
-module UnionfindImpl =
- struct
-  (** val run_ops :
-      uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
+(** val run_ops :
+    uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
 
-  let run_ops =
-    run_ops_impl
- end
+let run_ops =
+  run_ops_impl

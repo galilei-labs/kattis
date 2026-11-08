@@ -1060,13 +1060,9 @@ let roadtimes_impl xdist xrs xrd xrt xqs xqd =
        answers n e rR d x i t0 xqs xqd
   else make (length xqs) (zero, zero)
 
-module RoadtimesImpl =
- struct
-  (** val roadtimes :
-      sint Marray.t Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint Marray.t -> uint Marray.t -> (Float64.t * Float64.t)
-      Marray.t **)
+(** val roadtimes :
+    sint Marray.t Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t
+    -> uint Marray.t -> uint Marray.t -> (Float64.t * Float64.t) Marray.t **)
 
-  let roadtimes =
-    roadtimes_impl
- end
+let roadtimes =
+  roadtimes_impl

@@ -253,10 +253,7 @@ let min_moves_impl x =
   in
   sub n (search sU rK n (Uint63.of_int (0)) (Uint63.of_int (0)))
 
-module CardhandImpl =
- struct
-  (** val min_moves : string Marray.t -> uint **)
+(** val min_moves : string Marray.t -> uint **)
 
-  let min_moves =
-    min_moves_impl
- end
+let min_moves =
+  min_moves_impl

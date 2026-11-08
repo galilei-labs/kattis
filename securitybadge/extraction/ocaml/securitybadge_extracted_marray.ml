@@ -251,12 +251,9 @@ let securitybadge_core n b s d xla xlb xlx xly =
 let securitybadge_impl =
   securitybadge_core
 
-module SecuritybadgeImpl =
- struct
-  (** val securitybadge :
-      uint -> uint -> uint -> uint -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint Marray.t -> uint **)
+(** val securitybadge :
+    uint -> uint -> uint -> uint -> uint Marray.t -> uint Marray.t -> uint
+    Marray.t -> uint Marray.t -> uint **)
 
-  let securitybadge =
-    securitybadge_impl
- end
+let securitybadge =
+  securitybadge_impl

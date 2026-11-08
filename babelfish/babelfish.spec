@@ -7,6 +7,8 @@
 
     [@kattis babelfish]
     - Difficulty: 2.0
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - At most 100,000 dictionary entries and 100,000 query words.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Translation pairs, a blank line, then one query word per line.
+    - Output convention: One translation per line, or eh for a word absent from the dictionary. *)
 (* Input:
 dog ogday
 cat atcay
@@ -85,8 +88,7 @@ Definition translates
   exists i, at_ foreign_words i = Some foreign_word /\
             at_ english_words i = Some english_word.
 
-(** [@inside babelfish_correct] The statement's
-    guarantees, for the one test case. *)
+(** [@inside babelfish_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (english_words foreign_words message_words : list string)
     : Prop := {
@@ -109,10 +111,7 @@ Record valid_input
   vi_distinct : NoDup foreign_words;
 }.
 
-(** The answer for the foreign word foreign_word: Some
-    english_word exactly when the dictionary translates
-    foreign_word as english_word, so None exactly when
-    foreign_word is not in the dictionary. *)
+(** Some translation when the dictionary contains the query word; None otherwise. *)
 Definition answer
   (english_words foreign_words : list string)
     (foreign_word : string)
@@ -123,9 +122,9 @@ Definition answer
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must translate each query
-    word using the dictionary.] One answer per message
-    word, in order. *)
+(** [@requirement]
+    Each output entry is the dictionary translation of the corresponding query, or None
+    if the word is absent. *)
 Definition babelfish_spec
     (english_words foreign_words message_words : list
       string)
@@ -135,7 +134,8 @@ Definition babelfish_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Translate each query word using a dictionary of word pairs, reporting words that have no
+    translation.
     - Input [english_words]:
     - Input [foreign_words]:
     - Input [message_words]:

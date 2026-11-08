@@ -587,12 +587,9 @@ let run_impl ids ops xs ys =
     (make (Uint63.of_int (1001)) Leaf) (make (Uint63.of_int (1001)) None)
     (make n None) (Uint63.of_int (0))
 
-module SelfbalancingbstImpl =
- struct
-  (** val run_commands :
-      uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t ->
-      sint option Marray.t **)
+(** val run_commands :
+    uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t -> sint
+    option Marray.t **)
 
-  let run_commands =
-    run_impl
- end
+let run_commands =
+  run_impl

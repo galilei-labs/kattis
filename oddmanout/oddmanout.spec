@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives a sequence length and its integer values.
+    - Output convention: Case #number: followed by the value with odd multiplicity. *)
 (* Input:
 3
 3
@@ -65,7 +66,7 @@ Definition only_odd (codes : list N) (code : N) : Prop :=
   odd_occurrences codes code /\
   forall other, odd_occurrences codes other -> other = code.
 
-(** [@inside odd_one_correct] The statement's bounds, for one test case. *)
+(** [@inside odd_one_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (codes : list N) : Prop := {
   (* 3 <= G < 1000 *)
   vi_length : 3 <= len codes < 1000;
@@ -78,16 +79,15 @@ Record valid_input (codes : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The result is the code that occurs an odd
-    number of times.] The result is the code that occurs an odd
-    number of times. *)
+(** [@requirement]
+    The output is the unique input value with odd multiplicity. *)
 Definition odd_one_spec (codes : list N)
   (output : N) : Prop :=
   only_odd codes output.
 
 (** ** Interface *)
 
-(** The [odd_one] program on machine values.
+(** Find the unique value occurring an odd number of times in a sequence.
     - Input [codes]:
     - Output [output]: *)
 Program odd_one : array uint -> uint.

@@ -286,10 +286,7 @@ let indoor x l =
     (add (lsl0 (Uint63.of_int (1)) b) (Uint63.of_int (256)))
     (Uint63.of_int (0))
 
-module IndoorienteeringImpl =
- struct
-  (** val indoorienteering : uint Marray.t Marray.t -> uint -> bool **)
+(** val indoorienteering : uint Marray.t Marray.t -> uint -> bool **)
 
-  let indoorienteering =
-    indoor
- end
+let indoorienteering =
+  indoor

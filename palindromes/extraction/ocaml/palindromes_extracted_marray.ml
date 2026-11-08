@@ -290,11 +290,8 @@ let palindromes_impl x xl xr =
   let v3 = fam n m cnt xl xr (Uint63.of_int (1)) true in
   tab m (fun k -> add (add (add (get v0 k) (get v1 k)) (get v2 k)) (get v3 k))
 
-module PalindromesImpl =
- struct
-  (** val palindromes :
-      string -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
+(** val palindromes :
+    string -> uint Marray.t -> uint Marray.t -> uint Marray.t **)
 
-  let palindromes =
-    palindromes_impl
- end
+let palindromes =
+  palindromes_impl

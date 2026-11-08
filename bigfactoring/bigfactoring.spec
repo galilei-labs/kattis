@@ -7,13 +7,16 @@
 
     [@kattis bigfactoring]
     - Difficulty: 7.2
+    - CPU time limit: 4 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - Integer from 2 to $10^{24}$. *)
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: A single positive integer to factor.
+    - Output convention: Prime factors in ascending order, including repeated factors. *)
 (* Input:
 166448
 Output:
@@ -53,8 +56,7 @@ Instance repr_Z : Repr Z Z :=
 Definition product (factors : list Z) : Z :=
   fold_right Z.mul 1 factors.
 
-(** [@inside bigfactoring_correct] The statement's
-    bounds. *)
+(** [@inside bigfactoring_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (number : Z) : Prop := {
   (* a positive integer 2 <= n <= 10^24 *)
   vi_n : 2 <= number <= 10 ^ 24;
@@ -62,12 +64,9 @@ Record valid_input (number : Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the prime factors
-    in ascending order.] The prime factors of number, in
-    ascending order, a factor occurring k times in
-    number listed k times: every element is prime, the
-    list is sorted, and the product is number. By unique
-    factorisation, exactly one list qualifies. *)
+(** [@requirement]
+    The output is the ascending list of prime factors whose product equals the input,
+    including multiplicities. *)
 Definition bigfactoring_spec (number : Z)
   (output : list Z) : Prop :=
   Forall prime output /\ Sorted Z.le output /\
@@ -75,7 +74,7 @@ Definition bigfactoring_spec (number : Z)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Factor an integer into primes, listed in ascending order with multiplicity.
     - Input [number]:
     - Output [output]: *)
 Program bigfactoring : Z -> array Z.

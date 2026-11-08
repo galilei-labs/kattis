@@ -19,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Fact and query counts, followed by name is-a name or name has-a name relations.
+    - Output convention: One Query number: true/false result per query, numbered from 1. *)
 (* Input:
 5 5
 Day is-a Time
@@ -137,8 +138,7 @@ Definition follows given_sources given_kinds given_targets
     from_class to_class
   end.
 
-(** [@inside isahasa_correct] The statement's guarantees, for one test
-    case. *)
+(** [@inside isahasa_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (given_sources : list string)
     (given_kinds : list relkind) (given_targets : list
       string)
@@ -185,11 +185,9 @@ Record valid_input (given_sources : list string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short One answer per query, answer j true exactly
-    when query j follows (all    relationships are deduced from the
-    n given ones).] One answer per query, answer j true exactly when
-    query j follows (all relationships are deduced from the n given
-    ones). *)
+(** [@requirement]
+    Each output entry is true exactly when the corresponding relationship follows from
+    the given is-a and has-a facts. *)
 Definition isahasa_spec (given_sources : list string)
     (given_kinds : list relkind) (given_targets : list
       string)
@@ -204,6 +202,8 @@ Definition isahasa_spec (given_sources : list string)
        query_kinds IsA)
              (nth j query_sources EmptyString)
              (nth j query_targets EmptyString)).
+
+(** ** Interface *)
 
 (** ** Interface *)
 

@@ -262,10 +262,7 @@ let catenyms_impl x =
                  in
                  if eqb cnt n then Some res else None
 
-module CatenymsImpl =
- struct
-  (** val catenyms : string Marray.t -> string Marray.t option **)
+(** val catenyms : string Marray.t -> string Marray.t option **)
 
-  let catenyms =
-    catenyms_impl
- end
+let catenyms =
+  catenyms_impl

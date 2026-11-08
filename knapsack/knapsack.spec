@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: capacity and item count, followed by value-weight pairs.
+    - Output convention: Selected-item count, followed by their 0-based indices in any order. *)
 (* Input:
 5 3
 1 5
@@ -79,8 +80,7 @@ Definition fits (capacity : N) (weights : list N)
   (items : list N) : Prop :=
   total weights items <= capacity.
 
-(** [@inside knapsack_correct] The statement's bounds, for one test
-    case. *)
+(** [@inside knapsack_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (capacity : N)
   (values weights : list N) : Prop := {
   (* 1 <= C <= 2000 *)
@@ -98,12 +98,9 @@ Record valid_input (capacity : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The result output = (best_value, chosen) :
-    chosen is a set of items    that fits, best_value is its total
-    value, and no set of items that fits    has a greater total
-    value.] The result output = (best_value, chosen) : chosen is a
-    set of items that fits, best_value is its total value, and no
-    set of items that fits has a greater total value. *)
+(** [@requirement]
+    The output gives a maximum achievable total value and a corresponding subset of item
+    indices whose total weight does not exceed the capacity. *)
 Definition knapsack_spec (capacity : N)
   (values weights : list N)
     (output : N * list N) : Prop :=
@@ -119,7 +116,8 @@ Definition knapsack_spec (capacity : N)
 
 (** ** Interface *)
 
-(** The [knapsack] program on machine values.
+(** Choose a subset of items with maximum total value subject to a weight capacity. Return
+    its value and the selected item indices.
     - Input [capacity]:
     - Input [values]:
     - Input [weights]:

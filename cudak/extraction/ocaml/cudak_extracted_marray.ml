@@ -159,10 +159,7 @@ let cudak_impl a b s =
   ((sub cb ca),
   (minwalk t s1 d s (add ca (Uint63.of_int (1))) (Uint63.of_int (0))))
 
-module CudakImpl =
- struct
-  (** val cudak : uint -> uint -> uint -> uint * uint **)
+(** val cudak : uint -> uint -> uint -> uint * uint **)
 
-  let cudak =
-    cudak_impl
- end
+let cudak =
+  cudak_impl

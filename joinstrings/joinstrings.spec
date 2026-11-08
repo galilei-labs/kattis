@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: String count and strings, followed by 1-based destination-source pairs for concatenation.
+    - Output convention: The single remaining concatenated string. *)
 (* Input:
 4
 cute
@@ -100,7 +101,7 @@ Definition lowercase (word : string) : Prop :=
 Definition total (strings : list string) : N :=
   fold_right N.add 0 (map slen strings).
 
-(** [@inside joinstrings_correct] The [valid_input] datatype. *)
+(** [@inside joinstrings_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (strings : list string)
   (targets sources : list N)
     : Prop := {
@@ -135,10 +136,9 @@ Record valid_input (strings : list string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer: S_survivor after all the
-    operations, survivor being the    index that no operation
-    empties.] The answer: S_survivor after all the operations,
-    survivor being the index that no operation empties. *)
+(** [@requirement]
+    The output is the single string remaining after the append-and-clear operations are
+    executed in order. *)
 Definition joinstrings_spec (strings : list string)
   (targets sources : list N)
     (output : string) : Prop :=
@@ -148,7 +148,8 @@ Definition joinstrings_spec (strings : list string)
 
 (** ** Interface *)
 
-(** The [joinstrings] program on machine values.
+(** Process operations that append one string to another and empty the source. Return the
+    single string remaining after all operations.
     - Input [strings]:
     - Input [targets]:
     - Input [sources]:

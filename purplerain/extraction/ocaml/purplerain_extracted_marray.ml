@@ -65,10 +65,7 @@ let purplerain_impl x =
   then ((add a (Uint63.of_int (1))), b)
   else ((add b (Uint63.of_int (1))), a)
 
-module PurplerainImpl =
- struct
-  (** val purplerain : string -> uint * uint **)
+(** val purplerain : string -> uint * uint **)
 
-  let purplerain =
-    purplerain_impl
- end
+let purplerain =
+  purplerain_impl

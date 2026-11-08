@@ -53,10 +53,7 @@ let rec sd_loop n p =
 let pascal_impl n =
   sub n (div n (sd_loop n (Uint63.of_int (2))))
 
-module PascalImpl =
- struct
-  (** val pascal : uint -> uint **)
+(** val pascal : uint -> uint **)
 
-  let pascal =
-    pascal_impl
- end
+let pascal =
+  pascal_impl

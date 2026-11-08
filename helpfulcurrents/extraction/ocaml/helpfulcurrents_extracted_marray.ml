@@ -149,11 +149,8 @@ let helpfulcurrents_impl ym xm xim m =
   in
   if eqb (snd r) (Uint63.of_int (0)) then None else Some (fst r)
 
-module HelpfulcurrentsImpl =
- struct
-  (** val helpfulcurrents :
-      uint -> uint -> uint -> string Marray.t -> uint option **)
+(** val helpfulcurrents :
+    uint -> uint -> uint -> string Marray.t -> uint option **)
 
-  let helpfulcurrents =
-    helpfulcurrents_impl
- end
+let helpfulcurrents =
+  helpfulcurrents_impl

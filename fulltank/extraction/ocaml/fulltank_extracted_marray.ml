@@ -410,13 +410,9 @@ let fulltank_impl n p u v d c s e =
   let q = length c in
   qloop n p u v d (fst hn) (snd hn) c s e (make q None) (Uint63.of_int (0)) q
 
-module FulltankImpl =
- struct
-  (** val fulltank :
-      uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      option Marray.t **)
+(** val fulltank :
+    uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t
+    -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint option Marray.t **)
 
-  let fulltank =
-    fulltank_impl
- end
+let fulltank =
+  fulltank_impl

@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["helpfulcurrents_implem.v", "helpfulcurrents.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/helpfulcurrents_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/helpfulcurrents_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "helpfulcurrents_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/helpfulcurrents_extracted_marray.ml"
+Rust = ""

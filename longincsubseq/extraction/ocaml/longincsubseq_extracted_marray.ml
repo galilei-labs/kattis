@@ -102,10 +102,7 @@ let lis_impl x =
   build pred l (get tails (sub l (Uint63.of_int (1))))
     (make l (Uint63.of_int (0)))
 
-module LongincsubseqImpl =
- struct
-  (** val lis : sint Marray.t -> uint Marray.t **)
+(** val lis : sint Marray.t -> uint Marray.t **)
 
-  let lis =
-    lis_impl
- end
+let lis =
+  lis_impl

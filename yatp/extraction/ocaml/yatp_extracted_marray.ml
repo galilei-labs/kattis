@@ -482,11 +482,8 @@ let yatp_impl xp xu xv xw =
   in
   sum_loop best n1 (Uint63.of_int (1)) (Uint63.of_int (0))
 
-module YatpImpl =
- struct
-  (** val yatp :
-      uint Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint **)
+(** val yatp :
+    uint Marray.t -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint **)
 
-  let yatp =
-    yatp_impl
- end
+let yatp =
+  yatp_impl

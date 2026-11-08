@@ -355,11 +355,8 @@ let kth_occurrences_impl x ts ks =
   qloop x n sa l r c roots d ts ks (make q (Uint63.of_int (0)))
     (Uint63.of_int (0)) q
 
-module AnothersubstringqueryproblemImpl =
- struct
-  (** val kth_occurrences :
-      string -> string Marray.t -> uint Marray.t -> sint Marray.t **)
+(** val kth_occurrences :
+    string -> string Marray.t -> uint Marray.t -> sint Marray.t **)
 
-  let kth_occurrences =
-    kth_occurrences_impl
- end
+let kth_occurrences =
+  kth_occurrences_impl

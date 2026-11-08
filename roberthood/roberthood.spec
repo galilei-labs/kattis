@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Point count, followed by integer coordinate pairs.
+    - Output convention: Maximum pairwise distance, with absolute or relative error below $10^{-6}$. *)
 (* Input:
 2
 2 2
@@ -88,7 +89,7 @@ Definition within_tolerance (approx exact : R) : Prop :=
   (Rabs (approx - exact) < / 1000000 \/
    Rabs (approx - exact) < exact / 1000000)%R.
 
-(** [@inside roberthood_correct] The statement's bounds. *)
+(** [@inside roberthood_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (abscissas ordinates : list Z) : Prop :=
   {
   (* a single positive integer C, 2 <= C <= 100 000, the
@@ -107,10 +108,9 @@ Record valid_input (abscissas ordinates : list Z) : Prop :=
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the greatest Euclidean
-    distance between two arrows on a target.] The answer:
-    within the statement's tolerance of the longest
-    distance. *)
+(** [@requirement]
+    The output approximates the maximum Euclidean distance between input points, within
+    the specified absolute or relative tolerance. *)
 Definition roberthood_spec
   (abscissas ordinates : list Z)
   (output : R)
@@ -120,8 +120,7 @@ Definition roberthood_spec
 
 (** ** Interface *)
 
-(** Find the greatest Euclidean distance between two
-    arrows on a target.
+(** Find the greatest Euclidean distance between any two input points.
     - Input [abscissas]:
     - Input [ordinates]:
     - Output [output]: *)

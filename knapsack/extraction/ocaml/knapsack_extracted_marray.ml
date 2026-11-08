@@ -114,11 +114,8 @@ let knapsack_impl cw xv xw =
   (bestv,
   (copy_loop (snd ko) (make k (Uint63.of_int (0))) k (Uint63.of_int (0))))
 
-module KnapsackImpl =
- struct
-  (** val knapsack :
-      uint -> uint Marray.t -> uint Marray.t -> uint * uint Marray.t **)
+(** val knapsack :
+    uint -> uint Marray.t -> uint Marray.t -> uint * uint Marray.t **)
 
-  let knapsack =
-    knapsack_impl
- end
+let knapsack =
+  knapsack_impl

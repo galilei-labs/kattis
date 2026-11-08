@@ -8,6 +8,8 @@
 
     [@kattis bilateral]
     - Difficulty: 5.6
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 10,000 distinct edges.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Edge count, followed by pairs of vertex identifiers from the two partitions.
+    - Output convention: Minimum cover size, followed by one selected vertex identifier per line. *)
 (* Input:
 2
 1009 2011
@@ -54,7 +57,7 @@ Open Scope N_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** Your friend has ID 1009. *)
+(** The preferred vertex identifier, 1009. *)
 Definition friend : N := 1009.
 
 (** The teams, as (Stockholm member, London member)
@@ -83,7 +86,7 @@ Definition smallest
     invitation stockholm_members london_members invitees' ->
     len invitees <= len invitees'.
 
-(** [@inside bilateral_correct] The statement's bounds. *)
+(** [@inside bilateral_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (stockholm_members london_members : list N) : Prop := {
   (* 1 <= m <= 10 000, the number of teams *)
@@ -107,11 +110,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return a smallest valid
-    invitation list.] The invitees: a smallest
-    invitation, which contains the friend whenever some
-    smallest invitation does. Any such list, in any
-    order. *)
+(** [@requirement]
+    The output is a minimum vertex cover of the bipartite graph. It includes vertex 1009
+    whenever a minimum cover containing that vertex exists. *)
 Definition bilateral_spec
   (stockholm_members london_members : list N)
     (output : list N) : Prop :=
@@ -123,7 +124,9 @@ Definition bilateral_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Find a smallest vertex cover of a bipartite graph: a set containing at least one
+    endpoint of every edge. Prefer a minimum cover containing vertex 1009 whenever one
+    exists.
     - Input [stockholm_members]:
     - Input [london_members]:
     - Output [output]: *)

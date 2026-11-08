@@ -190,12 +190,9 @@ let slowleak_impl x y xs xi xj xk =
   dij_loop x m0 (add t2 (Uint63.of_int (1))) v t y m0 (make m0 false)
     (set (make m0 iNF) (Uint63.of_int (0)) (Uint63.of_int (0)))
 
-module SlowleakImpl =
- struct
-  (** val slowleak :
-      uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
-      Marray.t -> uint option **)
+(** val slowleak :
+    uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint
+    Marray.t -> uint option **)
 
-  let slowleak =
-    slowleak_impl
- end
+let slowleak =
+  slowleak_impl

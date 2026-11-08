@@ -148,10 +148,7 @@ let bank_impl t cash dl =
   in
   greedy_loop cash dl p n l (Uint63.of_int (0)) uf (Uint63.of_int (0))
 
-module BankImpl =
- struct
-  (** val bank : uint -> uint Marray.t -> uint Marray.t -> uint **)
+(** val bank : uint -> uint Marray.t -> uint Marray.t -> uint **)
 
-  let bank =
-    bank_impl
- end
+let bank =
+  bank_impl

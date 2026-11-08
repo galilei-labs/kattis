@@ -7,6 +7,8 @@
 
     [@kattis closestpair2]
     - Difficulty: 5.2
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 2 to 100,000 points.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: point count and coordinate pairs; a zero count ends input.
+    - Output convention: Four coordinates x1 y1 x2 y2 describing any closest pair, one line per case. *)
 (* Input:
 2
 1.12 0
@@ -110,8 +113,7 @@ Definition dist2 (x_coordinates y_coordinates : list Q)
 Definition two_decimals (coordinate : Q) : Prop :=
   exists hundredths : Z, coordinate == hundredths # 100.
 
-(** [@inside closestpair_correct] The statement's bounds
-    on one test case. *)
+(** [@inside closestpair_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list Q) : Prop := {
   (* 2 <= n <= 100 000 *)
@@ -133,12 +135,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return a pair of points
-    at minimum distance.] The answer, "any closest
-    pair": two distinct points that no pair of distinct
-    points is strictly closer than, exactly. Both
-    point_pair and dist2 are symmetric in i and j, so
-    (i, j) and (j, i) are equally accepted. *)
+(** [@requirement]
+    The output identifies two distinct input positions attaining the minimum Euclidean
+    distance between the exact decimal coordinates. *)
 Definition closestpair_spec
   (x_coordinates y_coordinates : list Q)
   (output : N * N) : Prop :=
@@ -152,7 +151,8 @@ Definition closestpair_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Find two distinct points with minimum Euclidean distance, using exact decimal
+    coordinates.
     - Input [x_coordinates]:
     - Input [y_coordinates]:
     - Output [output]: *)

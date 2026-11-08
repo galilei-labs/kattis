@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: sequence length followed by its integers; a zero length ends input.
+    - Output convention: One count of cyclic shifts with nonnegative prefix sums per case. *)
 (* Input:
 3
 2 2 1
@@ -74,8 +75,7 @@ Definition good_shifts (sequence : list Z) : list nat :=
   filter (good_shift sequence) (seq 0 (List.length
     sequence)).
 
-(** [@inside count_good_shifts_correct] The statement's bounds, for one
-    test case. *)
+(** [@inside count_good_shifts_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : list Z) : Prop := {
   (* 1 <= n <= 10^6 *)
   vi_length : (1 <= len sequence <= 10 ^ 6)%N;
@@ -86,8 +86,8 @@ Record valid_input (sequence : list Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The result is the number of good shifts.] The
-    result is the number of good shifts. *)
+(** [@requirement]
+    The output counts cyclic shifts for which every prefix sum is nonnegative. *)
 Definition count_good_shifts_spec (sequence : list Z)
   (output : N)
     : Prop :=
@@ -95,7 +95,7 @@ Definition count_good_shifts_spec (sequence : list Z)
 
 (** ** Interface *)
 
-(** The [count_good_shifts] program on machine values.
+(** Count cyclic shifts of an integer sequence whose every prefix has a nonnegative sum.
     - Input [sequence]:
     - Output [output]: *)
 Program count_good_shifts : array sint -> uint.

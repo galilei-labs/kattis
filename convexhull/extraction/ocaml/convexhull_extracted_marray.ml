@@ -204,10 +204,7 @@ let hull x y =
        copyl st2 (make (sub k (Uint63.of_int (1))) (Uint63.of_int (0)))
          (sub k (Uint63.of_int (1))) (Uint63.of_int (0))
 
-module ConvexhullImpl =
- struct
-  (** val convex_hull : sint Marray.t -> sint Marray.t -> uint Marray.t **)
+(** val convex_hull : sint Marray.t -> sint Marray.t -> uint Marray.t **)
 
-  let convex_hull =
-    hull
- end
+let convex_hull =
+  hull

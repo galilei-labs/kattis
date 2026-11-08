@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: pattern count, one pattern per line, then the text; input ends at EOF.
+    - Output convention: One line of ascending 0-based match positions per pattern. *)
 (* Input:
 2
 p
@@ -105,8 +106,7 @@ Definition ascending (positions : list N) : Prop :=
 Definition total_length (patterns : list string) : N :=
   N.of_nat (list_sum (map String.length patterns)).
 
-(** [@inside multimatch_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside multimatch_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (patterns : list string) (text : string)
   : Prop := {
   (* every pattern is non-empty *)
@@ -121,11 +121,9 @@ Record valid_input (patterns : list string) (text : string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find every occurrence of each
-    pattern in a text, including overlaps, with positions
-    in ascending order for each pattern.] One row per
-    pattern : the positions of its occurrences, each
-    once, in [ascending] order. *)
+(** [@requirement]
+    For each pattern, the output lists every occurrence position, including overlaps,
+    exactly once in ascending order. *)
 Definition multimatch_spec
   (patterns : list string)
   (text : string)
@@ -139,9 +137,8 @@ Definition multimatch_spec
 
 (** ** Interface *)
 
-(** Find every occurrence of each pattern in a [text],
-    including overlaps, with positions in [ascending]
-    order for each pattern.
+(** Find every occurrence of each pattern in a text, including overlaps, and return
+    ascending starting positions for each pattern.
     - Input [patterns]:
     - Input [text]:
     - Output [output]: *)

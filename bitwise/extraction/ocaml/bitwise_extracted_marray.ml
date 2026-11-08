@@ -211,10 +211,7 @@ let best_and_impl k a =
     (make n (Uint63.of_int (0))) (make n (Uint63.of_int (0)))
     (make n (Uint63.of_int (0))) (make n (Uint63.of_int (0)))
 
-module BitwiseImpl =
- struct
-  (** val best_and : uint -> uint Marray.t -> uint **)
+(** val best_and : uint -> uint Marray.t -> uint **)
 
-  let best_and =
-    best_and_impl
- end
+let best_and =
+  best_and_impl

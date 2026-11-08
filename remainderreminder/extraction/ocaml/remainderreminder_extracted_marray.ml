@@ -105,11 +105,8 @@ let rr_impl a b c d e f _ =
   let (r12, l12) = merge c v1 d v2 in
   let (r, l) = merge r12 l12 e v3 in lift f r l
 
-module RemainderreminderImpl =
- struct
-  (** val remainderreminder :
-      uint -> uint -> uint -> uint -> uint -> uint -> uint -> uint **)
+(** val remainderreminder :
+    uint -> uint -> uint -> uint -> uint -> uint -> uint -> uint **)
 
-  let remainderreminder =
-    rr_impl
- end
+let remainderreminder =
+  rr_impl

@@ -7,6 +7,8 @@
 
     [@kattis cudak]
     - Difficulty: 5.4
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 $\le$ lower bound $\le$ upper bound < $10^{15}$.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Lower bound, upper bound and required decimal digit sum.
+    - Output convention: The qualifying count on the first line and smallest qualifying integer on the second. *)
 (* Input:
 1 9 5
 Output:
@@ -75,7 +78,7 @@ Definition count_is (property : N -> Prop)
     (forall value, In value witnesses <-> property value) /\
     len witnesses = amount.
 
-(** [@inside cudak_correct] The statement's bounds. *)
+(** [@inside cudak_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (lower_bound upper_bound target_sum : N) : Prop := {
   (* 1 <= A <= B < 10^15 *)
@@ -92,11 +95,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the count and
-    smallest matching integer.] The answer (match_count,
-    smallest): match_count is the number of integers of
-    [lower_bound, upper_bound] with digit sum
-    target_sum, and smallest is the least of them. *)
+(** [@requirement]
+    The output gives the number of integers in the inclusive interval with the required
+    digit sum and the smallest such integer. *)
 Definition cudak_spec
   (lower_bound upper_bound target_sum : N)
     (output : N * N) : Prop :=
@@ -114,7 +115,8 @@ Definition cudak_spec
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Count integers in an inclusive interval with a specified decimal digit sum, and return
+    the smallest such integer.
     - Input [lower_bound]:
     - Input [upper_bound]:
     - Input [target_sum]:

@@ -8,7 +8,7 @@
     tell.
 
     [@kattis knigsoftheforest]
-    - Difficulty: 3.3
+    - Difficulty: 3.4
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -20,7 +20,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Pool size and year count, then entry-year/strength pairs with the designated participant first.
+    - Output convention: The designated participant's winning year, or unknown. *)
 (* Input:
 2 4
 2013 2
@@ -93,8 +94,7 @@ Definition schedule (year_count : N)
       entry all_strengths moose <= entry all_strengths
         (winner year).
 
-(** [@inside knigsoftheforest_correct] The statement's bounds and
-    guarantees. *)
+(** [@inside knigsoftheforest_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (pool_size year_count karl_year karl_strength : N)
     (other_years other_strengths : list N) : Prop := {
@@ -133,12 +133,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The winners are determined, and the answer
-    output is Some year exactly    when year is a data year in which
-    Karl (moose 0) wins; None when he wins    in none.] The winners
-    are determined, and the answer output is Some year exactly when
-    year is a data year in which Karl (moose 0) wins; None when he
-    wins in none. *)
+(** [@requirement]
+    The output is the year when the designated participant wins, or None if that
+    participant does not win within the years determined by the input. *)
 Definition knigsoftheforest_spec
     (pool_size year_count karl_year karl_strength : N)
     (other_years other_strengths : list N) (output : option
@@ -156,7 +153,9 @@ Definition knigsoftheforest_spec
 
 (** ** Interface *)
 
-(** The [knigsoftheforest] program on machine values.
+(** Process annual arrivals into a competition where the strongest active participant wins
+    and leaves each year. Determine when a designated participant wins, or whether the
+    known arrivals are insufficient to tell.
     - Input [pool_size]:
     - Input [year_count]:
     - Input [karl_year]:

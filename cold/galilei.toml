@@ -18,10 +18,11 @@ collapsible = ["Definitions"]
 files = ["cold_implem.v", "cold.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/cold_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/cold_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "cold_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/cold_extracted_marray.ml"
+Rust = ""

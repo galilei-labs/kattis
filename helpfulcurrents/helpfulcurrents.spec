@@ -20,7 +20,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Grid dimensions and starting column, followed by rows using ~, #, @, > and <.
+    - Output convention: Path count modulo 1,000,003, or begin repairs if the destination is unreachable. *)
 (* Input:
 2 2 0
 >@
@@ -72,8 +73,7 @@ Definition in_map
   (row_count column_count row column : N) : Prop :=
   row < row_count /\ column < column_count.
 
-(** The two moves of the statement: north (lowering the sails), or along
-    the current of the cell the ship is on (retracting them). *)
+(** A permitted step moves north or follows the current cell's horizontal arrow. *)
 Inductive move := North | Current.
 
 (** One move from (row, column): none from the castle, where the route
@@ -131,8 +131,7 @@ Definition route_count (row_count start_column : N)
                   is_route row_count start_column ocean_map
             moves.
 
-(** [@inside helpfulcurrents_correct] The statement's bounds and
-    guarantees. *)
+(** [@inside helpfulcurrents_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (row_count column_count start_column : N)
     (ocean_map : list string) : Prop := {
   (* 0 < Y <= 300 (row_count) *)
@@ -183,11 +182,9 @@ Record valid_input (row_count column_count start_column : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short None is "begin repairs": there is no route.
-    Some total_mod: there are    total > 0 routes, and total_mod is
-    total modulo 1 000 003.] None is "begin repairs": there is no
-    route. Some total_mod: there are total > 0 routes, and total_mod
-    is total modulo 1 000 003. *)
+(** [@requirement]
+    The output is the number of permitted paths to the destination modulo 1,000,003, or
+    None exactly when no path exists. *)
 Definition helpfulcurrents_spec
   (row_count column_count start_column : N)
     (ocean_map : list string) (output : option N) : Prop :=
@@ -203,7 +200,9 @@ Definition helpfulcurrents_spec
 
 (** ** Interface *)
 
-(** The [helpfulcurrents] program on machine values.
+(** Count paths through a grid from a given bottom-row cell to a destination. Each move goes
+    north or follows the current cell's horizontal arrow, avoiding obstacles. Return the
+    count modulo 1000003, distinguishing an unreachable destination.
     - Input [row_count]:
     - Input [column_count]:
     - Input [start_column]:

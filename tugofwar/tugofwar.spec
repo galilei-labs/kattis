@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Weight count, followed by one integer weight per line.
+    - Output convention: The two group totals on one line, with the smaller total first. *)
 (* Input:
 3
 100
@@ -84,7 +85,7 @@ Definition gap (weights : list N) (assignment : list bool) :
   Z.abs (Z.of_N (sum (team weights assignment)) -
          Z.of_N (sum (other_team weights assignment))).
 
-(** [@inside tugofwar_correct] The statement's bounds. *)
+(** [@inside tugofwar_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (weights : list N) : Prop := {
   (* There is at least 1 and at most 100 people at the
      picnic. *)
@@ -95,12 +96,9 @@ Record valid_input (weights : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Divide people into two teams
-    whose sizes differ by at most one and whose total
-    weights are as close as possible.] (lighter_total,
-    heavier_total) are the totals of the two teams of a
-    [division] whose totals are as nearly equal as
-    possible, the lesser first. *)
+(** [@requirement]
+    The output gives the group totals in ascending order for a partition whose group
+    sizes differ by at most one and whose total-weight difference is minimal. *)
 Definition tugofwar_spec
   (weights : list N)
   (output : N * N)
@@ -121,9 +119,8 @@ Definition tugofwar_spec
 
 (** ** Interface *)
 
-(** Divide people into two teams whose sizes differ by at
-    most one and whose total [weights] are as close as
-    possible.
+(** Partition a sequence of weights into two groups whose sizes differ by at most one,
+    minimizing the difference between their total weights.
     - Input [weights]:
     - Output [output]: *)
 Program tugofwar : array uint -> uint * uint.

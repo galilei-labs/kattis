@@ -6,7 +6,7 @@
     boundaries. Strict containment without boundary contact does not count.
 
     [@kattis intersectingrectangles]
-    - Difficulty: 5.5
+    - Difficulty: 5.4
     - CPU time limit: 2 seconds
     - Memory limit: 1024 MB
 
@@ -19,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Rectangle count, followed by lower-left and upper-right corner coordinates.
+    - Output convention: 1 if any rectangle boundaries intersect; 0 otherwise. *)
 (* Input:
 3
 0 0 2 2
@@ -49,10 +50,7 @@ Open Scope Z_scope.
 
 (** ** Definitions *)
 
-(** Types : the coordinates are signed (sint / Z) ; the n input lines x1
-    y1 x2 y2 are four parallel arrays / lists, one per column
-    (lefts, bottoms, rights, tops). The answer 1 / 0 is the bool
-    true / false. Math side. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -90,8 +88,7 @@ Definition some_pair_intersects
   exists i j : N, (i < j < len lefts)%N /\
     intersect lefts bottoms rights tops i j.
 
-(** [@inside intersecting_rectangles_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside intersecting_rectangles_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (lefts bottoms rights tops : list Z) : Prop := {
   (* 1 <= n <= 10^5, n the number of rectangles *)
@@ -125,9 +122,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The output : 1 (true) iff some pair of
-    rectangles intersect.] The output : 1 (true) iff some pair of
-    rectangles intersect. *)
+(** [@requirement]
+    The output is true exactly when two rectangle boundaries intersect; strict
+    containment without boundary contact is excluded. *)
 Definition intersecting_rectangles_spec
   (lefts bottoms rights tops : list Z)
     (output : bool) : Prop :=
@@ -136,6 +133,8 @@ Definition intersecting_rectangles_spec
   | false => ~ some_pair_intersects lefts bottoms rights
     tops
   end.
+
+(** ** Interface *)
 
 (** ** Interface *)
 

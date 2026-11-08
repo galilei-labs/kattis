@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["catenyms_implem.v", "catenyms.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/catenyms_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/catenyms_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "catenyms_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/catenyms_extracted_marray.ml"
+Rust = ""

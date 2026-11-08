@@ -14,6 +14,9 @@
     - $-10^6 \le t_i \le 10^6$ for every value $t_i$. *)
 
 (** ** Examples *)
+
+(** - Input convention: A function call with an integer list; semicolons separate list elements.
+    - Output convention: The number of list elements strictly below zero. *)
 (* count_negatives [5; -10; 15] = 1 *)
 (* count_negatives [-14; -5; -39; -5; -7] = 5 *)
 
@@ -40,7 +43,7 @@ Definition len {A} (l : list A) : N :=
 Definition is_negative (temperature : Z) : bool :=
   temperature <? 0.
 
-(** [@inside count_negatives_correct] The statement's bounds. *)
+(** [@inside count_negatives_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (temperatures : list Z) : Prop := {
   (* 1 <= n <= 100 *)
   vi_length : (1 <= len temperatures <= 100)%N;
@@ -53,15 +56,15 @@ Record valid_input (temperatures : list Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must output the number of negative entries of [temperatures].]
-    The result [output] is the number of negative entries of [temperatures]. *)
+(** [@requirement]
+    The output is the number of input integers strictly below zero. *)
 Definition count_negatives_spec
   (temperatures : list Z) (output : N) : Prop :=
   output = len (filter is_negative temperatures).
 
 (** ** Interface *)
 
-(** Count the integers strictly below zero, on machine types.
+(** Count how many integers in a sequence are strictly below zero.
     - Input [temperatures]:
     - Output [output]: *)
 Program count_negatives : array sint -> uint.

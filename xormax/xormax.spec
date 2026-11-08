@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length, followed by space-separated positive integers.
+    - Output convention: A single integer giving the maximum subset XOR. *)
 (* Input:
 3
 1 3 5
@@ -74,7 +75,7 @@ Definition subset_xor (numbers : list N) (xor_value : N) :
     len mask = len numbers /\ xor_sum (pick mask numbers) =
       xor_value.
 
-(** [@inside xormax_correct] The statement's bounds. *)
+(** [@inside xormax_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (numbers : list N) : Prop := {
   (* an integer n (1 <= n <= 100 000): the length of the
      list *)
@@ -86,10 +87,8 @@ Record valid_input (numbers : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the largest XOR
-    obtainable from a subset of the input entries.] The
-    answer: the maximal xor-sum of a subset, attained and
-    not exceeded. *)
+(** [@requirement]
+    The output is the maximum XOR of any subset of the input values. *)
 Definition xormax_spec
   (numbers : list N )
   (output : N)
@@ -100,8 +99,7 @@ Definition xormax_spec
 
 (** ** Interface *)
 
-(** Find the largest XOR obtainable from a subset of the
-    input entries.
+(** Find the largest bitwise XOR obtainable from any subset of the input integers.
     - Input [numbers]:
     - Output [output]: *)
 Program xormax : array uint -> uint.

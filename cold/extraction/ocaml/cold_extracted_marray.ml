@@ -45,10 +45,7 @@ let rec count_loop x n i acc =
 let count_negatives_impl x =
   let n = length x in count_loop x n (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module ColdImpl =
- struct
-  (** val count_negatives : sint Marray.t -> uint **)
+(** val count_negatives : sint Marray.t -> uint **)
 
-  let count_negatives =
-    count_negatives_impl
- end
+let count_negatives =
+  count_negatives_impl

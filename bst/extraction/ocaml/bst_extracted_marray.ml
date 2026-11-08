@@ -176,10 +176,7 @@ let bst_impl x =
     (make (add n (Uint63.of_int (2))) (Uint63.of_int (0)))
     (Uint63.of_int (0)) (make n (Uint63.of_int (0)))
 
-module BstImpl =
- struct
-  (** val bst : uint Marray.t -> uint Marray.t **)
+(** val bst : uint Marray.t -> uint Marray.t **)
 
-  let bst =
-    bst_impl
- end
+let bst =
+  bst_impl

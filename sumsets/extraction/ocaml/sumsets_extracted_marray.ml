@@ -245,10 +245,7 @@ let sumsets_impl x =
   let t = build_out x cap n (Uint63.of_int (0)) t0 in
   best_k x t cap n (Uint63.of_int (0)) false (Uint63.of_int (0))
 
-module SumsetsImpl =
- struct
-  (** val sumsets : sint Marray.t -> sint option **)
+(** val sumsets : sint Marray.t -> sint option **)
 
-  let sumsets =
-    sumsets_impl
- end
+let sumsets =
+  sumsets_impl

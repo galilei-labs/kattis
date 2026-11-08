@@ -8,6 +8,8 @@
 
     [@kattis baza]
     - Difficulty: 5.5
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 30,000 dictionary words and 1 to 30,000 queries.
@@ -16,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Dictionary size and ordered words, followed by query count and query words.
+    - Output convention: One search-step count per query, in input order. *)
 (* Input:
 5
 hobotnica
@@ -118,8 +121,7 @@ Definition search_steps (database : list String.string)
       prefix_lengths /\
     steps = compared + fold_right N.add 0 prefix_lengths.
 
-(** [@inside baza_correct] The statement's bounds, for
-    one test case. *)
+(** [@inside baza_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (database queries : list String.string) : Prop := {
   (* 1 <= N <= 30 000, the number of words in the database
@@ -140,16 +142,18 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must count the search steps
-    for each query word.] One answer per query, in
-    order: the number of steps of its search. *)
+(** [@requirement]
+    Each output entry counts the words examined plus their common-prefix lengths when
+    searching the ordered dictionary for the corresponding query. *)
 Definition baza_spec (database queries : list String.string)
   (output : list N) : Prop :=
   Forall2 (search_steps database) queries output.
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** For each query word, scan an ordered dictionary until a match is found or the dictionary
+    ends. Return the number of words examined plus the sum of their common-prefix
+    lengths with the query.
     - Input [database]:
     - Input [queries]:
     - Output [output]: *)

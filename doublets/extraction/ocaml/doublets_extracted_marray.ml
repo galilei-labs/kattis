@@ -382,12 +382,9 @@ let doublets_impl xd xs xt =
   qloop xd xs xt n n16 cls hd cn wl wb wn nq (Uint63.of_int (0))
     (make nq None)
 
-module DoubletsImpl =
- struct
-  (** val doublets :
-      string Marray.t -> string Marray.t -> string Marray.t -> string
-      Marray.t option Marray.t **)
+(** val doublets :
+    string Marray.t -> string Marray.t -> string Marray.t -> string Marray.t
+    option Marray.t **)
 
-  let doublets =
-    doublets_impl
- end
+let doublets =
+  doublets_impl

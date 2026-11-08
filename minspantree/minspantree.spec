@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex and edge counts, followed by weighted edges; 0 0 ends input.
+    - Output convention: Minimum tree cost and lexicographically sorted endpoint pairs, or Impossible if disconnected. *)
 (* Input:
 4 4
 0 1 1
@@ -155,7 +156,7 @@ Fixpoint total_weight (edge_weights : list Z)
     edge_weights rest)%Z
   end.
 
-(** [@inside mst_correct] The statement's bounds, for one test case. *)
+(** [@inside mst_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (vertex_count : N)
   (edge_sources edge_targets : list N)
     (edge_weights : list Z) : Prop := {
@@ -192,11 +193,9 @@ Definition minimum_spanning_tree (vertex_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The result is None exactly when the graph is
-    not connected, and    otherwise a minimum spanning tree with its
-    weight.] The result is None exactly when the graph is not
-    connected, and otherwise a minimum spanning tree with its
-    weight. *)
+(** [@requirement]
+    The output gives a minimum spanning tree and its total weight, or None exactly when
+    the graph is disconnected. *)
 Definition mst_spec (vertex_count : N)
   (edge_sources edge_targets : list N)
     (edge_weights : list Z) (output : option (Z * list N)) :
@@ -212,7 +211,8 @@ Definition mst_spec (vertex_count : N)
 
 (** ** Interface *)
 
-(** The [mst] program on machine values.
+(** Find a minimum spanning tree of an undirected weighted graph. Return its total weight
+    and edge indices, or report that the graph is disconnected.
     - Input [vertex_count]:
     - Input [edge_sources]:
     - Input [edge_targets]:

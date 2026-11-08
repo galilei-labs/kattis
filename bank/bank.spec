@@ -8,6 +8,8 @@
 
     [@kattis bank]
     - Difficulty: 2.3
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 10,000 jobs; closing time from 1 to 47.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Job count and closing time, followed by reward-deadline pairs.
+    - Output convention: A single integer giving the maximum total reward. *)
 (* Input:
 4 4
 1000 1
@@ -90,7 +93,7 @@ Definition value (cash_amounts : list N)
   (plan : schedule) : N :=
   fold_right N.add 0 (map (get cash_amounts) (served plan)).
 
-(** [@inside bank_correct] The statement's bounds. *)
+(** [@inside bank_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (closing_time : N)
   (cash_amounts deadlines : list N)
     : Prop := {
@@ -110,10 +113,9 @@ Record valid_input (closing_time : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the greatest cash
-    collectable before closing.] output is the maximum :
-    some valid schedule collects exactly output, and
-    none collects more. *)
+(** [@requirement]
+    The output is the maximum total reward achievable by scheduling unit-duration jobs
+    within their deadlines and the closing time. *)
 Definition bank_spec (closing_time : N)
   (cash_amounts deadlines : list N)
     (output : N) : Prop :=
@@ -126,7 +128,8 @@ Definition bank_spec (closing_time : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Choose unit-duration jobs to maximize total reward before a closing time. Each job must
+    start no later than its deadline, and only one job can run at a time.
     - Input [closing_time]:
     - Input [cash_amounts]:
     - Input [deadlines]:

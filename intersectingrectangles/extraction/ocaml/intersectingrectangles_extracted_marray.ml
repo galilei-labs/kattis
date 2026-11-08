@@ -186,11 +186,8 @@ let intersecting_rectangles_impl x1 y1 x2 y2 =
    | Some _ -> false
    | None -> true)
 
-module IntersectingrectanglesImpl =
- struct
-  (** val intersecting_rectangles :
-      sint Marray.t -> sint Marray.t -> sint Marray.t -> sint Marray.t -> bool **)
+(** val intersecting_rectangles :
+    sint Marray.t -> sint Marray.t -> sint Marray.t -> sint Marray.t -> bool **)
 
-  let intersecting_rectangles =
-    intersecting_rectangles_impl
- end
+let intersecting_rectangles =
+  intersecting_rectangles_impl

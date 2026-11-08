@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Graph size, fuel prices and weighted roads, followed by capacity-source-destination queries.
+    - Output convention: One minimum fuel cost per query, or impossible if no feasible route exists. *)
 (* Input:
 5 5
 10 10 20 12 13
@@ -125,7 +126,7 @@ Definition cheapest
       price' ->
     price <= price'.
 
-(** [@inside fulltank_correct] The statement's bounds. *)
+(** [@inside fulltank_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (city_count : N)
     (prices road_starts road_ends road_lengths capacities
       starts goals
@@ -163,8 +164,7 @@ Record valid_input (city_count : N)
   vi_e : Forall (fun city => city < city_count) goals;
 }.
 
-(** The answer to one query: the price of the cheapest trip, or None
-    when there is no trip at all. *)
+(** Some minimum feasible trip cost, or None exactly when no feasible trip exists. *)
 Definition answer
   (prices road_starts road_ends road_lengths : list N)
     (capacity start goal : N) (result : option N) : Prop :=
@@ -182,8 +182,9 @@ Definition answer
 
 (** ** Correctness *)
 
-(** [@requirement] [@short One answer per query, in order.] One answer
-    per query, in order. *)
+(** [@requirement]
+    Each output entry is the minimum fuel cost of a feasible trip with the requested
+    capacity and endpoints, starting with an empty tank, or None if no trip exists. *)
 Definition fulltank_spec (city_count : N)
     (prices road_starts road_ends road_lengths capacities
       starts goals
@@ -198,7 +199,9 @@ Definition fulltank_spec (city_count : N)
 
 (** ** Interface *)
 
-(** The [fulltank] program on machine values.
+(** Find the cheapest route in a road network with location-dependent fuel prices and a
+    specified tank capacity. Start with an empty tank, buy whole fuel units, and consume
+    one unit per unit of distance.
     - Input [city_count]:
     - Input [prices]:
     - Input [road_starts]:

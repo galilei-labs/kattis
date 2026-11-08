@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex count and walk length, weighted tree edges, then the count and indices of marked vertices.
+    - Output convention: The minimum number of additional marked vertices. *)
 (* Input:
 5 6
 1 2 1
@@ -214,7 +215,7 @@ Definition safe (jog_distance : N)
     lit lamps new_lamps (get trail_starts j) \/
     lit lamps new_lamps (get trail_ends j).
 
-(** [@inside joggers_correct] The [valid_input] datatype. *)
+(** [@inside joggers_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (intersection_count jog_distance : N)
     (trail_starts trail_ends trail_lengths lamps : list N) :
       Prop := {
@@ -257,9 +258,9 @@ Record valid_input (intersection_count jog_distance : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The least number of new lamps that makes
-    every usable trail safe.] The least number of new lamps that
-    makes every usable trail safe. *)
+(** [@requirement]
+    The output is the minimum number of additional marked vertices needed so every edge
+    usable by an allowed closed walk has a marked endpoint. *)
 Definition joggers_spec
   (intersection_count jog_distance : N)
     (trail_starts trail_ends trail_lengths lamps : list N)
@@ -279,7 +280,9 @@ Definition joggers_spec
 
 (** ** Interface *)
 
-(** The [joggers] program on machine values.
+(** In a weighted tree with a designated root, add the fewest marked vertices so every edge
+    usable by a closed walk of a specified length from the root has a marked endpoint.
+    Walks may turn around inside edges.
     - Input [intersection_count]:
     - Input [jog_distance]:
     - Input [trail_starts]:

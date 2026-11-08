@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Set size, followed by distinct integer elements, one per line.
+    - Output convention: The largest valid target value, or no solution. *)
 (* Input:
 5
 2
@@ -68,7 +69,7 @@ Definition sum_of_three (elements : list Z) (target : Z) :
       /\
     first + second + third = target.
 
-(** [@inside sumsets_correct] The statement's bounds. *)
+(** [@inside sumsets_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (elements : list Z) : Prop := {
   (* 1 <= N <= 4 000, the number of elements in S *)
   vi_n : (1 <= len elements <= 4000)%N;
@@ -82,11 +83,9 @@ Record valid_input (elements : list Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the largest element of a
-    set that is the sum of three other distinct elements,
-    or report that no solution exists.] Some target :
-    target is such a sum and no such sum is larger ; None
-    : no element of S is such a sum ("no solution"). *)
+(** [@requirement]
+    The output is the greatest input value expressible as the sum of three other
+    distinct input elements, or None if no such value exists. *)
 Definition sumsets_spec
   (elements : list Z )
   (output : option Z )
@@ -101,9 +100,8 @@ Definition sumsets_spec
 
 (** ** Interface *)
 
-(** Find the largest element of a set that is the sum of
-    three other distinct [elements], or report that no
-    solution exists.
+(** Find the largest member of an integer set equal to the sum of three other distinct
+    members, or report that none exists.
     - Input [elements]:
     - Output [output]: *)
 Program sumsets : array sint -> option sint.

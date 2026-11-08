@@ -7,6 +7,8 @@
 
     [@kattis anothersubstringqueryproblem]
     - Difficulty: 7.7
+    - CPU time limit: 6 seconds
+    - Memory limit: 2048 MB
 
     **Kattis Bounds**
     - Text length and query count from 1 to 200,000.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Text, query count, then one pattern and occurrence rank per query.
+    - Output convention: One 1-based starting position per query, or -1 if the occurrence does not exist. *)
 (* Input:
 abacabadabacaba
 4
@@ -95,9 +98,7 @@ Definition occurrences (text pattern : string) : list N :=
     (filter (starts_at text pattern) (seq 0
       (String.length text))).
 
-(** The answer to the query (pattern, rank): 1 + the
-    position of the rank-th occurrence, or -1 if pattern
-    occurs fewer than rank times. *)
+(** The 1-based starting position of the requested pattern occurrence, or -1 if fewer occurrences exist. *)
 Definition answer (text pattern : string) (rank : N) : Z :=
   match nth_error (occurrences text pattern)
     (N.to_nat rank - 1) with
@@ -105,8 +106,7 @@ Definition answer (text pattern : string) (rank : N) : Z :=
   | None => -1
   end.
 
-(** [@inside kth_occurrences_correct] The statement's
-    input bounds and guarantees. *)
+(** [@inside kth_occurrences_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (text : string) (patterns : list string)
   (ranks : list N)
     : Prop := {
@@ -135,9 +135,9 @@ Record valid_input (text : string) (patterns : list string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the requested
-    occurrence of each query string.] One answer per
-    query, in the order of the queries. *)
+(** [@requirement]
+    Each output entry is the 1-based starting position of the requested occurrence,
+    including overlapping occurrences, or -1 if it does not exist. *)
 Definition kth_occurrences_spec (text : string)
   (patterns : list string)
     (ranks : list N) (output : list Z) : Prop :=
@@ -150,7 +150,8 @@ Definition kth_occurrences_spec (text : string)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** For each pattern and occurrence rank, find the starting position of that occurrence in a
+    text, counting overlaps. Return -1 if it does not exist.
     - Input [text]:
     - Input [patterns]:
     - Input [ranks]:

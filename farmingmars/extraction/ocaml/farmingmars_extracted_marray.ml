@@ -266,11 +266,8 @@ let farm p ls rs =
       (make (add n (Uint63.of_int (1))) (Uint63.of_int (0)))),
       (make m false)))
 
-module FarmingmarsImpl =
- struct
-  (** val farmingmars :
-      Float64.t Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
+(** val farmingmars :
+    Float64.t Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
 
-  let farmingmars =
-    farm
- end
+let farmingmars =
+  farm

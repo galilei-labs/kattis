@@ -684,10 +684,7 @@ let bigfactoring_impl n =
   let out = copy acc (make cnt Z0) cnt (Uint63.of_int (0)) in
   isort out cnt (Uint63.of_int (1))
 
-module BigfactoringImpl =
- struct
-  (** val bigfactoring : z -> z Marray.t **)
+(** val bigfactoring : z -> z Marray.t **)
 
-  let bigfactoring =
-    bigfactoring_impl
- end
+let bigfactoring =
+  bigfactoring_impl

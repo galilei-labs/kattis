@@ -54,10 +54,7 @@ let crt_impl a n b m =
        Some ((add a (mul n t)), (mul n mg))
   else None
 
-module GeneralchineseremainderImpl =
- struct
-  (** val crt : uint -> uint -> uint -> uint -> (uint * uint) option **)
+(** val crt : uint -> uint -> uint -> uint -> (uint * uint) option **)
 
-  let crt =
-    crt_impl
- end
+let crt =
+  crt_impl

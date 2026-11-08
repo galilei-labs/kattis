@@ -511,10 +511,7 @@ let valid_impl xm xe =
   for_ (Uint63.of_int (0)) n true (fun i b ->
     if b then negb (eqb0 (count_nz xm i t) (Uint63.of_int (1))) else false)
 
-module DimensionalanalysisImpl =
- struct
-  (** val valid : uint -> sint Marray.t Marray.t -> bool **)
+(** val valid : uint -> sint Marray.t Marray.t -> bool **)
 
-  let valid =
-    valid_impl
- end
+let valid =
+  valid_impl

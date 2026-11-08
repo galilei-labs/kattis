@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: A single string containing only R and B.
+    - Output convention: Inclusive 1-based endpoints of the optimal substring, with earliest endpoints breaking ties. *)
 (* Input:
 BBRRBRRBRB
 Output:
@@ -74,9 +75,7 @@ Definition part (colors : String.string) (west east : N) :
     (N.to_nat (east - west + 1))
     colors.
 
-(** The [difference] between the number of R and the
-    number of B in sections west to east, in absolute
-    value (sample 2: the answer BBRBB has more B). *)
+(** The absolute difference between the R and B counts in the inclusive interval from west to east. *)
 Definition difference (colors : String.string)
   (west east : N) : Z :=
   Z.abs (Z.of_N (count "R" (part colors west east))
@@ -88,7 +87,7 @@ Definition west_or_equal (west east west' east' : N) : Prop
   :=
   west < west' \/ (west = west' /\ east <= east').
 
-(** [@inside purplerain_correct] Valid input. *)
+(** [@inside purplerain_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (colors : String.string) : Prop := {
   (* a string of n characters (1 <= n <= 10^5) *)
   vi_n : 1 <= slen colors <= 10 ^ 5;
@@ -101,13 +100,9 @@ Record valid_input (colors : String.string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the contiguous part of a
-    red-and-blue peninsula with the largest colour
-    imbalance. Break ties by the smallest starting
-    position, then the smallest ending position.] The
-    answer (west, east) is a [part] of maximal
-    [difference], and the Westernmost one among the parts
-    of maximal [difference]. *)
+(** [@requirement]
+    The output identifies an interval maximizing the absolute difference between the two
+    symbol counts, breaking ties by earliest start and then earliest end. *)
 Definition purplerain_spec
   (colors : String.string)
   (output : N * N)
@@ -126,10 +121,8 @@ Definition purplerain_spec
 
 (** ** Interface *)
 
-(** Find the contiguous [part] of a red-and-blue
-    peninsula with the largest colour imbalance. Break
-    ties by the smallest starting position, then the
-    smallest ending position.
+(** Find a contiguous substring with the largest absolute difference between counts of two
+    symbols. Break ties by the earliest start, then the earliest end.
     - Input [colors]:
     - Output [output]: *)
 Program purplerain : PrimString.string -> uint * uint.

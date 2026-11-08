@@ -605,10 +605,7 @@ let darkness_impl xb xh xg =
   let b = mul0 (Uint63.of_int (86)) n in
   flow_loop lt r c n b res (Uint63.of_int (0))
 
-module DarknessImpl =
- struct
-  (** val darkness : uint -> uint -> uint Marray.t Marray.t -> uint **)
+(** val darkness : uint -> uint -> uint Marray.t Marray.t -> uint **)
 
-  let darkness =
-    darkness_impl
- end
+let darkness =
+  darkness_impl

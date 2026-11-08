@@ -8,6 +8,8 @@
 
     [@kattis bitwise]
     - Difficulty: 6.2
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 $\le$ section count $\le$ sequence length $\le$ 500,000.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length and partition count, followed by the circular sequence values.
+    - Output convention: A single integer giving the maximum AND of the section ORs. *)
 (* Input:
 4 2
 2 3 4 1
@@ -82,8 +85,7 @@ Definition division (integers : list N) (section_count : N)
   exists start, (start < List.length integers)%nat /\
     concat sections = rotate start integers.
 
-(** [@inside best_and_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside best_and_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (section_count : N)
   (integers : list N) : Prop := {
   (* 1 <= K <= N <= 5 * 10^5 *)
@@ -96,9 +98,9 @@ Record valid_input (section_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must maximise the bitwise AND
-    of the section ORs.] The answer : the value of some
-    division, that no division exceeds. *)
+(** [@requirement]
+    The output is the maximum bitwise AND of section ORs over all partitions into the
+    requested number of nonempty circular sections. *)
 Definition best_and_spec (section_count : N)
   (integers : list N)
   (output : N) : Prop :=
@@ -111,7 +113,8 @@ Definition best_and_spec (section_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Partition a circular sequence into a specified number of nonempty contiguous sections.
+    Maximize the bitwise AND of the sections' bitwise ORs.
     - Input [section_count]:
     - Input [integers]:
     - Output [output]: *)

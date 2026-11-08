@@ -369,10 +369,7 @@ let polymul_impl x y =
     let (yr, yi) = fft lg half true tre tim pr pim in accum g l invN yr yi r)
     (Uint63.of_int (0)) (make l (Uint63.of_int (0)))
 
-module Polymul2Impl =
- struct
-  (** val polymul : sint Marray.t -> sint Marray.t -> sint Marray.t **)
+(** val polymul : sint Marray.t -> sint Marray.t -> sint Marray.t **)
 
-  let polymul =
-    polymul_impl
- end
+let polymul =
+  polymul_impl

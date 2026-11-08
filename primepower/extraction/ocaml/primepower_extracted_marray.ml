@@ -139,10 +139,7 @@ let primepower_impl e l r =
   then (Uint63.of_int (1))
   else prod_loop (sieve r) e l r (Uint63.of_int (1))
 
-module PrimepowerImpl =
- struct
-  (** val primepower : uint -> uint -> uint -> uint **)
+(** val primepower : uint -> uint -> uint -> uint **)
 
-  let primepower =
-    primepower_impl
- end
+let primepower =
+  primepower_impl

@@ -8,6 +8,8 @@
 
     [@kattis cardhand]
     - Difficulty: 4.4
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 52 distinct cards.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Card count, followed by rank-suit codes such as 2s or Ah.
+    - Output convention: A single integer giving the minimum number of moves. *)
 (* Input:
 4
 2h Th 8c Qh
@@ -141,7 +144,7 @@ Definition suits_monotone
 Definition sorted_hand (hand : list String.string) : Prop :=
   suits_grouped hand /\ suits_monotone hand.
 
-(** [@inside min_moves_correct] The statement's bounds. *)
+(** [@inside min_moves_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (hand : list String.string) : Prop := {
   (* an integer n
     (1 <= n <= 52), the number of cards in the hand *)
@@ -166,9 +169,9 @@ Record valid_input (hand : list String.string) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum moves
-    needed to sort the hand.] output moves sort the
-    hand, and no fewer do. *)
+(** [@requirement]
+    The output is the minimum number of remove-and-reinsert moves required to group each
+    suit contiguously with monotone ranks within each group. *)
 Definition min_moves_spec (hand : list String.string)
   (output : N)
   : Prop :=
@@ -182,7 +185,9 @@ Definition min_moves_spec (hand : list String.string)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Reorder distinct playing cards so each suit is contiguous and its ranks are monotone in
+    either direction. Find the fewest moves, where one move removes a card and reinserts
+    it anywhere.
     - Input [hand]:
     - Output [output]: *)
 Program min_moves : array PrimString.string -> uint.

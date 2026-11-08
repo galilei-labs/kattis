@@ -197,12 +197,9 @@ let worstweather_impl ys rs qy qx =
   let t = build rs n l in
   q_loop ys rs t qy qx n m (Uint63.of_int (0)) (make m Ans_false)
 
-module WorstweatherImpl =
- struct
-  (** val worstweather :
-      sint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t ->
-      answer Marray.t **)
+(** val worstweather :
+    sint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t ->
+    answer Marray.t **)
 
-  let worstweather =
-    worstweather_impl
- end
+let worstweather =
+  worstweather_impl

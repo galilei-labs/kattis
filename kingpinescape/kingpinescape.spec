@@ -6,7 +6,7 @@
     single edge is removed.
 
     [@kattis kingpinescape]
-    - Difficulty: 6.9
+    - Difficulty: 7.0
     - CPU time limit: 6 seconds
     - Memory limit: 1024 MB
 
@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex count and root index, followed by the tree's 0-based edge endpoints.
+    - Output convention: Minimum added-edge count, followed by one endpoint pair per new edge. *)
 (* Input:
 4 0
 0 1
@@ -128,7 +129,7 @@ Definition in_range (hideout_count : N)
     ->
     hideout < hideout_count /\ hideout' < hideout_count.
 
-(** [@inside kingpin_escape_correct] The [valid_input] datatype. *)
+(** [@inside kingpin_escape_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (hideout_count headquarters : N)
     (first_ends second_ends : list N) : Prop := {
   (* 2 <= n <= 10^5, the number of hideouts *)
@@ -151,15 +152,9 @@ Record valid_input (hideout_count headquarters : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer (added_firsts, added_seconds): the
-    passageways    (added_firsts_k, added_seconds_k) between
-    hideouts make the network safe    once added, and no set of
-    passageways between hideouts that does so is    smaller.  Any
-    such answer is accepted.] The answer (added_firsts,
-    added_seconds): the passageways (added_firsts_k,
-    added_seconds_k) between hideouts make the network safe once
-    added, and no set of passageways between hideouts that does so
-    is smaller. Any such answer is accepted. *)
+(** [@requirement]
+    The output is a minimum set of added edges that preserves connectivity after removal
+    of any single edge. *)
 Definition kingpin_escape_spec
   (hideout_count headquarters : N)
     (first_ends second_ends : list N) (output : list N *
@@ -182,7 +177,8 @@ Definition kingpin_escape_spec
 
 (** ** Interface *)
 
-(** The [kingpin_escape] program on machine values.
+(** Add the fewest edges to a tree so the graph remains connected after any single edge is
+    removed.
     - Input [hideout_count]:
     - Input [headquarters]:
     - Input [first_ends]:

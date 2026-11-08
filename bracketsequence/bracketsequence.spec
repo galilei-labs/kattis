@@ -8,6 +8,8 @@
 
     [@kattis bracketsequence]
     - Difficulty: 3.9
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 300,000 tokens forming a valid bracket sequence.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Token count, followed by integers and parentheses separated by spaces.
+    - Output convention: The expression value modulo $10^9 + 7$. *)
 (* Input:
 2
 2 3
@@ -73,9 +76,7 @@ Definition len {A} (l : list A) : N :=
 (** The modulus used for the result. *)
 Definition modulus : N := 10^9 + 7.
 
-(** A bracket sequence, as the statement reads it: a
-    list of items, an item being an integer or a
-    bracketed bracket sequence. *)
+(** An expression item is an integer or a nested bracket sequence. *)
 Inductive item : Type :=
 | Leaf : N -> item
 | Group : list item -> item.
@@ -137,8 +138,7 @@ Fixpoint item_value (add : bool) (element : item) : N :=
 Definition seq_value (items : list item) : N :=
   combine true (map (item_value true) items).
 
-(** [@inside bracketsequence_correct] The statement's
-    input bounds and guarantees. *)
+(** [@inside bracketsequence_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (tokens : list (token N)) : Prop := {
   (* 1 <= n <= 3 * 10^5 tokens *)
   vi_n : 1 <= len tokens <= 3 * 10 ^ 5;
@@ -155,9 +155,9 @@ Record valid_input (tokens : list (token N)) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must evaluate the bracket
-    sequence.] The value of the bracket sequence the
-    tokens spell, modulo 10^9+7. *)
+(** [@requirement]
+    The output is the value of the nested expression modulo $10^9 + 7$, with addition at
+    the outer level and alternating multiplication and addition within parentheses. *)
 Definition bracketsequence_spec (tokens : list (token N))
   (output : N) : Prop :=
   forall items, seq_ok items -> seq_tokens items = tokens ->
@@ -165,7 +165,9 @@ Definition bracketsequence_spec (tokens : list (token N))
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Evaluate a nested sequence of integers, adding at the outermost level and alternating
+    multiplication and addition at successive nesting levels. Return the value modulo
+    1000000007.
     - Input [tokens]:
     - Output [output]: *)
 Program bracketsequence : array (token uint) -> uint.

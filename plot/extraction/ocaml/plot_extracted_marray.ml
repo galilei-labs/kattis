@@ -88,10 +88,7 @@ let plot_impl _ y =
   in
   diff_outer len (Uint63.of_int (0)) d
 
-module PlotImpl =
- struct
-  (** val plot : uint -> sint Marray.t -> sint Marray.t **)
+(** val plot : uint -> sint Marray.t -> sint Marray.t **)
 
-  let plot =
-    plot_impl
- end
+let plot =
+  plot_impl

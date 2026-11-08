@@ -6,7 +6,7 @@
     solutions and inconsistency. For a unique solution, approximate each
     component within 0.001 wherever that accuracy is representable.
 
-    [@kattis equationsolver_exact]
+    [@kattis equationsolver]
     - Difficulty: 4.4
     - CPU time limit: 2 seconds
     - Memory limit: 1024 MB
@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: matrix dimension, matrix rows and right-hand-side vector; a zero dimension ends input.
+    - Output convention: Solution components within 0.001, or multiple or inconsistent, on one line per case. *)
 (* Input:
 2
 1 1
@@ -72,8 +73,7 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The answer, on both sides : V is array float on the machine side,
-    list R on the math side. *)
+(** A solution classification, parameterized by array float for machine values or list R for mathematical values. *)
 Inductive outcome (V : Type) : Type :=
   | Unique : V -> outcome V
   | Multiple : outcome V
@@ -144,7 +144,7 @@ Definition approximates
              (Rabs (estimate - true_value) <= 1 / 1000)%R)
     approximation solution.
 
-(** [@inside solve_correct] The statement's bounds on one test case. *)
+(** [@inside solve_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (unknown_count : N)
   (matrix : list (list R))
     (right_sides : list R) : Prop := {
@@ -163,14 +163,10 @@ Record valid_input (unknown_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer : Unique approximation when
-    exactly one vector solves the    system and approximation
-    approximates it, Multiple when two distinct    vectors solve it,
-    Inconsistent when none does.  Exactly one case    holds.] The
-    answer : Unique approximation when exactly one vector solves the
-    system and approximation approximates it, Multiple when two
-    distinct vectors solve it, Inconsistent when none does. Exactly
-    one case holds. *)
+(** [@requirement]
+    The output classifies the system as inconsistent, underdetermined or uniquely
+    solvable. A unique solution is approximated within 0.001 wherever that accuracy is
+    representable. *)
 Definition solve_spec (unknown_count : N)
   (matrix : list (list R))
     (right_sides : list R) (output : outcome (list R)) :
@@ -195,7 +191,9 @@ Definition solve_spec (unknown_count : N)
 
 (** ** Interface *)
 
-(** The [solve] program on machine values.
+(** Solve a square linear system, distinguishing a unique solution, multiple solutions and
+    inconsistency. For a unique solution, approximate each component within 0.001
+    wherever that accuracy is representable.
     - Input [unknown_count]:
     - Input [matrix]:
     - Input [right_sides]:

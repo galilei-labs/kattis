@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: sequence length followed by its integer values; input ends at EOF.
+    - Output convention: Subsequence length, followed by increasing 0-based indices of a longest increasing subsequence. *)
 (* Input:
 10
 1 2 3 4 5 6 7 8 9 10
@@ -91,7 +92,7 @@ Definition increasing_subseq (sequence : list Z)
     positions /\
   values_increasing sequence positions.
 
-(** [@inside lis_correct] The statement's bounds on one test case. *)
+(** [@inside lis_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : list Z) : Prop := {
   (* 1 <= n <= 10^5 *)
   vi_length : 1 <= len sequence <= 10 ^ 5;
@@ -102,9 +103,9 @@ Record valid_input (sequence : list Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer output : an increasing subsequence
-    of sequence that none    is longer than.] The answer output : an
-    increasing subsequence of sequence that none is longer than. *)
+(** [@requirement]
+    The output is an increasing sequence of input indices identifying a longest strictly
+    increasing subsequence. *)
 Definition lis_spec (sequence : list Z)
   (output : list N) : Prop :=
   increasing_subseq sequence output /\
@@ -114,7 +115,7 @@ Definition lis_spec (sequence : list Z)
 
 (** ** Interface *)
 
-(** The [lis] program on machine values.
+(** Return the positions of a longest strictly increasing subsequence.
     - Input [sequence]:
     - Output [output]: *)
 Program lis : array sint -> array uint.

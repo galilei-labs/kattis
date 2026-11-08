@@ -9,6 +9,8 @@
 
     [@kattis cuboidslicinggame]
     - Difficulty: 4.2
+    - CPU time limit: 3 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100 cuboids.
@@ -16,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Starting player, cuboid count, then three integer dimensions per cuboid.
+    - Output convention: RUBEN or ALBERT, identifying the winning player under optimal play. *)
 (* Input:
 RUBEN
 1
@@ -124,9 +127,7 @@ Definition initial
   (x_lengths y_lengths z_lengths : list N) : position :=
   combine (combine x_lengths y_lengths) z_lengths.
 
-(** [@inside winner_correct] The statement's bounds; the
-    N input lines are the three parallel lists of the
-    coordinates x, y, z. *)
+(** [@inside winner_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_lengths y_lengths z_lengths : list N) : Prop := {
   (* 1 <= N <= 100 *)
@@ -146,10 +147,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the winner under
-    optimal play.] The answer is first_player when the
-    player to move wins the starting position, its
-    opponent when the player to move loses it. *)
+(** [@requirement]
+    The output identifies the winner under optimal play from the initial cuboid
+    configuration and starting player. *)
 Definition winner_spec (first_player : player)
     (x_lengths y_lengths z_lengths : list N)
       (output : player)
@@ -161,7 +161,9 @@ Definition winner_spec (first_player : player)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Determine the winner under optimal play in a game on integer-sized cuboids. Each move
+    removes one unit-thick slice perpendicular to each axis from one cuboid, leaving up
+    to eight smaller cuboids. The player making the last move wins.
     - Input [first_player]:
     - Input [x_lengths]:
     - Input [y_lengths]:

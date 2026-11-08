@@ -206,11 +206,8 @@ let winner_impl s xs ys zs =
   in
   if eqb gx (Uint63.of_int (0)) then opponent s else s
 
-module CuboidslicinggameImpl =
- struct
-  (** val winner :
-      player -> uint Marray.t -> uint Marray.t -> uint Marray.t -> player **)
+(** val winner :
+    player -> uint Marray.t -> uint Marray.t -> uint Marray.t -> player **)
 
-  let winner =
-    winner_impl
- end
+let winner =
+  winner_impl

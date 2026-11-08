@@ -19,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex/edge/refill counts and distance limit, refill vertices, then weighted undirected edges.
+    - Output convention: Minimum feasible route length from vertex 1 to n, or stuck. *)
 (* Input:
 6 7 2 4
 2 5
@@ -147,7 +148,7 @@ Definition shortest (intersection_count tire_range : N)
       road_lengths 1 distance' ->
     distance <= distance'.
 
-(** [@inside slowleak_correct] The statement's bounds. *)
+(** [@inside slowleak_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (intersection_count tire_range : N)
     (stations road_starts road_ends road_lengths : list N) :
       Prop := {
@@ -194,11 +195,9 @@ Record valid_input (intersection_count tire_range : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Find the shortest trip home
-    while refilling a leaking tyre often enough to stay
-    within its travel range.] Some distance for the
-    length of a [shortest] [trip]; None ("stuck") when no
-    [trip] exists. *)
+(** [@requirement]
+    The output is the minimum length of a route satisfying the refill-distance
+    constraint, or None exactly when no feasible route exists. *)
 Definition slowleak_spec
   (intersection_count tire_range : N)
   (stations road_starts road_ends road_lengths : list N)
@@ -218,9 +217,9 @@ Definition slowleak_spec
 
 (** ** Interface *)
 
-(** Find the [shortest] [trip] home while refilling a
-    leaking tyre often enough to stay within its travel
-    range.
+(** Find the shortest route in a weighted road network subject to a maximum distance between
+    refills at designated vertices. Start with a full supply, or report that no route is
+    possible.
     - Input [intersection_count]:
     - Input [tire_range]:
     - Input [stations]:

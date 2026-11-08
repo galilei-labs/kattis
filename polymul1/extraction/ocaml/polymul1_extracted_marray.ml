@@ -76,10 +76,7 @@ let polymul_impl x y =
        else rows_loop x y la lb (Uint63.of_int (0))
               (make (sub (add la lb) (Uint63.of_int (1))) (Uint63.of_int (0)))
 
-module Polymul1Impl =
- struct
-  (** val polymul : sint Marray.t -> sint Marray.t -> sint Marray.t **)
+(** val polymul : sint Marray.t -> sint Marray.t -> sint Marray.t **)
 
-  let polymul =
-    polymul_impl
- end
+let polymul =
+  polymul_impl

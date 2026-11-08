@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Directed edge count, followed by source-destination name pairs.
+    - Output convention: Sorted multi-vertex components prefixed by okay; remaining names on a final avoid line. *)
 (* Input:
 6
 Starbucks HEB
@@ -131,7 +132,7 @@ Definition group (origins destinations : list string)
     In other members <-> together origins destinations name
       other.
 
-(** [@inside loopy_regions_correct] The [valid_input] datatype. *)
+(** [@inside loopy_regions_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (origins destinations : list string) : Prop := {
   (* a line containing an integer 0 <= n <= 10 000 *)
@@ -156,14 +157,10 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The "okay" lines are the groups, each in
-    lexicographic order, the groups    in lexicographic order, every
-    store that belongs to a group listed in    one; the "avoid" line
-    is, in lexicographic order, every store in no    group.] The
-    "okay" lines are the groups, each in lexicographic order, the
-    groups in lexicographic order, every store that belongs to a
-    group listed in one; the "avoid" line is, in lexicographic
-    order, every store in no group. *)
+(** [@requirement]
+    The output lists strongly connected components of size at least two with names and
+    groups sorted lexicographically, followed separately by the remaining names in
+    sorted order. *)
 Definition loopy_regions_spec
   (origins destinations : list string)
     (output : list (list string) * list string) : Prop :=
@@ -184,7 +181,9 @@ Definition loopy_regions_spec
 
 (** ** Interface *)
 
-(** The [loopy_regions] program on machine values.
+(** Find the strongly connected components of a directed graph that contain at least two
+    vertices. Sort the names within each component and the components lexicographically,
+    and list the remaining vertices separately.
     - Input [origins]:
     - Input [destinations]:
     - Output [output]: *)

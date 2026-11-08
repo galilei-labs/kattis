@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex and edge counts, a string of X/. vertex labels, then directed endpoint pairs.
+    - Output convention: The maximum path score from vertex 0 to the last vertex. *)
 (* Input:
 13 15
 .X...X.X...X.
@@ -128,7 +129,7 @@ Definition happiness (sites : string)
   count_sites sites "X"%char locations - count_sites sites
     "."%char locations.
 
-(** [@inside excavator_correct] The statement's bounds and guarantees. *)
+(** [@inside excavator_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sites : string)
   (edge_sources edge_targets : list N)
     : Prop := {
@@ -164,9 +165,9 @@ Record valid_input (sites : string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer is the happiness of some route,
-    and no route does better.] The answer is the happiness of some
-    route, and no route does better. *)
+(** [@requirement]
+    The output is the maximum score of a path from the first vertex to the last,
+    counting internal vertex contributions and excluding the endpoints. *)
 Definition excavator_spec (sites : string)
   (edge_sources edge_targets
     : list N) (output : Z) : Prop :=
@@ -179,7 +180,8 @@ Definition excavator_spec (sites : string)
 
 (** ** Interface *)
 
-(** The [excavator] program on machine values.
+(** Find a maximum-score path from the first vertex to the last in a directed acyclic graph.
+    Each internal vertex contributes either +1 or -1; the endpoints contribute zero.
     - Input [sites]:
     - Input [edge_sources]:
     - Input [edge_targets]:

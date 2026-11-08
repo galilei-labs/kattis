@@ -121,10 +121,7 @@ let count_impl x =
   sweep p n tot (add n n) (Uint63.of_int (1)) (Uint63.of_int (0))
     (Uint63.of_int (0)) (Uint63.of_int (0)) (make n (Uint63.of_int (0)))
 
-module NonnegpartsumsImpl =
- struct
-  (** val count_good_shifts : sint Marray.t -> uint **)
+(** val count_good_shifts : sint Marray.t -> uint **)
 
-  let count_good_shifts =
-    count_impl
- end
+let count_good_shifts =
+  count_impl

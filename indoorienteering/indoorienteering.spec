@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex count and target tour length, followed by a square distance matrix.
+    - Output convention: possible if a tour of exactly the requested length exists; impossible otherwise. *)
 (* Input:
 4 10
 0 3 2 1
@@ -48,9 +49,7 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The control points are 0 .. n-1 (the statement's 1 .. n);
-    row i of distances is the i-th line of the matrix. The number of
-    elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -85,8 +84,7 @@ Definition race_length (distances : list (list N))
         order start) start
   end.
 
-(** [@inside indoorienteering_correct] The statement's bounds, for one
-    test case. *)
+(** [@inside indoorienteering_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (distances : list (list N))
   (desired_length : N)
     : Prop := {
@@ -119,11 +117,9 @@ Record valid_input (distances : list (list N))
 
 (** ** Correctness *)
 
-(** [@requirement] [@short "possible" (true) iff some order visits every
-    control point once and    returns to the first one with a total
-    distance of exactly    desired_length.] "possible" (true) iff
-    some order visits every control point once and returns to the
-    first one with a total distance of exactly desired_length. *)
+(** [@requirement]
+    The output is true exactly when a tour visits every vertex once, returns to its
+    start and has the specified total length. *)
 Definition indoorienteering_spec (distances : list (list N))
     (desired_length : N) (output : bool) : Prop :=
   match output with
@@ -139,7 +135,8 @@ Definition indoorienteering_spec (distances : list (list N))
 
 (** ** Interface *)
 
-(** The [indoorienteering] program on machine values.
+(** Decide whether a tour can visit every vertex exactly once, return to its start, and have
+    exactly a specified total length.
     - Input [distances]:
     - Input [desired_length]:
     - Output [output]: *)

@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["candydistribution_implem.v", "candydistribution.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/candydistribution_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/candydistribution_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "candydistribution_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/candydistribution_extracted_marray.ml"
+Rust = ""

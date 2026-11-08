@@ -147,10 +147,7 @@ let satisfiable_impl n y =
   let lim = lsl0 (Uint63.of_int (1)) n in
   search_loop (masks true y) (masks false y) m lim (Uint63.of_int (0))
 
-module SatisfiabilityImpl =
- struct
-  (** val satisfiable : uint -> uint literal Marray.t Marray.t -> bool **)
+(** val satisfiable : uint -> uint literal Marray.t Marray.t -> bool **)
 
-  let satisfiable =
-    satisfiable_impl
- end
+let satisfiable =
+  satisfiable_impl

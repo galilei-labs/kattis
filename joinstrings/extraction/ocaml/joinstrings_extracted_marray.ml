@@ -137,11 +137,8 @@ let joinstrings_impl xs xa xb =
   in
   build xs (fst oc) (Uint63.of_int (0)) (snd oc)
 
-module JoinstringsImpl =
- struct
-  (** val joinstrings :
-      string Marray.t -> uint Marray.t -> uint Marray.t -> string **)
+(** val joinstrings :
+    string Marray.t -> uint Marray.t -> uint Marray.t -> string **)
 
-  let joinstrings =
-    joinstrings_impl
- end
+let joinstrings =
+  joinstrings_impl

@@ -8,6 +8,8 @@
 
     [@kattis booking]
     - Difficulty: 4.5
+    - CPU time limit: 5 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 5,000 intervals; cleanup time from 0 to 360 minutes.
@@ -16,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives booking count, cleanup time, then identifiers and arrival/departure timestamps.
+    - Output convention: One minimum room count per case. *)
 (* Input:
 4
 2 120
@@ -162,8 +165,7 @@ Definition rooms_suffice (cleaning_time : N)
        compatible cleaning_time arrival departure arrival'
          departure').
 
-(** [@inside min_rooms_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside min_rooms_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (cleaning_time : N)
   (arrivals departures : list (datetime N))
   : Prop := {
@@ -189,9 +191,9 @@ Record valid_input (cleaning_time : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum
-    number of rooms needed.] The answer: output rooms
-    suffice, and no fewer do. *)
+(** [@requirement]
+    The output is the minimum number of resources needed to accommodate all intervals,
+    including the cleanup period after each interval. *)
 Definition min_rooms_spec (cleaning_time : N)
   (arrivals departures : list (datetime N))
     (output : N) : Prop :=
@@ -203,7 +205,8 @@ Definition min_rooms_spec (cleaning_time : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Find the minimum number of resources needed to accommodate time intervals, allowing a
+    fixed cleanup period after each interval before its resource can be reused.
     - Input [cleaning_time]:
     - Input [arrivals]:
     - Input [departures]:

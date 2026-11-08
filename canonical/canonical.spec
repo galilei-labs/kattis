@@ -7,6 +7,8 @@
 
     [@kattis canonical]
     - Difficulty: 4.7
+    - CPU time limit: 2 seconds
+    - Memory limit: 2048 MB
 
     **Kattis Bounds**
     - 2 to 100 strictly increasing denominations.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Denomination count, followed by strictly increasing coin values starting with 1.
+    - Output convention: canonical if greedy change is always optimal; non-canonical otherwise. *)
 (* Input:
 4
 1 2 4 8
@@ -110,8 +113,7 @@ Definition counterexample (denominations : list N)
     greedy_uses denominations amount greedy_count /\
     coin_count < greedy_count.
 
-(** [@inside canonical_correct] The statement's input
-    guarantees. *)
+(** [@inside canonical_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (denominations : list N) : Prop := {
   (* 2 <= n <= 100, the number of denominations *)
   vi_n : 2 <= len denominations <= 100;
@@ -129,11 +131,9 @@ Record valid_input (denominations : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether the coin
-    system is canonical.] "canonical" (true) exactly
-    when S has no counterexample, i.e. the greedy
-    algorithm is always optimal; "non-canonical" (false)
-    otherwise. *)
+(** [@requirement]
+    The output is true exactly when greedy coin selection minimizes the number of coins
+    for every positive amount. *)
 Definition canonical_spec (denominations : list N)
   (output : bool)
   : Prop :=
@@ -146,7 +146,8 @@ Definition canonical_spec (denominations : list N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether repeatedly choosing the largest affordable coin always yields a minimum-
+    size representation of every positive amount.
     - Input [denominations]:
     - Output [output]: *)
 Program canonical : array uint -> bool.

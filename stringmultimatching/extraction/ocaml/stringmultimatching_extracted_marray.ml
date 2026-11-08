@@ -300,10 +300,7 @@ let multimatch_impl pats txt =
     (scan f_fill t fl out fp np txt n (Uint63.of_int (0)) (Uint63.of_int (0))
       (rows, (make m (Uint63.of_int (0)))))
 
-module StringmultimatchingImpl =
- struct
-  (** val multimatch : string Marray.t -> string -> uint Marray.t Marray.t **)
+(** val multimatch : string Marray.t -> string -> uint Marray.t Marray.t **)
 
-  let multimatch =
-    multimatch_impl
- end
+let multimatch =
+  multimatch_impl

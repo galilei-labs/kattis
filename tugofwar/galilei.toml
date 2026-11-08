@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["tugofwar_implem.v", "tugofwar.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/tugofwar_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/tugofwar_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "tugofwar_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/tugofwar_extracted_marray.ml"
+Rust = ""

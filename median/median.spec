@@ -6,7 +6,7 @@
     values when its length is even.
 
     [@kattis median]
-    - Difficulty: 2.4
+    - Difficulty: 2.8
     - CPU time limit: 2 seconds
     - Memory limit: 1024 MB
 
@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length, followed by space-separated integer values.
+    - Output convention: The median, averaging the two middle values for an even-length sequence. *)
 (* Input:
 7
 5 4 3 1 6 7 2
@@ -66,7 +67,7 @@ Definition median_of_sorted (sorted_values : list N) : R :=
   else ((elem sorted_values (value_count / 2 - 1)
          + elem sorted_values (value_count / 2)) / 2)%R.
 
-(** [@inside median_correct] The statement's bounds. *)
+(** [@inside median_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (values : list N) : Prop := {
   (* a single integer, n, where 1 <= n <= 10^5 *)
   vi_n : 1 <= len values <= 10 ^ 5;
@@ -76,10 +77,9 @@ Record valid_input (values : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer: the median of the input once
-    sorted (the sorted    rearrangement of the input exists and is
-    unique).] The answer: the median of the input once sorted (the
-    sorted rearrangement of the input exists and is unique). *)
+(** [@requirement]
+    The output is the exact median of the input values, averaging the two middle values
+    when the sequence length is even. *)
 Definition median_spec (values : list N)
   (output : R) : Prop :=
   forall sorted_values, Permutation values sorted_values ->
@@ -88,7 +88,8 @@ Definition median_spec (values : list N)
 
 (** ** Interface *)
 
-(** The [median] program on machine values.
+(** Compute the median of an integer sequence, averaging the two middle values when its
+    length is even.
     - Input [values]:
     - Output [output]: *)
 Program median : array uint -> float.

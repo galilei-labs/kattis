@@ -68,10 +68,7 @@ let relatives_impl n =
   then (Uint63.of_int (0))
   else outer (Uint63.of_int (2)) n n
 
-module RelativesImpl =
- struct
-  (** val relatives : uint -> uint **)
+(** val relatives : uint -> uint **)
 
-  let relatives =
-    relatives_impl
- end
+let relatives =
+  relatives_impl

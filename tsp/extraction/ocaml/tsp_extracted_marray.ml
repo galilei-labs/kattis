@@ -535,10 +535,7 @@ let tsp_impl x y =
   in
   ds_out s
 
-module TspImpl =
- struct
-  (** val tsp : Float64.t Marray.t -> Float64.t Marray.t -> uint Marray.t **)
+(** val tsp : Float64.t Marray.t -> Float64.t Marray.t -> uint Marray.t **)
 
-  let tsp =
-    tsp_impl
- end
+let tsp =
+  tsp_impl

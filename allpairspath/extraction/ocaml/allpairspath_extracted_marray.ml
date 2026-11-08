@@ -401,12 +401,9 @@ let allpairspath_impl n us vs ws =
   for_loop (fun u res -> set res u (row_of n m hd nx vs ws r bad p u))
     (Uint63.of_int (0)) n (make n (make (Uint63.of_int (0)) Impossible))
 
-module AllpairspathImpl =
- struct
-  (** val allpairspath :
-      uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> sint answer
-      Marray.t Marray.t **)
+(** val allpairspath :
+    uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> sint answer
+    Marray.t Marray.t **)
 
-  let allpairspath =
-    allpairspath_impl
- end
+let allpairspath =
+  allpairspath_impl

@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: target endpoints, interval count, then available interval endpoints.
+    - Output convention: Minimum cover size and 0-based interval indices, or impossible if no cover exists. *)
 (* Input:
 -0.5 1
 3
@@ -114,7 +115,7 @@ Definition covering (target_left target_right : R)
   indices_valid lefts chosen /\
   covers target_left target_right lefts rights chosen.
 
-(** [@inside cover_correct] The statement's bounds on one test case. *)
+(** [@inside cover_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (target_left target_right : R)
   (lefts rights : list R)
     : Prop := {
@@ -137,11 +138,9 @@ Record valid_input (target_left target_right : R)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer : None when no selection covers
-    [target_left, target_right],    otherwise a covering selection
-    that none is shorter than.] The answer : None when no selection
-    covers [target_left, target_right], otherwise a covering
-    selection that none is shorter than. *)
+(** [@requirement]
+    The output identifies a minimum-cardinality set of intervals covering the target
+    interval, or None exactly when no cover exists. *)
 Definition cover_spec (target_left target_right : R)
   (lefts rights : list R)
     (output : option (list N)) : Prop :=
@@ -160,7 +159,8 @@ Definition cover_spec (target_left target_right : R)
 
 (** ** Interface *)
 
-(** The [cover] program on machine values.
+(** Find a smallest subset of given closed intervals whose union covers a target interval,
+    or report that coverage is impossible.
     - Input [target_left]:
     - Input [target_right]:
     - Input [lefts]:

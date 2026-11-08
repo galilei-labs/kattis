@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["worstweather_implem.v", "worstweather.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/worstweather_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/worstweather_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "worstweather_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/worstweather_extracted_marray.ml"
+Rust = ""

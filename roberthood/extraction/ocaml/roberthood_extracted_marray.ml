@@ -291,11 +291,3 @@ let diam2 x y =
 
 let roberthood x y =
   sqrt (of_uint63 (diam2 x y))
-
-module RoberthoodImpl =
- struct
-  (** val roberthood : sint Marray.t -> sint Marray.t -> Float64.t **)
-
-  let roberthood =
-    roberthood
- end

@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Element and operation counts, followed by = a b unions and ? a b connectivity queries.
+    - Output convention: yes or no for each connectivity query, one result per line. *)
 (* Input:
 10 4
 ? 1 3
@@ -101,7 +102,7 @@ Inductive connected (is_union : list bool)
       connected is_union first_elements second_elements k
         element other.
 
-(** [@inside run_ops_correct] The statement's bounds. *)
+(** [@inside run_ops_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (element_count : N)
   (is_union : list bool)
   (first_elements second_elements : list N) : Prop := {
@@ -136,11 +137,9 @@ Definition answers_query (is_union : list bool)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Maintain disjoint sets under
-    union operations and answer whether pairs of elements
-    currently belong to the same set.] One answer per
-    operation ; only the answers at queries are
-    specified. *)
+(** [@requirement]
+    The output has one entry per operation; entries corresponding to queries indicate
+    whether the queried elements are connected after the preceding unions. *)
 Definition run_ops_spec
   (element_count : N)
   (is_union : list bool)
@@ -154,8 +153,7 @@ Definition run_ops_spec
 
 (** ** Interface *)
 
-(** Maintain disjoint sets under union operations and
-    answer whether pairs of elements currently belong to
+(** Maintain disjoint sets under union operations and answer whether two elements belong to
     the same set.
     - Input [element_count]:
     - Input [is_union]:

@@ -7,7 +7,7 @@
     negative cycles.
 
     [@kattis shortestpath3]
-    - Difficulty: 1.9
+    - Difficulty: 2.0
     - CPU time limit: 3 seconds
     - Memory limit: 1024 MB
 
@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex, edge and query counts and source; weighted edges and query vertices; four zeros end input.
+    - Output convention: One shortest distance, Impossible or -Infinity per query. *)
 (* Input:
 5 4 3 0
 0 1 999
@@ -97,12 +98,7 @@ Definition get {A} (l : list A) (fallback : A) (j : N) : A
   :=
   nth (N.to_nat j) l fallback.
 
-(** [walk edge_sources edge_targets edge_weights start
-    target cost]: following edges of the graph from node
-    start, one reaches node target with total weight cost
-    (a path in the statement's sense: edges and nodes may
-    repeat; the empty path goes from start to start,
-    weight 0). *)
+(** A walk from start to target with the given total edge weight. Vertices and edges may repeat; an empty walk has weight zero. *)
 Inductive walk (edge_sources edge_targets : list N)
   (edge_weights : list Z)
     : N -> N -> Z -> Prop :=
@@ -144,8 +140,7 @@ Definition min_distance edge_sources edge_targets
     source target cost ->
     distance <= cost.
 
-(** [@inside shortestpath3_correct] The statement's
-    guarantees on one test case. *)
+(** [@inside shortestpath3_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (node_count source : N)
   (edge_sources edge_targets : list N)
     (edge_weights : list Z) (queries : list N) : Prop := {
@@ -175,11 +170,9 @@ Record valid_input (node_count source : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Answer shortest-path queries
-    in a directed weighted graph, distinguishing
-    unreachable vertices and paths whose cost is
-    unbounded below.] One [answer] per query, in order;
-    each [answer] is the case that holds. *)
+(** [@requirement]
+    Each output entry gives the shortest distance to the queried vertex, or classifies
+    it as unreachable or unbounded below. *)
 Definition shortestpath3_spec
   (node_count source : N)
   (edge_sources edge_targets : list N )
@@ -205,9 +198,8 @@ Definition shortestpath3_spec
 
 (** ** Interface *)
 
-(** Answer shortest-path [queries] in a directed weighted
-    graph, distinguishing unreachable vertices and paths
-    whose cost is unbounded below.
+(** Answer shortest-path queries from one source in a directed weighted graph,
+    distinguishing unreachable vertices and costs unbounded below by negative cycles.
     - Input [node_count]:
     - Input [source]:
     - Input [edge_sources]:

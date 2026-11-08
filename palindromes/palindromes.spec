@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Text, query count, then inclusive 1-based interval endpoints.
+    - Output convention: One count of contained palindromic substrings per query. *)
 (* Input:
 aabacab
 5
@@ -99,9 +100,7 @@ Definition index_pairs (left_end right_end : N) : list
     right_end))
            (range left_end right_end).
 
-(** The statement's answer for the customer remembering name_left_end ..
-    name_right_end: the number of pairs (i, j), left_end <= i <= j
-    <= right_end, with name_i .. name_j a palindrome. *)
+(** The number of palindromic substrings contained within the inclusive query interval. *)
 Definition palindromic_count (name : String.string)
   (left_end right_end : N)
     : N :=
@@ -109,7 +108,7 @@ Definition palindromic_count (name : String.string)
     (snd span)))
               (index_pairs left_end right_end)).
 
-(** [@inside palindromes_correct] The [valid_input] datatype. *)
+(** [@inside palindromes_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (name : String.string)
   (left_ends right_ends : list N)
     : Prop := {
@@ -130,8 +129,9 @@ Record valid_input (name : String.string)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short One answer per customer, in input order.] One
-    answer per customer, in input order. *)
+(** [@requirement]
+    Each output entry counts palindromic substrings contained entirely within the
+    corresponding query interval. *)
 Definition palindromes_spec (name : String.string)
     (left_ends right_ends : list N) (output : list N) : Prop
       :=
@@ -142,7 +142,8 @@ Definition palindromes_spec (name : String.string)
 
 (** ** Interface *)
 
-(** The [palindromes] program on machine values.
+(** For each queried interval of a string, count the palindromic substrings contained
+    entirely within that interval.
     - Input [name]:
     - Input [left_ends]:
     - Input [right_ends]:

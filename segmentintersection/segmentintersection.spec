@@ -15,7 +15,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count, followed by eight endpoint coordinates per segment pair.
+    - Output convention: none, one point or two segment endpoints, with coordinates to two decimal places. *)
 (* Input:
 5
 -10 0 10 0 0 -10 0 10
@@ -54,10 +55,7 @@ Open Scope Z_scope.
 
 (** ** Definitions *)
 
-(** The answer, on both sides (A = sint, A = Z). The
-    answer is exact: a point is a rational
-    (x/denominator, y/denominator), not a decimal; the
-    rounding to 2 decimals is the printer's. *)
+(** An exact intersection represented as empty, a rational point or a segment. Decimal rounding is performed only when printing. *)
 Inductive inter (A : Type) : Type :=
 | Empty
 | Point (x y denominator : A)
@@ -126,8 +124,7 @@ Definition well_formed (answer : inter Z) : Prop :=
         (start_x = end_x /\ start_y < end_y)
   end.
 
-(** [@inside intersect_correct] The statement's bounds,
-    for one test case. *)
+(** [@inside intersect_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (x1 y1 x2 y2 x3 y3 x4 y4 : Z) : Prop := {
   (* Coordinates have absolute value at most 10000. *)
   vi_coords : Forall
@@ -137,11 +134,9 @@ Record valid_input (x1 y1 x2 y2 x3 y3 x4 y4 : Z) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Compute the exact intersection
-    of two closed line segments: no intersection, one
-    rational point, or a shared segment.] The answer is
-    well formed, and its points are exactly the
-    (rational) points on both segments. *)
+(** [@requirement]
+    The output is a well-formed exact representation of the shared points of the two
+    closed segments: empty, a point or a segment. *)
 Definition intersect_spec
   (x1 y1 x2 y2 x3 y3 x4 y4 : Z)
   (output : inter Z)
@@ -154,9 +149,8 @@ Definition intersect_spec
 
 (** ** Interface *)
 
-(** Compute the exact intersection of two closed line
-    segments: no intersection, one rational point, or a
-    shared segment.
+(** Compute the exact intersection of two closed line segments: no intersection, one
+    rational point, or a shared segment.
     - Input [x1]:
     - Input [y1]:
     - Input [x2]:

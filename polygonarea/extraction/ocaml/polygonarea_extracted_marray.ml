@@ -50,10 +50,7 @@ let signed_area2_impl x y =
   sub (add s (mul (get x m) (get y (Uint63.of_int (0)))))
     (mul (get x (Uint63.of_int (0))) (get y m))
 
-module PolygonareaImpl =
- struct
-  (** val signed_area2 : sint Marray.t -> sint Marray.t -> sint **)
+(** val signed_area2 : sint Marray.t -> sint Marray.t -> sint **)
 
-  let signed_area2 =
-    signed_area2_impl
- end
+let signed_area2 =
+  signed_area2_impl

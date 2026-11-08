@@ -181,10 +181,7 @@ let suffix_array_impl x =
   rounds n (Uint63.of_int (1)) r (make n (Uint63.of_int (0))) sa
     (make n (Uint63.of_int (0)))
 
-module SuffixsortingImpl =
- struct
-  (** val suffix_array : string -> uint Marray.t **)
+(** val suffix_array : string -> uint Marray.t **)
 
-  let suffix_array =
-    suffix_array_impl
- end
+let suffix_array =
+  suffix_array_impl

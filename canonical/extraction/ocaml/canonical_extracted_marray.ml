@@ -98,10 +98,7 @@ let run c =
 let canonical_impl =
   run
 
-module CanonicalImpl =
- struct
-  (** val canonical : uint Marray.t -> bool **)
+(** val canonical : uint Marray.t -> bool **)
 
-  let canonical =
-    canonical_impl
- end
+let canonical =
+  canonical_impl

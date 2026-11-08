@@ -16,6 +16,8 @@
 
 (** ** Examples *)
 
+(** - Input convention: A function call with two coefficient lists, each in increasing degree order.
+    - Output convention: Product coefficients in increasing degree order, including zero coefficients. *)
 (* polymul [1; 0; 5] [0; -2] = [0; -2; 0; -10] *)
 
 (** ** [@hide] Environment *)
@@ -67,8 +69,7 @@ Definition is_product
     eval product_coeffs point =
     eval first_coeffs point * eval second_coeffs point.
 
-(** [@inside polymul_correct] The statement's bounds, for
-    one test case. *)
+(** [@inside polymul_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (first_coeffs second_coeffs : list Z) : Prop := {
   (* 1 <= n <= 255 : a polynomial of degree n has n + 1
@@ -93,9 +94,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Multiply two polynomials whose
-    integer coefficients are listed from lowest to
-    highest degree.] The result is the product. *)
+(** [@requirement]
+    The output contains the coefficients of the product polynomial in increasing degree
+    order. *)
 Definition polymul_spec
   (first_coeffs second_coeffs : list Z)
   (output : list Z)
@@ -104,8 +105,8 @@ Definition polymul_spec
 
 (** ** Interface *)
 
-(** Multiply two polynomials whose integer coefficients
-    are listed from lowest to highest degree.
+(** Multiply two integer polynomials given by their coefficients in increasing degree order,
+    returning the product in the same order.
     - Input [first_coeffs]:
     - Input [second_coeffs]:
     - Output [output]: *)

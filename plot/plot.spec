@@ -18,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Polynomial degree, followed by coefficients in descending degree order.
+    - Output convention: Initial finite-difference constants C0 through Cn, separated by spaces. *)
 (* Input:
 1 5 2
 Output:
@@ -75,7 +76,7 @@ Fixpoint step (variables : list Z) : list Z :=
 Definition plotted (constants : list Z) (point : N) : Z :=
   hd 0 (N.iter point step constants).
 
-(** [@inside plot_correct] The [valid_input] datatype. *)
+(** [@inside plot_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (degree : N)
   (coefficients : list Z) : Prop := {
   (* The first integer is n, where 1 <= n <= 6. *)
@@ -93,12 +94,9 @@ Record valid_input (degree : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The constants C_0, ..., C_n: n+1 of them, and
-    with them the pseudocode    gives the correct value p(point) at
-    every point, so for every m at    point = 0, ..., m-1.] The
-    constants C_0, ..., C_n: n+1 of them, and with them the
-    pseudocode gives the correct value p(point) at every point, so
-    for every m at point = 0, ..., m-1. *)
+(** [@requirement]
+    The output contains the initial finite differences that generate the polynomial's
+    values at every nonnegative integer input. *)
 Definition plot_spec (degree : N) (coefficients : list Z)
     (output : list Z) : Prop :=
   len output = (degree + 1)%N /\
@@ -107,7 +105,9 @@ Definition plot_spec (degree : N) (coefficients : list Z)
 
 (** ** Interface *)
 
-(** The [plot] program on machine values.
+(** Convert a polynomial's coefficients into initial finite differences. Starting with these
+    values and repeatedly adding each next entry to its predecessor must produce the
+    polynomial's values at 0, 1, 2 and so on.
     - Input [degree]:
     - Input [coefficients]:
     - Output [output]: *)

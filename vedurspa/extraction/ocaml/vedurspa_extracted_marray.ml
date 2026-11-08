@@ -654,14 +654,11 @@ let vedurspa_impl xt xd xs xh m =
     (Uint63.of_int (0)) ((((make l None), (make l None)), (make l None)),
     (make l None))
 
-module VedurspaImpl =
- struct
-  (** val vedurspa :
-      Float64.t option Marray.t -> uint option Marray.t -> Float64.t option
-      Marray.t -> uint option Marray.t -> uint -> ((Float64.t option
-      Marray.t * uint option Marray.t) * Float64.t option Marray.t) * uint
-      option Marray.t **)
+(** val vedurspa :
+    Float64.t option Marray.t -> uint option Marray.t -> Float64.t option
+    Marray.t -> uint option Marray.t -> uint -> ((Float64.t option
+    Marray.t * uint option Marray.t) * Float64.t option Marray.t) * uint
+    option Marray.t **)
 
-  let vedurspa =
-    vedurspa_impl
- end
+let vedurspa =
+  vedurspa_impl

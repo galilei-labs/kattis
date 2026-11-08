@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives N, generator parameters A B C and hash parameters X Y.
+    - Output convention: One hash of the sorted generated sequence per case. *)
 (* Input:
 3
 7
@@ -58,9 +59,7 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The statement's A, B, C are seed, multiplier, modulus;
-    its X, Y are hash_base, hash_modulus. The number of elements of
-    l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -95,9 +94,7 @@ Definition hash (hash_base hash_modulus : N)
             mod hash_modulus)
             terms 0.
 
-(** [@inside magic_correct] The statement's bounds, for one test case
-    (TC, the number of test cases, is the harness's loop, not an
-    argument). *)
+(** [@inside magic_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (sequence_length seed multiplier modulus hash_base
             hash_modulus : N) : Prop := {
@@ -114,11 +111,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer output is the hash of R =
-    sorted_terms, the sorted version    of S (R is unique, so the
-    answer is pinned).] The answer output is the hash of R =
-    sorted_terms, the sorted version of S (R is unique, so the
-    answer is pinned). *)
+(** [@requirement]
+    The output is the specified rolling hash of the generated sequence sorted in
+    nondecreasing order. *)
 Definition magic_spec
   (sequence_length seed multiplier modulus hash_base
             hash_modulus : N) (output : N) : Prop
@@ -130,7 +125,9 @@ Definition magic_spec
 
 (** ** Interface *)
 
-(** The [magic] program on machine values.
+(** Generate N integers by S[0] = A and S[i] = (S[i-1] * B + A) mod C, then sort them. Hash
+    the sorted sequence by starting at zero and repeatedly replacing V with (V * X +
+    value) mod Y.
     - Input [sequence_length]:
     - Input [seed]:
     - Input [multiplier]:

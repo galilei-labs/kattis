@@ -225,12 +225,9 @@ let dijkstra_impl n us vs ws s =
   in
   out_loop dist n (Uint63.of_int (0)) (make n None)
 
-module Shortestpath1Impl =
- struct
-  (** val dijkstra :
-      uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint -> uint
-      option Marray.t **)
+(** val dijkstra :
+    uint -> uint Marray.t -> uint Marray.t -> uint Marray.t -> uint -> uint
+    option Marray.t **)
 
-  let dijkstra =
-    dijkstra_impl
- end
+let dijkstra =
+  dijkstra_impl

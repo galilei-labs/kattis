@@ -17,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Command count, followed by instance identifiers, operation codes and any arguments.
+    - Output convention: One integer per rank, get or size query, in command order. *)
 (* Input:
 14
 1 i -8 -2
@@ -258,7 +259,7 @@ Definition args_ok (operation : N)
     z : none *)
   end.
 
-(** [@inside run_commands_correct] Valid input. *)
+(** [@inside run_commands_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (instance_ids operations : list N)
     (first_args second_args : list Z) : Prop := {
   (* q lines follow, each "<id> <operation> [arg]" : one
@@ -290,10 +291,9 @@ Record valid_input (instance_ids operations : list N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Execute commands on ordered
-    key-value maps, including cursor movement and rank,
-    lookup and size queries.] The outputs: the lines
-    Kattis prints, from empty instances. *)
+(** [@requirement]
+    The output is the sequence of query results obtained by executing the commands on
+    initially empty ordered maps. *)
 Definition run_commands_spec
   (instance_ids operations : list N )
   (first_args second_args : list Z )
@@ -305,9 +305,9 @@ Definition run_commands_spec
 
 (** ** Interface *)
 
-(** Execute [commands] on ordered key-value maps,
-    including cursor movement and [rank], [lookup] and
-    size queries.
+(** Execute operations on ordered integer key-value maps with a cursor per map, including
+    insertion, deletion, lookup, copying, cursor movement and rank queries. Return the
+    requested query results.
     - Input [instance_ids]:
     - Input [operations]:
     - Input [first_args]:

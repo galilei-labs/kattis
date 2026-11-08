@@ -19,7 +19,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Vertex, edge and label counts; source and destination; then edges with inclusive label ranges.
+    - Output convention: The count of labels permitting a source-to-destination path. *)
 (* Input:
 4 5 10
 3 2
@@ -106,7 +107,7 @@ Definition good (badge_count start destination : N)
     highest_badges badge
     start destination.
 
-(** [@inside securitybadge_correct] Valid input. *)
+(** [@inside securitybadge_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (room_count badge_count start destination
   : N)
     (lock_sources lock_targets lowest_badges highest_badges
@@ -145,12 +146,9 @@ Record valid_input (room_count badge_count start destination
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Count the badge numbers that
-    allow a route from the starting room to the
-    destination through directed, badge-restricted
-    doors.] The answer is the number of [good] badges:
-    [output] is the length of a duplicate-free list
-    holding exactly the [good] badges. *)
+(** [@requirement]
+    The output counts allowed integer labels for which a directed path exists from the
+    source to the destination. *)
 Definition securitybadge_spec
   (room_count badge_count start destination : N)
   (lock_sources lock_targets lowest_badges highest_badges :
@@ -167,9 +165,8 @@ Definition securitybadge_spec
 
 (** ** Interface *)
 
-(** Count the badge numbers that allow a route from the
-    starting room to the [destination] through directed,
-    badge-restricted doors.
+(** Each edge of a directed graph permits an inclusive interval of integer labels. Count the
+    labels that permit a path from a specified source to a destination.
     - Input [room_count]:
     - Input [badge_count]:
     - Input [start]:

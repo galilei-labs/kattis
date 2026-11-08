@@ -8,13 +8,16 @@
 
     [@kattis bst]
     - Difficulty: 3.4
+    - CPU time limit: 2 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 300,000 entries, forming a permutation of 1 through N. *)
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length, followed by distinct insertion values, one per line.
+    - Output convention: One cumulative node-depth sum after each insertion. *)
 (* Input:
 4
 1
@@ -118,7 +121,7 @@ Fixpoint counter (sequence : list N)
     (N.of_nat j)
   end.
 
-(** [@inside bst_correct] The statement's bounds. *)
+(** [@inside bst_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : list N) : Prop := {
   (* 1 <= N <= 300 000, N the length of the sequence *)
   vi_n : 1 <= len sequence <= 300000;
@@ -132,9 +135,9 @@ Record valid_input (sequence : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the cumulative
-    insertion depths.] One counter per insertion: cell k
-    is C after sequence_k has been inserted. *)
+(** [@requirement]
+    Each output entry is the sum of node depths after the corresponding insertion into
+    an initially empty binary search tree; the root has depth zero. *)
 Definition bst_spec (sequence : list N)
   (output : list N) : Prop :=
   len output = len sequence /\
@@ -143,7 +146,8 @@ Definition bst_spec (sequence : list N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Insert a permutation into an initially empty binary search tree. After each insertion,
+    return the sum of all inserted nodes' depths, with root depth zero.
     - Input [sequence]:
     - Output [output]: *)
 Program bst : array uint -> array uint.

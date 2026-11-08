@@ -129,10 +129,7 @@ let dirtydriving_impl p d =
   max_loop s p (get s (Uint63.of_int (0))) n (Uint63.of_int (0))
     (Uint63.of_int (0))
 
-module DirtydrivingImpl =
- struct
-  (** val dirtydriving : uint -> uint Marray.t -> uint **)
+(** val dirtydriving : uint -> uint Marray.t -> uint **)
 
-  let dirtydriving =
-    dirtydriving_impl
- end
+let dirtydriving =
+  dirtydriving_impl

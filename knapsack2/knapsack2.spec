@@ -6,7 +6,7 @@
     given item sizes, with unlimited copies of each item.
 
     [@kattis knapsack2]
-    - Difficulty: 5.9
+    - Difficulty: 5.8
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Item-type count and target size, followed by the available item sizes.
+    - Output convention: possible if the target can be filled exactly; impossible otherwise. *)
 (* Input:
 2 10000000000
 3 6
@@ -69,7 +70,7 @@ Definition exact_filling (item_sizes : list N)
   exists items, bag item_sizes items /\
     total_size item_sizes items = knapsack_size.
 
-(** [@inside fillable_correct] The statement's bounds. *)
+(** [@inside fillable_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (knapsack_size : N)
   (item_sizes : list N) : Prop := {
   (* 1 <= n <= 20 *)
@@ -83,9 +84,9 @@ Record valid_input (knapsack_size : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The result output is true exactly when an
-    exact filling exists.] The result output is true exactly when an
-    exact filling exists. *)
+(** [@requirement]
+    The output is true exactly when the target size is a nonnegative integer combination
+    of the available item sizes. *)
 Definition fillable_spec (knapsack_size : N)
   (item_sizes : list N)
     (output : bool) : Prop :=
@@ -96,7 +97,8 @@ Definition fillable_spec (knapsack_size : N)
 
 (** ** Interface *)
 
-(** The [fillable] program on machine values.
+(** Decide whether a target size is a nonnegative integer combination of the given item
+    sizes, with unlimited copies of each item.
     - Input [knapsack_size]:
     - Input [item_sizes]:
     - Output [output]: *)

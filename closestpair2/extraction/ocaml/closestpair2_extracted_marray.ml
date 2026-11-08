@@ -207,10 +207,7 @@ let closestpair_impl xs ys =
   in
   fst r
 
-module Closestpair2Impl =
- struct
-  (** val closestpair : sint Marray.t -> sint Marray.t -> uint * uint **)
+(** val closestpair : sint Marray.t -> sint Marray.t -> uint * uint **)
 
-  let closestpair =
-    closestpair_impl
- end
+let closestpair =
+  closestpair_impl

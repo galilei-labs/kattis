@@ -212,13 +212,3 @@ let cover x y ls rs =
      (loop k (fun _ _ -> true) (copy_out w) (Uint63.of_int (0))
        (make k (Uint63.of_int (0))))
    | None -> None)
-
-module IntervalcoverImpl =
- struct
-  (** val cover :
-      Float64.t -> Float64.t -> Float64.t Marray.t -> Float64.t Marray.t ->
-      uint Marray.t option **)
-
-  let cover =
-    cover
- end

@@ -20,7 +20,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sheet dimensions, three remainders in descending box-volume order, then lower and upper bounds.
+    - Output convention: The unique integer satisfying the interval and congruence constraints. *)
 (* Input:
 16 21 407 409 17 20000 30000
 Output:
@@ -101,8 +102,7 @@ Definition consistent (sheet_width sheet_length : N)
     books mod second_volume = left_second /\
     books mod third_volume = left_third.
 
-(** [@inside remainderreminder_correct] The statement's
-    bounds. *)
+(** [@inside remainderreminder_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sheet_width sheet_length : N)
     (left_largest left_second left_third min_books max_books
       : N) : Prop := {
@@ -126,11 +126,9 @@ Record valid_input (sheet_width sheet_length : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Recover the unique number of
-    books from the remainders left when packing them into
-    the three largest distinct boxes foldable from a
-    rectangular sheet.] The answer is the one
-    [consistent] number of books. *)
+(** [@requirement]
+    The output is the unique integer within the given bounds satisfying the three
+    congruences defined by the largest distinct box volumes. *)
 Definition remainderreminder_spec
   (sheet_width sheet_length : N)
   (left_largest left_second left_third min_books max_books :
@@ -145,10 +143,9 @@ Definition remainderreminder_spec
 
 (** ** Interface *)
 
-(** Recover the unique number of books from the
-    remainders left when packing them into the three
-    largest distinct boxes foldable from a rectangular
-    sheet.
+(** Form the three largest distinct values of x * (a - 2x) * (b - 2x) over positive integers
+    x with 2x < a and 2x < b. Find the unique integer in a specified interval having the
+    given remainders modulo those three values.
     - Input [sheet_width]:
     - Input [sheet_length]:
     - Input [left_largest]:

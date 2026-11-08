@@ -284,12 +284,9 @@ let isahasa_impl xsrc xrs xdst xqsrc xqrs xqdst =
   fill (fun j -> answer st t w k (get xqsrc j) (get xqdst j) (get xqrs j)) m
     (Uint63.of_int (0)) (make m false)
 
-module IsahasaImpl =
- struct
-  (** val isahasa :
-      string Marray.t -> relkind Marray.t -> string Marray.t -> string
-      Marray.t -> relkind Marray.t -> string Marray.t -> bool Marray.t **)
+(** val isahasa :
+    string Marray.t -> relkind Marray.t -> string Marray.t -> string Marray.t
+    -> relkind Marray.t -> string Marray.t -> bool Marray.t **)
 
-  let isahasa =
-    isahasa_impl
- end
+let isahasa =
+  isahasa_impl

@@ -204,11 +204,8 @@ let min_rooms_impl c xa xd =
   let r' = sort_all r in
   sweep a' r' n (Uint63.of_int (0)) (Uint63.of_int (0)) (Uint63.of_int (0))
 
-module BookingImpl =
- struct
-  (** val min_rooms :
-      uint -> uint datetime Marray.t -> uint datetime Marray.t -> uint **)
+(** val min_rooms :
+    uint -> uint datetime Marray.t -> uint datetime Marray.t -> uint **)
 
-  let min_rooms =
-    min_rooms_impl
- end
+let min_rooms =
+  min_rooms_impl

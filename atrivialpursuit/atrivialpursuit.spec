@@ -8,6 +8,8 @@
 
     [@kattis atrivialpursuit]
     - Difficulty: 9.1
+    - CPU time limit: 4 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - Sequence length from 1 to $10^{18}$.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length and two factor counts, followed by the factors of the required GCD and LCM.
+    - Output convention: The number of qualifying sequences modulo $10^9 + 7$. *)
 (* Input:
 3 1 2
 3
@@ -84,8 +87,7 @@ Definition num_sequences
          /\
     len sequences = sequence_count.
 
-(** [@inside atrivialpursuit_correct] The statement's
-    bounds. *)
+(** [@inside atrivialpursuit_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (term_count : N)
   (gcd_factors lcm_factors : list N)
     : Prop := {
@@ -104,9 +106,9 @@ Record valid_input (term_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must count sequences with the
-    specified GCD and LCM.] The answer: the number of
-    such sequences, modulo 10^9 + 7. *)
+(** [@requirement]
+    The output counts ordered sequences with the specified length, GCD and LCM, modulo
+    $10^9 + 7$. *)
 Definition atrivialpursuit_spec (term_count : N)
     (gcd_factors lcm_factors : list N)
       (output : N) : Prop :=
@@ -118,7 +120,9 @@ Definition atrivialpursuit_spec (term_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Count ordered sequences of positive integers with a specified length, greatest common
+    divisor and least common multiple. The latter two are given as products of factors;
+    return the count modulo 1000000007.
     - Input [term_count]:
     - Input [gcd_factors]:
     - Input [lcm_factors]:

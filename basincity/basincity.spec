@@ -7,6 +7,8 @@
 
     [@kattis basincity]
     - Difficulty: 8.2
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100,000 vertices; requested set size from 0 to 15.
@@ -14,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Requested independent-set size, vertex count, then degree-prefixed adjacency lists with 1-based indices.
+    - Output convention: possible if a sufficiently large independent set exists; impossible otherwise. *)
 (* Input:
 4
 7
@@ -92,8 +95,7 @@ Definition placement (neighbour_lists : list (list N))
      In intersection drone_spots -> In other drone_spots ->
      ~ neighbours neighbour_lists intersection other).
 
-(** [@inside basincity_correct] The statement's
-    guarantees on the input. *)
+(** [@inside basincity_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (drone_count : N)
   (neighbour_lists : list (list N))
     : Prop := {
@@ -129,10 +131,9 @@ Record valid_input (drone_count : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether the
-    requested drone placement exists.] "possible"
-    exactly when some placement of drone_count drones
-    exists. *)
+(** [@requirement]
+    The output is true exactly when the graph contains an independent set of the
+    requested size. *)
 Definition basincity_spec (drone_count : N)
   (neighbour_lists : list (list N))
     (output : bool) : Prop :=
@@ -147,7 +148,8 @@ Definition basincity_spec (drone_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether an undirected graph contains a set of the requested size with no edge
+    between any two selected vertices.
     - Input [drone_count]:
     - Input [neighbour_lists]:
     - Output [output]: *)

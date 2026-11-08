@@ -174,10 +174,7 @@ let zapis_impl x =
   let p = ixi w (Uint63.of_int (0)) n in
   ((get tb p), (leb mOD (get tb (add p (Uint63.of_int (1))))))
 
-module ZapisImpl =
- struct
-  (** val zapis : string -> uint * bool **)
+(** val zapis : string -> uint * bool **)
 
-  let zapis =
-    zapis_impl
- end
+let zapis =
+  zapis_impl

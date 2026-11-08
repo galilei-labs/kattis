@@ -1,6 +1,6 @@
 OCaml extraction
 
-Source: galilei-labs/kattis-private, commit 5de4caf82d10ad3d48544c55c9123c264d78edaa
+Source: galilei-labs/kattis-private, commit fd0866fdc9551843369c161e9c1ef2a5dacc2088
 Path: 100_problems_run_new/hashing/implem-bens-1/benchmark/extracted/hashing_extracted_marray.ml
 
 This is the upstream mutable-array extraction. Its Marray runtime is included.

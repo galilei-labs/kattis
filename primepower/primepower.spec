@@ -6,7 +6,7 @@
     interval, modulo 1000000007.
 
     [@kattis primepower]
-    - Difficulty: 4.5
+    - Difficulty: 4.6
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Exponent E and interval endpoints L and R, each on a separate line.
+    - Output convention: The product of the prime powers modulo $10^9 + 7$. *)
 (* Input:
 3
 6
@@ -71,7 +72,7 @@ Definition prime_power_product (exponent low high : N) : N
   prime_power_product_from exponent low
     (N.to_nat (high + 1 - low)).
 
-(** [@inside primepower_correct] The statement's bounds. *)
+(** [@inside primepower_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (exponent low high : N) : Prop := {
   (* E (1 <= E <= 1,000,000) *)
   vi_e : 1 <= exponent <= 10 ^ 6;
@@ -83,9 +84,9 @@ Record valid_input (exponent low high : N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Multiply the given power of
-    every prime in an inclusive interval, modulo
-    1000000007.] The answer: the product modulo 10^9 + 7. *)
+(** [@requirement]
+    The output is the product of the specified power of every prime in the inclusive
+    interval, modulo $10^9 + 7$. *)
 Definition primepower_spec
   (exponent low high : N)
   (output : N)
@@ -95,8 +96,8 @@ Definition primepower_spec
 
 (** ** Interface *)
 
-(** Multiply the given power of every prime in an
-    inclusive interval, modulo 1000000007.
+(** Compute the product of p^E over all primes p in a given inclusive interval, modulo
+    1000000007.
     - Input [exponent]:
     - Input [low]:
     - Input [high]:

@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Per case: vertex count and polygon coordinates in boundary order; a zero count ends input.
+    - Output convention: CW or CCW followed by the unsigned area with one decimal place. *)
 (* Input:
 3
 0 0
@@ -87,10 +88,7 @@ Definition shoelace
                 * get_list_Z y_coordinates i)
     (N.to_nat vertex_count).
 
-(** [@inside signed_area2_correct] The statement's bounds, for one test
-    case. The statement also says the vertices are those of a simple
-    polygon ; the shoelace sum does not need it, so it is not
-    stated. *)
+(** [@inside signed_area2_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list Z) : Prop := {
   (* 3 <= n <= 1000 *)
@@ -109,8 +107,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer : the shoelace sum.] The answer :
-    the shoelace sum. *)
+(** [@requirement]
+    The output is twice the polygon's signed area, positive for counterclockwise order
+    and negative for clockwise order. *)
 Definition signed_area2_spec
   (x_coordinates y_coordinates : list Z)
     (output : Z) : Prop :=
@@ -118,7 +117,8 @@ Definition signed_area2_spec
 
 (** ** Interface *)
 
-(** The [signed_area2] program on machine values.
+(** Compute twice a polygon's signed area: positive for counterclockwise vertex order and
+    negative for clockwise order.
     - Input [x_coordinates]:
     - Input [y_coordinates]:
     - Output [output]: *)

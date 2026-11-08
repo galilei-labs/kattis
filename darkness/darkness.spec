@@ -10,6 +10,8 @@
 
     [@kattis darkness]
     - Difficulty: 6.0
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 30 rows and columns; bulb strengths are digits 0 to 9.
@@ -18,7 +20,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Light threshold, source height, grid dimensions, then one string of light-strength digits per row.
+    - Output convention: A single integer giving the minimum barrier cost. *)
 (* Input:
 9
 1
@@ -168,7 +171,7 @@ Definition cost (min_light ceiling_height : N) club
      else 0)
      (N.to_nat (cols club))) (N.to_nat (rows club - 1)).
 
-(** [@inside darkness_correct] The statement's bounds. *)
+(** [@inside darkness_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (min_light ceiling_height : N)
   (club : list (list N))
     : Prop := {
@@ -192,11 +195,9 @@ Record valid_input (min_light ceiling_height : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum cost
-    of keeping the darkness out.] The answer is the
-    least cost of a fencing that fences out the dark
-    cells: some such fencing costs exactly output, and
-    none costs less. *)
+(** [@requirement]
+    The output is the minimum total barrier cost separating every insufficiently lit
+    cell from the grid boundary. *)
 Definition darkness_spec (min_light ceiling_height : N) club
     (output : N) : Prop :=
   (exists h_fences v_fences,
@@ -212,7 +213,10 @@ Definition darkness_spec (min_light ceiling_height : N) club
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** On a grid, each cell receives light from all bulbs, with contribution s / (dr^2 + dc^2 +
+    h^2) for bulb strength s and height h. Find the cheapest barriers separating cells
+    below a threshold from the boundary. A barrier between adjacent cells costs 43 if
+    both are sufficiently lit, and 11 otherwise.
     - Input [min_light]:
     - Input [ceiling_height]:
     - Input [club]:

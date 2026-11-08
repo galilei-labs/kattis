@@ -146,10 +146,7 @@ let fillable_core k g =
 let fillable_impl =
   fillable_core
 
-module Knapsack2Impl =
- struct
-  (** val fillable : uint -> uint Marray.t -> bool **)
+(** val fillable : uint -> uint Marray.t -> bool **)
 
-  let fillable =
-    fillable_impl
- end
+let fillable =
+  fillable_impl

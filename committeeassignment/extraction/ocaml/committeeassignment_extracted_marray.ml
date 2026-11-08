@@ -198,10 +198,7 @@ let committees_impl _ y z =
   let p0 = if ltb p (Uint63.of_int (1)) then (Uint63.of_int (1)) else p in
   deepen tbl p p0 (Uint63.of_int (1)) (make p0 (Uint63.of_int (0)))
 
-module CommitteeassignmentImpl =
- struct
-  (** val committees : uint -> string Marray.t -> string Marray.t -> uint **)
+(** val committees : uint -> string Marray.t -> string Marray.t -> uint **)
 
-  let committees =
-    committees_impl
- end
+let committees =
+  committees_impl

@@ -867,12 +867,9 @@ let timing_impl xt xu xs xd xf =
        if fcheck b o then o else timing_exact xt xu xs xd xf
   else timing_exact xt xu xs xd xf
 
-module TimingImpl =
- struct
-  (** val timing :
-      uint -> Float64.t Marray.t -> uint Marray.t -> uint Marray.t ->
-      Float64.t Marray.t -> Float64.t **)
+(** val timing :
+    uint -> Float64.t Marray.t -> uint Marray.t -> uint Marray.t -> Float64.t
+    Marray.t -> Float64.t **)
 
-  let timing =
-    timing_impl
- end
+let timing =
+  timing_impl

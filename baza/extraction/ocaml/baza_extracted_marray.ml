@@ -462,10 +462,7 @@ let baza_impl db qs =
   answer qs q b.b_T b.b_cnt b.b_end n (make q (Uint63.of_int (0)))
     (Uint63.of_int (0))
 
-module BazaImpl =
- struct
-  (** val baza : string Marray.t -> string Marray.t -> uint Marray.t **)
+(** val baza : string Marray.t -> string Marray.t -> uint Marray.t **)
 
-  let baza =
-    baza_impl
- end
+let baza =
+  baza_impl

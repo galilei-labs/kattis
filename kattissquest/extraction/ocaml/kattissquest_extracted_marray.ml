@@ -362,10 +362,7 @@ let kattissquest_impl x =
     (make n (Uint63.of_int (0))) (make u (Uint63.of_int (0)))
     (make q (Uint63.of_int (0))) (Uint63.of_int (0))
 
-module KattissquestImpl =
- struct
-  (** val kattissquest : command Marray.t -> uint Marray.t **)
+(** val kattissquest : command Marray.t -> uint Marray.t **)
 
-  let kattissquest =
-    kattissquest_impl
- end
+let kattissquest =
+  kattissquest_impl

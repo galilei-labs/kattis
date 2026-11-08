@@ -6,7 +6,7 @@
     value is larger than the later value.
 
     [@kattis ultraquicksort]
-    - Difficulty: 3.9
+    - Difficulty: 4.0
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Sequence length, followed by one integer value per line.
+    - Output convention: A single integer giving the inversion count. *)
 (* Input:
 5
 9
@@ -63,7 +64,7 @@ Fixpoint inv_list (values : list N) : nat :=
     %nat
   end.
 
-(** [@inside inversions_correct] The statement's bounds. *)
+(** [@inside inversions_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : list N) : Prop := {
   (* 1 <= n <= 500000 *)
   vi_length : 1 <= len sequence <= 5 * 10 ^ 5;
@@ -76,9 +77,9 @@ Record valid_input (sequence : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Count inversions: pairs of
-    positions whose values appear in decreasing order.]
-    The result is the number of [inversions]. *)
+(** [@requirement]
+    The output counts index pairs for which the earlier value is strictly greater than
+    the later value. *)
 Definition inversions_spec
   (sequence : list N)
   (output : N)
@@ -87,8 +88,8 @@ Definition inversions_spec
 
 (** ** Interface *)
 
-(** Count [inversions]: pairs of positions whose values
-    appear in decreasing order.
+(** Count inversions in a sequence: pairs of positions where the earlier value is larger
+    than the later value.
     - Input [sequence]:
     - Output [output]: *)
 Program inversions : array uint -> uint.

@@ -8,13 +8,16 @@
 
     [@kattis canvas]
     - Difficulty: 3.5
+    - CPU time limit: 2 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100,000 items; each weight from 1 to 100,000. *)
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count; each case gives a weight count followed by the weights.
+    - Output convention: One minimum total splitting cost per case. *)
 (* Input:
 2
 3
@@ -168,8 +171,7 @@ Definition ink_spent (sizes : list N) (ink : N) : Prop :=
     paints sizes place (fun seen => seen = white)
       (fun _ => white) ink.
 
-(** [@inside canvas_correct] The statement's bounds, for
-    one test case. *)
+(** [@inside canvas_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sizes : list N) : Prop := {
   (* 1 <= N_i <= 100 000 : number of canvasses in the test
     case *)
@@ -181,9 +183,9 @@ Record valid_input (sizes : list N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return the minimum ink
-    needed.] The answer : an amount of ink some painting
-    spends, and no painting spends less. *)
+(** [@requirement]
+    The output is the minimum total cost of recursively splitting the weighted items
+    into singletons, charging the total weight of each group split. *)
 Definition canvas_spec (sizes : list N)
   (output : N) : Prop :=
   ink_spent sizes output /\
@@ -191,7 +193,9 @@ Definition canvas_spec (sizes : list N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Repeatedly split a group of weighted items into two groups, paying the group's total
+    weight for each split. Find the minimum cost of separating all items into
+    singletons.
     - Input [sizes]:
     - Output [output]: *)
 Program canvas : array uint -> uint.

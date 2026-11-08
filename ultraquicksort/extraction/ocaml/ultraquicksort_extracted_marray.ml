@@ -100,10 +100,7 @@ let inversions_impl a =
     (msort true (Uint63.of_int (0)) n (copy a) (make n (Uint63.of_int (0)))
       (Uint63.of_int (0)))
 
-module UltraquicksortImpl =
- struct
-  (** val inversions : uint Marray.t -> uint **)
+(** val inversions : uint Marray.t -> uint **)
 
-  let inversions =
-    inversions_impl
- end
+let inversions =
+  inversions_impl

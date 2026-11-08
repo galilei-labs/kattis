@@ -8,6 +8,8 @@
 
     [@kattis dimensionalanalysis]
     - Difficulty: 8.1
+    - CPU time limit: 4 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100 equations over at most 100 quantities.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Equation count, followed by multiplicative equations using names, 1, *, / and =.
+    - Output convention: invalid if any quantity is forced to be dimensionless; valid otherwise. *)
 (* Input:
 5
 velocity * time = length
@@ -101,8 +104,7 @@ Definition free_quantity (equations : list (list Z))
 Definition abs_sum (row : list Z) : Z :=
   fold_right (fun entry total => Z.abs entry + total) 0 row.
 
-(** [@inside valid_correct] The statement's bounds, for
-    the one test case. *)
+(** [@inside valid_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (quantity_count : N) (equations : list
   (list Z))
     : Prop := {
@@ -120,9 +122,9 @@ Record valid_input (quantity_count : N) (equations : list
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether every
-    quantity can remain dimensional.] valid exactly when
-    every quantity can have a dimension. *)
+(** [@requirement]
+    The output is true exactly when no individual quantity is forced to be dimensionless
+    by the equations. *)
 Definition valid_spec (quantity_count : N)
   (equations : list (list Z))
     (output : bool) : Prop :=
@@ -137,7 +139,8 @@ Definition valid_spec (quantity_count : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Given multiplicative equations between quantities, decide whether any quantity is forced
+    to be dimensionless. Each equation is represented by its signed exponent vector.
     - Input [quantity_count]:
     - Input [equations]:
     - Output [output]: *)

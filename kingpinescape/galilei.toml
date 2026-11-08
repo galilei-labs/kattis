@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["kingpinescape_implem.v", "kingpinescape.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/kingpinescape_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/kingpinescape_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "kingpinescape_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/kingpinescape_extracted_marray.ml"
+Rust = ""

@@ -127,10 +127,7 @@ let magic_impl n a b c x y =
   let r = if ltb m k then r1 else pass (Uint63.of_int (16)) n r1 hi g in
   hash_loop x y n (Uint63.of_int (0)) (Uint63.of_int (0)) r
 
-module MagicsequenceImpl =
- struct
-  (** val magic : uint -> uint -> uint -> uint -> uint -> uint -> uint **)
+(** val magic : uint -> uint -> uint -> uint -> uint -> uint -> uint **)
 
-  let magic =
-    magic_impl
- end
+let magic =
+  magic_impl

@@ -14,10 +14,11 @@ collapsible = ["Definitions"]
 files = ["canvas_implem.v", "canvas.spec"]
 
 [extraction]
-languages = ["OCaml"]
+languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/canvas_extracted_marray.ml", "extraction/ocaml/marray.ml", "extraction/ocaml/README.txt"]
+files = ["extraction/ocaml/canvas_extracted_marray.ml", "extraction/ocaml/marray.ml"]
 archive = "canvas_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/canvas_extracted_marray.ml"
+Rust = ""

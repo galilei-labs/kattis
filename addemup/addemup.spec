@@ -9,6 +9,8 @@
 
     [@kattis addemup]
     - Difficulty: 5.5
+    - CPU time limit: 2 seconds
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 to 100,000 cards; values from 1 to 100,000,000.
@@ -16,7 +18,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Card count and target sum, followed by the card values.
+    - Output convention: YES if two cards can produce the target sum; NO otherwise. *)
 (* Input:
 3 66
 15 21 22
@@ -53,8 +56,7 @@ Open Scope N_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The digit digit, shown upside down, reads rotated
-    (the font of the statement). *)
+(** The digit [digit] becomes [rotated] under the permitted 180-degree rotation. *)
 Definition rotates (digit rotated : N) : Prop :=
   In (digit, rotated) [(0, 0); (1, 1); (2, 2); (5, 5);
     (6, 9); (8, 8); (9, 6)].
@@ -95,7 +97,7 @@ Definition winnable (desired_sum : N)
     shows (nth (N.to_nat j) cards 0) shown_j /\
     shown_i + shown_j = desired_sum.
 
-(** [@inside addemup_correct] The statement's bounds. *)
+(** [@inside addemup_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (desired_sum : N)
   (cards : list N) : Prop := {
   (* 1 <= n <= 100 000, n the number of cards *)
@@ -109,9 +111,9 @@ Record valid_input (desired_sum : N)
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must decide whether two
-    different cards can show the desired sum.] YES
-    (true) exactly when the game can be won. *)
+(** [@requirement]
+    The output is true exactly when two distinct cards, each in an allowed orientation,
+    sum to the target. *)
 Definition addemup_spec (desired_sum : N) (cards : list N)
   (output : bool)
     : Prop :=
@@ -122,7 +124,9 @@ Definition addemup_spec (desired_sum : N) (cards : list N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Decide whether two distinct numbered cards can sum to a target, optionally rotating
+    either card by 180 degrees. Rotation reverses the digits, swaps 6 and 9, preserves
+    0, 1, 2, 5 and 8, and is invalid for 3, 4 or 7.
     - Input [desired_sum]:
     - Input [cards]:
     - Output [output]: *)

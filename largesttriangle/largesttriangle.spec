@@ -16,7 +16,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Point count, followed by integer coordinate pairs.
+    - Output convention: Maximum triangle area, with absolute error at most $10^{-5}$. *)
 (* Input:
 7
 0 0
@@ -92,7 +93,7 @@ Definition is_largest_area
      (area x_coordinates y_coordinates i j k <=
        largest_area)%R).
 
-(** [@inside largest_triangle_correct] The statement's bounds. *)
+(** [@inside largest_triangle_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list N) : Prop := {
   (* 3 <= N <= 5 000 *)
@@ -109,9 +110,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short The answer output: within an absolute error
-    of at most 10^-5 of    the largest area.] The answer output:
-    within an absolute error of at most 10^-5 of the largest area. *)
+(** [@requirement]
+    The output approximates the maximum area of a triangle formed by input points, with
+    absolute error at most $10^{-5}$. *)
 Definition largest_triangle_spec
   (x_coordinates y_coordinates : list N)
     (output : R) : Prop :=
@@ -122,7 +123,8 @@ Definition largest_triangle_spec
 
 (** ** Interface *)
 
-(** The [largest_triangle] program on machine values.
+(** Find the maximum area of a triangle formed by three input points, returning zero if all
+    such triangles are degenerate.
     - Input [x_coordinates]:
     - Input [y_coordinates]:
     - Output [output]: *)

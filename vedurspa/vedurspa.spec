@@ -8,7 +8,7 @@
     fewer than two observations.
 
     [@kattis vedurspa]
-    - Difficulty: 1.9
+    - Difficulty: 9.6
     - CPU time limit: 1 second
     - Memory limit: 1024 MB
 
@@ -20,8 +20,10 @@
 
 (** ** Examples *)
 
-(** Kattis input/output format example. The sample prediction is not a
-    reference result for the least-squares method specified here. *)
+(** - Input convention: Observation/prediction counts, location/time metadata and four measurement columns; - marks missing data.
+    - Output convention: One row per prediction: temperature, wind direction, wind speed and humidity; - omits a value.
+
+    This sample illustrates the text format; its predictions are not reference results for the specified least-squares method. *)
 (* Input:
 72 1
 63.9829 22.600517 50.9 2024-02-26 16:00:00
@@ -217,13 +219,7 @@ Definition forecast (lower upper error_bound : R)
             )
           <= error_bound.
 
-(** [@inside vedurspa_correct] The statement's
-    guarantees. The header line (position, height, date,
-    time) does not enter the contract, and is left to the
-    harness. "Exactly one digit after the decimal point"
-    is a property of the input text, gone once parsed.
-    The statement bounds neither n nor
-    [prediction_count]. *)
+(** [@inside vedurspa_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (temperatures : list (option R))
     (wind_directions : list (option N))
       (wind_speeds : list (option R))
@@ -259,14 +255,10 @@ Definition tol : R := / 1000000.
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Forecast hourly weather
-    measurements using least-squares lines, respecting
-    each measurement range and preserving missing
-    forecasts when too few observations exist.] The four
-    [forecast] columns. An [output] of [prediction_count]
-    cells exists only for [prediction_count] <=
-    PArray.max_length = 4194303; beyond, nothing is
-    required. *)
+(** [@requirement]
+    For prediction counts at most 4,194,303, each output column follows the specified
+    least-squares fit, clamping, rounding and missing-data rules within the stated
+    tolerances. Larger prediction counts are not constrained by this specification. *)
 Definition vedurspa_spec
   (temperatures : list (option R))
   (wind_directions : list (option N))
@@ -294,10 +286,9 @@ Definition vedurspa_spec
 
 (** ** Interface *)
 
-(** Forecast hourly weather measurements using
-    least-squares lines, respecting each measurement
-    range and preserving missing forecasts when too few
-    observations exist.
+(** Extrapolate each column of a time series using a least-squares line, clamping
+    predictions to the column's permitted range and rounding integer-valued columns.
+    Return missing predictions for columns with fewer than two observations.
     - Input [temperatures]:
     - Input [wind_directions]:
     - Input [wind_speeds]:

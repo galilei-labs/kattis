@@ -108,10 +108,7 @@ let tugofwar_impl a =
   let t = item_loop a t0 w k n in
   let b = best_loop t w h k half in (b, (sub s b))
 
-module TugofwarImpl =
- struct
-  (** val tugofwar : uint Marray.t -> uint * uint **)
+(** val tugofwar : uint Marray.t -> uint * uint **)
 
-  let tugofwar =
-    tugofwar_impl
- end
+let tugofwar =
+  tugofwar_impl

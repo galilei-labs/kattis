@@ -8,6 +8,8 @@
 
     [@kattis candydistribution]
     - Difficulty: 4.7
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
 
     **Kattis Bounds**
     - 1 $\le$ K, C $\le$ $10^{9}$.
@@ -15,7 +17,8 @@
 
 (** ** Examples *)
 
-(** Kattis text input and output. *)
+(** - Input convention: Case count, followed by one pair K C per case.
+    - Output convention: A valid bag count, or IMPOSSIBLE, on one line per case. *)
 (* Input:
 5
 10 5
@@ -55,7 +58,7 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** "you will never buy more than 10^9 candy bags" *)
+(** The upper bound of $10^9$ on the bag count. *)
 Definition max_bags : N := 10 ^ 9.
 
 (** Buying bag_count bags of bag_size candies, within
@@ -69,8 +72,7 @@ Definition fair_bags
   exists share : N, 1 <= share
     /\ bag_count * bag_size = kid_count * share + 1.
 
-(** [@inside candydistribution_correct] The statement's
-    bounds, for one test case. *)
+(** [@inside candydistribution_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (kid_count bag_size : N) : Prop := {
   (* "1 <= K, C <= 10^9" *)
   vi_k : 1 <= kid_count <= 10 ^ 9;
@@ -79,10 +81,9 @@ Record valid_input (kid_count bag_size : N) : Prop := {
 
 (** ** Correctness *)
 
-(** [@requirement] [@short must return a valid bag
-    count, or report impossibility.] Some bag_count:
-    bag_count bags are a fair purchase; None: no number
-    of bags is. *)
+(** [@requirement]
+    The output is a positive bag count satisfying the divisibility, positive-share and
+    upper-bound constraints, or None exactly when no such count exists. *)
 Definition candydistribution_spec (kid_count bag_size : N)
   (output : option N) : Prop :=
   match output with
@@ -93,7 +94,8 @@ Definition candydistribution_spec (kid_count bag_size : N)
 
 (** ** Interface *)
 
-(** The machine-level interface.
+(** Given positive integers K and C, find a positive B no greater than 1000000000 such that
+    C * B = K * X + 1 for some positive integer X, or report that no solution exists.
     - Input [kid_count]:
     - Input [bag_size]:
     - Output [output]: *)

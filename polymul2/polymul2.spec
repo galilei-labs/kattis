@@ -6,7 +6,7 @@
     increasing degree order, returning the product in the same order.
 
     [@kattis polymul2]
-    - Difficulty: 4.5
+    - Difficulty: 4.4
     - CPU time limit: 3 seconds
     - Memory limit: 1024 MB
 
@@ -16,6 +16,8 @@
 
 (** ** Examples *)
 
+(** - Input convention: A function call with two coefficient lists, each in increasing degree order.
+    - Output convention: Product coefficients in increasing degree order, including zero coefficients. *)
 (* Kattis sample : first_coeffs = [1; 0; 5] (1 + 5 x^2)
    and second_coeffs = [0; -2] (-2 x). The product has 3
    + 2 - 1 = 4 coefficients, output = [0; -2; 0; -10] (-2
@@ -72,8 +74,7 @@ Definition is_product
     eval product_coeffs point =
     eval first_coeffs point * eval second_coeffs point.
 
-(** [@inside polymul_correct] The statement's bounds, for
-    the one test case. *)
+(** [@inside polymul_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (first_coeffs second_coeffs : list Z) : Prop := {
   (* 1 <= n <= 131071 = 2^17 - 1 : a polynomial of degree
@@ -98,9 +99,9 @@ Record valid_input
 
 (** ** Correctness *)
 
-(** [@requirement] [@short Multiply two polynomials whose
-    integer coefficients are listed from lowest to
-    highest degree.] The result is the product. *)
+(** [@requirement]
+    The output contains the coefficients of the product polynomial in increasing degree
+    order. *)
 Definition polymul_spec
   (first_coeffs second_coeffs : list Z)
   (output : list Z)
@@ -109,8 +110,8 @@ Definition polymul_spec
 
 (** ** Interface *)
 
-(** Multiply two polynomials whose integer coefficients
-    are listed from lowest to highest degree.
+(** Multiply two integer polynomials given by their coefficients in increasing degree order,
+    returning the product in the same order.
     - Input [first_coeffs]:
     - Input [second_coeffs]:
     - Output [output]: *)

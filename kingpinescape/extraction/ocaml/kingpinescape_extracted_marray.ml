@@ -173,12 +173,9 @@ let kingpin_impl n _ ea eb =
   out_loop lv a c (Uint63.of_int (0)) (make c (Uint63.of_int (0)))
     (make c (Uint63.of_int (0)))
 
-module KingpinescapeImpl =
- struct
-  (** val kingpin_escape :
-      uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t * uint
-      Marray.t **)
+(** val kingpin_escape :
+    uint -> uint -> uint Marray.t -> uint Marray.t -> uint Marray.t * uint
+    Marray.t **)
 
-  let kingpin_escape =
-    kingpin_impl
- end
+let kingpin_escape =
+  kingpin_impl
