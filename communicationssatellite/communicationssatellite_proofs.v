@@ -37,7 +37,7 @@
      relatively otherwise.  Nothing is computed exactly in reals at run
      time; the only exact values are the int squared distance and radius sum. *)
 
-From Speck Require Import Prelude.
+From Communicationssatellite.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Import FinFun.
 From Stdlib Require Sint63.
@@ -51,7 +51,7 @@ Import ListNotations.
 
 Open Scope R_scope.
 
-Require Export communicationssatellite_implem.
+From Communicationssatellite Require Export communicationssatellite_implem.
 Open Scope R_scope.
 
 

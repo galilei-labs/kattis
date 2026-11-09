@@ -21,14 +21,14 @@
    Termination: both loops recurse on an erased [Acc (Zwf 0) (gap m i)]
    proof, the template's device.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Canonical.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
 
 Unset Lia Cache.
 
-Require Export canonical_implem.
+From Canonical Require Export canonical_implem.
 
 
 

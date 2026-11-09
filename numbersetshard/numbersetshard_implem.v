@@ -2,7 +2,7 @@
    Correctness proofs are in numbersetshard_proofs.v. *)
 (* Implementation of numbersetshard (numbersetshard.spec). *)
 
-From Speck Require Import Prelude.
+From Numbersetshard.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Znumtheory Relations.

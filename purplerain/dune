@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Purplerain)
+ (modules purplerain_implem purplerain_proofs)
+ (theories Purplerain.spec Stdlib stdpp StdGalilei))

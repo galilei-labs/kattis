@@ -10,7 +10,7 @@
    Termination: erased Acc (Zwf 0) proofs on Z measures, as in the
    template.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Booking.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation Sorted.
 Import ListNotations.
@@ -20,7 +20,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export booking_implem.
+From Booking Require Export booking_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

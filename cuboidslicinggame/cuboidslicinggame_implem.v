@@ -1,6 +1,6 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in cuboidslicinggame_proofs.v. *)
-From Speck Require Import Prelude.
+From Cuboidslicinggame.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Btauto.
 Import ListNotations.

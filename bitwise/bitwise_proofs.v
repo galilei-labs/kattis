@@ -1,5 +1,5 @@
 (* Correctness proofs for bitwise_implem.v. *)
-From Speck Require Import Prelude.
+From Bitwise.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation.
 Import ListNotations.
@@ -7,7 +7,7 @@ Import ListNotations.
 Open Scope Z_scope.
 Unset Lia Cache.
 
-Require Export bitwise_implem.
+From Bitwise Require Export bitwise_implem.
 Open Scope Z_scope.
 
 

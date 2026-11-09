@@ -17,7 +17,7 @@
    the main loop on an erased [Acc (Zwf 0) (gap n j)] proof, the
    template's device.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Bst.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorting.Sorted.
@@ -28,7 +28,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export bst_implem.
+From Bst Require Export bst_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Magicsequence)
+ (modules magicsequence_implem magicsequence_proofs)
+ (theories Magicsequence.spec Stdlib stdpp StdGalilei))

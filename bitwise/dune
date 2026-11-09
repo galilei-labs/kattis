@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bitwise)
+ (modules bitwise_implem bitwise_proofs)
+ (theories Bitwise.spec Stdlib stdpp StdGalilei))

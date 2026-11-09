@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Polymul1)
+ (modules polymul1_implem polymul1_proofs)
+ (theories Polymul1.spec Stdlib stdpp StdGalilei))

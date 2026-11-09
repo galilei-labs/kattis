@@ -1,7 +1,7 @@
 (* Correctness proofs for knapsack2_implem.v. *)
 (* Implementation of knapsack2 (knapsack2.spec). *)
 
-From Speck Require Import Prelude.
+From Knapsack2.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -11,7 +11,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export knapsack2_implem.
+From Knapsack2 Require Export knapsack2_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

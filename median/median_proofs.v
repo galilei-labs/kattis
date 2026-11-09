@@ -32,7 +32,7 @@
    the maximum of [0, k) into position k-1 gives the same property at
    k - 1. *)
 
-From Speck Require Import Prelude.
+From Median.spec Require Import Prelude.
 From StdGalilei Require Import repr repr_float.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals.
 From Stdlib Require Import Sorted Permutation ZifyUint63 Lia Lra Zwf.
@@ -45,7 +45,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export median_implem.
+From Median Require Export median_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

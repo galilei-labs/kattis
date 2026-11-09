@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Canonical)
+ (modules canonical_implem canonical_proofs)
+ (theories Canonical.spec Stdlib stdpp StdGalilei))

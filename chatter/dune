@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Chatter)
+ (modules chatter_implem chatter_proofs)
+ (theories Chatter.spec Stdlib stdpp StdGalilei))

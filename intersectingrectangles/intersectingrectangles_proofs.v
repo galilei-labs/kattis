@@ -27,7 +27,7 @@
    insertion loop recurses on an erased [Acc (Zwf 0) (gap n i)] proof, the
    template's device.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Intersectingrectangles.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Reals Sorted.
@@ -39,7 +39,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export intersectingrectangles_implem.
+From Intersectingrectangles Require Export intersectingrectangles_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

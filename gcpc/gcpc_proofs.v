@@ -31,7 +31,7 @@
    keys of the teams 1..n after the first j events, and the rank query
    then counts, through the encoding, the teams with a better score. *)
 
-From Speck Require Import Prelude.
+From Gcpc.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Permutation.
@@ -42,7 +42,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export gcpc_implem.
+From Gcpc Require Export gcpc_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

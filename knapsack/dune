@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Knapsack)
+ (modules knapsack_implem knapsack_proofs)
+ (theories Knapsack.spec Stdlib stdpp StdGalilei))

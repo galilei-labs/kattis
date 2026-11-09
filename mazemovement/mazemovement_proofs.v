@@ -3,7 +3,7 @@
    maximum flow, first phase, on the dense n x n residual table.
    See README.md, section Implementation, for the design and the proof. *)
 
-From Speck Require Import Prelude.
+From Mazemovement.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Bool Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -14,7 +14,7 @@ Open Scope bool_scope.
 
 Unset Lia Cache.
 
-Require Export mazemovement_implem.
+From Mazemovement Require Export mazemovement_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 Open Scope bool_scope.

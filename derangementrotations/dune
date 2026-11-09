@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Derangementrotations)
+ (modules derangementrotations_implem derangementrotations_proofs)
+ (theories Derangementrotations.spec Stdlib stdpp StdGalilei))

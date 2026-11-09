@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Largesttriangle)
+ (modules largesttriangle_implem largesttriangle_proofs)
+ (theories Largesttriangle.spec Stdlib stdpp StdGalilei Flocq))

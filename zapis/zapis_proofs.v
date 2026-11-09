@@ -1,5 +1,5 @@
 (* Correctness proofs for zapis_implem.v. *)
-From Speck Require Import Prelude.
+From Zapis.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray PrimString ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.
@@ -11,7 +11,7 @@ Import ListNotations.
 
 Local Open Scope list_scope.
 
-Require Export zapis_implem.
+From Zapis Require Export zapis_implem.
 Local Open Scope list_scope.
 
 

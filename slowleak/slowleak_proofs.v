@@ -38,7 +38,7 @@
    (double negation, [dn_min]) and be < 2^31 < INF, so Dijkstra would
    have reached home. *)
 
-From Speck Require Import Prelude.
+From Slowleak.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -47,7 +47,7 @@ Open Scope uint63_scope.
 
 Unset Lia Cache.
 
-Require Export slowleak_implem.
+From Slowleak Require Export slowleak_implem.
 Open Scope uint63_scope.
 
 

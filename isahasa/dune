@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Isahasa)
+ (modules isahasa_implem isahasa_proofs)
+ (theories Isahasa.spec Stdlib stdpp StdGalilei))

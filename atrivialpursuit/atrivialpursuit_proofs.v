@@ -1,5 +1,5 @@
 (* Correctness proofs for atrivialpursuit_implem.v. *)
-From Speck Require Import Prelude.
+From Atrivialpursuit.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Znumtheory Permutation.
 Import ListNotations.
@@ -8,7 +8,7 @@ Unset Lia Cache.
 Local Notation length := List.length.
 Open Scope bool_scope.
 
-Require Export atrivialpursuit_implem.
+From Atrivialpursuit Require Export atrivialpursuit_implem.
 Open Scope bool_scope.
 
 

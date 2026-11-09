@@ -14,7 +14,7 @@
    device); the test [p <? n] makes the decrease unconditional (p + 1
    cannot wrap) and, with the contract's bound, keeps p * p exact. *)
 
-From Speck Require Import Prelude.
+From Pascal.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 

@@ -28,7 +28,7 @@
    insertion loop recurses on an erased [Acc (Zwf 0) (gap n i)] proof, the
    template's device.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Intersectingrectangles.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Reals Sorted.

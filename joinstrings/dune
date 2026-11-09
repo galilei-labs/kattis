@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Joinstrings)
+ (modules joinstrings_implem joinstrings_proofs)
+ (theories Joinstrings.spec Stdlib stdpp StdGalilei))

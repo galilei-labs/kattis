@@ -29,7 +29,7 @@
    1, pivot columns solved).  [satisfies_iff] / [free_iff] connect [sol]
    to the spec's [satisfies] / [free_quantity]. *)
 
-From Speck Require Import Prelude.
+From Dimensionalanalysis.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith QArith List Uint63 PArray ZifyUint63 Lia Zwf.
@@ -41,7 +41,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export dimensionalanalysis_implem.
+From Dimensionalanalysis Require Export dimensionalanalysis_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 
@@ -322,7 +322,8 @@ Proof.
   intros L r' r s d g p f H. unfold rowsum. apply sumq_lin.
   intros x Hx. pose proof (injZ_lin _ _ _ _ _ _ (H x Hx)) as E.
   setoid_replace (inject_Z g * (inject_Z (r' x) * d x))%Q
-    with ((inject_Z g * inject_Z (r' x)) * d x)%Q by ring.
+    with ((inject_Z g * inject_Z (r' x)) * d x)%Q
+    using relation Qeq by ring.
   rewrite E. ring.
 Qed.
 
@@ -390,7 +391,8 @@ Proof.
       apply (Qmult_integral_l (inject_Z (A s c))); [apply injZ_nz; exact Hp|].
       rewrite <- (Qplus_0_r (inject_Z (A s c) * _)).
       setoid_replace (inject_Z (A s c) * rowsum (A i) d (Z.to_nat m) + 0)%Q
-        with (inject_Z (A s c) * rowsum (A i) d (Z.to_nat m) - inject_Z f * 0)%Q by ring.
+        with (inject_Z (A s c) * rowsum (A i) d (Z.to_nat m) - inject_Z f * 0)%Q
+        using relation Qeq by ring.
       rewrite <- R. ring.
     + (* sol A -> sol A' *)
       destruct (Z.eq_dec i s) as [E | E].
@@ -611,7 +613,7 @@ Proof.
         intro Z0. apply (injZ_nz _ Hak).
         setoid_replace (inject_Z (A i k))
           with (- (- inject_Z (A i k) / inject_Z (A i (piv i))) * inject_Z (A i (piv i)))%Q
-          by (field; apply injZ_nz; exact Hnz).
+          using relation Qeq by (field; apply injZ_nz; exact Hnz).
         rewrite Z0. ring.
     + exists (dk A used piv n j). split.
       * apply Hs. apply build_sol; [lia | exact HP | lia |].

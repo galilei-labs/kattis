@@ -11,7 +11,7 @@
    Termination: erased Acc (Zwf 0) proofs on Z measures, as in the
    template.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Booking.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation Sorted.
 Import ListNotations.

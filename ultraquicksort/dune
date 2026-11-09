@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Ultraquicksort)
+ (modules ultraquicksort_implem ultraquicksort_proofs)
+ (theories Ultraquicksort.spec Stdlib stdpp StdGalilei))

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Median)
+ (modules median_implem median_proofs)
+ (theories Median.spec Stdlib stdpp StdGalilei Flocq))

@@ -23,7 +23,7 @@
    template's device): [scan] on n - pos, [inner] on rem.  No nat, no Z
    in the code. *)
 
-From Speck Require Import Prelude.
+From Antiarithmetic.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.

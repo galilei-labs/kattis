@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Cuboidslicinggame)
+ (modules cuboidslicinggame_implem cuboidslicinggame_proofs)
+ (theories Cuboidslicinggame.spec Stdlib stdpp StdGalilei))

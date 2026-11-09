@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Relatives)
+ (modules relatives_implem relatives_proofs)
+ (theories Relatives.spec Stdlib stdpp StdGalilei))

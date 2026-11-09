@@ -1,5 +1,5 @@
 (* Correctness proofs for arbitrage_implem.v. *)
-From Speck Require Import Prelude.
+From Arbitrage.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith QArith Qreals List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Sint63.
 From StdGalilei Require Import repr repr_float.
@@ -9,7 +9,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export arbitrage_implem.
+From Arbitrage Require Export arbitrage_implem.
 Open Scope uint63_scope.
 
 

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Water)
+ (modules water_implem water_proofs)
+ (theories Water.spec Stdlib stdpp StdGalilei))

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Helpfulcurrents)
+ (modules helpfulcurrents_implem helpfulcurrents_proofs)
+ (theories Helpfulcurrents.spec Stdlib stdpp StdGalilei))

@@ -31,7 +31,7 @@
    [cont_spec], [inner_spec], [sweep_spec]: after the sweep, the best pair
    is no farther, exactly, than any pair of positions a < c. *)
 
-From Speck Require Import Prelude.
+From Closestpair1.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bst)
+ (modules bst_implem bst_proofs)
+ (theories Bst.spec Stdlib stdpp StdGalilei))

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Convexhull)
+ (modules convexhull_implem convexhull_proofs)
+ (theories Convexhull.spec Stdlib stdpp StdGalilei))

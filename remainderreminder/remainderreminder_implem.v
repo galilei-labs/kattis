@@ -20,7 +20,7 @@
    Termination: [scan] on an erased [Acc (Zwf 0) (gap m x)], [egcd] on an
    erased [Acc (Zwf 0) (φ r1)] (the remainder decreases); no nat, no fuel. *)
 
-From Speck Require Import Prelude.
+From Remainderreminder.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith Uint63 ZifyUint63 Lia Zwf.
 

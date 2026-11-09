@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Cudak)
+ (modules cudak_implem cudak_proofs)
+ (theories Cudak.spec Stdlib stdpp StdGalilei))

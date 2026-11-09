@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Longincsubseq)
+ (modules longincsubseq_implem longincsubseq_proofs)
+ (theories Longincsubseq.spec Stdlib stdpp StdGalilei))

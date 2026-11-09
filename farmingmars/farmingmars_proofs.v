@@ -27,7 +27,7 @@
    functions [cz] of the window, and ge[t] > 0 iff some pH value has
    count >= t in the acres l..r (the spec's [usable]). *)
 
-From Speck Require Import Prelude.
+From Farmingmars.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 Import ListNotations.
@@ -35,7 +35,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export farmingmars_implem.
+From Farmingmars Require Export farmingmars_implem.
 Open Scope uint63_scope.
 
 

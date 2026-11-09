@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Ada)
+ (modules ada_implem ada_proofs)
+ (theories Ada.spec Stdlib stdpp StdGalilei))

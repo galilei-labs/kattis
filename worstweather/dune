@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Worstweather)
+ (modules worstweather_implem worstweather_proofs)
+ (theories Worstweather.spec Stdlib stdpp StdGalilei))

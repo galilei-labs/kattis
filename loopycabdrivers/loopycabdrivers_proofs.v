@@ -1,7 +1,7 @@
 (* Correctness proofs for loopycabdrivers_implem.v. *)
 (* Implementation of loopycabdrivers (loopycabdrivers.spec). *)
 
-From Speck Require Import Prelude.
+From Loopycabdrivers.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Relations Sorting Permutation.
@@ -13,7 +13,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export loopycabdrivers_implem.
+From Loopycabdrivers Require Export loopycabdrivers_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

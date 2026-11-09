@@ -26,13 +26,13 @@
    [isect_m_repr] proves that the machine function computes it word for
    word (Sint63.to_Z_add/sub/mul under the bounds of valid_input). *)
 
-From Speck Require Import Prelude.
+From Segmentintersection.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith Lia Bool Uint63.
 From Stdlib Require Sint63.
 Open Scope Z_scope.
 
-Require Export segmentintersection_implem.
+From Segmentintersection Require Export segmentintersection_implem.
 Open Scope Z_scope.
 
 

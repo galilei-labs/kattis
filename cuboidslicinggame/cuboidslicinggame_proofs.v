@@ -1,12 +1,12 @@
 (* Correctness proofs for cuboidslicinggame_implem.v. *)
-From Speck Require Import Prelude.
+From Cuboidslicinggame.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Btauto.
 Import ListNotations.
 
 Unset Lia Cache.
 
-Require Export cuboidslicinggame_implem.
+From Cuboidslicinggame Require Export cuboidslicinggame_implem.
 
 
 

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Joggers)
+ (modules joggers_implem joggers_proofs)
+ (theories Joggers.spec Stdlib stdpp StdGalilei))

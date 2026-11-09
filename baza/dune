@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Baza)
+ (modules baza_implem baza_proofs)
+ (theories Baza.spec Stdlib stdpp StdGalilei))

@@ -24,7 +24,7 @@
    [Acc (Zwf 0) _] proof (the template's device).  No nat, no Z, no list in
    the code. *)
 
-From Speck Require Import Prelude.
+From Tugofwar.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.
@@ -34,7 +34,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export tugofwar_implem.
+From Tugofwar Require Export tugofwar_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

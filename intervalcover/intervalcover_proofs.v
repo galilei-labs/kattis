@@ -20,7 +20,7 @@
    gives a fixpoint of the chain below b (or a = point uncovered), hence
    no covering at all. *)
 
-From Speck Require Import Prelude.
+From Intervalcover.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf Sorting.Sorted Sorting.Permutation.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core.
@@ -29,7 +29,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export intervalcover_implem.
+From Intervalcover Require Export intervalcover_implem.
 Open Scope uint63_scope.
 
 

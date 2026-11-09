@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Cold)
+ (modules cold_implem cold_proofs)
+ (theories Cold.spec Stdlib stdpp StdGalilei))

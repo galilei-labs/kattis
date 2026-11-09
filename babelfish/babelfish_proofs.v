@@ -30,7 +30,7 @@
    Termination: every loop recurses structurally on an erased
    [Acc (Zwf 0) (gap m i)] proof, as in template/polymul1. *)
 
-From Speck Require Import Prelude.
+From Babelfish.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString PString String Ascii.
@@ -41,7 +41,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export babelfish_implem.
+From Babelfish Require Export babelfish_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

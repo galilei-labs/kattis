@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Segmentintersection)
+ (modules segmentintersection_implem segmentintersection_proofs)
+ (theories Segmentintersection.spec Stdlib stdpp StdGalilei))

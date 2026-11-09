@@ -1,5 +1,5 @@
 (* Correctness proofs for knigsoftheforest_implem.v. *)
-From Speck Require Import Prelude.
+From Knigsoftheforest.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import FinFun.
@@ -11,7 +11,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export knigsoftheforest_implem.
+From Knigsoftheforest Require Export knigsoftheforest_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

@@ -23,7 +23,7 @@
    agrees on X1..Xn with the mask whose bit i-1 is v i ([mask_exists]),
    which is below 2^n, and the literals only mention X1..Xn. *)
 
-From Speck Require Import Prelude.
+From Satisfiability.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.

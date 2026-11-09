@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Selfbalancingbst)
+ (modules selfbalancingbst_implem selfbalancingbst_proofs)
+ (theories Selfbalancingbst.spec Stdlib stdpp StdGalilei))

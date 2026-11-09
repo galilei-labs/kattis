@@ -21,7 +21,7 @@
    array and the deque are threaded linearly, allocated once before the
    sweeps; the input array is only read. *)
 
-From Speck Require Import Prelude.
+From Nonnegpartsums.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
@@ -32,7 +32,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export nonnegpartsums_implem.
+From Nonnegpartsums Require Export nonnegpartsums_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

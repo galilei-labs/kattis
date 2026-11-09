@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Farmingmars)
+ (modules farmingmars_implem farmingmars_proofs)
+ (theories Farmingmars.spec Stdlib stdpp StdGalilei Flocq))

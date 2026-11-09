@@ -24,7 +24,7 @@
    [Delta^0 f m; ...; Delta^n f m] is mapped by [step] to the same vector
    at m+1, so i iterations give f(i) at the head. *)
 
-From Speck Require Import Prelude.
+From Plot.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.

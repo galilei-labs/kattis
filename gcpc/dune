@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Gcpc)
+ (modules gcpc_implem gcpc_proofs)
+ (theories Gcpc.spec Stdlib stdpp StdGalilei))

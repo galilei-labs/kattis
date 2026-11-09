@@ -12,7 +12,7 @@
    Termination: erased Acc (Zwf 0) on Z measures, as in the template.  No
    nat, no lists, flat arrays only. *)
 
-From Speck Require Import Prelude.
+From Palindromes.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63 String Ascii PrimString.

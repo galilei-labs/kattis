@@ -2,7 +2,7 @@
    Correctness proofs are in fulltank_proofs.v. *)
 (* Implementation of fulltank (fulltank.spec). *)
 
-From Speck Require Import Prelude.
+From Fulltank.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import FinFun.

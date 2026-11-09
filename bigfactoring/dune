@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bigfactoring)
+ (modules bigfactoring_implem bigfactoring_proofs)
+ (theories Bigfactoring.spec Stdlib stdpp StdGalilei))

@@ -2,7 +2,7 @@
 (* Implementation of chatter (chatter.spec): see README.md, section
    Implementation. *)
 
-From Speck Require Import Prelude.
+From Chatter.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Relations Sorted.
@@ -13,7 +13,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export chatter_implem.
+From Chatter Require Export chatter_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

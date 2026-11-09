@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Doublets)
+ (modules doublets_implem doublets_proofs)
+ (theories Doublets.spec Stdlib stdpp StdGalilei))

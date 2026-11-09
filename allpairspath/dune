@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Allpairspath)
+ (modules allpairspath_implem allpairspath_proofs)
+ (theories Allpairspath.spec Stdlib stdpp StdGalilei))

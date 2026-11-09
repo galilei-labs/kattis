@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Numbersetshard)
+ (modules numbersetshard_implem numbersetshard_proofs)
+ (theories Numbersetshard.spec Stdlib stdpp StdGalilei))

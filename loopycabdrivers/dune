@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Loopycabdrivers)
+ (modules loopycabdrivers_implem loopycabdrivers_proofs)
+ (theories Loopycabdrivers.spec Stdlib stdpp StdGalilei))

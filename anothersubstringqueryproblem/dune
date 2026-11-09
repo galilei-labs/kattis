@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Anothersubstringqueryproblem)
+ (modules anothersubstringqueryproblem_implem anothersubstringqueryproblem_proofs)
+ (theories Anothersubstringqueryproblem.spec Stdlib stdpp StdGalilei))

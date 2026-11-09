@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Stringmatching)
+ (modules stringmatching_implem stringmatching_proofs)
+ (theories Stringmatching.spec Stdlib stdpp StdGalilei))

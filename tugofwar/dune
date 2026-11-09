@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Tugofwar)
+ (modules tugofwar_implem tugofwar_proofs)
+ (theories Tugofwar.spec Stdlib stdpp StdGalilei))

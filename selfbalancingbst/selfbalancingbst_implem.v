@@ -30,7 +30,7 @@
    not part of any invariant: the balance is the algorithm's business, the
    contract only needs the contents. *)
 
-From Speck Require Import Prelude.
+From Selfbalancingbst.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.

@@ -36,7 +36,7 @@
    lists of reported positions are abstracted by a relation R in
    [scan_spec], instantiated by [Rcnt] and [Rfill]. *)
 
-From Speck Require Import Prelude.
+From Stringmultimatching.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString String Ascii.

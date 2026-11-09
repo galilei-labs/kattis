@@ -35,7 +35,7 @@
    tentative distance has a heap entry, the frontier edges are relaxed, a
    counter bounds the pops). *)
 
-From Speck Require Import Prelude.
+From Allpairspath.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import Bool ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Psatz.
 From Stdlib Require Sint63.

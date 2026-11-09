@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Basincity)
+ (modules basincity_implem basincity_proofs)
+ (theories Basincity.spec Stdlib stdpp StdGalilei))

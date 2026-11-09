@@ -1,6 +1,6 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in committeeassignment_proofs.v. *)
-From Speck Require Import Prelude.
+From Committeeassignment.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString PString String Ascii.

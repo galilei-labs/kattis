@@ -27,7 +27,7 @@
    interpolation on the first d+1 nodes ([interp]) and the propagation of
    the zero (d+1)-th row to all n values ([propagate]). *)
 
-From Speck Require Import Prelude.
+From Ada.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Reals Lra.

@@ -18,7 +18,7 @@
    Termination: the scan recurses structurally on an erased
    [Acc (Zwf 0) (gap n k)] proof, as in template/polymul1. *)
 
-From Speck Require Import Prelude.
+From Purplerain.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString String.

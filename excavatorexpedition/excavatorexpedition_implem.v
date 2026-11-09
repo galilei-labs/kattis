@@ -27,7 +27,7 @@
    relaxed.  At the end, acyclicity (through a pigeonhole on walks) shows
    that every location was popped. *)
 
-From Speck Require Import Prelude.
+From Excavatorexpedition.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii Relations.

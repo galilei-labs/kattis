@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Addemup)
+ (modules addemup_implem addemup_proofs)
+ (theories Addemup.spec Stdlib stdpp StdGalilei))

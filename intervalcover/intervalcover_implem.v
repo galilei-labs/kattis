@@ -21,7 +21,7 @@
    gives a fixpoint of the chain below b (or a = point uncovered), hence
    no covering at all. *)
 
-From Speck Require Import Prelude.
+From Intervalcover.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf Sorting.Sorted Sorting.Permutation.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.

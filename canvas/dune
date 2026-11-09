@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Canvas)
+ (modules canvas_implem canvas_proofs)
+ (theories Canvas.spec Stdlib stdpp StdGalilei))

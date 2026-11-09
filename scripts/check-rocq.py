@@ -56,8 +56,13 @@ def main():
             (generated / 'Prelude.v').write_text(run(['rocq-speck', 'dump-spec', '--prelude', str(spec)], dest))
             for suffix in ['implem', 'proofs']:
                 shutil.copy2(ROOT / slug / f'{slug}_{suffix}.v', dest)
-            namespace = ['-Q', str(dest), 'Cold'] if slug == 'cold' else []
-            command = ['rocq', 'compile', *flags, *lib_flags, *namespace, '-Q', str(generated), 'Speck']
+            # Keep the checker usable alongside the Dune namespace migration.
+            # Complexity/polymul2 is deliberately left on the legacy layout.
+            logical = slug.capitalize()
+            migrated = (ROOT / slug / 'dune').is_file()
+            namespace = ['-Q', str(dest), logical] if migrated else []
+            prelude_namespace = logical + '.spec' if migrated else 'Speck'
+            command = ['rocq', 'compile', *flags, *lib_flags, *namespace, '-Q', str(generated), prelude_namespace]
             for file in [generated / 'Prelude.v', dest / f'{slug}_implem.v', dest / f'{slug}_proofs.v']:
                 run([*command, str(file)], dest)
             return slug

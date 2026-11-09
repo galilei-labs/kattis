@@ -28,7 +28,7 @@
    invariant [TI]: every inserted pair has an entry reachable along the
    decreasing links from the head of its bucket. *)
 
-From Speck Require Import Prelude.
+From Sumsets.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.

@@ -3,7 +3,8 @@
    arrays.
 
    Build: driven by the Makefile in this directory.
-   Emits cold_extracted_marray.ml and .mli here. Integer extraction uses
+   Emits cold_extracted_marray.ml and .mli under _build, leaving the
+   checked-in snapshots unchanged. Integer extraction uses
    Rocq's default representation; no external Bigint mappings are enabled.
 
    Everything is the header's setting (ExtrOcamlBasic

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Securitybadge)
+ (modules securitybadge_implem securitybadge_proofs)
+ (theories Securitybadge.spec Stdlib stdpp StdGalilei))

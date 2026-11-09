@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Hashing)
+ (modules hashing_implem hashing_proofs)
+ (theories Hashing.spec Stdlib stdpp StdGalilei))

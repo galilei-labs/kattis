@@ -2,7 +2,7 @@
    Correctness proofs are in cardhand_proofs.v. *)
 (* Implementation of cardhand (cardhand.spec). *)
 
-From Speck Require Import Prelude.
+From Cardhand.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import PrimString String Ascii Sorted Permutation.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.

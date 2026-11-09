@@ -29,7 +29,7 @@
    [Acc (Zwf 0) _] proof (the template's device); no nat, no fuel.  Every
    array is threaded linearly. *)
 
-From Speck Require Import Prelude.
+From Isahasa.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 From Stdlib Require Import Relations String Ascii.

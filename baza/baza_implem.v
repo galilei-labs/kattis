@@ -4,7 +4,7 @@
    a counter per node, built once in database order; every query answered
    offline against it.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Baza.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require String Ascii PrimString.

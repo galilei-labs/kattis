@@ -42,7 +42,7 @@
    [deg_loop_spec], [chk_loop_spec], [hier_sim]); [main_run] and
    [catenyms_impl_correct] assemble the contract. *)
 
-From Speck Require Import Prelude.
+From Catenyms.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii Permutation Sorted.
@@ -54,7 +54,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export catenyms_implem.
+From Catenyms Require Export catenyms_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

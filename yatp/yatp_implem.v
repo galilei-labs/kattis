@@ -20,7 +20,7 @@
    walk from u; at the end every node is removed and shortcut turns the
    witness walk into a simple path.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Yatp.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.

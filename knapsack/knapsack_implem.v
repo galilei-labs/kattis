@@ -27,7 +27,7 @@
    last item from any selection).  The machine side ([Proofs] section)
    proves one invariant lemma per loop. *)
 
-From Speck Require Import Prelude.
+From Knapsack.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.

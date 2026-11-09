@@ -20,7 +20,7 @@
    [Acc (Zwf 0) (φ r1)] proof, the shape of the loops of
    template/polymul1/implem-bens-1/polymul1_implem.v. *)
 
-From Speck Require Import Prelude.
+From Generalchineseremainder.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.

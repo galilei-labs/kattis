@@ -2,7 +2,7 @@
    Correctness proofs are in water_proofs.v. *)
 (* Implementation of water (water.spec): incremental Edmonds-Karp. *)
 
-From Speck Require Import Prelude.
+From Water.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Bool Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.

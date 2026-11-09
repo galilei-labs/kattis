@@ -7,7 +7,7 @@
    proofs.  Termination by erased Acc on Z measures; no nat, no Z in the
    extracted code. *)
 
-From Speck Require Import Prelude.
+From Canvas.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Permutation Bool.
@@ -22,7 +22,7 @@ Unset Lia Cache.
 
 Open Scope N_scope.
 
-Require Export canvas_implem.
+From Canvas Require Export canvas_implem.
 Open Scope N_scope.
 
 

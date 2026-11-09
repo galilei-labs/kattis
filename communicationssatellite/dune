@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Communicationssatellite)
+ (modules communicationssatellite_implem communicationssatellite_proofs)
+ (theories Communicationssatellite.spec Stdlib stdpp StdGalilei Flocq))

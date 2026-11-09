@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Suffixsorting)
+ (modules suffixsorting_implem suffixsorting_proofs)
+ (theories Suffixsorting.spec Stdlib stdpp StdGalilei))

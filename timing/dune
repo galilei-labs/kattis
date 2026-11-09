@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Timing)
+ (modules timing_implem timing_proofs)
+ (theories Timing.spec Stdlib stdpp StdGalilei Flocq))

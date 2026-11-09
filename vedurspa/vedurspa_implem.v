@@ -33,7 +33,7 @@
    least-squares line.  [round_err], [clamp_lip]: the output is within
    1/2 (integers) or 2^-21 (floats) of the clamped line. *)
 
-From Speck Require Import Prelude.
+From Vedurspa.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.

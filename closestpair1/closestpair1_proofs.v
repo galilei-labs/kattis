@@ -30,7 +30,7 @@
    [cont_spec], [inner_spec], [sweep_spec]: after the sweep, the best pair
    is no farther, exactly, than any pair of positions a < c. *)
 
-From Speck Require Import Prelude.
+From Closestpair1.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
@@ -39,7 +39,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export closestpair1_implem.
+From Closestpair1 Require Export closestpair1_implem.
 Open Scope uint63_scope.
 
 

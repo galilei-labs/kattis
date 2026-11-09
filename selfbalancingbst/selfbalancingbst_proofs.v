@@ -29,7 +29,7 @@
    not part of any invariant: the balance is the algorithm's business, the
    contract only needs the contents. *)
 
-From Speck Require Import Prelude.
+From Selfbalancingbst.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
@@ -40,7 +40,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export selfbalancingbst_implem.
+From Selfbalancingbst Require Export selfbalancingbst_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

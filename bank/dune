@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bank)
+ (modules bank_implem bank_proofs)
+ (theories Bank.spec Stdlib stdpp StdGalilei))

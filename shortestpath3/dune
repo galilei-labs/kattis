@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Shortestpath3)
+ (modules shortestpath3_implem shortestpath3_proofs)
+ (theories Shortestpath3.spec Stdlib stdpp StdGalilei))

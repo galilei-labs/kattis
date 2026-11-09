@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Dimensionalanalysis)
+ (modules dimensionalanalysis_implem dimensionalanalysis_proofs)
+ (theories Dimensionalanalysis.spec Stdlib stdpp StdGalilei))

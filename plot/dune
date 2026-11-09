@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Plot)
+ (modules plot_implem plot_proofs)
+ (theories Plot.spec Stdlib stdpp StdGalilei))

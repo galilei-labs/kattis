@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Babelfish)
+ (modules babelfish_implem babelfish_proofs)
+ (theories Babelfish.spec Stdlib stdpp StdGalilei))

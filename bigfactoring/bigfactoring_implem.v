@@ -32,7 +32,7 @@
    [Acc (Zwf 0) _] proof (Z measure: the exponent, the cofactor, a gap of
    Uint63 counters), as in template/polymul1. *)
 
-From Speck Require Import Prelude.
+From Bigfactoring.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.

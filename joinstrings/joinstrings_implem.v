@@ -18,7 +18,7 @@
    threaded linearly (each [set] on the latest version); xs, xa, xb are
    only read. *)
 
-From Speck Require Import Prelude.
+From Joinstrings.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.

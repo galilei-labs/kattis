@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Yatp)
+ (modules yatp_implem yatp_proofs)
+ (theories Yatp.spec Stdlib stdpp StdGalilei))

@@ -1,5 +1,5 @@
 (* Correctness proofs for basincity_implem.v. *)
-From Speck Require Import Prelude.
+From Basincity.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -10,7 +10,7 @@ Open Scope bool_scope.
 
 Unset Lia Cache.
 
-Require Export basincity_implem.
+From Basincity Require Export basincity_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 Open Scope bool_scope.

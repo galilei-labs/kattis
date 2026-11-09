@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bracketsequence)
+ (modules bracketsequence_implem bracketsequence_proofs)
+ (theories Bracketsequence.spec Stdlib stdpp StdGalilei))

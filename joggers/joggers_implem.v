@@ -3,7 +3,7 @@
 (* Implementation of joggers (joggers.spec).  See README.md, section
    Implementation, for the algorithm and the structure of the proof. *)
 
-From Speck Require Import Prelude.
+From Joggers.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Reals Lra Permutation.

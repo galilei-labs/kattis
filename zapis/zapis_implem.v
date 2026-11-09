@@ -1,6 +1,6 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in zapis_proofs.v. *)
-From Speck Require Import Prelude.
+From Zapis.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray PrimString ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.

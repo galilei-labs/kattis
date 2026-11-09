@@ -19,7 +19,7 @@
    measure is 2 * (unstamped cells) + stack height, the count of unstamped
    cells being a Prop-side function ([unm]).  See README.md. *)
 
-From Speck Require Import Prelude.
+From Securitybadge.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Relations.

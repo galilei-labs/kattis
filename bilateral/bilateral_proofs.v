@@ -11,7 +11,7 @@
    no smallest invitation contains the friend.  Flat Uint63 arrays only;
    every loop terminates on an erased Acc. *)
 
-From Speck Require Import Prelude.
+From Bilateral.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -21,7 +21,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export bilateral_implem.
+From Bilateral Require Export bilateral_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

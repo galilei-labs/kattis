@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Unionfind)
+ (modules unionfind_implem unionfind_proofs)
+ (theories Unionfind.spec Stdlib stdpp StdGalilei))

@@ -2,7 +2,7 @@
    Correctness proofs are in knapsack2_proofs.v. *)
 (* Implementation of knapsack2 (knapsack2.spec). *)
 
-From Speck Require Import Prelude.
+From Knapsack2.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.

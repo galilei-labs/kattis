@@ -1,5 +1,5 @@
 (* Correctness proofs for committeeassignment_implem.v. *)
-From Speck Require Import Prelude.
+From Committeeassignment.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString PString String Ascii.
@@ -10,7 +10,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export committeeassignment_implem.
+From Committeeassignment Require Export committeeassignment_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

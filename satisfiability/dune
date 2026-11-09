@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Satisfiability)
+ (modules satisfiability_implem satisfiability_proofs)
+ (theories Satisfiability.spec Stdlib stdpp StdGalilei))

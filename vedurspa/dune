@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Vedurspa)
+ (modules vedurspa_implem vedurspa_proofs)
+ (theories Vedurspa.spec Stdlib stdpp StdGalilei Flocq))

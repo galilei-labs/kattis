@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Zapis)
+ (modules zapis_implem zapis_proofs)
+ (theories Zapis.spec Stdlib stdpp StdGalilei))

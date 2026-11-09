@@ -30,7 +30,7 @@
    invariance of [cross] under permutation of either argument.  The count
    is exact because it is below n^2 < 2^63. *)
 
-From Speck Require Import Prelude.
+From Ultraquicksort.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorted Permutation.
@@ -41,7 +41,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export ultraquicksort_implem.
+From Ultraquicksort Require Export ultraquicksort_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

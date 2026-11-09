@@ -1,7 +1,7 @@
 (* Correctness proofs for minspantree_implem.v. *)
 (* Implementation of minspantree (minspantree.spec): Kruskal. *)
 
-From Speck Require Import Prelude.
+From Minspantree.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import FinFun.
@@ -14,7 +14,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export minspantree_implem.
+From Minspantree Require Export minspantree_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

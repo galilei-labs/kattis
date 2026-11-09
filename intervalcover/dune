@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Intervalcover)
+ (modules intervalcover_implem intervalcover_proofs)
+ (theories Intervalcover.spec Stdlib stdpp StdGalilei Flocq))

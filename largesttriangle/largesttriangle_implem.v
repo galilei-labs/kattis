@@ -1,6 +1,6 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in largesttriangle_proofs.v. *)
-From Speck Require Import Prelude.
+From Largesttriangle.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.

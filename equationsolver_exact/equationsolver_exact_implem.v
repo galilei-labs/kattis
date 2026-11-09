@@ -29,7 +29,7 @@
    norm arithmetic exact on dyadics), the Multiple / Inconsistent witness
    checks (exact), and [solve]. *)
 
-From Speck Require Import Prelude.
+From Equationsolver_exact.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import bigint.

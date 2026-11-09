@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Nonnegpartsums)
+ (modules nonnegpartsums_implem nonnegpartsums_proofs)
+ (theories Nonnegpartsums.spec Stdlib stdpp StdGalilei))

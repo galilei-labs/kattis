@@ -18,7 +18,7 @@
    measure is 2 * (unstamped cells) + stack height, the count of unstamped
    cells being a Prop-side function ([unm]).  See README.md. *)
 
-From Speck Require Import Prelude.
+From Securitybadge.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Relations.
@@ -30,7 +30,7 @@ Open Scope bool_scope.
 
 Unset Lia Cache.
 
-Require Export securitybadge_implem.
+From Securitybadge Require Export securitybadge_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 Open Scope bool_scope.

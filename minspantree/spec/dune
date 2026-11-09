@@ -1,0 +1,6 @@
+(include ../../scripts/prelude.dune.inc)
+
+(rocq.theory
+ (name Minspantree.spec)
+ (modules Prelude)
+ (theories Stdlib stdpp StdGalilei))

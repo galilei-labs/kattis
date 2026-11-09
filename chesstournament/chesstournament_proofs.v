@@ -35,7 +35,7 @@
    stronger predecessor under any skill function, impossible on a finite
    set (no_ascent). *)
 
-From Speck Require Import Prelude.
+From Chesstournament.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Relations Wellfounded.
@@ -46,7 +46,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export chesstournament_implem.
+From Chesstournament Require Export chesstournament_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

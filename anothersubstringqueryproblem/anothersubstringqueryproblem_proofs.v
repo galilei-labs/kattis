@@ -19,7 +19,7 @@
    Every loop terminates on an erased [Acc (Zwf 0) _] proof; no nat, no Z
    in the code.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Anothersubstringqueryproblem.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.
@@ -30,7 +30,7 @@ Open Scope Z_scope.
 
 Unset Lia Cache.
 
-Require Export anothersubstringqueryproblem_implem.
+From Anothersubstringqueryproblem Require Export anothersubstringqueryproblem_implem.
 Open Scope Z_scope.
 
 

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Closestpair2)
+ (modules closestpair2_implem closestpair2_proofs)
+ (theories Closestpair2.spec Stdlib stdpp StdGalilei))

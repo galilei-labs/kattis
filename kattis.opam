@@ -11,6 +11,7 @@ homepage: "https://github.com/galilei-labs/kattis"
 bug-reports: "https://github.com/galilei-labs/kattis/issues"
 
 depends: [
+  "dune" {>= "3.21"}
   "rocq-core" {= "9.2.0"}
   "rocq-stdlib" {= "9.1.0"}
   "std-galilei" {= "dev.2026-11-09.0.ad62f8f2"}

@@ -30,7 +30,7 @@
    might_be_true, and [count_iff] (strictly increasing integers fill
    [ys_i, ys_j] iff j - i = ys_j - ys_i) for the "true" case. *)
 
-From Speck Require Import Prelude.
+From Worstweather.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.

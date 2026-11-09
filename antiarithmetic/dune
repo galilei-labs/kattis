@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Antiarithmetic)
+ (modules antiarithmetic_implem antiarithmetic_proofs)
+ (theories Antiarithmetic.spec Stdlib stdpp StdGalilei))

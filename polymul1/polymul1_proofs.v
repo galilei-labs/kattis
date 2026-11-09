@@ -21,7 +21,7 @@
    eval a x * eval b x and has conv a b k as its k-th coefficient, so it
    is the witness of the existential. *)
 
-From Speck Require Import Prelude.
+From Polymul1.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
@@ -32,7 +32,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export polymul1_implem.
+From Polymul1 Require Export polymul1_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

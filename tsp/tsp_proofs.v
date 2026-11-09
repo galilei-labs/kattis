@@ -30,13 +30,13 @@
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
-From Speck Require Import Prelude.
+From Tsp.spec Require Import Prelude.
 Import ListNotations.
 
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export tsp_implem.
+From Tsp Require Export tsp_implem.
 Open Scope uint63_scope.
 
 Definition dadd (a b : Z * Z) : Z * Z :=

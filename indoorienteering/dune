@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Indoorienteering)
+ (modules indoorienteering_implem indoorienteering_proofs)
+ (theories Indoorienteering.spec Stdlib stdpp StdGalilei))

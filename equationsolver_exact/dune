@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Equationsolver_exact)
+ (modules equationsolver_exact_implem equationsolver_exact_proofs)
+ (theories Equationsolver_exact.spec Stdlib stdpp StdGalilei Flocq))

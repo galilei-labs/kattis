@@ -30,7 +30,7 @@
    connected by the first k operations.  The converse direction of the
    query answer is an induction on [connected]. *)
 
-From Speck Require Import Prelude.
+From Unionfind.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Relations Transitive_Closure.

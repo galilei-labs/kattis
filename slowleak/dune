@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Slowleak)
+ (modules slowleak_implem slowleak_proofs)
+ (theories Slowleak.spec Stdlib stdpp StdGalilei))

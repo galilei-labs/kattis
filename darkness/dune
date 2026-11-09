@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Darkness)
+ (modules darkness_implem darkness_proofs)
+ (theories Darkness.spec Stdlib stdpp StdGalilei))

@@ -1,5 +1,5 @@
 (* Correctness proofs for primepower_implem.v. *)
-From Speck Require Import Prelude.
+From Primepower.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Znumtheory.
 Import ListNotations.
@@ -9,7 +9,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export primepower_implem.
+From Primepower Require Export primepower_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

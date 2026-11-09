@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Remainderreminder)
+ (modules remainderreminder_implem remainderreminder_proofs)
+ (theories Remainderreminder.spec Stdlib stdpp StdGalilei))

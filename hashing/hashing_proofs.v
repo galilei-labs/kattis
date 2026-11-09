@@ -2,7 +2,7 @@
 (* Implementation of hashing (hashing.spec): keyed polynomial prefix
    hashing modulo the Mersenne prime p = 2^61 - 1.  See README.md. *)
 
-From Speck Require Import Prelude.
+From Hashing.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Znumtheory Zpow_facts String Ascii.
@@ -13,7 +13,7 @@ Open Scope Z_scope.
 
 Unset Lia Cache.
 
-Require Export hashing_implem.
+From Hashing Require Export hashing_implem.
 Open Scope Z_scope.
 
 

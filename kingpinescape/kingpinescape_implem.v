@@ -34,7 +34,7 @@
    The machine side (Section Machine) proves each loop against those ghost
    objects (cnt_spec, pre_spec, fill_spec, nb_spec, dfs_spec, out_spec). *)
 
-From Speck Require Import Prelude.
+From Kingpinescape.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation.
 Import ListNotations.

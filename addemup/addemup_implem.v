@@ -18,7 +18,7 @@
    Termination: every loop recurses structurally on an erased
    [Acc (Zwf 0) measure] proof, as in template/polymul1. *)
 
-From Speck Require Import Prelude.
+From Addemup.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorted Permutation Orders Mergesort.

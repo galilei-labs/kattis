@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Generalchineseremainder)
+ (modules generalchineseremainder_implem generalchineseremainder_proofs)
+ (theories Generalchineseremainder.spec Stdlib stdpp StdGalilei))

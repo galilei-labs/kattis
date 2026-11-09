@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Bilateral)
+ (modules bilateral_implem bilateral_proofs)
+ (theories Bilateral.spec Stdlib stdpp StdGalilei))

@@ -18,7 +18,7 @@
 
    Proof: see README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Closestpair2.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith QArith Qabs List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Permutation.

@@ -4,7 +4,7 @@
    convex hull (Andrew's monotone chain) and rotating calipers, exactly in
    63-bit integers, one float square root at the end. *)
 
-From Speck Require Import Prelude.
+From Roberthood.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Sint63.
 From StdGalilei Require Import repr.

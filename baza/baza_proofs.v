@@ -3,7 +3,7 @@
    a counter per node, built once in database order; every query answered
    offline against it.  See README.md, "Implementation". *)
 
-From Speck Require Import Prelude.
+From Baza.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require String Ascii PrimString.
@@ -14,7 +14,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export baza_implem.
+From Baza Require Export baza_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

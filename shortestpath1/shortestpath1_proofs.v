@@ -22,7 +22,7 @@
    the scan of the edges of u pushes at most deg u entries while u leaves
    the sum.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Shortestpath1.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -33,7 +33,7 @@ Open Scope bool_scope.
 
 Unset Lia Cache.
 
-Require Export shortestpath1_implem.
+From Shortestpath1 Require Export shortestpath1_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 Open Scope bool_scope.

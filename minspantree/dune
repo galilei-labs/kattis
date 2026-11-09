@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Minspantree)
+ (modules minspantree_implem minspantree_proofs)
+ (theories Minspantree.spec Stdlib stdpp StdGalilei))

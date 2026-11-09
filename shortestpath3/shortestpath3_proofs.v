@@ -1,5 +1,5 @@
 (* Correctness proofs for shortestpath3_implem.v. *)
-From Speck Require Import Prelude.
+From Shortestpath3.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63 ListDec.
@@ -11,7 +11,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export shortestpath3_implem.
+From Shortestpath3 Require Export shortestpath3_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

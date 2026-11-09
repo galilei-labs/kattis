@@ -29,7 +29,7 @@
    the height clause makes the pred chain from tails.[L-1] an increasing
    subsequence of length L. *)
 
-From Speck Require Import Prelude.
+From Longincsubseq.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
@@ -40,7 +40,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export longincsubseq_implem.
+From Longincsubseq Require Export longincsubseq_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

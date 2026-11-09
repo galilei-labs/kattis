@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Sumsets)
+ (modules sumsets_implem sumsets_proofs)
+ (theories Sumsets.spec Stdlib stdpp StdGalilei))

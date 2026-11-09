@@ -3,7 +3,7 @@
 (* Implementation of convexhull (convexhull.spec): Andrew's monotone
    chain.  See README.md, section Implementation. *)
 
-From Speck Require Import Prelude.
+From Convexhull.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.

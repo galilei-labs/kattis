@@ -1,0 +1,22 @@
+; Generate and compile fresh extraction outputs in _build/. The documentation
+; snapshot in ocaml/ is kept separately.
+
+(rocq.extraction
+ (prelude extract_marray)
+ (extracted_modules cold_extracted_marray)
+ (theories Cold Cold.spec Stdlib stdpp StdGalilei))
+
+(library
+ (name cold_extraction)
+ (modules Marray Cold_extracted_marray)
+ (libraries rocq-runtime.kernel)
+ (flags (:standard -w -a)))
+
+; Snapshot updates are explicit: run this alias, then dune promote.
+(rule
+ (alias check-snapshot)
+ (action
+  (progn
+   (diff ocaml/cold_extracted_marray.ml cold_extracted_marray.ml)
+   (diff ocaml/cold_extracted_marray.mli cold_extracted_marray.mli)
+   (diff ocaml/marray.ml marray.ml))))

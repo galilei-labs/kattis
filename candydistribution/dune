@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Candydistribution)
+ (modules candydistribution_implem candydistribution_proofs)
+ (theories Candydistribution.spec Stdlib stdpp StdGalilei))

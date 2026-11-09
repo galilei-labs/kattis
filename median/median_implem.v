@@ -33,7 +33,7 @@
    the maximum of [0, k) into position k-1 gives the same property at
    k - 1. *)
 
-From Speck Require Import Prelude.
+From Median.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals.

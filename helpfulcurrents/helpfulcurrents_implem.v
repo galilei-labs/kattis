@@ -24,7 +24,7 @@
 
    Termination: erased [Acc (Zwf 0)] on a Z measure, as in polymul1. *)
 
-From Speck Require Import Prelude.
+From Helpfulcurrents.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.

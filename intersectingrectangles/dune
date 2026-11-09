@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Intersectingrectangles)
+ (modules intersectingrectangles_implem intersectingrectangles_proofs)
+ (theories Intersectingrectangles.spec Stdlib stdpp StdGalilei))

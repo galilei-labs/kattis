@@ -31,7 +31,7 @@
    [Acc (Zwf 0) _] proof (Z measure: the exponent, the cofactor, a gap of
    Uint63 counters), as in template/polymul1. *)
 
-From Speck Require Import Prelude.
+From Bigfactoring.spec Require Import Prelude.
 From StdGalilei Require Import repr bigint.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Znumtheory Sorted.
@@ -43,7 +43,7 @@ Open Scope bool_scope.
 
 Unset Lia Cache.
 
-Require Export bigfactoring_implem.
+From Bigfactoring Require Export bigfactoring_implem.
 Open Scope uint63_scope.
 Open Scope Z_scope.
 Open Scope bool_scope.

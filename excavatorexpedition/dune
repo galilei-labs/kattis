@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Excavatorexpedition)
+ (modules excavatorexpedition_implem excavatorexpedition_proofs)
+ (theories Excavatorexpedition.spec Stdlib stdpp StdGalilei))

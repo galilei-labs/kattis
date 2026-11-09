@@ -2,7 +2,7 @@
    Correctness proofs are in darkness_proofs.v. *)
 (* Implementation of darkness (darkness.spec). *)
 
-From Speck Require Import Prelude.
+From Darkness.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   QArith Relations Bool.

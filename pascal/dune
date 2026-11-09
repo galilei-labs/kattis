@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Pascal)
+ (modules pascal_implem pascal_proofs)
+ (theories Pascal.spec Stdlib stdpp StdGalilei))

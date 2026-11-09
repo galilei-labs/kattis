@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Palindromes)
+ (modules palindromes_implem palindromes_proofs)
+ (theories Palindromes.spec Stdlib stdpp StdGalilei))

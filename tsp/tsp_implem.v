@@ -32,7 +32,7 @@ From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
-From Speck Require Import Prelude.
+From Tsp.spec Require Import Prelude.
 Import ListNotations.
 
 Open Scope uint63_scope.

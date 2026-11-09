@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Kingpinescape)
+ (modules kingpinescape_implem kingpinescape_proofs)
+ (theories Kingpinescape.spec Stdlib stdpp StdGalilei))

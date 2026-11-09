@@ -29,7 +29,7 @@
    at m = the first free minute), then an Abel summation ([abel]) over the
    decreasing cash turns the prefix counts into the value bound. *)
 
-From Speck Require Import Prelude.
+From Bank.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Permutation Sorted Bool.

@@ -1,6 +1,6 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in arbitrage_proofs.v. *)
-From Speck Require Import Prelude.
+From Arbitrage.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith QArith Qreals List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Sint63.
 From StdGalilei Require Import repr.

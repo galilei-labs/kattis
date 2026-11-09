@@ -1,5 +1,5 @@
 (* Correctness proofs for largesttriangle_implem.v. *)
-From Speck Require Import Prelude.
+From Largesttriangle.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core.
@@ -13,7 +13,7 @@ Unset Lia Cache.
 
 Local Open Scope Z_scope.
 
-Require Export largesttriangle_implem.
+From Largesttriangle Require Export largesttriangle_implem.
 Local Open Scope Z_scope.
 
 

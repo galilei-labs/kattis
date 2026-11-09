@@ -32,7 +32,7 @@
    least-squares line.  [round_err], [clamp_lip]: the output is within
    1/2 (integers) or 2^-21 (floats) of the clamped line. *)
 
-From Speck Require Import Prelude.
+From Vedurspa.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
@@ -41,7 +41,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export vedurspa_implem.
+From Vedurspa Require Export vedurspa_implem.
 Open Scope uint63_scope.
 
 

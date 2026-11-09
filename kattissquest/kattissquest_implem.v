@@ -5,7 +5,7 @@
    See the README of this try for the design; the code section below is
    self-contained. *)
 
-From Speck Require Import Prelude.
+From Kattissquest.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation.
 Import ListNotations.

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Knigsoftheforest)
+ (modules knigsoftheforest_implem knigsoftheforest_proofs)
+ (theories Knigsoftheforest.spec Stdlib stdpp StdGalilei))

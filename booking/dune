@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Booking)
+ (modules booking_implem booking_proofs)
+ (theories Booking.spec Stdlib stdpp StdGalilei))

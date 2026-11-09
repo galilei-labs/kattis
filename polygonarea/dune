@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Polygonarea)
+ (modules polygonarea_implem polygonarea_proofs)
+ (theories Polygonarea.spec Stdlib stdpp StdGalilei))

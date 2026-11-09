@@ -19,7 +19,7 @@
    proof (b decreases strictly, a mod b < b), the device of
    template/polymul1.  No nat, no Z in the code. *)
 
-From Speck Require Import Prelude.
+From Candydistribution.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 Import ListNotations.

@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Chesstournament)
+ (modules chesstournament_implem chesstournament_proofs)
+ (theories Chesstournament.spec Stdlib stdpp StdGalilei))

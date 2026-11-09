@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Tsp)
+ (modules tsp_implem tsp_proofs)
+ (theories Tsp.spec Stdlib stdpp StdGalilei Flocq))

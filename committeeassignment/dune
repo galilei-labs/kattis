@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Committeeassignment)
+ (modules committeeassignment_implem committeeassignment_proofs)
+ (theories Committeeassignment.spec Stdlib stdpp StdGalilei))

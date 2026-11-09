@@ -1,7 +1,7 @@
 (* Correctness proofs for magicsequence_implem.v. *)
 (* Implementation of magicsequence (magicsequence.spec). *)
 
-From Speck Require Import Prelude.
+From Magicsequence.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorting.Sorted Sorting.Permutation.
@@ -13,7 +13,7 @@ Open Scope nat_scope.
 
 Unset Lia Cache.
 
-Require Export magicsequence_implem.
+From Magicsequence Require Export magicsequence_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 Open Scope nat_scope.

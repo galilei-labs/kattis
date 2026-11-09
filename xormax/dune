@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Xormax)
+ (modules xormax_implem xormax_proofs)
+ (theories Xormax.spec Stdlib stdpp StdGalilei))

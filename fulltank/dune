@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Fulltank)
+ (modules fulltank_implem fulltank_proofs)
+ (theories Fulltank.spec Stdlib stdpp StdGalilei))

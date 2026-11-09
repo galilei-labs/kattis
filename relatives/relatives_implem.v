@@ -26,7 +26,7 @@
    to r.  The final count over [0, n) is the spec's count over [1, n) for
    n >= 2, and gcd k n = 1 is the statement's "relatively prime". *)
 
-From Speck Require Import Prelude.
+From Relatives.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf Znumtheory Bool.
 Import ListNotations.

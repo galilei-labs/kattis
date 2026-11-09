@@ -25,7 +25,7 @@
    [gm_max] bounds every element of the span by it (comparison through
    the quotients by 2^k). *)
 
-From Speck Require Import Prelude.
+From Xormax.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.

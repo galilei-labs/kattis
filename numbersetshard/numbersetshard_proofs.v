@@ -1,7 +1,7 @@
 (* Correctness proofs for numbersetshard_implem.v. *)
 (* Implementation of numbersetshard (numbersetshard.spec). *)
 
-From Speck Require Import Prelude.
+From Numbersetshard.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Znumtheory Relations.
@@ -12,7 +12,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export numbersetshard_implem.
+From Numbersetshard Require Export numbersetshard_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

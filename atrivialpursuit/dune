@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Atrivialpursuit)
+ (modules atrivialpursuit_implem atrivialpursuit_proofs)
+ (theories Atrivialpursuit.spec Stdlib stdpp StdGalilei))

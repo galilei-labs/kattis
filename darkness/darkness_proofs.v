@@ -1,7 +1,7 @@
 (* Correctness proofs for darkness_implem.v. *)
 (* Implementation of darkness (darkness.spec). *)
 
-From Speck Require Import Prelude.
+From Darkness.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   QArith Relations Bool.
@@ -12,7 +12,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export darkness_implem.
+From Darkness Require Export darkness_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

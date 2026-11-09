@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Kattissquest)
+ (modules kattissquest_implem kattissquest_proofs)
+ (theories Kattissquest.spec Stdlib stdpp StdGalilei))

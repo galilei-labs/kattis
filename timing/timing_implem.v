@@ -55,7 +55,7 @@
 
    Termination: every loop recurses on an erased [Acc (Zwf 0) _] proof. *)
 
-From Speck Require Import Prelude.
+From Timing.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import repr_float.

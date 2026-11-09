@@ -54,7 +54,7 @@
 
    Termination: every loop recurses on an erased [Acc (Zwf 0) _] proof. *)
 
-From Speck Require Import Prelude.
+From Timing.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
@@ -63,7 +63,7 @@ Import ListNotations.
 Open Scope uint63_scope.
 Unset Lia Cache.
 
-Require Export timing_implem.
+From Timing Require Export timing_implem.
 Open Scope uint63_scope.
 
 

@@ -1,7 +1,7 @@
 (* Correctness proofs for water_implem.v. *)
 (* Implementation of water (water.spec): incremental Edmonds-Karp. *)
 
-From Speck Require Import Prelude.
+From Water.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Bool Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
@@ -11,7 +11,7 @@ Open Scope array_scope.
 
 Unset Lia Cache.
 
-Require Export water_implem.
+From Water Require Export water_implem.
 Open Scope uint63_scope.
 Open Scope array_scope.
 

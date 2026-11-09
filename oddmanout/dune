@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Oddmanout)
+ (modules oddmanout_implem oddmanout_proofs)
+ (theories Oddmanout.spec Stdlib stdpp StdGalilei))

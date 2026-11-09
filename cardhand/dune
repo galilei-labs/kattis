@@ -1,0 +1,4 @@
+(rocq.theory
+ (name Cardhand)
+ (modules cardhand_implem cardhand_proofs)
+ (theories Cardhand.spec Stdlib stdpp StdGalilei))

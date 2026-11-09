@@ -30,7 +30,7 @@
    1, pivot columns solved).  [satisfies_iff] / [free_iff] connect [sol]
    to the spec's [satisfies] / [free_quantity]. *)
 
-From Speck Require Import Prelude.
+From Dimensionalanalysis.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith QArith List Uint63 PArray ZifyUint63 Lia Zwf.
