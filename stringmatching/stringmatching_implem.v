@@ -32,7 +32,7 @@
    [repr]; [out_ok_correct] reads the math list off the result array. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf String Ascii.
 From Stdlib Require PrimString.
 Import ListNotations.

@@ -21,7 +21,7 @@
    erased [Acc (Zwf 0) (φ r1)] (the remainder decreases); no nat, no fuel. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith Uint63 ZifyUint63 Lia Zwf.
 
 Open Scope uint63_scope.

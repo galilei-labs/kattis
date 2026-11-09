@@ -3,11 +3,8 @@
    arrays.
 
    Build: driven by the Makefile in this directory.
-   Emits cold_extracted_marray.ml and .mli here.  The
-   `arrays_bigint` route, in the kattis repo, is derived from this file by
-   tools/gen-extract-arrays.py: the Marray block below replaced by plain
-   OCaml arrays pasted inline (unsafe_get/unsafe_set), plus `From Respeced
-   Require Import ExtrZBigint.` (Z onto tools/bigint.ml).
+   Emits cold_extracted_marray.ml and .mli here. Integer extraction uses
+   Rocq's default representation; no external Bigint mappings are enabled.
 
    Everything is the header's setting (ExtrOcamlBasic
    ExtrOCamlInt63) EXCEPT ExtrOCamlPArray: instead of rocq-runtime's

@@ -19,7 +19,7 @@
    Proof: see README.md, "Implementation". *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith QArith Qabs List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Permutation.
 From Stdlib Require Sint63.

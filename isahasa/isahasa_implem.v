@@ -30,7 +30,7 @@
    array is threaded linearly. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 From Stdlib Require Import Relations String Ascii.
 From Stdlib Require PrimString PrimStringAxioms PString.

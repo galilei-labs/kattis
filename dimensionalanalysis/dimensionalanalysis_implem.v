@@ -8,7 +8,7 @@
    row not yet used as a pivot row (flags in one flat [array bool]) with a
    nonzero entry in column c; every other row i with f = T[i][c] <> 0 becomes
    p * row i - f * row s (p the pivot), then is divided by the gcd of its
-   entries ([Respeced.ZBig.zgcd]) to keep the entries at the size of minors.
+   entries ([StdGalilei.bigint.zgcd]) to keep the entries at the size of minors.
    At the end the table is a reduced echelon form up to row scaling, and a
    quantity is forced dimensionless exactly when some row has a single
    nonzero entry, so [valid] answers "no row has exactly one nonzero".
@@ -31,8 +31,8 @@
    to the spec's [satisfies] / [free_quantity]. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
-From Respeced Require Import ZBig.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith QArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
 Import ListNotations.

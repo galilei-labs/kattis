@@ -34,7 +34,8 @@
    k - 1. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr ReprFloat.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import repr_float.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals.
 From Stdlib Require Import Sorted Permutation ZifyUint63 Lia Lra Zwf.
 From Stdlib Require Import FinFun.

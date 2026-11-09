@@ -39,7 +39,7 @@
                     for constants c1 and c2 independent of the inputs.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
-From Respeced Require Import Repr Cost.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 

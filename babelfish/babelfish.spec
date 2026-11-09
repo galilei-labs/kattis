@@ -54,7 +54,7 @@ loops
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Stdlib Require PrimString.
 From Stdlib Require Import String Ascii.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 

@@ -24,7 +24,7 @@
    which is below 2^n, and the literals only mention X1..Xn. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Bool.
 Import ListNotations.
 

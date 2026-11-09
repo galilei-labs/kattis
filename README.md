@@ -37,6 +37,30 @@ This repository was previously named `tristan-kattis2`. Its local checkout is
 `galilei/kattis`; the upstream benchmark repository is now
 `galilei/kattis-private` (`galilei-labs/kattis-private` on GitHub).
 
+## Setup
+
+Create and select an opam switch (OCaml 4.14 or later):
+
+```sh
+opam switch create kattis ocaml-base-compiler.4.14.2
+opam switch link kattis .
+eval $(opam env)
+```
+
+Add the required repositories and install the dependencies:
+
+```sh
+opam repo add rocq-released https://rocq-prover.org/opam/released
+opam repo add galilei-dev git@github.com:galilei-labs/opam.git
+make builddep
+```
+
+The Galilei repository and its packages require GitHub SSH access.
+`kattis.opam` tracks the dependencies, including Rocq 9.2.0 and
+`std-galilei`. `make builddep` installs a virtual
+package retaining those dependencies without building this project.
+Use `OPAMFLAGS=-y` for non-interactive installation.
+
 ## Cold
 
 The documented `cold/cold.spec` preserves the current upstream specification.
@@ -48,11 +72,11 @@ commit `5de4caf8`. The implementation and its correctness proofs are separated i
 Build and check the Rocq proof and OCaml extraction with:
 
 ```sh
-opam exec --switch=rocq-9.2 -- make -C cold/extraction check
+opam exec -- make -C cold/extraction check
 ```
 
-This requires the sibling `../kattis-private/lib` representation library.
-Override `LIB` when building with a different checkout location.
+Cold uses the installed `std-galilei` library and does not require a sibling
+`kattis-private` checkout.
 The mutable-array extraction is not a verified extraction backend; it relies
 on linear use of arrays.
 

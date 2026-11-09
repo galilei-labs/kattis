@@ -13,7 +13,7 @@
    nat, no lists, flat arrays only. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63 String Ascii PrimString.
 Import ListNotations.

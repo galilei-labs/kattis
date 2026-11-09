@@ -15,7 +15,7 @@
    cannot wrap) and, with the contract's bound, keeps p * p exact. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 
 Open Scope uint63_scope.

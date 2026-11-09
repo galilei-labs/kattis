@@ -3,7 +3,7 @@
 (* Implementation of darkness (darkness.spec). *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   QArith Relations Bool.
 Import ListNotations.

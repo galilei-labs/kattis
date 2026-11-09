@@ -31,8 +31,8 @@
 
 From Speck Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
-From Respeced Require Import Repr.
-From Respeced Require Import ZBig.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import bigint.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -80,8 +80,9 @@ End Loop.
 (* Conversions int <-> Z : the primitives, constant time (steering v3) *)
 (* ------------------------------------------------------------------ *)
 
-(* Uint63.to_Z / of_Z, called directly; on the arrays_bigint route
-   Respeced.ExtrZBigint maps them to Bigint.of_uint63 / to_uint63 *)
+(* Uint63.to_Z / of_Z, called directly. Optional extraction mappings in
+   StdGalilei.extraction.ocaml.bigint target an external Bigint runtime;
+   this implementation does not enable those mappings. *)
 Definition i2z (x : int) : Z := to_Z x.
 Definition z2i (z : Z) : int := of_Z z.
 
@@ -228,7 +229,7 @@ Definition solve_exact (n : uint) (a : array (array float)) (b : array float) : 
 
 From Flocq Require Import Core IEEE754.BinarySingleNaN.
 From Flocq Require IEEE754.PrimFloat.
-From Respeced Require Import ReprFloat.
+From StdGalilei Require Import repr_float.
 Notation float := PrimFloat.float.
 Local Instance prec53' : Prec_gt_0 53 := eq_refl _.
 Local Instance fexp64_valid' : Valid_exp fexp64 := FLT_exp_valid _ _.

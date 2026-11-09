@@ -1,7 +1,7 @@
 (* Executable implementation and its required termination dependencies.
    Correctness proofs are in shortestpath3_proofs.v. *)
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63 ListDec.
 From Stdlib Require Import Permutation.

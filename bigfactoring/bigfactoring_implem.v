@@ -33,7 +33,8 @@
    Uint63 counters), as in template/polymul1. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr ZBig.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Znumtheory Sorted.
 Import ListNotations.

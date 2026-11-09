@@ -52,7 +52,7 @@ Output:
 *)
 From Stdlib Require Import ZArith NArith List Bool Uint63
   PArray.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 

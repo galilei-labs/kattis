@@ -31,7 +31,7 @@
    contract only needs the contents. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
 Import ListNotations.
