@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["timing_implem.v", "timing.spec"]
+files = ["timing_implem.v", "timing_proofs.v", "timing.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

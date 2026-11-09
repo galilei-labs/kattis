@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["bitwise_implem.v", "bitwise.spec"]
+files = ["bitwise_implem.v", "bitwise_proofs.v", "bitwise.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["canvas_implem.v", "canvas.spec"]
+files = ["canvas_implem.v", "canvas_proofs.v", "canvas.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

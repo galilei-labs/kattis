@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["sumsets_implem.v", "sumsets.spec"]
+files = ["sumsets_implem.v", "sumsets_proofs.v", "sumsets.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

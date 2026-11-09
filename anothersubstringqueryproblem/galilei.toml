@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["anothersubstringqueryproblem_implem.v", "anothersubstringqueryproblem.spec"]
+files = ["anothersubstringqueryproblem_implem.v", "anothersubstringqueryproblem_proofs.v", "anothersubstringqueryproblem.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["shortestpath1_implem.v", "shortestpath1.spec"]
+files = ["shortestpath1_implem.v", "shortestpath1_proofs.v", "shortestpath1.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

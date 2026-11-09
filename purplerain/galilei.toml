@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["purplerain_implem.v", "purplerain.spec"]
+files = ["purplerain_implem.v", "purplerain_proofs.v", "purplerain.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

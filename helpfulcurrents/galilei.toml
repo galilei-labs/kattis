@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["helpfulcurrents_implem.v", "helpfulcurrents.spec"]
+files = ["helpfulcurrents_implem.v", "helpfulcurrents_proofs.v", "helpfulcurrents.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

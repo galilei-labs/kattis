@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - At most 25,143 dictionary words, each with 1 to 16 lowercase letters.
-    - At most 10 query pairs. *)
+    - At most $25{,}143$ dictionary words, each with $1\text{ to }16$ lowercase letters.
+    - At most $10$ query pairs. *)
 
 (** ** Examples *)
 
@@ -164,10 +164,10 @@ Definition doublets_spec
 (** For each pair of words, find a shortest chain of dictionary words changing exactly one
     letter at each step, or report that no chain exists. Both endpoints must belong to
     the dictionary.
-    - Input [dictionary]:
-    - Input [start_words]:
-    - Input [end_words]:
-    - Output [output]: *)
+    - Input [dictionary]: Words permitted in transformation chains.
+    - Input [start_words]: Starting word of each query.
+    - Input [end_words]: Destination word of each query.
+    - Output [output]: Each output entry is a shortest dictionary-word chain between the corresponding endpoints, changing one letter at each step, or None if no chain exists. *)
 Program doublets :
   array PrimString.string -> array PrimString.string ->
   array PrimString.string ->

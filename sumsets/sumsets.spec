@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 4,000 distinct integers.
-    - Values from -536,870,912 to 536,870,911. *)
+    - $1\text{ to }4{,}000$ distinct integers.
+    - Values in $[-536{,}870{,}912, 536{,}870{,}911]$. *)
 
 (** ** Examples *)
 
@@ -102,8 +102,8 @@ Definition sumsets_spec
 
 (** Find the largest member of an integer set equal to the sum of three other distinct
     members, or report that none exists.
-    - Input [elements]:
-    - Output [output]: *)
+    - Input [elements]: Distinct integers available for the sum relation.
+    - Output [output]: The output is the greatest input value expressible as the sum of three other distinct input elements, or None if no such value exists. *)
 Program sumsets : array sint -> option sint.
 
 (** ** Bridge *)

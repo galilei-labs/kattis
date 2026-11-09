@@ -11,9 +11,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{5}$ nonempty lowercase strings, totaling at most $10^{6}$
+    - $1\text{ to }10^{5}$ nonempty lowercase strings, totaling at most $10^{6}$
       characters.
-    - Exactly N - 1 operations on distinct source and target indices; an
+    - Exactly $N-1$ operations on distinct source and target indices; an
       emptied source is never accessed again. *)
 
 (** ** Examples *)
@@ -150,10 +150,10 @@ Definition joinstrings_spec (strings : list string)
 
 (** Process operations that append one string to another and empty the source. Return the
     single string remaining after all operations.
-    - Input [strings]:
-    - Input [targets]:
-    - Input [sources]:
-    - Output [output]: *)
+    - Input [strings]: Initial strings indexed by the operations.
+    - Input [targets]: Destination string of each append operation.
+    - Input [sources]: Source string appended and then emptied at each operation.
+    - Output [output]: The output is the single string remaining after the append-and-clear operations are executed in order. *)
 Program joinstrings :
   array PrimString.string -> array uint -> array uint ->
     PrimString.string.

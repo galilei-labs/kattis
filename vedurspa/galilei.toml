@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["vedurspa_implem.v", "vedurspa.spec"]
+files = ["vedurspa_implem.v", "vedurspa_proofs.v", "vedurspa.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

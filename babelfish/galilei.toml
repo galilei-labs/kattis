@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["babelfish_implem.v", "babelfish.spec"]
+files = ["babelfish_implem.v", "babelfish_proofs.v", "babelfish.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

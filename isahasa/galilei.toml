@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["isahasa_implem.v", "isahasa.spec"]
+files = ["isahasa_implem.v", "isahasa_proofs.v", "isahasa.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["excavatorexpedition_implem.v", "excavatorexpedition.spec"]
+files = ["excavatorexpedition_implem.v", "excavatorexpedition_proofs.v", "excavatorexpedition.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

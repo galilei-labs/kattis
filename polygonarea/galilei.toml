@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["polygonarea_implem.v", "polygonarea.spec"]
+files = ["polygonarea_implem.v", "polygonarea_proofs.v", "polygonarea.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

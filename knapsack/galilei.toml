@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["knapsack_implem.v", "knapsack.spec"]
+files = ["knapsack_implem.v", "knapsack_proofs.v", "knapsack.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

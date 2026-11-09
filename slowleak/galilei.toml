@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["slowleak_implem.v", "slowleak.spec"]
+files = ["slowleak_implem.v", "slowleak_proofs.v", "slowleak.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

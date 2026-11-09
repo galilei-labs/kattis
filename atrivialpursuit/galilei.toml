@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["atrivialpursuit_implem.v", "atrivialpursuit.spec"]
+files = ["atrivialpursuit_implem.v", "atrivialpursuit_proofs.v", "atrivialpursuit.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

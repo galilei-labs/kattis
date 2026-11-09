@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Sequence length from 1 to $10^{18}$.
-    - Each factor list has 1 to 400 entries, each from 1 to $10^{18}$. *)
+    - Sequence length in $[1, 10^{18}]$.
+    - Each factor list has Entry count: $1 \le n \le 400$, each in $[1, 10^{18}]$. *)
 
 (** ** Examples *)
 
@@ -123,10 +123,10 @@ Definition atrivialpursuit_spec (term_count : N)
 (** Count ordered sequences of positive integers with a specified length, greatest common
     divisor and least common multiple. The latter two are given as products of factors;
     return the count modulo 1000000007.
-    - Input [term_count]:
-    - Input [gcd_factors]:
-    - Input [lcm_factors]:
-    - Output [output]: *)
+    - Input [term_count]: Required sequence length.
+    - Input [gcd_factors]: Factors whose product is the required greatest common divisor.
+    - Input [lcm_factors]: Factors whose product is the required least common multiple.
+    - Output [output]: The output counts ordered sequences with the specified length, GCD and LCM, modulo $10^9 + 7$. *)
 Program atrivialpursuit : uint -> array uint -> array uint
   -> uint.
 

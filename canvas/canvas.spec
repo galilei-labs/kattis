@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 items; each weight from 1 to 100,000. *)
+    - Item count: $1 \le n \le 100{,}000$; each weight in $[1, 100{,}000]$. *)
 
 (** ** Examples *)
 
@@ -196,8 +196,8 @@ Definition canvas_spec (sizes : list N)
 (** Repeatedly split a group of weighted items into two groups, paying the group's total
     weight for each split. Find the minimum cost of separating all items into
     singletons.
-    - Input [sizes]:
-    - Output [output]: *)
+    - Input [sizes]: Weights of the items to separate.
+    - Output [output]: The output is the minimum total cost of recursively splitting the weighted items into singletons, charging the total weight of each group split. *)
 Program canvas : array uint -> uint.
 
 (** ** Bridge *)

@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to $10^{5}$ vertices, initially connected by exactly n - 1 edges
+    - Vertex count: $2 \le n \le 10^{5}$, initially connected by exactly $n-1$ edges
       forming a tree. *)
 
 (** ** Examples *)
@@ -179,11 +179,11 @@ Definition kingpin_escape_spec
 
 (** Add the fewest edges to a tree so the graph remains connected after any single edge is
     removed.
-    - Input [hideout_count]:
-    - Input [headquarters]:
-    - Input [first_ends]:
-    - Input [second_ends]:
-    - Output [output]: *)
+    - Input [hideout_count]: Number of vertices in the initial tree.
+    - Input [headquarters]: Designated root vertex.
+    - Input [first_ends]: First endpoint of each tree edge.
+    - Input [second_ends]: Second endpoint of each tree edge.
+    - Output [output]: The output is a minimum set of added edges that preserves connectivity after removal of any single edge. *)
 Program kingpin_escape :
   uint -> uint -> array uint -> array uint ->
     array uint * array uint.

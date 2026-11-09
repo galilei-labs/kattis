@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["cardhand_implem.v", "cardhand.spec"]
+files = ["cardhand_implem.v", "cardhand_proofs.v", "cardhand.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

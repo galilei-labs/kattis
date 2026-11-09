@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["intervalcover_implem.v", "intervalcover.spec"]
+files = ["intervalcover_implem.v", "intervalcover_proofs.v", "intervalcover.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

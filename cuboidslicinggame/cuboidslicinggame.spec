@@ -13,8 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 cuboids.
-    - Each integer side length is from 1 to 30. *)
+    - Cuboid count: $1 \le n \le 100$.
+    - Each integer side length is in $[1, 30]$. *)
 
 (** ** Examples *)
 
@@ -164,11 +164,11 @@ Definition winner_spec (first_player : player)
 (** Determine the winner under optimal play in a game on integer-sized cuboids. Each move
     removes one unit-thick slice perpendicular to each axis from one cuboid, leaving up
     to eight smaller cuboids. The player making the last move wins.
-    - Input [first_player]:
-    - Input [x_lengths]:
-    - Input [y_lengths]:
-    - Input [z_lengths]:
-    - Output [output]: *)
+    - Input [first_player]: Player making the first move.
+    - Input [x_lengths]: First side length of each cuboid.
+    - Input [y_lengths]: Second side length of each cuboid.
+    - Input [z_lengths]: Third side length of each cuboid.
+    - Output [output]: The output identifies the winner under optimal play from the initial cuboid configuration and starting player. *)
 Program winner : player -> array uint -> array uint
   -> array uint -> player.
 

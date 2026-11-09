@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["mazemovement_implem.v", "mazemovement.spec"]
+files = ["mazemovement_implem.v", "mazemovement_proofs.v", "mazemovement.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

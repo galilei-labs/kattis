@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["worstweather_implem.v", "worstweather.spec"]
+files = ["worstweather_implem.v", "worstweather_proofs.v", "worstweather.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

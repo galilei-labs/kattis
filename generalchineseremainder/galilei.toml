@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["generalchineseremainder_implem.v", "generalchineseremainder.spec"]
+files = ["generalchineseremainder_implem.v", "generalchineseremainder_proofs.v", "generalchineseremainder.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

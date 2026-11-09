@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 vertices; requested set size from 0 to 15.
+    - Vertex count: $1 \le n \le 100{,}000$; requested set size in $[0, 15]$.
     - At most four distinct neighbors per vertex; no self-loops. *)
 
 (** ** Examples *)
@@ -150,9 +150,9 @@ Definition basincity_spec (drone_count : N)
 
 (** Decide whether an undirected graph contains a set of the requested size with no edge
     between any two selected vertices.
-    - Input [drone_count]:
-    - Input [neighbour_lists]:
-    - Output [output]: *)
+    - Input [drone_count]: Required number of mutually nonadjacent vertices.
+    - Input [neighbour_lists]: Neighbors of each vertex in the graph.
+    - Output [output]: The output is true exactly when the graph contains an independent set of the requested size. *)
 Program basincity : uint -> array (array uint) -> bool.
 
 (** ** Bridge *)

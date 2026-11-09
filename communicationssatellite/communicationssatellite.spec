@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 2,000 circles with no overlaps.
-    - Integer center coordinates from -1,000 to 1,000; radii from 1 to 100. *)
+    - Circle count: $1 \le n \le 2{,}000$ with no overlaps.
+    - Integer center coordinates in $[-1{,}000, 1{,}000]$; radii in $[1, 100]$. *)
 
 (** ** Examples *)
 
@@ -231,10 +231,10 @@ Definition communicationssatellite_spec
 (** Connect nonoverlapping circles with straight segments of minimum total length. Segments
     must join circle boundaries without crossing each other or entering any circle's
     interior.
-    - Input [x_coordinates]:
-    - Input [y_coordinates]:
-    - Input [radii]:
-    - Output [output]: *)
+    - Input [x_coordinates]: Horizontal coordinates of the circle centers.
+    - Input [y_coordinates]: Vertical coordinates of the circle centers.
+    - Input [radii]: Radius of each corresponding circle.
+    - Output [output]: The output approximates the minimum total length of a valid connection of the circles, within the specified absolute or relative tolerance. *)
 Program communicationssatellite :
   array sint -> array sint -> array uint -> float.
 

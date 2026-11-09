@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["antiarithmetic_implem.v", "antiarithmetic.spec"]
+files = ["antiarithmetic_implem.v", "antiarithmetic_proofs.v", "antiarithmetic.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

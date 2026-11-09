@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["bilateral_implem.v", "bilateral.spec"]
+files = ["bilateral_implem.v", "bilateral_proofs.v", "bilateral.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

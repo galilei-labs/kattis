@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 300,000 entries, forming a permutation of 1 through N. *)
+    - Entry count: $1 \le n \le 300{,}000$, forming a permutation of $1$ through N. *)
 
 (** ** Examples *)
 
@@ -148,8 +148,8 @@ Definition bst_spec (sequence : list N)
 
 (** Insert a permutation into an initially empty binary search tree. After each insertion,
     return the sum of all inserted nodes' depths, with root depth zero.
-    - Input [sequence]:
-    - Output [output]: *)
+    - Input [sequence]: Distinct values in binary-search-tree insertion order.
+    - Output [output]: Each output entry is the sum of node depths after the corresponding insertion into an initially empty binary search tree; the root has depth zero. *)
 Program bst : array uint -> array uint.
 
 (** ** Bridge *)

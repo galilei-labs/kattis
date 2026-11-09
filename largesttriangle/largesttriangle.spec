@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 5,000 points.
-    - Integer coordinates from 0 to 40,000,000. *)
+    - Point count: $3 \le n \le 5{,}000$.
+    - Integer coordinates in $[0, 40{,}000{,}000]$. *)
 
 (** ** Examples *)
 
@@ -125,9 +125,9 @@ Definition largest_triangle_spec
 
 (** Find the maximum area of a triangle formed by three input points, returning zero if all
     such triangles are degenerate.
-    - Input [x_coordinates]:
-    - Input [y_coordinates]:
-    - Output [output]: *)
+    - Input [x_coordinates]: Horizontal coordinates of the input points.
+    - Input [y_coordinates]: Vertical coordinates of the corresponding points.
+    - Output [output]: The output approximates the maximum area of a triangle formed by input points, with absolute error at most $10^{-5}$. *)
 Program largest_triangle : array uint -> array uint ->
   float.
 

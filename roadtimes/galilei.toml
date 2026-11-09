@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["roadtimes_implem.v", "roadtimes.spec"]
+files = ["roadtimes_implem.v", "roadtimes_proofs.v", "roadtimes.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

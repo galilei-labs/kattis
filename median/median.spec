@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{5}$ integers, each from 0 to $10^{9}$. *)
+    - Sequence length: $1 \le n \le 10^{5}$, each in $[0, 10^{9}]$. *)
 
 (** ** Examples *)
 
@@ -90,8 +90,8 @@ Definition median_spec (values : list N)
 
 (** Compute the median of an integer sequence, averaging the two middle values when its
     length is even.
-    - Input [values]:
-    - Output [output]: *)
+    - Input [values]: Integer values whose median is required.
+    - Output [output]: The output is the exact median of the input values, averaging the two middle values when the sequence length is even. *)
 Program median : array uint -> float.
 
 (** ** Bridge *)

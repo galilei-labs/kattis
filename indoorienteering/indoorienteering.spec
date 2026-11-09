@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 14 vertices; target length from 1 to $10^{15}$.
-    - Distances are symmetric, zero on the diagonal, and otherwise from 1 to
+    - Vertex count: $2 \le n \le 14$; target length in $[1, 10^{15}]$.
+    - Distances are symmetric, zero on the diagonal, and otherwise from $1$ to
       the target length; they satisfy the triangle inequality. *)
 
 (** ** Examples *)
@@ -137,9 +137,9 @@ Definition indoorienteering_spec (distances : list (list N))
 
 (** Decide whether a tour can visit every vertex exactly once, return to its start, and have
     exactly a specified total length.
-    - Input [distances]:
-    - Input [desired_length]:
-    - Output [output]: *)
+    - Input [distances]: Matrix of pairwise distances between vertices.
+    - Input [desired_length]: Required total length of the closed tour.
+    - Output [output]: The output is true exactly when a tour visits every vertex once, returns to its start and has the specified total length. *)
 Program indoorienteering : array
   (array uint) -> uint -> bool.
 

@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 10,000 entries, forming a permutation of 0 through n - 1. *)
+    - Entry count: $3 \le n \le 10{,}000$, forming a permutation of $0$ through $n-1$. *)
 
 (** ** Examples *)
 
@@ -113,8 +113,8 @@ Definition antiarithmetic_spec (permutation : list N)
 
 (** Decide whether a permutation contains no three entries, in their original order, that
     form an arithmetic progression.
-    - Input [permutation]:
-    - Output [output]: *)
+    - Input [permutation]: Permutation to test for a three-term arithmetic progression.
+    - Output [output]: The output is true exactly when no three entries in increasing index order form an arithmetic progression. *)
 Program antiarithmetic : array uint -> bool.
 
 (** ** Bridge *)

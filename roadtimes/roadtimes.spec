@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 30 vertices and at most 100 roads.
-    - Road lengths from 1 to 1,000 km; speeds from 30 to 60 km/h.
-    - 1 to 100 observations and 1 to 100 queries; each pair has a unique
+    - Vertex count: $1 \le n \le 30$ and at most $100$ roads.
+    - Road lengths in $[1, 1{,}000]$ km; speeds in $[30, 60]$ km/h.
+    - $1\text{ to }100$ observations and Query count: $1 \le q \le 100$; each pair has a unique
       shortest-distance route.
     - Some assignment of road speeds is consistent with all observations. *)
 
@@ -319,13 +319,13 @@ Definition roadtimes_spec
     possible duration of each queried journey. All journeys use their unique shortest-
     distance route, and each road has a fixed unknown speed between 30 and 60 km/h
     consistent with the observations.
-    - Input [distances]:
-    - Input [past_sources]:
-    - Input [past_destinations]:
-    - Input [past_minutes]:
-    - Input [query_sources]:
-    - Input [query_destinations]:
-    - Output [output]: *)
+    - Input [distances]: Road-distance matrix, including missing-road indicators.
+    - Input [past_sources]: Starting vertex of each observed journey.
+    - Input [past_destinations]: Destination vertex of each observed journey.
+    - Input [past_minutes]: Recorded duration of each journey, in minutes.
+    - Input [query_sources]: Starting vertex of each queried journey.
+    - Input [query_destinations]: Destination vertex of each queried journey.
+    - Output [output]: Each output entry approximates the tight minimum and maximum travel times consistent with all observations and speed constraints, within the specified tolerance. *)
 Program roadtimes : array (array sint) -> array uint ->
   array uint ->
   array uint -> array uint -> array uint -> array (float *

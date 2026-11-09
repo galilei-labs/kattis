@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["oddmanout_implem.v", "oddmanout.spec"]
+files = ["oddmanout_implem.v", "oddmanout_proofs.v", "oddmanout.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

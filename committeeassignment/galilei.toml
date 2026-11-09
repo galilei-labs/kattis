@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["committeeassignment_implem.v", "committeeassignment.spec"]
+files = ["committeeassignment_implem.v", "committeeassignment_proofs.v", "committeeassignment.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

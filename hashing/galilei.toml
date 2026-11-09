@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["hashing_implem.v", "hashing.spec"]
+files = ["hashing_implem.v", "hashing_proofs.v", "hashing.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

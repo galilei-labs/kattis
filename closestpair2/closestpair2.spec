@@ -11,9 +11,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 100,000 points.
+    - Point count: $2 \le n \le 100{,}000$.
     - Coordinates have at most two decimal places and absolute value at most
-      100,000. *)
+      $100{,}000$. *)
 
 (** ** Examples *)
 
@@ -153,9 +153,9 @@ Definition closestpair_spec
 
 (** Find two distinct points with minimum Euclidean distance, using exact decimal
     coordinates.
-    - Input [x_coordinates]:
-    - Input [y_coordinates]:
-    - Output [output]: *)
+    - Input [x_coordinates]: Horizontal coordinates of the input points.
+    - Input [y_coordinates]: Vertical coordinates of the corresponding points.
+    - Output [output]: The output identifies two distinct input positions attaining the minimum Euclidean distance between the exact decimal coordinates. *)
 Program closestpair : array sint -> array sint
   -> uint * uint.
 

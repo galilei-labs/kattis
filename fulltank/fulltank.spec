@@ -12,9 +12,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1,000 vertices; at most 10,000 roads; 1 to 100 queries.
-    - Fuel prices, road lengths and tank capacities are integers from 1 to
-      100. *)
+    - Vertex count: $1 \le n \le 1{,}000$; at most $10{,}000$ roads; Query count: $1 \le q \le 100$.
+    - Fuel prices, road lengths and tank capacities are integers from $1$ to
+      $100$. *)
 
 (** ** Examples *)
 
@@ -202,15 +202,15 @@ Definition fulltank_spec (city_count : N)
 (** Find the cheapest route in a road network with location-dependent fuel prices and a
     specified tank capacity. Start with an empty tank, buy whole fuel units, and consume
     one unit per unit of distance.
-    - Input [city_count]:
-    - Input [prices]:
-    - Input [road_starts]:
-    - Input [road_ends]:
-    - Input [road_lengths]:
-    - Input [capacities]:
-    - Input [starts]:
-    - Input [goals]:
-    - Output [output]: *)
+    - Input [city_count]: Number of vertices in the road network.
+    - Input [prices]: Fuel price per unit at each vertex.
+    - Input [road_starts]: First endpoint of each undirected road.
+    - Input [road_ends]: Second endpoint of each undirected road.
+    - Input [road_lengths]: Fuel consumed along each road.
+    - Input [capacities]: Tank capacity for each query.
+    - Input [starts]: Starting vertex for each query.
+    - Input [goals]: Destination vertex for each query.
+    - Output [output]: Each output entry is the minimum fuel cost of a feasible trip with the requested capacity and endpoints, starting with an empty tank, or None if no trip exists. *)
 Program fulltank : uint -> array uint -> array uint -> array
   uint ->
   array uint -> array uint -> array uint -> array uint ->

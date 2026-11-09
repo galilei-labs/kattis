@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1,000 vertices; 0 to 5,000 edges; 1 to 100 queries.
-    - Edge weights from -2,000 to 2,000. *)
+    - Vertex count: $1 \le n \le 1{,}000$; Edge count: $0 \le m \le 5{,}000$; Query count: $1 \le q \le 100$.
+    - Edge weights in $[-2{,}000, 2{,}000]$. *)
 
 (** ** Examples *)
 
@@ -200,13 +200,13 @@ Definition shortestpath3_spec
 
 (** Answer shortest-path queries from one source in a directed weighted graph,
     distinguishing unreachable vertices and costs unbounded below by negative cycles.
-    - Input [node_count]:
-    - Input [source]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Input [edge_weights]:
-    - Input [queries]:
-    - Output [output]: *)
+    - Input [node_count]: Number of graph vertices.
+    - Input [source]: Vertex from which distances are measured.
+    - Input [edge_sources]: Source vertex of each directed edge.
+    - Input [edge_targets]: Destination vertex of each directed edge.
+    - Input [edge_weights]: Signed weight of each corresponding edge.
+    - Input [queries]: Vertices whose shortest distances are requested.
+    - Output [output]: Each output entry gives the shortest distance to the queried vertex, or classifies it as unreachable or unbounded below. *)
 Program shortestpath3 :
   uint -> uint -> array uint -> array uint -> array sint ->
     array uint ->

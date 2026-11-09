@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Nonempty pattern and text; the input file is at most 5 MB.
-    - This specification additionally caps text length at 4,194,303 so all
+    - Nonempty pattern and text; the input file is at most $5$ MB.
+    - This specification additionally caps text length at $4{,}194{,}303$ so all
       match positions fit the output array. *)
 
 (** ** Examples *)
@@ -121,9 +121,9 @@ Definition find_all_spec
 
 (** Find every occurrence of a pattern in a text, including overlaps, and return the
     starting positions in ascending order.
-    - Input [pattern]:
-    - Input [text]:
-    - Output [output]: *)
+    - Input [pattern]: Pattern whose occurrences are sought.
+    - Input [text]: Text in which to search, including overlapping occurrences.
+    - Output [output]: The output lists every starting position of a pattern occurrence, including overlaps, exactly once in ascending order. *)
 Program find_all : PrimString.string -> PrimString.string ->
   array uint.
 

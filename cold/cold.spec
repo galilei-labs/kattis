@@ -65,8 +65,8 @@ Definition count_negatives_spec
 (** ** Interface *)
 
 (** Count how many integers in a sequence are strictly below zero.
-    - Input [temperatures]:
-    - Output [output]: *)
+    - Input [temperatures]: Integer temperatures to test for negativity.
+    - Output [output]: The output is the number of input integers strictly below zero. *)
 Program count_negatives : array sint -> uint.
 
 (** ** Bridge *)

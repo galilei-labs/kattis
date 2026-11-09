@@ -20,8 +20,11 @@ OCAMLPKG ?= $(shell ocamlfind query rocq-runtime.kernel >/dev/null 2>&1 && echo 
 
 all: marray
 
-marray: $(ROOT)/$(PROBLEM)_implem.vo
+marray: $(ROOT)/$(PROBLEM)_proofs.vo
 	$(COQC) extract_marray.v
+
+$(ROOT)/$(PROBLEM)_proofs.vo: $(ROOT)/$(PROBLEM)_proofs.v $(ROOT)/$(PROBLEM)_implem.vo
+	$(COQC) $<
 
 $(ROOT)/$(PROBLEM)_implem.vo: $(ROOT)/$(PROBLEM)_implem.v $(ROOT)/.generated/Prelude.vo
 	$(COQC) $<

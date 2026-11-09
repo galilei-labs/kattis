@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20,000 vertices; 0 to 30,000 edges.
-    - Edge weights from -20,000 to 20,000. *)
+    - Vertex count: $1 \le n \le 20{,}000$; Edge count: $0 \le m \le 30{,}000$.
+    - Edge weights in $[-20{,}000, 20{,}000]$. *)
 
 (** ** Examples *)
 
@@ -213,11 +213,11 @@ Definition mst_spec (vertex_count : N)
 
 (** Find a minimum spanning tree of an undirected weighted graph. Return its total weight
     and edge indices, or report that the graph is disconnected.
-    - Input [vertex_count]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Input [edge_weights]:
-    - Output [output]: *)
+    - Input [vertex_count]: Number of graph vertices.
+    - Input [edge_sources]: First endpoint of each undirected edge.
+    - Input [edge_targets]: Second endpoint of each undirected edge.
+    - Input [edge_weights]: Weight of each corresponding edge.
+    - Output [output]: The output gives a minimum spanning tree and its total weight, or None exactly when the graph is disconnected. *)
 Program mst : uint -> array uint -> array uint -> array sint
   ->
                 option (sint * array uint).

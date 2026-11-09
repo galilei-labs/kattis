@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ n $\le$ $10^{9}$. *)
+    - $1 \le n \le 10^9$. *)
 
 (** ** Examples *)
 
@@ -80,8 +80,8 @@ Definition pascal_spec (number : N) (output : N) : Prop :=
 
 (** Starting at n - 1 and counting downward, stop at the first divisor of n. Return the
     number of candidate integers examined.
-    - Input [number]:
-    - Output [output]: *)
+    - Input [number]: Positive integer whose descending divisor search is counted.
+    - Output [output]: The output counts descending candidate divisors from n - 1 through the first divisor of n; for n = 1, it is zero. *)
 Program pascal : uint -> uint.
 
 (** ** Bridge *)

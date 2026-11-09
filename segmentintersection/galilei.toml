@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["segmentintersection_implem.v", "segmentintersection.spec"]
+files = ["segmentintersection_implem.v", "segmentintersection_proofs.v", "segmentintersection.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

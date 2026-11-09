@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1,000,000 elements and 0 to 1,000,000 operations.
-    - Element indices from 0 to N - 1. *)
+    - $1\text{ to }1{,}000{,}000$ elements and $0\text{ to }1{,}000{,}000$ operations.
+    - Element indices from $0$ to $N-1$. *)
 
 (** ** Examples *)
 
@@ -155,11 +155,11 @@ Definition run_ops_spec
 
 (** Maintain disjoint sets under union operations and answer whether two elements belong to
     the same set.
-    - Input [element_count]:
-    - Input [is_union]:
-    - Input [first_elements]:
-    - Input [second_elements]:
-    - Output [output]: *)
+    - Input [element_count]: Number of elements, initially in separate sets.
+    - Input [is_union]: Whether each operation joins sets rather than querying connectivity.
+    - Input [first_elements]: First element of each operation.
+    - Input [second_elements]: Second element of each operation.
+    - Output [output]: The output has one entry per operation; entries corresponding to queries indicate whether the queried elements are connected after the preceding unions. *)
 Program run_ops : uint -> array bool -> array uint -> array
   uint ->
                     array bool.

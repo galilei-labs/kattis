@@ -13,10 +13,10 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 50,000 recorded years and 1 to 10,000 queries.
-    - Years from -$10^{9}$ to $10^{9}$; recorded years are strictly
+    - $1\text{ to }50{,}000$ recorded years and Query count: $1 \le q \le 10{,}000$.
+    - Years in $[-10^{9}, 10^{9}]$; recorded years are strictly
       increasing.
-    - Rainfall from 1 to $10^{9}$; each query's first year precedes its
+    - Rainfall in $[1, 10^{9}]$; each query's first year precedes its
       second. *)
 
 (** ** Examples *)
@@ -199,11 +199,11 @@ Definition worstweather_spec
 (** For each queried pair of years, test whether the later rainfall is no greater than the
     earlier rainfall and exceeds every intervening year's rainfall. Classify the claim
     as confirmed, impossible or still possible when records are missing.
-    - Input [years]:
-    - Input [rainfalls]:
-    - Input [since_years]:
-    - Input [record_years]:
-    - Output [output]: *)
+    - Input [years]: Recorded years in strictly increasing order.
+    - Input [rainfalls]: Rainfall recorded for each corresponding year.
+    - Input [since_years]: Earlier endpoint of each year-range query.
+    - Input [record_years]: Later endpoint of each year-range query.
+    - Output [output]: Each output entry classifies the rainfall claim as confirmed by complete records, contradicted by the records or possible given missing records. *)
 Program worstweather :
   array sint -> array uint -> array sint -> array sint ->
     array answer.

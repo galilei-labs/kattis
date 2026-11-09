@@ -13,9 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 vertices; at most (N - 1)^2 links; 0 to 5,000 time steps.
-    - Initial quantities from 0 to 1,000; each transfer fraction is greater
-      than zero and at most one.
+    - Vertex count: $1 \le n \le 100$; at most $(n-1)^2$ links; $0\text{ to }5{,}000$ time steps.
+    - Initial quantities in $[0, 1{,}000]$; each transfer fraction satisfies $0 < p_i \le 1$.
     - Outgoing transfers from a vertex total at most its available quantity. *)
 
 (** ** Examples *)
@@ -238,12 +237,12 @@ Definition timing_spec
 (** Evolve quantities on a directed graph by simultaneously transferring specified fractions
     along edges each time step. After a given number of steps, return the smallest sum
     of a vertex's quantity and those of its neighbors in either direction.
-    - Input [attack_time]:
-    - Input [initial_strengths]:
-    - Input [link_sources]:
-    - Input [link_targets]:
-    - Input [link_fractions]:
-    - Output [output]: *)
+    - Input [attack_time]: Number of simultaneous transfer steps.
+    - Input [initial_strengths]: Initial quantity at each vertex.
+    - Input [link_sources]: Source vertex of each transfer edge.
+    - Input [link_targets]: Destination vertex of each transfer edge.
+    - Input [link_fractions]: Fraction transferred along each edge per step.
+    - Output [output]: The output approximates the minimum final vertex-and-neighbor quantity sum after the specified number of transfer steps, within the specified absolute or relative tolerance. *)
 Program timing :
   uint -> array float -> array uint -> array uint ->
     array float -> float.

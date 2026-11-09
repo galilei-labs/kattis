@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["dimensionalanalysis_implem.v", "dimensionalanalysis.spec"]
+files = ["dimensionalanalysis_implem.v", "dimensionalanalysis_proofs.v", "dimensionalanalysis.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

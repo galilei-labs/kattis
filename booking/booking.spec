@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 5,000 intervals; cleanup time from 0 to 360 minutes.
-    - Valid dates from 2013 through 2016; each interval ends no earlier than
+    - Interval count: $1 \le n \le 5{,}000$; cleanup time in $[0, 360]$ minutes.
+    - Valid dates from $2013$ through $2016$; each interval ends no earlier than
       it starts. *)
 
 (** ** Examples *)
@@ -207,10 +207,10 @@ Definition min_rooms_spec (cleaning_time : N)
 
 (** Find the minimum number of resources needed to accommodate time intervals, allowing a
     fixed cleanup period after each interval before its resource can be reused.
-    - Input [cleaning_time]:
-    - Input [arrivals]:
-    - Input [departures]:
-    - Output [output]: *)
+    - Input [cleaning_time]: Delay after departure before a resource can be reused, in minutes.
+    - Input [arrivals]: Start timestamp of each booking.
+    - Input [departures]: End timestamp of each booking.
+    - Output [output]: The output is the minimum number of resources needed to accommodate all intervals, including the cleanup period after each interval. *)
 Program min_rooms : uint -> array (datetime uint) -> array
   (datetime uint) -> uint.
 

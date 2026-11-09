@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 200,000 commands.
-    - Task energy, reward and query budget are from 1 to $10^{5}$. *)
+    - Command count: $1 \le q \le 200{,}000$.
+    - Task energy, reward and query budget are in $[1, 10^{5}]$. *)
 
 (** ** Examples *)
 
@@ -169,8 +169,8 @@ Definition kattissquest_spec (commands : list op)
 (** Maintain tasks with energy costs and rewards. For each budget query, repeatedly remove
     the affordable task with greatest cost, breaking ties by greatest reward, and return
     the total reward earned.
-    - Input [commands]:
-    - Output [output]: *)
+    - Input [commands]: Task additions and budget queries in execution order.
+    - Output [output]: The output gives the total reward for each budget query under the specified greedy task-selection rule, starting with an empty task collection. *)
 Program kattissquest : array command -> array uint.
 
 (** ** Bridge *)

@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 200 currencies; at most C * (C - 1) exchange rates.
-    - Each rate exchanges between 1 and 100 units of each of two distinct
+    - Currency count: $1 \le C \le 200$; at most $C(C-1)$ exchange rates.
+    - Each rate exchanges between $1$ and $100$ units of each of two distinct
       currencies. *)
 
 (** ** Examples *)
@@ -193,12 +193,12 @@ Definition arbitrage_spec (currency_count : N)
 
 (** Decide whether a cycle of currency exchanges can increase the starting amount, using the
     given exact exchange rates.
-    - Input [currency_count]:
-    - Input [from_currencies]:
-    - Input [to_currencies]:
-    - Input [paid_units]:
-    - Input [got_units]:
-    - Output [output]: *)
+    - Input [currency_count]: Number of currencies.
+    - Input [from_currencies]: Currency paid in each exchange.
+    - Input [to_currencies]: Currency received in each exchange.
+    - Input [paid_units]: Units paid for each exchange rate.
+    - Input [got_units]: Units received for the corresponding payment.
+    - Output [output]: The output is true exactly when a cycle of exchanges strictly increases the initial amount of a currency. *)
 Program arbitrage :
   uint -> array uint -> array uint -> array uint
     -> array uint -> bool.

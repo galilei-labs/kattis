@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["selfbalancingbst_implem.v", "selfbalancingbst.spec"]
+files = ["selfbalancingbst_implem.v", "selfbalancingbst_proofs.v", "selfbalancingbst.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 500 vertices; 1 to n * (n - 1) / 2 roads, with no repeated pair.
+    - Vertex count: $2 \le n \le 500$; $1$ to $n(n-1)/2$ roads, with no repeated pair.
     - Refill vertices are distinct and exclude the endpoints.
     - Positive road lengths, travel range and any feasible minimum total
       distance are below $2^{31}$. *)
@@ -220,13 +220,13 @@ Definition slowleak_spec
 (** Find the shortest route in a weighted road network subject to a maximum distance between
     refills at designated vertices. Start with a full supply, or report that no route is
     possible.
-    - Input [intersection_count]:
-    - Input [tire_range]:
-    - Input [stations]:
-    - Input [road_starts]:
-    - Input [road_ends]:
-    - Input [road_lengths]:
-    - Output [output]: *)
+    - Input [intersection_count]: Number of vertices in the road network.
+    - Input [tire_range]: Maximum distance that can be traveled between refills.
+    - Input [stations]: Vertices at which the supply can be refilled.
+    - Input [road_starts]: First endpoint of each undirected road.
+    - Input [road_ends]: Second endpoint of each undirected road.
+    - Input [road_lengths]: Length of each corresponding road.
+    - Output [output]: The output is the minimum length of a route satisfying the refill-distance constraint, or None exactly when no feasible route exists. *)
 Program slowleak :
   uint -> uint -> array uint -> array uint -> array uint ->
     array uint ->

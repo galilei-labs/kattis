@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 1,000 distinct words, each containing 1 to 20 lowercase letters. *)
+    - $3\text{ to }1{,}000$ distinct words, each containing $1\text{ to }20$ lowercase letters. *)
 
 (** ** Examples *)
 
@@ -137,8 +137,8 @@ Definition catenyms_spec (words : list string)
 (** Arrange all given words exactly once so each word's last letter matches the next word's
     first letter. Return the lexicographically smallest period-separated arrangement, or
     report that none exists.
-    - Input [words]:
-    - Output [output]: *)
+    - Input [words]: Words to arrange into a chain, each used exactly once.
+    - Output [output]: The output is the lexicographically smallest period-separated chain using every word once with matching endpoint letters, or None if no chain exists. *)
 Program catenyms : array PrimString.string -> option
   (array PrimString.string).
 

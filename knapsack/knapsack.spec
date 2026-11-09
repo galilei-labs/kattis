@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Capacity and item count from 1 to 2,000.
-    - Integer weights and values from 1 to 10,000. *)
+    - Capacity and item count in $[1, 2{,}000]$.
+    - Integer weights and values in $[1, 10{,}000]$. *)
 
 (** ** Examples *)
 
@@ -118,10 +118,10 @@ Definition knapsack_spec (capacity : N)
 
 (** Choose a subset of items with maximum total value subject to a weight capacity. Return
     its value and the selected item indices.
-    - Input [capacity]:
-    - Input [values]:
-    - Input [weights]:
-    - Output [output]: *)
+    - Input [capacity]: Maximum permitted total weight.
+    - Input [values]: Value of each available item.
+    - Input [weights]: Weight of each corresponding item.
+    - Output [output]: The output gives a maximum achievable total value and a corresponding subset of item indices whose total weight does not exceed the capacity. *)
 Program knapsack : uint -> array uint -> array uint -> uint
   * array uint.
 

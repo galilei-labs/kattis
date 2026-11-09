@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["numbersetshard_implem.v", "numbersetshard.spec"]
+files = ["numbersetshard_implem.v", "numbersetshard_proofs.v", "numbersetshard.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 300,000 lowercase text characters; at most 300,000 queries.
+    - $1\text{ to }300{,}000$ lowercase text characters; at most $300{,}000$ queries.
     - Each query selects a nonempty substring within the text. *)
 
 (** ** Examples *)
@@ -165,11 +165,11 @@ Definition hashes_spec (hash_family : N -> string -> N)
 (** Compute keyed hashes for queried substrings. Equal substrings must always hash equally;
     distinct substrings may collide for at most as many keys as their maximum length,
     among 2^61 - 1 possible keys.
-    - Input [hash_key]:
-    - Input [text]:
-    - Input [query_lefts]:
-    - Input [query_rights]:
-    - Output [output]: *)
+    - Input [hash_key]: Key selecting the hash function.
+    - Input [text]: Text containing the queried substrings.
+    - Input [query_lefts]: Left endpoint of each substring query.
+    - Input [query_rights]: Right endpoint of each substring query.
+    - Output [output]: The output hashes each queried substring using the supplied key and a common hash family. Equal substrings have equal hashes; distinct substrings collide for at most their maximum length in keys among $2^{61} - 1$ keys. *)
 Program hashes : uint -> PrimString.string -> array uint ->
   array uint ->
                    array uint.

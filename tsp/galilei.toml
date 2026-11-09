@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["tsp_implem.v", "tsp.spec"]
+files = ["tsp_implem.v", "tsp_proofs.v", "tsp.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ N $\le$ $10^{6}$.
-    - 1 $\le$ A, B, C, X, Y $\le$ $10^{9}$. *)
+    - $1 \le N \le 10^6$.
+    - $1 \le A, B, C, X, Y \le 10^{9}$. *)
 
 (** ** Examples *)
 
@@ -128,13 +128,13 @@ Definition magic_spec
 (** Generate N integers by S[0] = A and S[i] = (S[i-1] * B + A) mod C, then sort them. Hash
     the sorted sequence by starting at zero and repeatedly replacing V with (V * X +
     value) mod Y.
-    - Input [sequence_length]:
-    - Input [seed]:
-    - Input [multiplier]:
-    - Input [modulus]:
-    - Input [hash_base]:
-    - Input [hash_modulus]:
-    - Output [output]: *)
+    - Input [sequence_length]: Number of values to generate.
+    - Input [seed]: Initial value and additive generator parameter.
+    - Input [multiplier]: Multiplier used to generate the sequence.
+    - Input [modulus]: Modulus used to generate the sequence.
+    - Input [hash_base]: Multiplier used to hash the sorted sequence.
+    - Input [hash_modulus]: Modulus used for the resulting hash.
+    - Output [output]: The output is the specified rolling hash of the generated sequence sorted in nondecreasing order. *)
 Program magic : uint -> uint -> uint -> uint -> uint -> uint
   -> uint.
 

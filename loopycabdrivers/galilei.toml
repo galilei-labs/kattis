@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["loopycabdrivers_implem.v", "loopycabdrivers.spec"]
+files = ["loopycabdrivers_implem.v", "loopycabdrivers_proofs.v", "loopycabdrivers.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

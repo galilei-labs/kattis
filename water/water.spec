@@ -12,9 +12,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 100 vertices; at most n * (n - 1) / 2 initial edges.
-    - 1 to 10,000 updates; initial capacities and capacity increases from 1
-      to 1,000.
+    - Vertex count: $2 \le n \le 100$; at most $n(n-1)/2$ initial edges.
+    - $1\text{ to }10{,}000$ updates; initial capacities and capacity increases from $1$
+      to $1{,}000$.
     - Initial edges have distinct endpoint pairs. *)
 
 (** ** Examples *)
@@ -213,14 +213,14 @@ Definition water_spec
 
 (** Compute the maximum flow between two designated vertices of an undirected capacitated
     network, initially and after each edge-capacity increase.
-    - Input [station_count]:
-    - Input [pipe_starts]:
-    - Input [pipe_ends]:
-    - Input [pipe_capacities]:
-    - Input [improvement_starts]:
-    - Input [improvement_ends]:
-    - Input [improvement_amounts]:
-    - Output [output]: *)
+    - Input [station_count]: Number of vertices in the network.
+    - Input [pipe_starts]: First endpoint of each initial edge.
+    - Input [pipe_ends]: Second endpoint of each initial edge.
+    - Input [pipe_capacities]: Initial capacity of each edge.
+    - Input [improvement_starts]: First endpoint of each capacity update.
+    - Input [improvement_ends]: Second endpoint of each capacity update.
+    - Input [improvement_amounts]: Capacity added by each corresponding update.
+    - Output [output]: The output gives the maximum flow initially and after each capacity increase, in update order. *)
 Program water : uint -> array uint -> array uint ->
   array uint ->
   array uint -> array uint -> array uint -> array uint.

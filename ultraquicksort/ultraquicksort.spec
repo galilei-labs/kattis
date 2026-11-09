@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 500,000 distinct integers.
-    - Values from 0 to 999,999,999. *)
+    - $1\text{ to }500{,}000$ distinct integers.
+    - Values in $[0, 999{,}999{,}999]$. *)
 
 (** ** Examples *)
 
@@ -90,8 +90,8 @@ Definition inversions_spec
 
 (** Count inversions in a sequence: pairs of positions where the earlier value is larger
     than the later value.
-    - Input [sequence]:
-    - Output [output]: *)
+    - Input [sequence]: Integer sequence whose inversions are counted.
+    - Output [output]: The output counts index pairs for which the earlier value is strictly greater than the later value. *)
 Program inversions : array uint -> uint.
 
 (** ** Bridge *)

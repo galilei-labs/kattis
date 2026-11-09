@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["pascal_implem.v", "pascal.spec"]
+files = ["pascal_implem.v", "pascal_proofs.v", "pascal.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

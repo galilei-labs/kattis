@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["joggers_implem.v", "joggers.spec"]
+files = ["joggers_implem.v", "joggers_proofs.v", "joggers.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

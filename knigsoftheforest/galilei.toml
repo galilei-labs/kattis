@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["knigsoftheforest_implem.v", "knigsoftheforest.spec"]
+files = ["knigsoftheforest_implem.v", "knigsoftheforest_proofs.v", "knigsoftheforest.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

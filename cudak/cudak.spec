@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ lower bound $\le$ upper bound < $10^{15}$.
-    - Target digit sum from 1 to 135; at least one matching integer exists. *)
+    - Interval endpoints $a,b$: $1 \le a \le b < 10^{15}$.
+    - Target digit sum in $[1, 135]$; at least one matching integer exists. *)
 
 (** ** Examples *)
 
@@ -117,10 +117,10 @@ Definition cudak_spec
 
 (** Count integers in an inclusive interval with a specified decimal digit sum, and return
     the smallest such integer.
-    - Input [lower_bound]:
-    - Input [upper_bound]:
-    - Input [target_sum]:
-    - Output [output]: *)
+    - Input [lower_bound]: Inclusive lower endpoint of the integer interval.
+    - Input [upper_bound]: Inclusive upper endpoint of the integer interval.
+    - Input [target_sum]: Required sum of decimal digits.
+    - Output [output]: The output gives the number of integers in the inclusive interval with the required digit sum and the smallest such integer. *)
 Program cudak : uint -> uint -> uint -> uint * uint.
 
 (** ** Bridge *)

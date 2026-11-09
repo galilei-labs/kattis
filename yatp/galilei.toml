@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["yatp_implem.v", "yatp.spec"]
+files = ["yatp_implem.v", "yatp_proofs.v", "yatp.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

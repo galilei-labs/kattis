@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 200,000 vertices forming a tree.
-    - Vertex penalties and edge weights from 1 to 1,000,000. *)
+    - Vertex count: $1 \le n \le 200{,}000$ forming a tree.
+    - Vertex penalties and edge weights in $[1, 1{,}000{,}000]$. *)
 
 (** ** Examples *)
 
@@ -190,11 +190,11 @@ Definition yatp_spec
 
 (** For each vertex u of a weighted tree, minimize distance(u, v) + penalty(u) * penalty(v)
     over all vertices v, then sum these minimum costs.
-    - Input [penalties]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Input [edge_weights]:
-    - Output [output]: *)
+    - Input [penalties]: Penalty assigned to each vertex.
+    - Input [edge_sources]: First endpoint of each tree edge.
+    - Input [edge_targets]: Second endpoint of each tree edge.
+    - Input [edge_weights]: Length of each corresponding edge.
+    - Output [output]: The output sums, over all starting vertices, the minimum of path distance plus the product of endpoint penalties. *)
 Program yatp : array uint -> array uint -> array uint ->
   array uint -> uint.
 

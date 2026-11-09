@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 300,000 tokens forming a valid bracket sequence.
-    - Integer tokens from 0 to 1,000,000,006. *)
+    - Token count: $1 \le n \le 300{,}000$ forming a valid bracket sequence.
+    - Integer tokens in $[0, 1{,}000{,}000{,}006]$. *)
 
 (** ** Examples *)
 
@@ -168,8 +168,8 @@ Definition bracketsequence_spec (tokens : list (token N))
 (** Evaluate a nested sequence of integers, adding at the outermost level and alternating
     multiplication and addition at successive nesting levels. Return the value modulo
     1000000007.
-    - Input [tokens]:
-    - Output [output]: *)
+    - Input [tokens]: Nested integer and parenthesis tokens to evaluate.
+    - Output [output]: The output is the value of the nested expression modulo $10^9 + 7$, with addition at the outer level and alternating multiplication and addition within parentheses. *)
 Program bracketsequence : array (token uint) -> uint.
 
 (** ** Bridge *)

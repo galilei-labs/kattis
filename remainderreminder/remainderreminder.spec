@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 7 $\le$ a $\le$ b $\le$ 100.
-    - Each remainder is from 1 to $10^{9}$.
-    - Search interval endpoints satisfy 1 $\le$ lower < upper $\le$ $10^{9}$;
+    - Sheet dimensions: $7 \le a \le b \le 100$.
+    - Each remainder is in $[1, 10^{9}]$.
+    - Search interval endpoints satisfy $1 \le \text{lower} < \text{upper} \le 10^9$;
       exactly one answer exists. *)
 
 (** ** Examples *)
@@ -146,14 +146,14 @@ Definition remainderreminder_spec
 (** Form the three largest distinct values of x * (a - 2x) * (b - 2x) over positive integers
     x with 2x < a and 2x < b. Find the unique integer in a specified interval having the
     given remainders modulo those three values.
-    - Input [sheet_width]:
-    - Input [sheet_length]:
-    - Input [left_largest]:
-    - Input [left_second]:
-    - Input [left_third]:
-    - Input [min_books]:
-    - Input [max_books]:
-    - Output [output]: *)
+    - Input [sheet_width]: Shorter side of the rectangular sheet.
+    - Input [sheet_length]: Longer side of the rectangular sheet.
+    - Input [left_largest]: Remainder modulo the largest available box volume.
+    - Input [left_second]: Remainder modulo the second-largest distinct box volume.
+    - Input [left_third]: Remainder modulo the third-largest distinct box volume.
+    - Input [min_books]: Inclusive lower bound for the unknown integer.
+    - Input [max_books]: Inclusive upper bound for the unknown integer.
+    - Output [output]: The output is the unique integer within the given bounds satisfying the three congruences defined by the largest distinct box volumes. *)
 Program remainderreminder :
   uint -> uint -> uint -> uint -> uint -> uint -> uint ->
     uint.

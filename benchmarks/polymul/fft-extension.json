@@ -1,0 +1,46 @@
+{
+  "date_utc": "2026-11-09T01:27:00.071148+00:00",
+  "max_coefficients_per_input": 131072,
+  "max_degree_per_input": 131071,
+  "timeout_seconds_per_size": 120,
+  "sizes": [
+    {
+      "coefficients_per_input": 24576,
+      "degree": 24575,
+      "status": "measured",
+      "median_seconds": 0.151704072952
+    },
+    {
+      "coefficients_per_input": 32768,
+      "degree": 32767,
+      "status": "measured",
+      "median_seconds": 0.155323982239
+    },
+    {
+      "coefficients_per_input": 49152,
+      "degree": 49151,
+      "status": "measured",
+      "median_seconds": 0.309233188629
+    },
+    {
+      "coefficients_per_input": 65536,
+      "degree": 65535,
+      "status": "measured",
+      "median_seconds": 0.316571950912
+    },
+    {
+      "coefficients_per_input": 98304,
+      "degree": 98303,
+      "status": "measured",
+      "median_seconds": 0.655899047852
+    },
+    {
+      "coefficients_per_input": 131072,
+      "degree": 131071,
+      "status": "measured",
+      "median_seconds": 0.665745019913
+    }
+  ],
+  "harness_sha256": "bff3253a1d5c52ba0091d04488f17283b531109b5071dc73f3617fb71929ec2b",
+  "validation": "Each trial checks 35 coefficient positions by exact convolution, four modular polynomial identities over two primes, all coefficient magnitudes, result length, and input immutability."
+}

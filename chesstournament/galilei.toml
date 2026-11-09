@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["chesstournament_implem.v", "chesstournament.spec"]
+files = ["chesstournament_implem.v", "chesstournament_proofs.v", "chesstournament.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

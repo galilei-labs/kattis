@@ -13,7 +13,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 1,000 distinct labels, each from 2 to 2,000,000,000.
+    - $2\text{ to }1{,}000$ distinct labels, each in $[2, 2{,}000{,}000{,}000]$.
     - The maximum flow is at most $10^{9}$. *)
 
 (** ** Examples *)
@@ -170,8 +170,8 @@ Definition mazemovement_spec (rooms : list N)
 (** Build a network on distinct integer labels, joining two vertices when their greatest
     common divisor exceeds one and using that divisor as capacity in each direction.
     Find the maximum flow from the smallest label to the largest.
-    - Input [rooms]:
-    - Output [output]: *)
+    - Input [rooms]: Distinct vertex labels defining the GCD-based capacities.
+    - Output [output]: The output is the maximum flow from the smallest to the largest vertex label, using the specified GCD-based edge capacities. *)
 Program mazemovement : array uint -> uint.
 
 (** ** Bridge *)

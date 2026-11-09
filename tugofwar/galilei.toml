@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["tugofwar_implem.v", "tugofwar.spec"]
+files = ["tugofwar_implem.v", "tugofwar_proofs.v", "tugofwar.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

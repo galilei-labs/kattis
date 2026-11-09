@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["intersectingrectangles_implem.v", "intersectingrectangles.spec"]
+files = ["intersectingrectangles_implem.v", "intersectingrectangles_proofs.v", "intersectingrectangles.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 1,000 points.
+    - Point count: $1 \le n \le 1{,}000$.
     - Coordinate absolute values are at most $10^{6}$. *)
 
 (** ** Examples *)
@@ -149,9 +149,9 @@ Definition tsp_spec
 
 (** Construct a closed tour visiting every point exactly once, with total Euclidean length
     at most twice the optimum.
-    - Input [x_coords]:
-    - Input [y_coords]:
-    - Output [output]: *)
+    - Input [x_coords]: Horizontal coordinates of the points to visit.
+    - Input [y_coords]: Vertical coordinates of the corresponding points.
+    - Output [output]: The output is a closed tour visiting every input point exactly once, with total Euclidean length at most twice the optimal tour length. *)
 Program tsp : array float -> array float -> array uint.
 
 (** ** Bridge *)

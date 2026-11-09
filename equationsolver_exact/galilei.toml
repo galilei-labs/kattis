@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["equationsolver_exact_implem.v", "equationsolver_exact.spec"]
+files = ["equationsolver_exact_implem.v", "equationsolver_exact_proofs.v", "equationsolver_exact.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

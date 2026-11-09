@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["remainderreminder_implem.v", "remainderreminder.spec"]
+files = ["remainderreminder_implem.v", "remainderreminder_proofs.v", "remainderreminder.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["stringmultimatching_implem.v", "stringmultimatching.spec"]
+files = ["stringmultimatching_implem.v", "stringmultimatching_proofs.v", "stringmultimatching.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

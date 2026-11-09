@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Text length from 1 to 100,000. *)
+    - Text length in $[1, 100{,}000]$. *)
 
 (** ** Examples *)
 
@@ -102,8 +102,8 @@ Definition suffix_array_spec
 (** ** Interface *)
 
 (** Sort a text's suffixes lexicographically and return their starting positions.
-    - Input [text]:
-    - Output [output]: *)
+    - Input [text]: Text whose suffixes are to be sorted.
+    - Output [output]: The output is a permutation of all starting positions that orders the corresponding suffixes lexicographically. *)
 Program suffix_array : PrimString.string -> array uint.
 
 (** ** Bridge *)

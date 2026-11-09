@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 50,000 vertices forming a tree; edge lengths from 1 to 100.
-    - Walk length from 1 to $10^{4}$; at most one existing mark per vertex. *)
+    - Vertex count: $2 \le n \le 50{,}000$ forming a tree; edge lengths in $[1, 100]$.
+    - Walk length in $[1, 10^{4}]$; at most one existing mark per vertex. *)
 
 (** ** Examples *)
 
@@ -283,13 +283,13 @@ Definition joggers_spec
 (** In a weighted tree with a designated root, add the fewest marked vertices so every edge
     usable by a closed walk of a specified length from the root has a marked endpoint.
     Walks may turn around inside edges.
-    - Input [intersection_count]:
-    - Input [jog_distance]:
-    - Input [trail_starts]:
-    - Input [trail_ends]:
-    - Input [trail_lengths]:
-    - Input [lamps]:
-    - Output [output]: *)
+    - Input [intersection_count]: Number of vertices in the tree.
+    - Input [jog_distance]: Required length of a closed walk from the root.
+    - Input [trail_starts]: First endpoint of each tree edge.
+    - Input [trail_ends]: Second endpoint of each tree edge.
+    - Input [trail_lengths]: Length of each corresponding edge.
+    - Input [lamps]: Vertices that are already marked.
+    - Output [output]: The output is the minimum number of additional marked vertices needed so every edge usable by an allowed closed walk has a marked endpoint. *)
 Program joggers : uint -> uint -> array uint -> array uint
   ->
   array uint -> array uint -> uint.

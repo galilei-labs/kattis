@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Integer from 2 to $10^{24}$. *)
+    - Integer in $[2, 10^{24}]$. *)
 
 (** ** Examples *)
 
@@ -75,8 +75,8 @@ Definition bigfactoring_spec (number : Z)
 (** ** Interface *)
 
 (** Factor an integer into primes, listed in ascending order with multiplicity.
-    - Input [number]:
-    - Output [output]: *)
+    - Input [number]: Positive integer to factor into primes.
+    - Output [output]: The output is the ascending list of prime factors whose product equals the input, including multiplicities. *)
 Program bigfactoring : Z -> array Z.
 
 (** ** Bridge *)

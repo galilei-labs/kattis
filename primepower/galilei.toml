@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["primepower_implem.v", "primepower.spec"]
+files = ["primepower_implem.v", "primepower_proofs.v", "primepower.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

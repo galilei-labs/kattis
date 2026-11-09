@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Nonempty patterns with total length at most 100,000.
-    - Nonempty text of length at most 200,000. *)
+    - Nonempty patterns with total length at most $100{,}000$.
+    - Nonempty text of length at most $200{,}000$. *)
 
 (** ** Examples *)
 
@@ -139,9 +139,9 @@ Definition multimatch_spec
 
 (** Find every occurrence of each pattern in a text, including overlaps, and return
     ascending starting positions for each pattern.
-    - Input [patterns]:
-    - Input [text]:
-    - Output [output]: *)
+    - Input [patterns]: Patterns whose occurrences are sought.
+    - Input [text]: Text searched for every pattern.
+    - Output [output]: For each pattern, the output lists every occurrence position, including overlaps, exactly once in ascending order. *)
 Program multimatch : array PrimString.string ->
   PrimString.string ->
                        array (array uint).

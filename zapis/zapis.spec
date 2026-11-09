@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Even string length from 2 to 200.
+    - Even string length in $[2, 200]$.
     - Characters are round, square or curly brackets, or question marks. *)
 
 (** ** Examples *)
@@ -127,8 +127,8 @@ Definition zapis_spec
 (** Count substitutions of question marks that produce a balanced sequence of round, square
     and curly brackets. Return the last five digits and whether the count reaches
     100000.
-    - Input [sequence]:
-    - Output [output]: *)
+    - Input [sequence]: Bracket sequence containing question marks to replace.
+    - Output [output]: The output gives the number of balanced-bracket completions modulo 100,000 and a flag indicating whether the full count is at least 100,000. *)
 Program zapis : PrimString.string -> uint * bool.
 
 (** ** Bridge *)

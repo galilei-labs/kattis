@@ -15,7 +15,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["cold_implem.v", "cold.spec"]
+files = ["cold_implem.v", "cold_proofs.v", "cold.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

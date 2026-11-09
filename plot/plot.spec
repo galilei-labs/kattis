@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Polynomial degree from 1 to 6.
-    - Integer coefficients with absolute value at most 50; leading
+    - Polynomial degree in $[1, 6]$.
+    - Integer coefficients with absolute value at most $50$; leading
       coefficient nonzero. *)
 
 (** ** Examples *)
@@ -108,9 +108,9 @@ Definition plot_spec (degree : N) (coefficients : list Z)
 (** Convert a polynomial's coefficients into initial finite differences. Starting with these
     values and repeatedly adding each next entry to its predecessor must produce the
     polynomial's values at 0, 1, 2 and so on.
-    - Input [degree]:
-    - Input [coefficients]:
-    - Output [output]: *)
+    - Input [degree]: Degree of the polynomial.
+    - Input [coefficients]: Coefficients $a_n,\ldots,a_0$ in decreasing degree order.
+    - Output [output]: The output contains the initial finite differences that generate the polynomial's values at every nonnegative integer input. *)
 Program plot : uint -> array sint -> array sint.
 
 (** ** Bridge *)

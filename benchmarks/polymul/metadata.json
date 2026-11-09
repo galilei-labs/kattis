@@ -1,0 +1,28 @@
+{
+  "date_utc": "2026-11-09T01:04:39.126631+00:00",
+  "machine": "Apple M3 Max",
+  "memory_bytes": 38654705664,
+  "os": "macOS-14.8.1-arm64-arm-64bit-Mach-O",
+  "ocaml_version": "4.14.2",
+  "ocaml_config": "version: 4.14.2\nstandard_library_default: /Users/cosmo/.opam/rocq-9.2/lib/ocaml\nstandard_library: /Users/cosmo/.opam/rocq-9.2/lib/ocaml\nccomp_type: cc\nc_compiler: cc\nocamlc_cflags: -O2 -fno-strict-aliasing -fwrapv -pthread  \nocamlc_cppflags: -D_FILE_OFFSET_BITS=64 \nocamlopt_cflags: -O2 -fno-strict-aliasing -fwrapv -pthread  \nocamlopt_cppflags: -D_FILE_OFFSET_BITS=64 \nbytecomp_c_compiler: cc -O2 -fno-strict-aliasing -fwrapv -pthread   -D_FILE_OFFSET_BITS=64 \nnative_c_compiler: cc -O2 -fno-strict-aliasing -fwrapv -pthread   -D_FILE_OFFSET_BITS=64 \nbytecomp_c_libraries: -lm  -lpthread\nnative_c_libraries: -lm \nnative_pack_linker: ld -r -o \narchitecture: arm64\nmodel: default\nint_size: 63\nword_size: 64\nsystem: macosx\nasm: cc -c -Wno-trigraphs\nasm_cfi_supported: true\nwith_frame_pointers: false\next_exe: \next_obj: .o\next_asm: .s\next_lib: .a\next_dll: .so\nos_type: Unix\ndefault_executable_name: a.out\nsysthread_supported: true\nhost: aarch64-apple-darwin23.6.0\ntarget: aarch64-apple-darwin23.6.0\nflambda: true\nsafe_string: true\ndefault_safe_string: true\nflat_float_array: true\nfunction_sections: false\nafl_instrument: false\nwindows_unicode: false\nsupports_shared_libraries: true\nnaked_pointers: true\nexec_magic_number: Caml1999X031\ncmi_magic_number: Caml1999I031\ncmo_magic_number: Caml1999O031\ncma_magic_number: Caml1999A031\ncmx_magic_number: Caml1999y031\ncmxa_magic_number: Caml1999z031\nast_impl_magic_number: Caml1999M031\nast_intf_magic_number: Caml1999N031\ncmxs_magic_number: Caml1999D031\ncmt_magic_number: Caml1999T031\nlinear_magic_number: Caml1999L031",
+  "runtime_package": "/Users/cosmo/.opam/rocq-9.2/lib/rocq-runtime/kernel",
+  "compiler_flags": [
+    "-O3"
+  ],
+  "seed": 20261109,
+  "trials_per_size": 7,
+  "coefficients": "Uniform integers in [-3,3]; zero leading coefficients replaced by 1",
+  "timing": "Wall time per call; adaptive batches targeting >=30 ms (capped at 4096 calls); full major GC before each batch; alternate algorithm order",
+  "included": "Function evaluation, result allocation, FFT planning/twiddles, and GC during the batch",
+  "excluded": "Input generation, correctness checks, calibration, GC before the batch, compilation, and I/O",
+  "validation": "Every trial compares all output coefficients; sizes <=256 also checked against independent integer convolution; input immutability checked",
+  "backend": "Upstream mutable-array Marray extraction; this backend is not a verified extraction",
+  "scope": "Sizes >256 coefficients per input exceed polymul1 specification bounds; timings there are empirical extrapolation",
+  "sources_sha256": {
+    "polymul1/extraction/ocaml/marray.ml": "3af21069bae7cf13257eef4b6029d872551f19ac15459fb3aeed2cdfd6fd3a19",
+    "polymul1/extraction/ocaml/polymul1_extracted_marray.ml": "2f036f3026e7daf3ed4417022c2993d82485d328cf6d0ee7a5bd9a5968badd6a",
+    "polymul2/extraction/ocaml/polymul2_extracted_marray.ml": "5a54061006ce3fd20b7dcea283367768a87972b067ba1408d86dbd0452899721"
+  },
+  "harness_sha256": "be3148d47c6aa4fa7b9c4f6acb086d0732fc31eee40c2a601bf8324808ec713b",
+  "matplotlib_version": "3.11.2"
+}

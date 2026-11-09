@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["chatter_implem.v", "chatter.spec"]
+files = ["chatter_implem.v", "chatter_proofs.v", "chatter.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

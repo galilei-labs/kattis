@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20 item sizes, each from 1 to $10^{3}$.
-    - Target size from 1 to $10^{18}$. *)
+    - $1\text{ to }20$ item sizes, each in $[1, 10^{3}]$.
+    - Target size in $[1, 10^{18}]$. *)
 
 (** ** Examples *)
 
@@ -99,9 +99,9 @@ Definition fillable_spec (knapsack_size : N)
 
 (** Decide whether a target size is a nonnegative integer combination of the given item
     sizes, with unlimited copies of each item.
-    - Input [knapsack_size]:
-    - Input [item_sizes]:
-    - Output [output]: *)
+    - Input [knapsack_size]: Target size to fill exactly.
+    - Input [item_sizes]: Available item sizes; each can be used any number of times.
+    - Output [output]: The output is true exactly when the target size is a nonnegative integer combination of the available item sizes. *)
 Program fillable : uint -> array uint -> bool.
 
 (** ** Bridge *)

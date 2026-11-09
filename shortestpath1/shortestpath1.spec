@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 vertices; 0 to 30,000 edges.
-    - Edge weights from 0 to 1,000. *)
+    - Vertex count: $1 \le n \le 10{,}000$; Edge count: $0 \le m \le 30{,}000$.
+    - Edge weights in $[0, 1{,}000]$. *)
 
 (** ** Examples *)
 
@@ -185,12 +185,12 @@ Definition dijkstra_spec
 
 (** Find the shortest distance from a source to every vertex of a directed graph with
     nonnegative edge weights, identifying unreachable vertices.
-    - Input [node_count]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Input [edge_weights]:
-    - Input [source]:
-    - Output [output]: *)
+    - Input [node_count]: Number of graph vertices.
+    - Input [edge_sources]: Source vertex of each directed edge.
+    - Input [edge_targets]: Destination vertex of each directed edge.
+    - Input [edge_weights]: Nonnegative weight of each edge.
+    - Input [source]: Vertex from which distances are measured.
+    - Output [output]: Each output entry gives the shortest distance from the source to its vertex, or None if that vertex is unreachable. *)
 Program dijkstra : uint -> array uint -> array uint -> array
   uint ->
                      uint -> array (option uint).

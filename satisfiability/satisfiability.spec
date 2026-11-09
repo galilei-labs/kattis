@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20 Boolean variables and 1 to 100 clauses. *)
+    - Variable count: $1 \le n \le 20$ and Clause count: $1 \le m \le 100$. *)
 
 (** ** Examples *)
 
@@ -137,9 +137,9 @@ Definition satisfiable_spec
 (** ** Interface *)
 
 (** Decide whether a Boolean formula in conjunctive normal form has a satisfying assignment.
-    - Input [variable_count]:
-    - Input [clauses]:
-    - Output [output]: *)
+    - Input [variable_count]: Number of Boolean variables.
+    - Input [clauses]: Clauses of the formula, each containing signed literals.
+    - Output [output]: The output is true exactly when the Boolean formula has a satisfying assignment. *)
 Program satisfiable : uint -> array (array (literal uint))
   -> bool.
 

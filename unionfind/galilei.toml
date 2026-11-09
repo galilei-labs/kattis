@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["unionfind_implem.v", "unionfind.spec"]
+files = ["unionfind_implem.v", "unionfind_proofs.v", "unionfind.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

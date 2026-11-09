@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ n $\le$ 1,000,000,000. *)
+    - $1 \le n \le 10^9$. *)
 
 (** ** Examples *)
 
@@ -94,8 +94,8 @@ Definition relatives_spec
 (** ** Interface *)
 
 (** Count the positive integers smaller than n that are relatively prime to n.
-    - Input [number]:
-    - Output [output]: *)
+    - Input [number]: Positive integer against which coprimality is tested.
+    - Output [output]: The output counts positive integers smaller than the input that are coprime to it. *)
 Program relatives : uint -> uint.
 
 (** ** Bridge *)

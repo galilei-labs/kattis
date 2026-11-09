@@ -10,7 +10,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 999 entries, each from 1 to $2^{31}$ - 1.
+    - Entry count: $3 \le n \le 999$, each in $[1, 2^{31}-1]$.
     - Exactly one value has odd multiplicity. *)
 
 (** ** Examples *)
@@ -88,8 +88,8 @@ Definition odd_one_spec (codes : list N)
 (** ** Interface *)
 
 (** Find the unique value occurring an odd number of times in a sequence.
-    - Input [codes]:
-    - Output [output]: *)
+    - Input [codes]: Integer values containing one value of odd multiplicity.
+    - Output [output]: The output is the unique input value with odd multiplicity. *)
 Program odd_one : array uint -> uint.
 
 (** ** Bridge *)

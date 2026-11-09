@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Temperature from -50 to 50 and wind speed from 0 to 80, each with one
+    - Temperature in $[-50, 50]$ and wind speed in $[0, 80{,}]$ each with one
       decimal place.
-    - Integer wind direction from 0 to 360 and humidity from 0 to 110.
+    - Integer wind direction in $[0, 360]$ and humidity in $[0, 110]$.
     - Measurements may be missing. *)
 
 (** ** Examples *)
@@ -289,12 +289,12 @@ Definition vedurspa_spec
 (** Extrapolate each column of a time series using a least-squares line, clamping
     predictions to the column's permitted range and rounding integer-valued columns.
     Return missing predictions for columns with fewer than two observations.
-    - Input [temperatures]:
-    - Input [wind_directions]:
-    - Input [wind_speeds]:
-    - Input [humidities]:
-    - Input [prediction_count]:
-    - Output [output]: *)
+    - Input [temperatures]: Temperature observations in chronological order, including missing values.
+    - Input [wind_directions]: Wind-direction observations in corresponding order.
+    - Input [wind_speeds]: Wind-speed observations in corresponding order.
+    - Input [humidities]: Humidity observations in corresponding order.
+    - Input [prediction_count]: Number of future hourly measurements to predict.
+    - Output [output]: For prediction counts at most 4,194,303, each output column follows the specified least-squares fit, clamping, rounding and missing-data rules within the stated tolerances. Larger prediction counts are not constrained by this specification. *)
 Program vedurspa :
   array (option float) -> array (option uint) ->
   array (option float) -> array (option uint) -> uint ->

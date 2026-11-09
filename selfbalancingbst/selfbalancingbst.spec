@@ -12,8 +12,8 @@
     - Memory limit: 192 MB
 
     **Kattis Bounds**
-    - Map instance IDs from 1 to 1,000.
-    - Keys and values are signed 32-bit integers. *)
+    - Map instance IDs in $[1, 1{,}000]$.
+    - Keys and values are signed integers in $[-2^{31}, 2^{31}-1]$. *)
 
 (** ** Examples *)
 
@@ -308,11 +308,11 @@ Definition run_commands_spec
 (** Execute operations on ordered integer key-value maps with a cursor per map, including
     insertion, deletion, lookup, copying, cursor movement and rank queries. Return the
     requested query results.
-    - Input [instance_ids]:
-    - Input [operations]:
-    - Input [first_args]:
-    - Input [second_args]:
-    - Output [output]: *)
+    - Input [instance_ids]: Map instance operated on by each command.
+    - Input [operations]: Operation code of each command.
+    - Input [first_args]: First argument of each command, when required.
+    - Input [second_args]: Second argument of each command, when required.
+    - Output [output]: The output is the sequence of query results obtained by executing the commands on initially empty ordered maps. *)
 Program run_commands :
   array uint -> array uint -> array sint -> array sint ->
     array (option sint).

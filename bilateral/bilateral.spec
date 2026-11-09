@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 distinct edges.
-    - The two vertex sets use IDs 1,000 to 1,999 and 2,000 to 2,999. *)
+    - $1\text{ to }10{,}000$ distinct edges.
+    - The two vertex sets use IDs $1{,}000\text{ to }1{,}999$ and $2{,}000\text{ to }2{,}999$. *)
 
 (** ** Examples *)
 
@@ -127,9 +127,9 @@ Definition bilateral_spec
 (** Find a smallest vertex cover of a bipartite graph: a set containing at least one
     endpoint of every edge. Prefer a minimum cover containing vertex 1009 whenever one
     exists.
-    - Input [stockholm_members]:
-    - Input [london_members]:
-    - Output [output]: *)
+    - Input [stockholm_members]: First endpoint of each bipartite edge, using identifiers in the first partition.
+    - Input [london_members]: Corresponding endpoint in the second partition.
+    - Output [output]: The output is a minimum vertex cover of the bipartite graph. It includes vertex 1009 whenever a minimum cover containing that vertex exists. *)
 Program bilateral : array uint -> array uint -> array uint.
 
 (** ** Bridge *)

@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 10 values; each between -2,000,000 and 2,000,000.
+    - Value count: $2 \le n \le 10$; each between -$2{,}000{,}000$ and $2{,}000{,}000$.
     - At least two values differ. *)
 
 (** ** Examples *)
@@ -129,8 +129,8 @@ Definition ada_spec (values : list Z)
 
 (** Given polynomial values at equally spaced inputs, find the smallest possible degree and
     predict the next value.
-    - Input [values]:
-    - Output [output]: *)
+    - Input [values]: Polynomial values at equally spaced inputs.
+    - Output [output]: The output gives the minimum degree of a polynomial fitting the equally spaced observations and its value at the next input. *)
 Program ada : array sint -> uint * sint.
 
 (** ** Bridge *)

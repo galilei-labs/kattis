@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - At most 100,000 dictionary entries and 100,000 query words.
-    - Words contain 1 to 10 lowercase letters; dictionary keys are unique. *)
+    - At most $100{,}000$ dictionary entries and $100{,}000$ query words.
+    - Words contain $1\text{ to }10$ lowercase letters; dictionary keys are unique. *)
 
 (** ** Examples *)
 
@@ -136,10 +136,10 @@ Definition babelfish_spec
 
 (** Translate each query word using a dictionary of word pairs, reporting words that have no
     translation.
-    - Input [english_words]:
-    - Input [foreign_words]:
-    - Input [message_words]:
-    - Output [output]: *)
+    - Input [english_words]: Translations in dictionary order.
+    - Input [foreign_words]: Foreign words paired with those translations.
+    - Input [message_words]: Words to translate, in query order.
+    - Output [output]: Each output entry is the dictionary translation of the corresponding query, or None if the word is absent. *)
 Program babelfish :
   array PrimString.string -> array PrimString.string ->
   array PrimString.string -> array

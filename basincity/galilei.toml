@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["basincity_implem.v", "basincity.spec"]
+files = ["basincity_implem.v", "basincity_proofs.v", "basincity.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

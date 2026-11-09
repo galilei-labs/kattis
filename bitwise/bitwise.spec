@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ section count $\le$ sequence length $\le$ 500,000.
-    - Entries from 0 to $10^{9}$. *)
+    - Section count $k$ and sequence length $n$: $1 \le k \le n \le 500{,}000$.
+    - Entries in $[0, 10^{9}]$. *)
 
 (** ** Examples *)
 
@@ -115,9 +115,9 @@ Definition best_and_spec (section_count : N)
 
 (** Partition a circular sequence into a specified number of nonempty contiguous sections.
     Maximize the bitwise AND of the sections' bitwise ORs.
-    - Input [section_count]:
-    - Input [integers]:
-    - Output [output]: *)
+    - Input [section_count]: Required number of nonempty circular sections.
+    - Input [integers]: Values around the circle, in order.
+    - Output [output]: The output is the maximum bitwise AND of section ORs over all partitions into the requested number of nonempty circular sections. *)
 Program best_and : uint -> array uint -> uint.
 
 (** ** Bridge *)

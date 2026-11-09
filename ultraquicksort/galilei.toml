@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["ultraquicksort_implem.v", "ultraquicksort.spec"]
+files = ["ultraquicksort_implem.v", "ultraquicksort_proofs.v", "ultraquicksort.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

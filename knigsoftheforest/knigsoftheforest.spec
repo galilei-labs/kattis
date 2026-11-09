@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Pool size and observed year count from 1 to $10^{5}$.
-    - Entry years span 2011 through 2011 + year count - 1.
-    - Distinct strengths from 0 to $2^{31}$ - 1; a full pool enters initially
+    - Pool size and observed year count in $[1, 10^{5}]$.
+    - Entry years $y$ satisfy $2011 \le y \le 2011 + T - 1$, where $T$ is the year count.
+    - Distinct strengths in $[0, 2^{31}-1]$; a full pool enters initially
       and one new participant enters each subsequent year. *)
 
 (** ** Examples *)
@@ -156,13 +156,13 @@ Definition knigsoftheforest_spec
 (** Process annual arrivals into a competition where the strongest active participant wins
     and leaves each year. Determine when a designated participant wins, or whether the
     known arrivals are insufficient to tell.
-    - Input [pool_size]:
-    - Input [year_count]:
-    - Input [karl_year]:
-    - Input [karl_strength]:
-    - Input [other_years]:
-    - Input [other_strengths]:
-    - Output [output]: *)
+    - Input [pool_size]: Number of active participants in each annual competition.
+    - Input [year_count]: Number of years covered by the known arrivals.
+    - Input [karl_year]: Entry year of the designated participant.
+    - Input [karl_strength]: Strength of the designated participant.
+    - Input [other_years]: Entry years of the other participants.
+    - Input [other_strengths]: Strengths of the corresponding participants.
+    - Output [output]: The output is the year when the designated participant wins, or None if that participant does not win within the years determined by the input. *)
 Program knigsoftheforest :
   uint -> uint -> uint -> uint -> array uint ->
     array uint -> option uint.

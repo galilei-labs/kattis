@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["relatives_implem.v", "relatives.spec"]
+files = ["relatives_implem.v", "relatives_proofs.v", "relatives.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -1,0 +1,30 @@
+{
+  "date_utc": "2026-11-09T01:30:05.242072+00:00",
+  "max_coefficients_per_input": 131072,
+  "max_degree_per_input": 131071,
+  "algorithm": "schoolbook",
+  "scope": "Sizes above 256 coefficients per input exceed the schoolbook specification bounds.",
+  "timeout_seconds_per_size": 120,
+  "sizes": [
+    {
+      "coefficients_per_input": 24576,
+      "degree": 24575,
+      "status": "measured",
+      "median_seconds": 2.27618002892
+    },
+    {
+      "coefficients_per_input": 32768,
+      "degree": 32767,
+      "status": "measured",
+      "median_seconds": 4.03928399086
+    },
+    {
+      "coefficients_per_input": 49152,
+      "status": "stopped",
+      "reason": "Further runs cancelled at user request; extrapolate from the completed measurements."
+    }
+  ],
+  "harness_sha256": "7d86aa0ef4382a96e033d146d6ef2cdee95dba1f19b217b0233d977bafb24419",
+  "validation": "Each trial checks 35 coefficient positions by exact convolution, four modular polynomial identities over two primes, all coefficient magnitudes, result length, and input immutability.",
+  "extrapolation": "Quadratic scaling anchored at the last completed size; no machine failure was observed."
+}

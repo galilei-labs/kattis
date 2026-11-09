@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["catenyms_implem.v", "catenyms.spec"]
+files = ["catenyms_implem.v", "catenyms_proofs.v", "catenyms.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

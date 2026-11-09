@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 150 vertices; 0 to 5,000 edges.
-    - Edge weights from -1,000 to 1,000. *)
+    - Vertex count: $1 \le n \le 150$; Edge count: $0 \le m \le 5{,}000$.
+    - Edge weights in $[-1{,}000, 1{,}000]$. *)
 
 (** ** Examples *)
 
@@ -240,11 +240,11 @@ Definition allpairspath_spec (node_count : N)
 
 (** Find the minimum walk cost between every pair of vertices in a directed weighted graph,
     distinguishing unreachable pairs and costs unbounded below by negative cycles.
-    - Input [node_count]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Input [edge_weights]:
-    - Output [output]: *)
+    - Input [node_count]: Number of graph vertices.
+    - Input [edge_sources]: Source vertex of each directed edge.
+    - Input [edge_targets]: Destination vertex of each directed edge.
+    - Input [edge_weights]: Cost of each edge, in matching order.
+    - Output [output]: Each output entry gives the minimum walk cost for its vertex pair, or identifies an unreachable pair or a cost unbounded below. *)
 Program allpairspath : uint -> array uint -> array uint
   -> array sint ->
                            array (array (answer sint)).

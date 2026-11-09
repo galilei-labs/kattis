@@ -12,10 +12,10 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 1,000 vertices; 1 to 5,000 directed edges.
-    - Labels from 1 to B, where B $\le$ $10^{9}$.
+    - Vertex count: $2 \le n \le 1{,}000$; Directed edge count: $1 \le m \le 5{,}000$.
+    - Labels from $1$ to B, where B $\le 10^{9}$.
     - Source and destination differ; each ordered vertex pair has at most
-      one edge, with an allowed interval inside 1 through B. *)
+      one edge, with an allowed interval inside $1$ through B. *)
 
 (** ** Examples *)
 
@@ -167,15 +167,15 @@ Definition securitybadge_spec
 
 (** Each edge of a directed graph permits an inclusive interval of integer labels. Count the
     labels that permit a path from a specified source to a destination.
-    - Input [room_count]:
-    - Input [badge_count]:
-    - Input [start]:
-    - Input [destination]:
-    - Input [lock_sources]:
-    - Input [lock_targets]:
-    - Input [lowest_badges]:
-    - Input [highest_badges]:
-    - Output [output]: *)
+    - Input [room_count]: Number of graph vertices.
+    - Input [badge_count]: Largest allowed integer label.
+    - Input [start]: Starting vertex of the path.
+    - Input [destination]: Required destination vertex.
+    - Input [lock_sources]: Source vertex of each directed edge.
+    - Input [lock_targets]: Destination vertex of each directed edge.
+    - Input [lowest_badges]: Smallest label permitted by each edge.
+    - Input [highest_badges]: Largest label permitted by each edge.
+    - Output [output]: The output counts allowed integer labels for which a directed path exists from the source to the destination. *)
 Program securitybadge : uint -> uint -> uint -> uint ->
   array uint ->
   array uint -> array uint -> array uint -> uint.

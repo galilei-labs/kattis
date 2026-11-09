@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["cudak_implem.v", "cudak.spec"]
+files = ["cudak_implem.v", "cudak_proofs.v", "cudak.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

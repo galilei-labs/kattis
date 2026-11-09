@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["polymul1_implem.v", "polymul1.spec"]
+files = ["polymul1_implem.v", "polymul1_proofs.v", "polymul1.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

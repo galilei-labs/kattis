@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 jobs; closing time from 1 to 47.
-    - Rewards from 1 to 100,000; deadlines from 0 to closing time - 1. *)
+    - Job count: $1 \le n \le 10{,}000$; closing time in $[1, 47]$.
+    - Rewards in $[1, 100{,}000]$; deadlines from $0$ to closing time - $1$. *)
 
 (** ** Examples *)
 
@@ -130,10 +130,10 @@ Definition bank_spec (closing_time : N)
 
 (** Choose unit-duration jobs to maximize total reward before a closing time. Each job must
     start no later than its deadline, and only one job can run at a time.
-    - Input [closing_time]:
-    - Input [cash_amounts]:
-    - Input [deadlines]:
-    - Output [output]: *)
+    - Input [closing_time]: Number of available unit-time service slots.
+    - Input [cash_amounts]: Reward earned by completing each job.
+    - Input [deadlines]: Latest permitted start time for each job.
+    - Output [output]: The output is the maximum total reward achievable by scheduling unit-duration jobs within their deadlines and the closing time. *)
 Program bank : uint -> array uint -> array uint -> uint.
 
 (** ** Bridge *)

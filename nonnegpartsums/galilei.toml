@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["nonnegpartsums_implem.v", "nonnegpartsums.spec"]
+files = ["nonnegpartsums_implem.v", "nonnegpartsums_proofs.v", "nonnegpartsums.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

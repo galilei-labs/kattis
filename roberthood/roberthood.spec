@@ -10,8 +10,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 100,000 points.
-    - Integer coordinates with absolute value at most 1,000. *)
+    - Point count: $2 \le n \le 100{,}000$.
+    - Integer coordinates with absolute value at most $1{,}000$. *)
 
 (** ** Examples *)
 
@@ -121,9 +121,9 @@ Definition roberthood_spec
 (** ** Interface *)
 
 (** Find the greatest Euclidean distance between any two input points.
-    - Input [abscissas]:
-    - Input [ordinates]:
-    - Output [output]: *)
+    - Input [abscissas]: Horizontal coordinates of the input points.
+    - Input [ordinates]: Vertical coordinates of the corresponding points.
+    - Output [output]: The output approximates the maximum Euclidean distance between input points, within the specified absolute or relative tolerance. *)
 Program roberthood : array sint -> array sint -> float.
 
 (** ** Bridge *)

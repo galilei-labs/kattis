@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 values and 1 to 10,000 queries.
-    - Values from 0 to 14; each query is a nonempty interval within the
+    - Value count: $1 \le n \le 10{,}000$ and Query count: $1 \le q \le 10{,}000$.
+    - Values in $[0, 14]$; each query is a nonempty interval within the
       sequence. *)
 
 (** ** Examples *)
@@ -133,10 +133,10 @@ Definition farmingmars_spec (ph_values : list R)
 
 (** For each interval of a sequence, decide whether one value occurs in strictly more than
     half its positions.
-    - Input [ph_values]:
-    - Input [left_ends]:
-    - Input [right_ends]:
-    - Output [output]: *)
+    - Input [ph_values]: Measured values in sequence order.
+    - Input [left_ends]: Inclusive left endpoint of each interval query.
+    - Input [right_ends]: Inclusive right endpoint of each interval query.
+    - Output [output]: Each output entry is true exactly when a value occupies strictly more than half of the corresponding inclusive interval. *)
 Program farmingmars : array float -> array uint -> array
   uint -> array bool.
 

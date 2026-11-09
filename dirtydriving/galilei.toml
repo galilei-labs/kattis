@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["dirtydriving_implem.v", "dirtydriving.spec"]
+files = ["dirtydriving_implem.v", "dirtydriving_proofs.v", "dirtydriving.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

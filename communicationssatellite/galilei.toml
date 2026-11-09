@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["communicationssatellite_implem.v", "communicationssatellite.spec"]
+files = ["communicationssatellite_implem.v", "communicationssatellite_proofs.v", "communicationssatellite.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

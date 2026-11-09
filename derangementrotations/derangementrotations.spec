@@ -12,8 +12,8 @@
     - Memory limit: 2048 MB
 
     **Kattis Bounds**
-    - 3 $\le$ n $\le$ $10^{6}$.
-    - Prime modulus from $10^{8}$ to 1,000,000,007. *)
+    - Permutation size: $3 \le n \le 10^6$.
+    - Prime modulus in $[10^{8}, 1{,}000{,}000{,}007]$. *)
 
 (** ** Examples *)
 
@@ -131,9 +131,9 @@ Definition derangement_rotations_spec
 
 (** Count permutations of 1 through n with no fixed points for which exactly n - 2 cyclic
     rotations also have no fixed points. Return the count modulo a given prime.
-    - Input [perm_size]:
-    - Input [prime_modulus]:
-    - Output [output]: *)
+    - Input [perm_size]: Size of the permutations to count.
+    - Input [prime_modulus]: Prime modulus used for the result.
+    - Output [output]: The output counts derangements having exactly n - 2 cyclic rotations that are also derangements, modulo the given prime. *)
 Program derangement_rotations : uint -> uint -> uint.
 
 (** ** Bridge *)

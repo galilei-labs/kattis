@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{6}$ integers, each from -1,000 to 1,000. *)
+    - Sequence length: $1 \le n \le 10^{6}$, each in $[-1{,}000, 1{,}000]$. *)
 
 (** ** Examples *)
 
@@ -96,8 +96,8 @@ Definition count_good_shifts_spec (sequence : list Z)
 (** ** Interface *)
 
 (** Count cyclic shifts of an integer sequence whose every prefix has a nonnegative sum.
-    - Input [sequence]:
-    - Output [output]: *)
+    - Input [sequence]: Integer sequence whose cyclic shifts are tested.
+    - Output [output]: The output counts cyclic shifts for which every prefix sum is nonnegative. *)
 Program count_good_shifts : array sint -> uint.
 
 (** ** Bridge *)

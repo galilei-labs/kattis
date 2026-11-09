@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["derangementrotations_implem.v", "derangementrotations.spec"]
+files = ["derangementrotations_implem.v", "derangementrotations_proofs.v", "derangementrotations.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

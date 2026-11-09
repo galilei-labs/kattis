@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 given relationships and 1 to 10,000 queries.
-    - At most 500 distinct class names; query names occur in the given
+    - $1\text{ to }10{,}000$ given relationships and Query count: $1 \le q \le 10{,}000$.
+    - At most $500$ distinct class names; query names occur in the given
       relationships.
     - No nontrivial is-a cycles. *)
 
@@ -205,10 +205,14 @@ Definition isahasa_spec (given_sources : list string)
 
 (** ** Interface *)
 
-(** ** Interface *)
-
 (** The [isahasa] program on machine values.
-    - Output [output]: *)
+    - Input [given_sources]: Source class of each given relationship.
+    - Input [given_kinds]: Kind of each given relationship: is-a or has-a.
+    - Input [given_targets]: Target class of each given relationship.
+    - Input [query_sources]: Source class of each query.
+    - Input [query_kinds]: Relationship kind asked about in each query.
+    - Input [query_targets]: Target class of each query.
+    - Output [output]: Each output entry is true exactly when the corresponding relationship follows from the given is-a and has-a facts. *)
 Program isahasa :
   array PrimString.string -> array relkind ->
     array PrimString.string ->

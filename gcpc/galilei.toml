@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["gcpc_implem.v", "gcpc.spec"]
+files = ["gcpc_implem.v", "gcpc_proofs.v", "gcpc.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

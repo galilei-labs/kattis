@@ -10,8 +10,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 entries.
-    - Signed 32-bit integer values. *)
+    - Entry count: $1 \le n \le 100{,}000$.
+    - Signed $32$-bit integer values. *)
 
 (** ** Examples *)
 
@@ -116,8 +116,8 @@ Definition lis_spec (sequence : list Z)
 (** ** Interface *)
 
 (** Return the positions of a longest strictly increasing subsequence.
-    - Input [sequence]:
-    - Output [output]: *)
+    - Input [sequence]: Integer sequence in which to find an increasing subsequence.
+    - Output [output]: The output is an increasing sequence of input indices identifying a longest strictly increasing subsequence. *)
 Program lis : array sint -> array uint.
 
 (** ** Bridge *)

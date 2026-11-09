@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 unknowns, with a square coefficient matrix.
+    - Number of unknowns: $1 \le n \le 100$, with a square coefficient matrix.
     - Coefficients and right-hand sides are floating-point numbers; no
       magnitude bound is stated. *)
 
@@ -194,10 +194,10 @@ Definition solve_spec (unknown_count : N)
 (** Solve a square linear system, distinguishing a unique solution, multiple solutions and
     inconsistency. For a unique solution, approximate each component within 0.001
     wherever that accuracy is representable.
-    - Input [unknown_count]:
-    - Input [matrix]:
-    - Input [right_sides]:
-    - Output [output]: *)
+    - Input [unknown_count]: Number of unknowns and equations.
+    - Input [matrix]: Square coefficient matrix of the linear system.
+    - Input [right_sides]: Right-hand-side vector of the linear system.
+    - Output [output]: The output classifies the system as inconsistent, underdetermined or uniquely solvable. A unique solution is approximated within 0.001 wherever that accuracy is representable. *)
 Program solve : uint -> array
   (array float) -> array float ->
                   outcome (array float).

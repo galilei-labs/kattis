@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ E $\le$ 1,000,000.
-    - 1 $\le$ lower bound $\le$ upper bound $\le$ 1,000,000. *)
+    - Exponent: $1 \le E \le 10^6$.
+    - Interval endpoints: $1 \le L \le R \le 10^6$. *)
 
 (** ** Examples *)
 
@@ -98,10 +98,10 @@ Definition primepower_spec
 
 (** Compute the product of p^E over all primes p in a given inclusive interval, modulo
     1000000007.
-    - Input [exponent]:
-    - Input [low]:
-    - Input [high]:
-    - Output [output]: *)
+    - Input [exponent]: Power applied to each prime.
+    - Input [low]: Inclusive lower endpoint of the prime interval.
+    - Input [high]: Inclusive upper endpoint of the prime interval.
+    - Output [output]: The output is the product of the specified power of every prime in the inclusive interval, modulo $10^9 + 7$. *)
 Program primepower : uint -> uint -> uint -> uint.
 
 (** ** Bridge *)

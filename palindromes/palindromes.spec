@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 lowercase characters; 1 to 100,000 queries.
+    - $1\text{ to }100{,}000$ lowercase characters; Query count: $1 \le q \le 100{,}000$.
     - Each query is a nonempty interval within the string. *)
 
 (** ** Examples *)
@@ -144,10 +144,10 @@ Definition palindromes_spec (name : String.string)
 
 (** For each queried interval of a string, count the palindromic substrings contained
     entirely within that interval.
-    - Input [name]:
-    - Input [left_ends]:
-    - Input [right_ends]:
-    - Output [output]: *)
+    - Input [name]: Text containing the queried substrings.
+    - Input [left_ends]: Inclusive left endpoint of each query.
+    - Input [right_ends]: Inclusive right endpoint of each query.
+    - Output [output]: Each output entry counts palindromic substrings contained entirely within the corresponding query interval. *)
 Program palindromes : PrimString.string -> array uint ->
   array uint -> array uint.
 

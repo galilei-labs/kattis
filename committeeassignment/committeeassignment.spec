@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 15 vertices; at most n * (n - 1) / 2 incompatible pairs.
-    - Names contain at most 20 uppercase or lowercase letters. *)
+    - Vertex count: $1 \le n \le 15$; at most $n(n-1)/2$ incompatible pairs.
+    - Names contain at most $20$ uppercase or lowercase letters. *)
 
 (** ** Examples *)
 
@@ -161,10 +161,10 @@ Definition committees_spec (member_count : N)
 
 (** Partition a graph's vertices into as few groups as possible, with no adjacent vertices
     in the same group.
-    - Input [member_count]:
-    - Input [first_names]:
-    - Input [second_names]:
-    - Output [output]: *)
+    - Input [member_count]: Total number of vertices to partition.
+    - Input [first_names]: First endpoint name of each incompatible pair.
+    - Input [second_names]: Second endpoint name of each incompatible pair.
+    - Output [output]: The output is the minimum number of groups in a partition of the vertices with no adjacent vertices in the same group. *)
 Program committees :
   uint -> array PrimString.string
     -> array PrimString.string -> uint.

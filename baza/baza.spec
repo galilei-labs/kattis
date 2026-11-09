@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 30,000 dictionary words and 1 to 30,000 queries.
-    - Words contain fewer than 30 lowercase letters; dictionary entries are
+    - Dictionary size: $1 \le n \le 30{,}000$ and Query count: $1 \le q \le 30{,}000$.
+    - Words contain fewer than $30$ lowercase letters; dictionary entries are
       distinct. *)
 
 (** ** Examples *)
@@ -154,9 +154,9 @@ Definition baza_spec (database queries : list String.string)
 (** For each query word, scan an ordered dictionary until a match is found or the dictionary
     ends. Return the number of words examined plus the sum of their common-prefix
     lengths with the query.
-    - Input [database]:
-    - Input [queries]:
-    - Output [output]: *)
+    - Input [database]: Dictionary words in search order.
+    - Input [queries]: Words whose search costs are requested.
+    - Output [output]: Each output entry counts the words examined plus their common-prefix lengths when searching the ordered dictionary for the corresponding query. *)
 Program baza :
   array PrimString.string -> array PrimString.string
     -> array uint.

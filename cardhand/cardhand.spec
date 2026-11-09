@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 52 distinct cards.
-    - Thirteen ranks (2 through ace) and four suits. *)
+    - $1\text{ to }52$ distinct cards.
+    - Thirteen ranks ($2$ through ace) and four suits. *)
 
 (** ** Examples *)
 
@@ -188,8 +188,8 @@ Definition min_moves_spec (hand : list String.string)
 (** Reorder distinct playing cards so each suit is contiguous and its ranks are monotone in
     either direction. Find the fewest moves, where one move removes a card and reinserts
     it anywhere.
-    - Input [hand]:
-    - Output [output]: *)
+    - Input [hand]: Cards in their original order, with rank and suit encoded for each card.
+    - Output [output]: The output is the minimum number of remove-and-reinsert moves required to group each suit contiguously with monotone ranks within each group. *)
 Program min_moves : array PrimString.string -> uint.
 
 (** ** Bridge *)

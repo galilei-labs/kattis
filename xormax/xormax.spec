@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 integers, each from 1 to $10^{18}$. *)
+    - Sequence length: $1 \le n \le 100{,}000$, each in $[1, 10^{18}]$. *)
 
 (** ** Examples *)
 
@@ -100,8 +100,8 @@ Definition xormax_spec
 (** ** Interface *)
 
 (** Find the largest bitwise XOR obtainable from any subset of the input integers.
-    - Input [numbers]:
-    - Output [output]: *)
+    - Input [numbers]: Integers available for subset selection.
+    - Output [output]: The output is the maximum XOR of any subset of the input values. *)
 Program xormax : array uint -> uint.
 
 (** ** Bridge *)

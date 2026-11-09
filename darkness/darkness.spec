@@ -14,8 +14,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 30 rows and columns; bulb strengths are digits 0 to 9.
-    - Light threshold from 1 to 9; height from 1 to 5.
+    - $1\text{ to }30$ rows and columns; bulb strengths are digits $0\text{ to }9$.
+    - Light threshold in $[1, 9]$; height in $[1, 5]$.
     - Every boundary cell meets the light threshold. *)
 
 (** ** Examples *)
@@ -217,10 +217,10 @@ Definition darkness_spec (min_light ceiling_height : N) club
     h^2) for bulb strength s and height h. Find the cheapest barriers separating cells
     below a threshold from the boundary. A barrier between adjacent cells costs 43 if
     both are sufficiently lit, and 11 otherwise.
-    - Input [min_light]:
-    - Input [ceiling_height]:
-    - Input [club]:
-    - Output [output]: *)
+    - Input [min_light]: Minimum acceptable illumination of a cell.
+    - Input [ceiling_height]: Height of the light sources above the grid.
+    - Input [club]: Grid of light-source strengths, one row per array entry.
+    - Output [output]: The output is the minimum total barrier cost separating every insufficiently lit cell from the grid boundary. *)
 Program darkness : uint -> uint -> array (array uint)
   -> uint.
 

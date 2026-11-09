@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["minspantree_implem.v", "minspantree.spec"]
+files = ["minspantree_implem.v", "minspantree_proofs.v", "minspantree.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

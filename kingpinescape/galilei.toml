@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["kingpinescape_implem.v", "kingpinescape.spec"]
+files = ["kingpinescape_implem.v", "kingpinescape_proofs.v", "kingpinescape.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

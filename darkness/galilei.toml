@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["darkness_implem.v", "darkness.spec"]
+files = ["darkness_implem.v", "darkness_proofs.v", "darkness.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 3 to 1,000 vertices.
-    - Integer coordinates with absolute value at most 10,000. *)
+    - Vertex count: $3 \le n \le 1{,}000$.
+    - Integer coordinates with absolute value at most $10{,}000$. *)
 
 (** ** Examples *)
 
@@ -119,9 +119,9 @@ Definition signed_area2_spec
 
 (** Compute twice a polygon's signed area: positive for counterclockwise vertex order and
     negative for clockwise order.
-    - Input [x_coordinates]:
-    - Input [y_coordinates]:
-    - Output [output]: *)
+    - Input [x_coordinates]: Horizontal coordinates of polygon vertices in boundary order.
+    - Input [y_coordinates]: Vertical coordinates of the corresponding polygon vertices.
+    - Output [output]: The output is twice the polygon's signed area, positive for counterclockwise order and negative for clockwise order. *)
 Program signed_area2 : array sint -> array sint -> sint.
 
 (** ** Bridge *)

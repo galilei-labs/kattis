@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["candydistribution_implem.v", "candydistribution.spec"]
+files = ["candydistribution_implem.v", "candydistribution_proofs.v", "candydistribution.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

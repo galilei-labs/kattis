@@ -11,8 +11,8 @@
     - Memory limit: 2048 MB
 
     **Kattis Bounds**
-    - 2 to 100 strictly increasing denominations.
-    - The first denomination is 1; the largest is at most $10^{6}$. *)
+    - $2\text{ to }100$ strictly increasing denominations.
+    - The first denomination is $1$; the largest is at most $10^{6}$. *)
 
 (** ** Examples *)
 
@@ -148,8 +148,8 @@ Definition canonical_spec (denominations : list N)
 
 (** Decide whether repeatedly choosing the largest affordable coin always yields a minimum-
     size representation of every positive amount.
-    - Input [denominations]:
-    - Output [output]: *)
+    - Input [denominations]: Coin denominations in increasing order, starting with one.
+    - Output [output]: The output is true exactly when greedy coin selection minimizes the number of coins for every positive amount. *)
 Program canonical : array uint -> bool.
 
 (** ** Bridge *)

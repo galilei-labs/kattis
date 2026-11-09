@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 10,000 points.
-    - Integer coordinates with absolute value at most 10,000. *)
+    - Point count: $1 \le n \le 10{,}000$.
+    - Integer coordinates with absolute value at most $10{,}000$. *)
 
 (** ** Examples *)
 
@@ -197,9 +197,9 @@ Definition convex_hull_spec
 
 (** Return the vertices of a point set's convex hull in counterclockwise order, omitting
     collinear intermediate vertices.
-    - Input [x_coordinates]:
-    - Input [y_coordinates]:
-    - Output [output]: *)
+    - Input [x_coordinates]: Horizontal coordinates of the input points.
+    - Input [y_coordinates]: Vertical coordinates of the corresponding points.
+    - Output [output]: The output lists convex-hull vertices counterclockwise, without duplicate coordinates or intermediate collinear vertices, and encloses every input point. *)
 Program convex_hull : array sint -> array sint
   -> array uint.
 

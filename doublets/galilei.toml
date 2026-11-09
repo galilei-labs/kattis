@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["doublets_implem.v", "doublets.spec"]
+files = ["doublets_implem.v", "doublets_proofs.v", "doublets.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -13,8 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 0 to 10,000 directed edges, with no repeated edge or self-loop.
-    - Vertex names contain 1 to 20 uppercase or lowercase letters. *)
+    - Directed edge count: $0 \le m \le 10{,}000$, with no repeated edge or self-loop.
+    - Vertex names contain $1\text{ to }20$ uppercase or lowercase letters. *)
 
 (** ** Examples *)
 
@@ -184,9 +184,9 @@ Definition loopy_regions_spec
 (** Find the strongly connected components of a directed graph that contain at least two
     vertices. Sort the names within each component and the components lexicographically,
     and list the remaining vertices separately.
-    - Input [origins]:
-    - Input [destinations]:
-    - Output [output]: *)
+    - Input [origins]: Source name of each directed edge.
+    - Input [destinations]: Destination name of each corresponding edge.
+    - Output [output]: The output lists strongly connected components of size at least two with names and groups sorted lexicographically, followed separately by the remaining names in sorted order. *)
 Program loopy_regions :
   array PrimString.string -> array PrimString.string ->
   array (array PrimString.string) * array PrimString.string.

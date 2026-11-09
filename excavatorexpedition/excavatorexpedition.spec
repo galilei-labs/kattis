@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 400,000 vertices; 1 to 400,000 edges.
+    - Vertex count: $2 \le n \le 400{,}000$; Edge count: $1 \le m \le 400{,}000$.
     - The graph is acyclic and contains a path from the first vertex to the
       last. *)
 
@@ -182,10 +182,10 @@ Definition excavator_spec (sites : string)
 
 (** Find a maximum-score path from the first vertex to the last in a directed acyclic graph.
     Each internal vertex contributes either +1 or -1; the endpoints contribute zero.
-    - Input [sites]:
-    - Input [edge_sources]:
-    - Input [edge_targets]:
-    - Output [output]: *)
+    - Input [sites]: Vertex labels specifying positive or negative contributions.
+    - Input [edge_sources]: Source vertex of each directed edge.
+    - Input [edge_targets]: Destination vertex of each directed edge.
+    - Output [output]: The output is the maximum score of a path from the first vertex to the last, counting internal vertex contributions and excluding the endpoints. *)
 Program excavator : PrimString.string -> array uint -> array
   uint -> sint.
 

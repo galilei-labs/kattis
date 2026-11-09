@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["largesttriangle_implem.v", "largesttriangle.spec"]
+files = ["largesttriangle_implem.v", "largesttriangle_proofs.v", "largesttriangle.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

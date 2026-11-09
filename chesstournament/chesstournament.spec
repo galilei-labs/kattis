@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 50,000 players; 1 to 250,000 reported matches.
+    - Player count: $2 \le n \le 50{,}000$; Match count: $1 \le m \le 250{,}000$.
     - At most one match per pair; every player appears in at least one
       match. *)
 
@@ -148,11 +148,11 @@ Definition chess_consistent_spec (player_count : N)
 
 (** Decide whether reported wins and draws admit consistent numerical skill levels: a win
     requires a strictly higher level, and a draw requires equal levels.
-    - Input [player_count]:
-    - Input [first_players]:
-    - Input [wins]:
-    - Input [second_players]:
-    - Output [output]: *)
+    - Input [player_count]: Number of participants.
+    - Input [first_players]: First participant in each reported relation.
+    - Input [wins]: Whether each relation is a strict win rather than a draw.
+    - Input [second_players]: Second participant in each reported relation.
+    - Output [output]: The output is true exactly when numerical skill levels can satisfy every equality and strict-order relation. *)
 Program chess_consistent :
   uint -> array uint -> array bool -> array uint -> bool.
 

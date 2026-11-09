@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 20,000 intervals; each left endpoint is no greater than its right
+    - Interval count: $1 \le n \le 20{,}000$; each left endpoint is no greater than its right
       endpoint.
     - Input coordinates have at most six digits after the decimal point. *)
 
@@ -161,11 +161,11 @@ Definition cover_spec (target_left target_right : R)
 
 (** Find a smallest subset of given closed intervals whose union covers a target interval,
     or report that coverage is impossible.
-    - Input [target_left]:
-    - Input [target_right]:
-    - Input [lefts]:
-    - Input [rights]:
-    - Output [output]: *)
+    - Input [target_left]: Left endpoint of the interval to cover.
+    - Input [target_right]: Right endpoint of the interval to cover.
+    - Input [lefts]: Left endpoint of each available interval.
+    - Input [rights]: Right endpoint of each available interval.
+    - Output [output]: The output identifies a minimum-cardinality set of intervals covering the target interval, or None exactly when no cover exists. *)
 Program cover :
   float -> float -> array float -> array float ->
     option (array uint).

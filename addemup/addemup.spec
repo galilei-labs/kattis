@@ -13,8 +13,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 cards; values from 1 to 100,000,000.
-    - Target sum from 2 to 200,000,000. *)
+    - Card count: $1 \le n \le 100{,}000$; values in $[1, 100{,}000{,}000]$.
+    - Target sum in $[2, 200{,}000{,}000]$. *)
 
 (** ** Examples *)
 
@@ -127,9 +127,9 @@ Definition addemup_spec (desired_sum : N) (cards : list N)
 (** Decide whether two distinct numbered cards can sum to a target, optionally rotating
     either card by 180 degrees. Rotation reverses the digits, swaps 6 and 9, preserves
     0, 1, 2, 5 and 8, and is invalid for 3, 4 or 7.
-    - Input [desired_sum]:
-    - Input [cards]:
-    - Output [output]: *)
+    - Input [desired_sum]: Required sum of two selected cards.
+    - Input [cards]: Numbers printed on the cards, in input order.
+    - Output [output]: The output is true exactly when two distinct cards, each in an allowed orientation, sum to the target. *)
 Program addemup : uint -> array uint -> bool.
 
 (** ** Bridge *)

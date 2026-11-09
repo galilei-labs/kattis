@@ -11,9 +11,9 @@
     - Memory limit: 2048 MB
 
     **Kattis Bounds**
-    - Text length and query count from 1 to 200,000.
-    - Nonempty lowercase patterns, with total length at most 200,000.
-    - Occurrence ranks from 1 to the text length. *)
+    - Text length and query count in $[1, 200{,}000]$.
+    - Nonempty lowercase patterns, with total length at most $200{,}000$.
+    - Occurrence ranks from $1$ to the text length. *)
 
 (** ** Examples *)
 
@@ -152,10 +152,10 @@ Definition kth_occurrences_spec (text : string)
 
 (** For each pattern and occurrence rank, find the starting position of that occurrence in a
     text, counting overlaps. Return -1 if it does not exist.
-    - Input [text]:
-    - Input [patterns]:
-    - Input [ranks]:
-    - Output [output]: *)
+    - Input [text]: Text to search.
+    - Input [patterns]: Pattern for each query.
+    - Input [ranks]: Requested occurrence number for each pattern, starting at one.
+    - Output [output]: Each output entry is the 1-based starting position of the requested occurrence, including overlapping occurrences, or -1 if it does not exist. *)
 Program kth_occurrences :
   PrimString.string -> array PrimString.string
     -> array uint -> array sint.

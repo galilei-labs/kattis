@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 weights, each an integer from 1 to 450. *)
+    - Weight count: $1 \le n \le 100$, each an integer in $[1, 450]$. *)
 
 (** ** Examples *)
 
@@ -121,8 +121,8 @@ Definition tugofwar_spec
 
 (** Partition a sequence of weights into two groups whose sizes differ by at most one,
     minimizing the difference between their total weights.
-    - Input [weights]:
-    - Output [output]: *)
+    - Input [weights]: Weights to partition into two balanced groups.
+    - Output [output]: The output gives the group totals in ascending order for a partition whose group sizes differ by at most one and whose total-weight difference is minimal. *)
 Program tugofwar : array uint -> uint * uint.
 
 (** ** Bridge *)

@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["arbitrage_implem.v", "arbitrage.spec"]
+files = ["arbitrage_implem.v", "arbitrage_proofs.v", "arbitrage.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Both moduli are from 1 to $10^{9}$.
+    - Both moduli are in $[1, 10^{9}]$.
     - Each residue is nonnegative and smaller than its modulus. *)
 
 (** ** Examples *)
@@ -95,11 +95,11 @@ Definition crt_spec
 (** Solve two modular congruences whose moduli need not be coprime. Return the least
     nonnegative solution and its period, or report that the congruences are
     inconsistent.
-    - Input [residue1]:
-    - Input [modulus1]:
-    - Input [residue2]:
-    - Input [modulus2]:
-    - Output [output]: *)
+    - Input [residue1]: Required remainder for the first congruence.
+    - Input [modulus1]: Modulus of the first congruence.
+    - Input [residue2]: Required remainder for the second congruence.
+    - Input [modulus2]: Modulus of the second congruence.
+    - Output [output]: The output gives the least nonnegative simultaneous solution and the least common multiple of the moduli, or None exactly when the congruences are inconsistent. *)
 Program crt : uint -> uint -> uint -> uint -> option
   (uint * uint).
 

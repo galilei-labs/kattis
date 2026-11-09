@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{5}$ teams and 1 to $10^{5}$ events.
-    - Each event's penalty is from 1 to 1,000. *)
+    - Team count: $1 \le n \le 10^{5}$ and Event count: $1 \le m \le 10^{5}$.
+    - Each event's penalty is in $[1, 1{,}000]$. *)
 
 (** ** Examples *)
 
@@ -145,10 +145,10 @@ Definition gcpc_spec (team_count : N)
 
 (** Track one team's rank as scoring events arrive. Rank teams by problems solved in
     descending order, breaking ties by total penalty in ascending order.
-    - Input [team_count]:
-    - Input [event_teams]:
-    - Input [event_penalties]:
-    - Output [output]: *)
+    - Input [team_count]: Number of teams in the ranking.
+    - Input [event_teams]: Team credited with a solution at each event.
+    - Input [event_penalties]: Penalty added by each corresponding event.
+    - Output [output]: Each output entry is team 1's rank after the corresponding event, ordered by decreasing solved count and increasing penalty. *)
 Program gcpc : uint -> array uint -> array uint -> array
   uint.
 

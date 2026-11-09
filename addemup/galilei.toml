@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["addemup_implem.v", "addemup.spec"]
+files = ["addemup_implem.v", "addemup_proofs.v", "addemup.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

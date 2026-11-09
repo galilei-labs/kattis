@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["satisfiability_implem.v", "satisfiability.spec"]
+files = ["satisfiability_implem.v", "satisfiability_proofs.v", "satisfiability.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

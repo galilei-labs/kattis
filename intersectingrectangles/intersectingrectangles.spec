@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{5}$ rectangles.
-    - Integer coordinates from -$10^{9}$ to $10^{9}$; each rectangle has positive
+    - Rectangle count: $1 \le n \le 10^{5}$.
+    - Integer coordinates in $[-10^{9}, 10^{9}]$; each rectangle has positive
       width and height.
     - All horizontal coordinates are distinct, as are all vertical
       coordinates. *)
@@ -136,10 +136,12 @@ Definition intersecting_rectangles_spec
 
 (** ** Interface *)
 
-(** ** Interface *)
-
 (** The [intersecting_rectangles] program on machine values.
-    - Output [output]: *)
+    - Input [lefts]: Left horizontal coordinate of each rectangle.
+    - Input [bottoms]: Bottom vertical coordinate of each rectangle.
+    - Input [rights]: Right horizontal coordinate of each rectangle.
+    - Input [tops]: Top vertical coordinate of each rectangle.
+    - Output [output]: The output is true exactly when two rectangle boundaries intersect; strict containment without boundary contact is excluded. *)
 Program intersecting_rectangles :
   array sint -> array sint -> array sint -> array sint ->
     bool.

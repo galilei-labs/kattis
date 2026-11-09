@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["magicsequence_implem.v", "magicsequence.spec"]
+files = ["magicsequence_implem.v", "magicsequence_proofs.v", "magicsequence.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

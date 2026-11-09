@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to $10^{5}$ characters, each R or B. *)
+    - $1\text{ to }10^{5}$ characters, each R or B. *)
 
 (** ** Examples *)
 
@@ -123,8 +123,8 @@ Definition purplerain_spec
 
 (** Find a contiguous substring with the largest absolute difference between counts of two
     symbols. Break ties by the earliest start, then the earliest end.
-    - Input [colors]:
-    - Output [output]: *)
+    - Input [colors]: Sequence of the two symbols R and B.
+    - Output [output]: The output identifies an interval maximizing the absolute difference between the two symbol counts, breaking ties by earliest start and then earliest end. *)
 Program purplerain : PrimString.string -> uint * uint.
 
 (** ** Bridge *)

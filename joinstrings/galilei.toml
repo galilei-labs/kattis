@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["joinstrings_implem.v", "joinstrings.spec"]
+files = ["joinstrings_implem.v", "joinstrings_proofs.v", "joinstrings.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

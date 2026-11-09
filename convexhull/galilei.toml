@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["convexhull_implem.v", "convexhull.spec"]
+files = ["convexhull_implem.v", "convexhull_proofs.v", "convexhull.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

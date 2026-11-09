@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["xormax_implem.v", "xormax.spec"]
+files = ["xormax_implem.v", "xormax_proofs.v", "xormax.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 $\le$ K, C $\le$ $10^{9}$.
+    - $1 \le K, C \le 10^{9}$.
     - The returned B must be at most $10^{9}$. *)
 
 (** ** Examples *)
@@ -96,9 +96,9 @@ Definition candydistribution_spec (kid_count bag_size : N)
 
 (** Given positive integers K and C, find a positive B no greater than 1000000000 such that
     C * B = K * X + 1 for some positive integer X, or report that no solution exists.
-    - Input [kid_count]:
-    - Input [bag_size]:
-    - Output [output]: *)
+    - Input [kid_count]: Number of equal positive shares required.
+    - Input [bag_size]: Number of units in each bag.
+    - Output [output]: The output is a positive bag count satisfying the divisibility, positive-share and upper-bound constraints, or None exactly when no such count exists. *)
 Program candydistribution : uint -> uint -> option uint.
 
 (** ** Bridge *)

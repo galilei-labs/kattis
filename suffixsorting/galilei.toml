@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["suffixsorting_implem.v", "suffixsorting.spec"]
+files = ["suffixsorting_implem.v", "suffixsorting_proofs.v", "suffixsorting.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

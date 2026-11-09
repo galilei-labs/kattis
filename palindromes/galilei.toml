@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["palindromes_implem.v", "palindromes.spec"]
+files = ["palindromes_implem.v", "palindromes_proofs.v", "palindromes.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

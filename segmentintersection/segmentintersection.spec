@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Coordinate absolute values are at most 10,000. *)
+    - Coordinate absolute values are at most $10{,}000$. *)
 
 (** ** Examples *)
 
@@ -151,15 +151,15 @@ Definition intersect_spec
 
 (** Compute the exact intersection of two closed line segments: no intersection, one
     rational point, or a shared segment.
-    - Input [x1]:
-    - Input [y1]:
-    - Input [x2]:
-    - Input [y2]:
-    - Input [x3]:
-    - Input [y3]:
-    - Input [x4]:
-    - Input [y4]:
-    - Output [output]: *)
+    - Input [x1]: Horizontal coordinate of the first endpoint of the first segment.
+    - Input [y1]: Vertical coordinate of the first endpoint of the first segment.
+    - Input [x2]: Horizontal coordinate of the second endpoint of the first segment.
+    - Input [y2]: Vertical coordinate of the second endpoint of the first segment.
+    - Input [x3]: Horizontal coordinate of the first endpoint of the second segment.
+    - Input [y3]: Vertical coordinate of the first endpoint of the second segment.
+    - Input [x4]: Horizontal coordinate of the second endpoint of the second segment.
+    - Input [y4]: Vertical coordinate of the second endpoint of the second segment.
+    - Output [output]: The output is a well-formed exact representation of the shared points of the two closed segments: empty, a point or a segment. *)
 Program intersect :
   sint -> sint -> sint -> sint -> sint -> sint -> sint ->
     sint -> inter sint.

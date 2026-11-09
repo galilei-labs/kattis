@@ -13,7 +13,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 300 rows and 1 to 50,000 columns.
+    - $1\text{ to }300$ rows and $1\text{ to }50{,}000$ columns.
     - Exactly one destination; the start is not an obstacle.
     - Arrows stay within the grid and point to neither an obstacle nor an
       opposing arrow. *)
@@ -203,11 +203,11 @@ Definition helpfulcurrents_spec
 (** Count paths through a grid from a given bottom-row cell to a destination. Each move goes
     north or follows the current cell's horizontal arrow, avoiding obstacles. Return the
     count modulo 1000003, distinguishing an unreachable destination.
-    - Input [row_count]:
-    - Input [column_count]:
-    - Input [start_column]:
-    - Input [ocean_map]:
-    - Output [output]: *)
+    - Input [row_count]: Number of grid rows.
+    - Input [column_count]: Number of grid columns.
+    - Input [start_column]: Starting column on the bottom row.
+    - Input [ocean_map]: Grid containing open cells, obstacles, horizontal currents and the destination.
+    - Output [output]: The output is the number of permitted paths to the destination modulo 1,000,003, or None exactly when no path exists. *)
 Program helpfulcurrents :
   uint -> uint -> uint -> array PrimString.string ->
     option uint.

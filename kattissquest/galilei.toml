@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["kattissquest_implem.v", "kattissquest.spec"]
+files = ["kattissquest_implem.v", "kattissquest_proofs.v", "kattissquest.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

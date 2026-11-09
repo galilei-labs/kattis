@@ -11,7 +11,7 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["canonical_implem.v", "canonical.spec"]
+files = ["canonical_implem.v", "canonical_proofs.v", "canonical.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]

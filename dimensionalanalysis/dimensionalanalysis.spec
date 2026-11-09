@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100 equations over at most 100 quantities.
-    - At most 100 atoms per equation. *)
+    - Equation count: $1 \le n \le 100$ over at most $100$ quantities.
+    - At most $100$ atoms per equation. *)
 
 (** ** Examples *)
 
@@ -141,9 +141,9 @@ Definition valid_spec (quantity_count : N)
 
 (** Given multiplicative equations between quantities, decide whether any quantity is forced
     to be dimensionless. Each equation is represented by its signed exponent vector.
-    - Input [quantity_count]:
-    - Input [equations]:
-    - Output [output]: *)
+    - Input [quantity_count]: Number of distinct physical quantities.
+    - Input [equations]: Signed exponent vectors representing the multiplicative equations.
+    - Output [output]: The output is true exactly when no individual quantity is forced to be dimensionless by the equations. *)
 Program valid : uint -> array (array sint) -> bool.
 
 (** ** Bridge *)

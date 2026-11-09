@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 1 to 100,000 distinct distances, each from 1 to $10^{7}$.
-    - Spacing constant from 1 to 20. *)
+    - $1\text{ to }100{,}000$ distinct distances, each in $[1, 10^{7}]$.
+    - Spacing constant in $[1, 20]$. *)
 
 (** ** Examples *)
 
@@ -106,9 +106,9 @@ Definition dirtydriving_spec (deceleration : N)
 (** Given distinct distances to objects ahead and a spacing constant p, find the smallest
     new distance to the nearest object such that the k-th nearest object is at least k *
     p away.
-    - Input [deceleration]:
-    - Input [distances]:
-    - Output [output]: *)
+    - Input [deceleration]: Required spacing per position in the distance order.
+    - Input [distances]: Current distances to the objects ahead.
+    - Output [output]: The output is the minimum distance to the nearest object for which the k-th nearest object is at least k times the spacing constant away. *)
 Program dirtydriving : uint -> array uint -> uint.
 
 (** ** Bridge *)

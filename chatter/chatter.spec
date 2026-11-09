@@ -13,9 +13,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - 2 to 10,000 vertices.
-    - Seed from 0 to 10,000; multiplier and increment from 1 to 10,000.
-    - Generator modulus from 2 to 50,000. *)
+    - Vertex count: $2 \le n \le 10{,}000$.
+    - Seed in $[0, 10{,}000]$; multiplier and increment in $[1, 10{,}000]$.
+    - Generator modulus in $[2, 50{,}000]$. *)
 
 (** ** Examples *)
 
@@ -231,12 +231,12 @@ Definition chatter_spec
 (** Generate distinct endpoint pairs using a linear congruential generator, joining them
     until the number of edges equals the number of vertices. Return the connected-
     component count and the frequency of each component size, largest first.
-    - Input [people_count]:
-    - Input [seed]:
-    - Input [multiplier]:
-    - Input [increment]:
-    - Input [modulus]:
-    - Output [output]: *)
+    - Input [people_count]: Number of vertices and generated connections.
+    - Input [seed]: Initial state of the connection generator.
+    - Input [multiplier]: Multiplier of the linear congruential generator.
+    - Input [increment]: Increment of the linear congruential generator.
+    - Input [modulus]: Modulus of the linear congruential generator.
+    - Output [output]: The output gives the connected-component count and the frequency of each component size in descending size order, after the specified generated connections. *)
 Program chatter :
   uint -> uint -> uint -> uint -> uint -> uint * array
     (uint * uint).
