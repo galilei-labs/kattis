@@ -40,7 +40,7 @@
 From Speck Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Sint63.
-From Respeced Require Import Repr ReprFloat.
+From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
 Import ListNotations.
 

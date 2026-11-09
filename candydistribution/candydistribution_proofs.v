@@ -19,7 +19,7 @@
    template/polymul1.  No nat, no Z in the code. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 Import ListNotations.
 

@@ -4,7 +4,7 @@
    See README.md, section Implementation, for the design and the proof. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Bool Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
 

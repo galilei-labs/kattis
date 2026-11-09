@@ -1,6 +1,6 @@
 (* Correctness proofs for committeeassignment_implem.v. *)
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString PString String Ascii.
 Import ListNotations.

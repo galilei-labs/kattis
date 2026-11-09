@@ -15,14 +15,14 @@ Check all specifications and both Rocq files without creating build artifacts in
 the working tree:
 
 ```sh
-opam exec --switch=rocq-9.2 -- python3 scripts/check-rocq.py
+opam exec -- python3 scripts/check-rocq.py
 # Or check selected problems:
-opam exec --switch=rocq-9.2 -- python3 scripts/check-rocq.py cold polymul1
+opam exec -- python3 scripts/check-rocq.py cold polymul1
 ```
 
-Requires `rocq-speck`, Flocq, and the sibling `kattis-private/lib` sources.
-Use `--lib PATH` to override the library directory, or `--flocq PATH` to use a
-locally built Flocq tree (the directory containing `Core/`). `--jobs` controls
+Requires the installed `rocq-speck`, Flocq, and `std-galilei` libraries from
+the active opam switch. Use `--flocq PATH` to use a locally built Flocq tree
+(the directory containing `Core/`). `--jobs` controls
 parallel compilation. Specs with complexity requirements also use `lib/Cost.v`,
 copied from `kattis-private/complexity/lib/Cost.v`, and rocq-speck's compiled
 `Complexity` library. The checker defaults to the sibling rocq-speck build;

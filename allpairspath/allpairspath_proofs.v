@@ -35,7 +35,7 @@
    counter bounds the pops). *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import Bool ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Psatz.
 From Stdlib Require Sint63.
 Import ListNotations.

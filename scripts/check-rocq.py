@@ -14,7 +14,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('problems', nargs='*', help='Problem slugs; defaults to all problems')
     parser.add_argument('--jobs', type=int, default=4)
-    parser.add_argument('--lib', type=Path, default=ROOT.parent / 'kattis-private' / 'lib')
     parser.add_argument('--flocq', type=Path, help='Optional built Flocq tree (containing Core/)')
     parser.add_argument('--complexity', type=Path, default=ROOT.parent / 'rocq-speck/_build/default/vendor/complexity',
                         help='Compiled rocq-speck Complexity library (needed by complexity specs)')
@@ -41,14 +40,11 @@ def main():
 
     with tempfile.TemporaryDirectory(prefix='kattis-rocq-') as tmp:
         build = Path(tmp)
-        lib = build / 'lib'
-        lib.mkdir()
-        lib_flags = ['-Q', str(lib), 'Respeced']
-        for name in ['Repr', 'ZBig', 'ReprFloat']:
-            shutil.copy2(args.lib / (name + '.v'), lib)
-            run(['rocq', 'compile', *flags, *lib_flags, name + '.v'], lib)
-
+        lib_flags = []
         if needs_cost:
+            lib = build / 'lib'
+            lib.mkdir()
+            lib_flags = ['-Q', str(lib), 'Respeced']
             shutil.copy2(ROOT / 'lib/Cost.v', lib)
             run(['rocq', 'compile', *flags, *lib_flags, 'Cost.v'], lib)
 

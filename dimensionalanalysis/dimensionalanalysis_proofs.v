@@ -30,8 +30,8 @@
    to the spec's [satisfies] / [free_quantity]. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
-From Respeced Require Import ZBig.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import bigint.
 From Stdlib Require Import ZArith NArith QArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
 Import ListNotations.

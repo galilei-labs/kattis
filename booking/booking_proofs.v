@@ -11,7 +11,7 @@
    template.  See README.md, "Implementation". *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation Sorted.
 Import ListNotations.
 

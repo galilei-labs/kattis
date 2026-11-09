@@ -34,7 +34,7 @@
    objects (cnt_spec, pre_spec, fill_spec, nb_spec, dfs_spec, out_spec). *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation.
 Import ListNotations.
 

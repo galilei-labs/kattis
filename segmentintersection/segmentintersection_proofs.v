@@ -27,7 +27,7 @@
    word (Sint63.to_Z_add/sub/mul under the bounds of valid_input). *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith Lia Bool Uint63.
 From Stdlib Require Sint63.
 Open Scope Z_scope.

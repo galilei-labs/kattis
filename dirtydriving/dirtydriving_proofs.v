@@ -16,7 +16,7 @@
    [Acc (Zwf 0) (gap _ _)] proof, as in template/polymul1. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf Permutation.
 Import ListNotations.
 

@@ -30,8 +30,8 @@
 
 From Speck Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
-From Respeced Require Import Repr.
-From Respeced Require Import ZBig.
+From StdGalilei Require Import repr.
+From StdGalilei Require Import bigint.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -125,7 +125,7 @@ Qed.
 
 From Flocq Require Import Core IEEE754.BinarySingleNaN.
 From Flocq Require IEEE754.PrimFloat.
-From Respeced Require Import ReprFloat.
+From StdGalilei Require Import repr_float.
 Notation float := PrimFloat.float.
 Local Instance prec53' : Prec_gt_0 53 := eq_refl _.
 Local Instance fexp64_valid' : Valid_exp fexp64 := FLT_exp_valid _ _.

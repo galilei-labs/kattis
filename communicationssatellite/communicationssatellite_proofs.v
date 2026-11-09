@@ -42,7 +42,7 @@ From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia
 From Stdlib Require Import FinFun.
 From Stdlib Require Sint63.
 From Stdlib Require Import Relation_Operators Operators_Properties Sorting.Sorted Sorting.Permutation Classical_Prop.
-From Respeced Require Import Repr ReprFloat.
+From StdGalilei Require Import repr repr_float.
 Import ListNotations.
 
 (* ================================================================== *)

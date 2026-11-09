@@ -20,7 +20,7 @@
    in the code.  See README.md, "Implementation". *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii.
 From Stdlib Require PrimString Sint63.

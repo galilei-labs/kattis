@@ -19,7 +19,7 @@
    cells being a Prop-side function ([unm]).  See README.md. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf
   Relations.
 Import ListNotations.

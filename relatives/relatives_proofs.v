@@ -26,7 +26,7 @@
    n >= 2, and gcd k n = 1 is the statement's "relatively prime". *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf Znumtheory Bool.
 Import ListNotations.
 

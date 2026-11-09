@@ -28,7 +28,7 @@
    The exact distance is the spec's [dist]; [di_D] ties it to [Dz]. *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
-From Respeced Require Import Repr ReprFloat.
+From StdGalilei Require Import repr repr_float.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
 From Speck Require Import Prelude.
 Import ListNotations.

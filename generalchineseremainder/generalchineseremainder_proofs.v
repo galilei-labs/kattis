@@ -20,7 +20,7 @@
    template/polymul1/implem-bens-1/polymul1_implem.v. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 Import ListNotations.
 

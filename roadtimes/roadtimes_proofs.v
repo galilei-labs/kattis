@@ -73,7 +73,7 @@ From Speck Require Import Prelude.
 From Stdlib Require Import Uint63 PArray ZifyUint63 Arith ZArith NArith List Bool Lia Zwf.
 From Stdlib Require Import Reals Lra QArith Qreals PrimFloat ListDec Decidable.
 From Stdlib Require Sint63.
-From Respeced Require Import Repr ZBig ReprFloat.
+From StdGalilei Require Import repr bigint repr_float.
 From Flocq Require Core.Raux Core.Zaux.
 
 Unset Lia Cache.

@@ -27,7 +27,7 @@
    that every location was popped. *)
 
 From Speck Require Import Prelude.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import String Ascii Relations.
 From Stdlib Require Sint63 PrimString.
