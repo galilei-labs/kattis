@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["intervalcover_implem.v", "intervalcover_proofs.v", "intervalcover.spec"]
+files = ["intervalcover_implem.v", "intervalcover.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/intervalcover_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/intervalcover_extracted_marray.ml",
+  "extraction/ocaml/intervalcover_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "intervalcover_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/intervalcover_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

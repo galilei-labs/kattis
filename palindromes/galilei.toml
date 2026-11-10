@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["palindromes_implem.v", "palindromes_proofs.v", "palindromes.spec"]
+files = ["palindromes_implem.v", "palindromes.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/palindromes_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/palindromes_extracted_marray.ml",
+  "extraction/ocaml/palindromes_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "palindromes_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/palindromes_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

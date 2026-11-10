@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["addemup_implem.v", "addemup_proofs.v", "addemup.spec"]
+files = ["addemup_implem.v", "addemup.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/addemup_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/addemup_extracted_marray.ml",
+  "extraction/ocaml/addemup_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "addemup_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/addemup_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

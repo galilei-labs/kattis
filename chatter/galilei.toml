@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["chatter_implem.v", "chatter_proofs.v", "chatter.spec"]
+files = ["chatter_implem.v", "chatter.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/chatter_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/chatter_extracted_marray.ml",
+  "extraction/ocaml/chatter_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "chatter_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/chatter_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

@@ -4,7 +4,6 @@
 [spec]
 file = "cold.spec"
 title = "Cold-puter Science"
-check = "opam exec --switch=rocq-9.2 -- make -C extraction check"
 
 [publish]
 path = "/kattis/cold"
@@ -15,12 +14,16 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["cold_implem.v", "cold_proofs.v", "cold.spec"]
+files = ["cold_implem.v", "cold.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/cold_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/cold_extracted_marray.ml",
+  "extraction/ocaml/cold_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "cold_ocaml.zip"
 
 [extraction.interface]

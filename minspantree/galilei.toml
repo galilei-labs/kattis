@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["minspantree_implem.v", "minspantree_proofs.v", "minspantree.spec"]
+files = ["minspantree_implem.v", "minspantree.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/minspantree_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/minspantree_extracted_marray.ml",
+  "extraction/ocaml/minspantree_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "minspantree_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/minspantree_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

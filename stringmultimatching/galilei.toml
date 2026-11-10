@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["stringmultimatching_implem.v", "stringmultimatching_proofs.v", "stringmultimatching.spec"]
+files = ["stringmultimatching_implem.v", "stringmultimatching.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/stringmultimatching_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/stringmultimatching_extracted_marray.ml",
+  "extraction/ocaml/stringmultimatching_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "stringmultimatching_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/stringmultimatching_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

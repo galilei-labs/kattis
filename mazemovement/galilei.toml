@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["mazemovement_implem.v", "mazemovement_proofs.v", "mazemovement.spec"]
+files = ["mazemovement_implem.v", "mazemovement.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/mazemovement_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/mazemovement_extracted_marray.ml",
+  "extraction/ocaml/mazemovement_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "mazemovement_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/mazemovement_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

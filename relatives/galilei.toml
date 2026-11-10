@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["relatives_implem.v", "relatives_proofs.v", "relatives.spec"]
+files = ["relatives_implem.v", "relatives.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/relatives_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/relatives_extracted_marray.ml",
+  "extraction/ocaml/relatives_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "relatives_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/relatives_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

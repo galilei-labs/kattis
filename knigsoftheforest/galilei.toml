@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["knigsoftheforest_implem.v", "knigsoftheforest_proofs.v", "knigsoftheforest.spec"]
+files = ["knigsoftheforest_implem.v", "knigsoftheforest.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/knigsoftheforest_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/knigsoftheforest_extracted_marray.ml",
+  "extraction/ocaml/knigsoftheforest_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "knigsoftheforest_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/knigsoftheforest_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

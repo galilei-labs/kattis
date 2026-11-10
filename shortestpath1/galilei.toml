@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["shortestpath1_implem.v", "shortestpath1_proofs.v", "shortestpath1.spec"]
+files = ["shortestpath1_implem.v", "shortestpath1.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/shortestpath1_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/shortestpath1_extracted_marray.ml",
+  "extraction/ocaml/shortestpath1_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "shortestpath1_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/shortestpath1_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

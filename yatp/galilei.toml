@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["yatp_implem.v", "yatp_proofs.v", "yatp.spec"]
+files = ["yatp_implem.v", "yatp.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/yatp_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/yatp_extracted_arrays_bigint.ml",
+  "extraction/ocaml/yatp_extracted_arrays_bigint.mli",
+  "extraction/ocaml/bigint.ml",
+]
 archive = "yatp_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/yatp_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/yatp_extracted_arrays_bigint.ml"
+"Rust" = ""

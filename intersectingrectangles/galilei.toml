@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["intersectingrectangles_implem.v", "intersectingrectangles_proofs.v", "intersectingrectangles.spec"]
+files = ["intersectingrectangles_implem.v", "intersectingrectangles.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/intersectingrectangles_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/intersectingrectangles_extracted_marray.ml",
+  "extraction/ocaml/intersectingrectangles_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "intersectingrectangles_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/intersectingrectangles_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

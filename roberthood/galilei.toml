@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["roberthood_implem.v", "roberthood_proofs.v", "roberthood.spec"]
+files = ["roberthood_implem.v", "roberthood.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/roberthood_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/roberthood_extracted_marray.ml",
+  "extraction/ocaml/roberthood_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "roberthood_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/roberthood_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

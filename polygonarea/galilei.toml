@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["polygonarea_implem.v", "polygonarea_proofs.v", "polygonarea.spec"]
+files = ["polygonarea_implem.v", "polygonarea.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/polygonarea_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/polygonarea_extracted_marray.ml",
+  "extraction/ocaml/polygonarea_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "polygonarea_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/polygonarea_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

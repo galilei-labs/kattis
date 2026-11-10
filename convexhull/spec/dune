@@ -1,6 +1,0 @@
-(include ../../scripts/prelude.dune.inc)
-
-(rocq.theory
- (name Convexhull.spec)
- (modules Prelude)
- (theories Stdlib stdpp StdGalilei))

@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["longincsubseq_implem.v", "longincsubseq_proofs.v", "longincsubseq.spec"]
+files = ["longincsubseq_implem.v", "longincsubseq.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/longincsubseq_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/longincsubseq_extracted_marray.ml",
+  "extraction/ocaml/longincsubseq_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "longincsubseq_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/longincsubseq_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

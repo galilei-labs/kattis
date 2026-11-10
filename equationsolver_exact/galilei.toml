@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["equationsolver_exact_implem.v", "equationsolver_exact_proofs.v", "equationsolver_exact.spec"]
+files = ["equationsolver_exact_implem.v", "equationsolver_exact.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/equationsolver_exact_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.ml",
+  "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.mli",
+  "extraction/ocaml/bigint.ml",
+]
 archive = "equationsolver_exact_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/equationsolver_exact_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.ml"
+"Rust" = ""

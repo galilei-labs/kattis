@@ -1,6 +1,0 @@
-(include ../../scripts/prelude.dune.inc)
-
-(rocq.theory
- (name Closestpair1.spec)
- (modules Prelude)
- (theories Stdlib stdpp StdGalilei))

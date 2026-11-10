@@ -1,23 +1,11 @@
-(* The `marray` route, an EXTRA, UNVERIFIED column: the same proven implem
-   extracted with Rocq's persistent arrays mapped onto OCaml's MUTABLE
-   arrays.
-
-   Build: driven by the Makefile in this directory.
-   Emits cold_extracted_marray.ml and .mli under _build, leaving the
-   checked-in snapshots unchanged. Integer extraction uses
-   Rocq's default representation; no external Bigint mappings are enabled.
-
-   Everything is the header's setting (ExtrOcamlBasic
-   ExtrOCamlInt63) EXCEPT ExtrOCamlPArray: instead of rocq-runtime's
-   Parray (one shared buffer plus a chain of Updated diffs, 48 B allocated
-   per set), PrimArray is mapped onto Marray (marray.ml in this directory,
-   a verbatim copy of tools/marray.ml), whose [set] writes in place and
-   returns the same array.
-
-   This is UNSOUND in general -- an old version would observe later writes
-   -- and correct exactly when the arrays are used linearly, which the spec
-   demands (@forbid) but nothing checks.  The column measures what a
-   linearity-aware extractor would buy; it is not the verified artefact. *)
+(* Selected Kattis submission extraction route: marray.
+   Output: cold_extracted_marray.ml.
+   Standard Rocq extraction with unverified mutable-array mappings;
+   correctness of in-place updates relies on linear array use.
+   Dune generates fresh OCaml code in _build and checks it against the
+   checked-in references. The extracted code requires the separate Marray
+   runtime; standalone Kattis submissions obtain it from the Kattis shim.
+*)
 
 From Cold Require Import cold_implem.
 From Stdlib Require Import Extraction ExtrOcamlBasic ExtrOCamlInt63.
@@ -40,4 +28,4 @@ Extract Constant PrimArray.max_length => "Marray.max_length".
 
 Set Extraction Output Directory ".".
 
-Extraction "cold_extracted_marray.ml" cold_implem.count_negatives.
+Extraction "cold_extracted_marray.ml" count_negatives.

@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["joinstrings_implem.v", "joinstrings_proofs.v", "joinstrings.spec"]
+files = ["joinstrings_implem.v", "joinstrings.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/joinstrings_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/joinstrings_extracted_marray.ml",
+  "extraction/ocaml/joinstrings_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "joinstrings_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/joinstrings_extracted_marray.ml"
-Rust = ""
+"Rust" = ""
