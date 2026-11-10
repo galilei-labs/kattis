@@ -26,20 +26,21 @@ Use `OPAMFLAGS=-y` for non-interactive installation.
 
 ## Structure
 
-Each of the 100 problems has three source files:
+Each of the 100 problems contains:
 
 - `<problem>.spec`: the formal specification and Focus documentation.
-- `<problem>_implem.v`: executable definitions, including termination lemmas.
-- `<problem>_proofs.v`: correctness proofs and mathematical helpers; re-exports
-  the implementation.
+- `<problem>_implem.v`: executable definitions, termination lemmas, and correctness proofs.
+- `galilei.toml`: presentation and download metadata.
+- `extraction/`: the selected extraction driver and checked-in OCaml `.ml`,
+  `.mli`, and separate runtime files under `ocaml/`.
 
-Both Rocq files are listed in the Focus implementation viewer. Checked-in OCaml
-snapshots live in each problem's `extraction/ocaml/` directory.
+Problem content is generated from the authoritative private repository; see
+[Upstream](#upstream) before editing it.
 
 ## Build
 
-The root Dune project (Rocq language 0.11) builds 99 problems. `polymul2`
-is excluded pending the shared Cost/Complexity library setup.
+The root Dune project builds all 100 problems, including their Rocq proofs and
+fresh OCaml extractions compiled against their generated interfaces.
 
 ```sh
 opam exec -- make build       # Build all Dune-enabled problems
@@ -48,76 +49,35 @@ opam exec -- make clean       # Remove the shared _build/ directory
 ```
 
 Equivalently, use `dune build`, or `dune build <problem>` for one problem.
-Each build generates a Prelude from the specification and compiles the
-implementation and correctness proofs. Preludes use problem-specific namespaces,
-e.g. `Arbitrage.spec.Prelude`; their generation rule is shared in
-`scripts/prelude.dune.inc`. All generated and compiled artifacts stay under
-`_build/`.
-
-Cold additionally generates and compiles fresh OCaml extraction, including its
-interface. Other problems currently have only checked-in OCaml snapshots, not
-extraction drivers; those snapshots are unchanged by Dune builds.
+Generated and compiled artifacts stay under `_build/`; builds do not overwrite
+checked-in files.
 
 **These builds do not run `rocq-speck check`.** Compilation checks the supplied
 proofs, but does not establish that every specification obligation is implemented
 or enforce the specification's allowed-axiom policy.
 
-### Alternative compilation checker
-
-The Python checker compiles the generated Prelude, implementation and proofs in
-temporary directories, with up to four problems in parallel:
-
-```sh
-opam exec -- python3 scripts/check-rocq.py cold polymul1
-```
-
-It uses the active switch's dependencies. `--jobs N` controls parallelism;
-`--flocq PATH` selects a locally built Flocq tree containing `Core/`.
-
-Like Dune, this script does **not** run `rocq-speck check`. Without problem names
-it attempts all 100 problems, including `polymul2`, whose legacy Cost/Complexity
-setup is not yet supported by the standard build. Its `polymul_time` obligation
-also remains unproved.
-
 ## OCaml extraction
 
-Each problem has a checked-in OCaml snapshot under `extraction/ocaml/`.
-Regeneration is currently wired into Dune only for Cold; other problems' snapshots
-are not rebuilt. Their extraction drivers will be imported from `kattis-private`
-separately. Fresh output stays under `_build/` until explicitly promoted.
-
-For Cold, generate fresh OCaml and compile it against its interface:
+Generate all selected OCaml programs, interfaces, and separate runtimes:
 
 ```sh
-opam exec -- make -C cold/extraction check
+opam exec -- dune build @extract
 ```
 
-Cold's `all`, `marray`, `check`, and `clean` Makefile targets delegate to
-the root Dune project. `marray` generates fresh OCaml from the implementation;
-`check` also compiles the generated `.ml` against its `.mli`. Use the full build
-to check correctness proofs as well.
-Neither overwrites the checked-in OCaml snapshot in `cold/extraction/ocaml/`.
-`clean` removes the shared workspace build directory.
-
-Compare fresh output with the tracked snapshot (Cold example):
+Check that freshly extracted `.ml` and `.mli` files match the checked-in snapshots:
 
 ```sh
+opam exec -- dune build @check-snapshot
+# Or check one problem:
 opam exec -- dune build @cold/extraction/check-snapshot
 ```
 
-If it reports differences, update the snapshot explicitly with:
+These checks report differences without updating source files. Fix stale
+snapshots in the private repository and re-export them, rather than promoting
+changes here.
 
-```sh
-opam exec -- dune promote \
-  cold/extraction/ocaml/cold_extracted_marray.ml \
-  cold/extraction/ocaml/cold_extracted_marray.mli \
-  cold/extraction/ocaml/marray.ml
-```
-
-Review the resulting Git diff. Ordinary builds do not update snapshots.
-
-The mutable-array extraction is not a verified extraction backend; it relies
-on linear use of arrays.
+The mutable-array and bigint extraction mappings are trusted, not a verified
+extraction backend. Mutable arrays rely on linear use.
 
 ## Preview
 
@@ -132,6 +92,10 @@ The local preview and page path is `/kattis/cold/`.
 
 ## Upstream
 
-These examples originate from
+Problem directories are exported from `100_problems/` in
 [`galilei-labs/kattis-private`](https://github.com/galilei-labs/kattis-private).
+Make specification, implementation, metadata, and snapshot changes there, then
+run its public exporter. `public-export.json` records the exported files and
+their hashes; the public build harness is maintained separately.
+
 This repository was previously named `tristan-kattis2`.
