@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["remainderreminder_implem.v", "remainderreminder_proofs.v", "remainderreminder.spec"]
+files = ["remainderreminder_implem.v", "remainderreminder.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/remainderreminder_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/remainderreminder_extracted_marray.ml",
+  "extraction/ocaml/remainderreminder_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "remainderreminder_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/remainderreminder_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

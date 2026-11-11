@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["knapsack_implem.v", "knapsack_proofs.v", "knapsack.spec"]
+files = ["knapsack_implem.v", "knapsack.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/knapsack_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/knapsack_extracted_arrays_bigint.ml",
+  "extraction/ocaml/knapsack_extracted_arrays_bigint.mli",
+  "extraction/ocaml/bigint.ml",
+]
 archive = "knapsack_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/knapsack_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/knapsack_extracted_arrays_bigint.ml"
+"Rust" = ""

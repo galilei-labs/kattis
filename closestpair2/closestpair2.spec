@@ -56,7 +56,7 @@ Output:
 
 From Stdlib Require Import ZArith NArith QArith Qabs List
   Uint63 Sint63 PArray.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Q_scope.
 

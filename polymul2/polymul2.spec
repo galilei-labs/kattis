@@ -39,7 +39,7 @@
                     for constants c1 and c2 independent of the inputs.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
-From Respeced Require Import Repr Cost.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 
@@ -127,23 +127,6 @@ Specification polymul_correct :
     repr
       (polymul first_coeffs_arr second_coeffs_arr) output /\
     polymul_spec first_coeffs second_coeffs output.
-
-(** ** Complexity *)
-
-(** [@hide] The cost translation used by the full timing requirement. *)
-Complexity polymul_cost for polymul.
-
-(** [@requirement]
-    $O(n\log n)$ steps, where $n$ is the total number of input coefficients. *)
-Specification polymul_time : exists c1 c2 : nat,
-  forall (first_coeffs second_coeffs : list ℤ)
-         (first_coeffs_arr second_coeffs_arr : array sint),
-  valid_input first_coeffs second_coeffs ->
-  repr first_coeffs_arr first_coeffs ->
-  repr second_coeffs_arr second_coeffs ->
-  (cost2 polymul_cost first_coeffs_arr second_coeffs_arr <=
-    c1 * ((size first_coeffs_arr + size second_coeffs_arr) *
-      (Nat.log2 (size first_coeffs_arr + size second_coeffs_arr) + 1)) + c2)%nat.
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

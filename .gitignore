@@ -1,1 +1,7 @@
 .DS_Store
+/builddep/
+/_opam
+_build/
+.nia.cache
+.lia.cache
+.nra.cache

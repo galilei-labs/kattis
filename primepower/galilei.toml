@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["primepower_implem.v", "primepower_proofs.v", "primepower.spec"]
+files = ["primepower_implem.v", "primepower.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/primepower_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/primepower_extracted_marray.ml",
+  "extraction/ocaml/primepower_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "primepower_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/primepower_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

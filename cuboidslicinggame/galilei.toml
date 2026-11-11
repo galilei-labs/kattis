@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["cuboidslicinggame_implem.v", "cuboidslicinggame_proofs.v", "cuboidslicinggame.spec"]
+files = ["cuboidslicinggame_implem.v", "cuboidslicinggame.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/cuboidslicinggame_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/cuboidslicinggame_extracted_marray.ml",
+  "extraction/ocaml/cuboidslicinggame_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "cuboidslicinggame_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/cuboidslicinggame_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

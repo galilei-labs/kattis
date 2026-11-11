@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["polymul1_implem.v", "polymul1_proofs.v", "polymul1.spec"]
+files = ["polymul1_implem.v", "polymul1.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/polymul1_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/polymul1_extracted_marray.ml",
+  "extraction/ocaml/polymul1_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "polymul1_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/polymul1_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

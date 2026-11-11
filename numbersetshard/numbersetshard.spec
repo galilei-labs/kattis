@@ -43,7 +43,7 @@ Case #2: 7
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Znumtheory Relations.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 

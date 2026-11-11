@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["tsp_implem.v", "tsp_proofs.v", "tsp.spec"]
+files = ["tsp_implem.v", "tsp.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/tsp_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/tsp_extracted_arrays_bigint.ml",
+  "extraction/ocaml/tsp_extracted_arrays_bigint.mli",
+  "extraction/ocaml/bigint.ml",
+]
 archive = "tsp_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/tsp_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/tsp_extracted_arrays_bigint.ml"
+"Rust" = ""

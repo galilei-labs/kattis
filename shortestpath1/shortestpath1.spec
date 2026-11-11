@@ -54,7 +54,7 @@ Impossible
                     source to that node, or None when there is no such path
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 

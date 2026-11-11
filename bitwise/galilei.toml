@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["bitwise_implem.v", "bitwise_proofs.v", "bitwise.spec"]
+files = ["bitwise_implem.v", "bitwise.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/bitwise_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/bitwise_extracted_marray.ml",
+  "extraction/ocaml/bitwise_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "bitwise_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/bitwise_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

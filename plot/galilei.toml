@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["plot_implem.v", "plot_proofs.v", "plot.spec"]
+files = ["plot_implem.v", "plot.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/plot_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/plot_extracted_marray.ml",
+  "extraction/ocaml/plot_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "plot_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/plot_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

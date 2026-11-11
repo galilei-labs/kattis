@@ -39,7 +39,7 @@ Output:
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Floats Reals.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 

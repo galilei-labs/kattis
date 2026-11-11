@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["committeeassignment_implem.v", "committeeassignment_proofs.v", "committeeassignment.spec"]
+files = ["committeeassignment_implem.v", "committeeassignment.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/committeeassignment_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/committeeassignment_extracted_marray.ml",
+  "extraction/ocaml/committeeassignment_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "committeeassignment_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/committeeassignment_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

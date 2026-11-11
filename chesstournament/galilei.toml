@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["chesstournament_implem.v", "chesstournament_proofs.v", "chesstournament.spec"]
+files = ["chesstournament_implem.v", "chesstournament.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/chesstournament_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/chesstournament_extracted_marray.ml",
+  "extraction/ocaml/chesstournament_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "chesstournament_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/chesstournament_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Rocq 9.2.0 / stdlib 9.2.0
+    # Private dependencies require secrets unavailable to fork pull requests.
+    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+    runs-on: ubuntu-22.04
+    timeout-minutes: 150
+    container:
+      image: rocq/rocq-prover:9.2.0
+      options: --user root
+    env:
+      # Reuse the image's switch even when Actions runs as root.
+      OPAMROOT: /home/rocq/.opam
+      OPAMROOTISOK: "true"
+      GIT_TERMINAL_PROMPT: "0"
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          persist-credentials: false
+
+      - name: Create read-only dependency token
+        id: dependency-token
+        uses: actions/create-github-app-token@v2
+        with:
+          app-id: ${{ vars.OPAM_PUBLISHING_APP_ID }}
+          private-key: ${{ secrets.OPAM_PUBLISHING_APP_PRIVATE_KEY }}
+          owner: galilei-labs
+          repositories: |
+            opam
+            rocq-speck
+            std-galilei
+          permission-contents: read
+
+      - name: Configure private dependency access
+        env:
+          CI_DEPENDENCIES_TOKEN: ${{ steps.dependency-token.outputs.token }}
+        run: |
+          if [[ -z "$CI_DEPENDENCIES_TOKEN" ]]; then
+            echo 'GitHub App did not provide a dependency token' >&2
+            exit 1
+          fi
+          git config --global url."https://github.com/".insteadOf 'git@github.com:'
+          git config --global --add url."https://github.com/".insteadOf 'ssh://git@github.com/'
+          # Keep only a reference to the environment variable, never the token.
+          git config --global credential.https://github.com.helper \
+            '!f() { printf "%s\n" "username=x-access-token" "password=$CI_DEPENDENCIES_TOKEN"; }; f'
+
+      - name: Restore dependency cache
+        id: dependencies
+        uses: actions/cache/restore@v4
+        with:
+          path: /home/rocq/.opam
+          key: opam-public-v1-${{ runner.os }}-${{ runner.arch }}-rocq-9.2.0-stdlib-9.2.0-${{ hashFiles('kattis.opam', 'Makefile', '.github/workflows/ci.yml') }}
+
+      - name: Configure opam repositories
+        env:
+          CI_DEPENDENCIES_TOKEN: ${{ steps.dependency-token.outputs.token }}
+        run: |
+          opam repository set-url --yes default https://opam.ocaml.org
+          opam repository set-url --yes rocq-released https://rocq-prover.org/opam/released
+          opam repository add --yes iris-dev https://github.com/rocq-iris/opam.git
+          opam repository add --yes galilei-dev git+https://github.com/galilei-labs/opam.git
+          opam update --yes
+
+      - name: Pin Rocq and stdlib versions
+        run: |
+          opam pin add --yes --no-action rocq-core 9.2.0
+          opam pin add --yes --no-action rocq-stdlib 9.2.0
+
+      - name: Install dependencies
+        env:
+          CI_DEPENDENCIES_TOKEN: ${{ steps.dependency-token.outputs.token }}
+        run: opam exec -- make builddep OPAMFLAGS=-y
+
+      - name: Save dependency cache
+        if: steps.dependencies.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: /home/rocq/.opam
+          key: ${{ steps.dependencies.outputs.cache-primary-key }}
+
+      - name: Build all Rocq theories and OCaml extractions
+        run: opam exec -- dune build @all --display short -j 2
+
+      - name: Check extraction snapshots are current
+        run: opam exec -- dune build @check-snapshot --display short -j 2

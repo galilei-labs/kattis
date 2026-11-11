@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["xormax_implem.v", "xormax_proofs.v", "xormax.spec"]
+files = ["xormax_implem.v", "xormax.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/xormax_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/xormax_extracted_marray.ml",
+  "extraction/ocaml/xormax_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "xormax_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/xormax_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

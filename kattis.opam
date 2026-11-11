@@ -1,0 +1,21 @@
+opam-version: "2.0"
+name: "kattis"
+synopsis: "Kattis specifications and Rocq implementations"
+description: """
+Dependencies for checking the Kattis specifications and Rocq implementations,
+and building the Cold OCaml extraction.
+"""
+maintainer: "Galilei Labs"
+authors: "Galilei Labs"
+homepage: "https://github.com/galilei-labs/kattis"
+bug-reports: "https://github.com/galilei-labs/kattis/issues"
+
+depends: [
+  "dune" {>= "3.21"}
+  "rocq-core" {= "9.2.0"}
+  "rocq-stdlib" {= "9.2.0"}
+  "std-galilei" {= "dev.2026-11-09.0.ad62f8f2"}
+  "rocq-speck" {= "dev.2026-11-05.0.05f85dca"}
+  "coq-flocq" {= "4.2.2"}
+  "ocamlfind"
+]

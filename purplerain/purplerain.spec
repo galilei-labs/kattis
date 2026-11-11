@@ -39,7 +39,7 @@ Output:
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Stdlib Require Import PrimString String Ascii.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 

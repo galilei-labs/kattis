@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["gcpc_implem.v", "gcpc_proofs.v", "gcpc.spec"]
+files = ["gcpc_implem.v", "gcpc.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/gcpc_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/gcpc_extracted_marray.ml",
+  "extraction/ocaml/gcpc_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "gcpc_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/gcpc_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

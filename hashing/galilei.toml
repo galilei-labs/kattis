@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["hashing_implem.v", "hashing_proofs.v", "hashing.spec"]
+files = ["hashing_implem.v", "hashing.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/hashing_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/hashing_extracted_marray.ml",
+  "extraction/ocaml/hashing_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "hashing_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/hashing_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

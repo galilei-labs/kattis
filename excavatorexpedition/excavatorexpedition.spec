@@ -59,7 +59,7 @@ Output:
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Relations.
 From Stdlib Require Import String Ascii.
-From Respeced Require Import Repr.
+From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 

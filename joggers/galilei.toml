@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["joggers_implem.v", "joggers_proofs.v", "joggers.spec"]
+files = ["joggers_implem.v", "joggers.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/joggers_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/joggers_extracted_marray.ml",
+  "extraction/ocaml/joggers_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "joggers_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/joggers_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

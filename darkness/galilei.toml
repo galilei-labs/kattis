@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["darkness_implem.v", "darkness_proofs.v", "darkness.spec"]
+files = ["darkness_implem.v", "darkness.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/darkness_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/darkness_extracted_marray.ml",
+  "extraction/ocaml/darkness_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "darkness_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/darkness_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

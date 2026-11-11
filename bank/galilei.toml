@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["bank_implem.v", "bank_proofs.v", "bank.spec"]
+files = ["bank_implem.v", "bank.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/bank_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/bank_extracted_marray.ml",
+  "extraction/ocaml/bank_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "bank_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/bank_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

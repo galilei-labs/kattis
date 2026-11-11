@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["babelfish_implem.v", "babelfish_proofs.v", "babelfish.spec"]
+files = ["babelfish_implem.v", "babelfish.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/babelfish_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/babelfish_extracted_marray.ml",
+  "extraction/ocaml/babelfish_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "babelfish_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/babelfish_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

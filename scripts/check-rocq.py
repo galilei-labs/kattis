@@ -14,7 +14,6 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('problems', nargs='*', help='Problem slugs; defaults to all problems')
     parser.add_argument('--jobs', type=int, default=4)
-    parser.add_argument('--lib', type=Path, default=ROOT.parent / 'kattis-private' / 'lib')
     parser.add_argument('--flocq', type=Path, help='Optional built Flocq tree (containing Core/)')
     parser.add_argument('--complexity', type=Path, default=ROOT.parent / 'rocq-speck/_build/default/vendor/complexity',
                         help='Compiled rocq-speck Complexity library (needed by complexity specs)')
@@ -41,14 +40,11 @@ def main():
 
     with tempfile.TemporaryDirectory(prefix='kattis-rocq-') as tmp:
         build = Path(tmp)
-        lib = build / 'lib'
-        lib.mkdir()
-        lib_flags = ['-Q', str(lib), 'Respeced']
-        for name in ['Repr', 'ZBig', 'ReprFloat']:
-            shutil.copy2(args.lib / (name + '.v'), lib)
-            run(['rocq', 'compile', *flags, *lib_flags, name + '.v'], lib)
-
+        lib_flags = []
         if needs_cost:
+            lib = build / 'lib'
+            lib.mkdir()
+            lib_flags = ['-Q', str(lib), 'Respeced']
             shutil.copy2(ROOT / 'lib/Cost.v', lib)
             run(['rocq', 'compile', *flags, *lib_flags, 'Cost.v'], lib)
 
@@ -60,8 +56,13 @@ def main():
             (generated / 'Prelude.v').write_text(run(['rocq-speck', 'dump-spec', '--prelude', str(spec)], dest))
             for suffix in ['implem', 'proofs']:
                 shutil.copy2(ROOT / slug / f'{slug}_{suffix}.v', dest)
-            namespace = ['-Q', str(dest), 'Cold'] if slug == 'cold' else []
-            command = ['rocq', 'compile', *flags, *lib_flags, *namespace, '-Q', str(generated), 'Speck']
+            # Keep the checker usable alongside the Dune namespace migration.
+            # Complexity/polymul2 is deliberately left on the legacy layout.
+            logical = slug.capitalize()
+            migrated = (ROOT / slug / 'dune').is_file()
+            namespace = ['-Q', str(dest), logical] if migrated else []
+            prelude_namespace = logical + '.spec' if migrated else 'Speck'
+            command = ['rocq', 'compile', *flags, *lib_flags, *namespace, '-Q', str(generated), prelude_namespace]
             for file in [generated / 'Prelude.v', dest / f'{slug}_implem.v', dest / f'{slug}_proofs.v']:
                 run([*command, str(file)], dest)
             return slug

@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["roadtimes_implem.v", "roadtimes_proofs.v", "roadtimes.spec"]
+files = ["roadtimes_implem.v", "roadtimes.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/roadtimes_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/roadtimes_extracted_arrays_bigint.ml",
+  "extraction/ocaml/roadtimes_extracted_arrays_bigint.mli",
+  "extraction/ocaml/bigint.ml",
+]
 archive = "roadtimes_ocaml.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/roadtimes_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/roadtimes_extracted_arrays_bigint.ml"
+"Rust" = ""

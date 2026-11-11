@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["canonical_implem.v", "canonical_proofs.v", "canonical.spec"]
+files = ["canonical_implem.v", "canonical.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/canonical_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/canonical_extracted_marray.ml",
+  "extraction/ocaml/canonical_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "canonical_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/canonical_extracted_marray.ml"
-Rust = ""
+"Rust" = ""

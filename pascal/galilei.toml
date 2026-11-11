@@ -11,14 +11,18 @@ brand = "focus"
 collapsible = ["Definitions"]
 
 [implementation]
-files = ["pascal_implem.v", "pascal_proofs.v", "pascal.spec"]
+files = ["pascal_implem.v", "pascal.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
 extracted = ["OCaml"]
-files = ["extraction/ocaml/pascal_extracted_marray.ml", "extraction/ocaml/marray.ml"]
+files = [
+  "extraction/ocaml/pascal_extracted_marray.ml",
+  "extraction/ocaml/pascal_extracted_marray.mli",
+  "extraction/ocaml/marray.ml",
+]
 archive = "pascal_ocaml.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/pascal_extracted_marray.ml"
-Rust = ""
+"Rust" = ""
