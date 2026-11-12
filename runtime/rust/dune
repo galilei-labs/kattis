@@ -1,0 +1,25 @@
+; Query the active switch, never the extractor's source checkout.
+(rule
+ (target share-directory)
+ (deps
+  (env_var OPAM_SWITCH_PREFIX)
+  (env_var OPAMSWITCH)
+  (env_var OPAMROOT)
+  (package rust-verified-extraction))
+ (action
+  (with-stdout-to %{target}
+    (run %{bin:opam} var rust-verified-extraction:share))))
+
+(rule
+ (target rocq_bigint.rs)
+ (action
+  (copy %{read-lines:share-directory}/runtime/bigint/rocq_bigint.rs %{target})))
+
+(rule
+ (target rocq_float64.rs)
+ (action
+  (copy %{read-lines:share-directory}/runtime/float64/rocq_float64.rs %{target})))
+(rule
+ (target rocq_string.rs)
+ (action
+  (copy %{read-lines:share-directory}/runtime/strings/rocq_string.rs %{target})))

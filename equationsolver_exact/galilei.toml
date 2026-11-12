@@ -15,14 +15,10 @@ files = ["equationsolver_exact_implem.v", "equationsolver_exact.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.ml",
-  "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "equationsolver_exact_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/equationsolver_exact_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/equationsolver_exact_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/equationsolver_exact.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/equationsolver_exact_extracted.rs", "extraction/rust/submit/equationsolver_exact.rs"]
+archive = "equationsolver_exact_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/equationsolver_exact_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/equationsolver_exact.ml"
+Rust = "extraction/rust/submit/equationsolver_exact.rs"

@@ -15,14 +15,10 @@ files = ["babelfish_implem.v", "babelfish.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/babelfish_extracted_marray.ml",
-  "extraction/ocaml/babelfish_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "babelfish_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/babelfish_extracted_marray.ml", "extraction/ocaml/snapshots/babelfish_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/babelfish.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/babelfish_extracted.rs", "extraction/rust/submit/babelfish.rs"]
+archive = "babelfish_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/babelfish_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/babelfish.ml"
+Rust = "extraction/rust/submit/babelfish.rs"

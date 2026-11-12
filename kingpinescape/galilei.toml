@@ -15,14 +15,10 @@ files = ["kingpinescape_implem.v", "kingpinescape.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/kingpinescape_extracted_marray.ml",
-  "extraction/ocaml/kingpinescape_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "kingpinescape_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/kingpinescape_extracted_marray.ml", "extraction/ocaml/snapshots/kingpinescape_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/kingpinescape.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/kingpinescape_extracted.rs", "extraction/rust/submit/kingpinescape.rs"]
+archive = "kingpinescape_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/kingpinescape_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/kingpinescape.ml"
+Rust = "extraction/rust/submit/kingpinescape.rs"

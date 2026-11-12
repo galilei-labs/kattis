@@ -15,14 +15,10 @@ files = ["plot_implem.v", "plot.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/plot_extracted_marray.ml",
-  "extraction/ocaml/plot_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "plot_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/plot_extracted_marray.ml", "extraction/ocaml/snapshots/plot_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/plot.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/plot_extracted.rs", "extraction/rust/submit/plot.rs"]
+archive = "plot_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/plot_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/plot.ml"
+Rust = "extraction/rust/submit/plot.rs"

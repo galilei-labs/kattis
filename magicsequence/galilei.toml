@@ -15,14 +15,10 @@ files = ["magicsequence_implem.v", "magicsequence.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/magicsequence_extracted_arrays_bigint.ml",
-  "extraction/ocaml/magicsequence_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "magicsequence_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/magicsequence_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/magicsequence_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/magicsequence.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/magicsequence_extracted.rs", "extraction/rust/submit/magicsequence.rs"]
+archive = "magicsequence_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/magicsequence_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/magicsequence.ml"
+Rust = "extraction/rust/submit/magicsequence.rs"

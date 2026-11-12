@@ -15,14 +15,10 @@ files = ["loopycabdrivers_implem.v", "loopycabdrivers.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/loopycabdrivers_extracted_marray.ml",
-  "extraction/ocaml/loopycabdrivers_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "loopycabdrivers_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/loopycabdrivers_extracted_marray.ml", "extraction/ocaml/snapshots/loopycabdrivers_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/loopycabdrivers.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/loopycabdrivers_extracted.rs", "extraction/rust/submit/loopycabdrivers.rs"]
+archive = "loopycabdrivers_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/loopycabdrivers_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/loopycabdrivers.ml"
+Rust = "extraction/rust/submit/loopycabdrivers.rs"

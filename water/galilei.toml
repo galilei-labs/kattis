@@ -15,14 +15,10 @@ files = ["water_implem.v", "water.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/water_extracted_marray.ml",
-  "extraction/ocaml/water_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "water_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/water_extracted_marray.ml", "extraction/ocaml/snapshots/water_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/water.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/water_extracted.rs", "extraction/rust/submit/water.rs"]
+archive = "water_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/water_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/water.ml"
+Rust = "extraction/rust/submit/water.rs"

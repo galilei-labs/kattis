@@ -15,14 +15,10 @@ files = ["closestpair2_implem.v", "closestpair2.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/closestpair2_extracted_marray.ml",
-  "extraction/ocaml/closestpair2_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "closestpair2_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/closestpair2_extracted_marray.ml", "extraction/ocaml/snapshots/closestpair2_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/closestpair2.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/closestpair2_extracted.rs", "extraction/rust/submit/closestpair2.rs"]
+archive = "closestpair2_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/closestpair2_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/closestpair2.ml"
+Rust = "extraction/rust/submit/closestpair2.rs"

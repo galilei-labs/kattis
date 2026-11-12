@@ -15,14 +15,10 @@ files = ["tugofwar_implem.v", "tugofwar.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/tugofwar_extracted_marray.ml",
-  "extraction/ocaml/tugofwar_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "tugofwar_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/tugofwar_extracted_marray.ml", "extraction/ocaml/snapshots/tugofwar_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/tugofwar.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/tugofwar_extracted.rs", "extraction/rust/submit/tugofwar.rs"]
+archive = "tugofwar_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/tugofwar_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/tugofwar.ml"
+Rust = "extraction/rust/submit/tugofwar.rs"

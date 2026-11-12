@@ -15,14 +15,10 @@ files = ["generalchineseremainder_implem.v", "generalchineseremainder.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/generalchineseremainder_extracted_marray.ml",
-  "extraction/ocaml/generalchineseremainder_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "generalchineseremainder_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/generalchineseremainder_extracted_marray.ml", "extraction/ocaml/snapshots/generalchineseremainder_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/generalchineseremainder.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/generalchineseremainder_extracted.rs", "extraction/rust/submit/generalchineseremainder.rs"]
+archive = "generalchineseremainder_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/generalchineseremainder_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/generalchineseremainder.ml"
+Rust = "extraction/rust/submit/generalchineseremainder.rs"

@@ -15,14 +15,10 @@ files = ["atrivialpursuit_implem.v", "atrivialpursuit.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/atrivialpursuit_extracted_marray.ml",
-  "extraction/ocaml/atrivialpursuit_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "atrivialpursuit_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/atrivialpursuit_extracted_marray.ml", "extraction/ocaml/snapshots/atrivialpursuit_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/atrivialpursuit.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/atrivialpursuit_extracted.rs", "extraction/rust/submit/atrivialpursuit.rs"]
+archive = "atrivialpursuit_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/atrivialpursuit_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/atrivialpursuit.ml"
+Rust = "extraction/rust/submit/atrivialpursuit.rs"

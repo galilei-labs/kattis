@@ -15,14 +15,10 @@ files = ["bigfactoring_implem.v", "bigfactoring.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/bigfactoring_extracted_arrays_bigint.ml",
-  "extraction/ocaml/bigfactoring_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "bigfactoring_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/bigfactoring_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/bigfactoring_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/bigfactoring.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/bigfactoring_extracted.rs", "extraction/rust/submit/bigfactoring.rs"]
+archive = "bigfactoring_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/bigfactoring_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/bigfactoring.ml"
+Rust = "extraction/rust/submit/bigfactoring.rs"

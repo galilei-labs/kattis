@@ -15,14 +15,10 @@ files = ["basincity_implem.v", "basincity.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/basincity_extracted_marray.ml",
-  "extraction/ocaml/basincity_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "basincity_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/basincity_extracted_marray.ml", "extraction/ocaml/snapshots/basincity_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/basincity.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/basincity_extracted.rs", "extraction/rust/submit/basincity.rs"]
+archive = "basincity_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/basincity_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/basincity.ml"
+Rust = "extraction/rust/submit/basincity.rs"

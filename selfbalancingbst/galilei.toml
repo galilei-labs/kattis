@@ -15,14 +15,10 @@ files = ["selfbalancingbst_implem.v", "selfbalancingbst.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/selfbalancingbst_extracted_marray.ml",
-  "extraction/ocaml/selfbalancingbst_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "selfbalancingbst_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/selfbalancingbst_extracted_marray.ml", "extraction/ocaml/snapshots/selfbalancingbst_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/selfbalancingbst.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/selfbalancingbst_extracted.rs", "extraction/rust/submit/selfbalancingbst.rs"]
+archive = "selfbalancingbst_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/selfbalancingbst_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/selfbalancingbst.ml"
+Rust = "extraction/rust/submit/selfbalancingbst.rs"

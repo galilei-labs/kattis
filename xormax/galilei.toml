@@ -15,14 +15,10 @@ files = ["xormax_implem.v", "xormax.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/xormax_extracted_marray.ml",
-  "extraction/ocaml/xormax_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "xormax_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/xormax_extracted_marray.ml", "extraction/ocaml/snapshots/xormax_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/xormax.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/xormax_extracted.rs", "extraction/rust/submit/xormax.rs"]
+archive = "xormax_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/xormax_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/xormax.ml"
+Rust = "extraction/rust/submit/xormax.rs"

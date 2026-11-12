@@ -15,14 +15,10 @@ files = ["addemup_implem.v", "addemup.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/addemup_extracted_marray.ml",
-  "extraction/ocaml/addemup_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "addemup_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/addemup_extracted_marray.ml", "extraction/ocaml/snapshots/addemup_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/addemup.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/addemup_extracted.rs", "extraction/rust/submit/addemup.rs"]
+archive = "addemup_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/addemup_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/addemup.ml"
+Rust = "extraction/rust/submit/addemup.rs"

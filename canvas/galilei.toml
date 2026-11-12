@@ -15,14 +15,10 @@ files = ["canvas_implem.v", "canvas.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/canvas_extracted_marray.ml",
-  "extraction/ocaml/canvas_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "canvas_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/canvas_extracted_marray.ml", "extraction/ocaml/snapshots/canvas_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/canvas.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/canvas_extracted.rs", "extraction/rust/submit/canvas.rs"]
+archive = "canvas_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/canvas_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/canvas.ml"
+Rust = "extraction/rust/submit/canvas.rs"

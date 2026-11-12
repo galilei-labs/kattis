@@ -15,14 +15,10 @@ files = ["darkness_implem.v", "darkness.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/darkness_extracted_marray.ml",
-  "extraction/ocaml/darkness_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "darkness_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/darkness_extracted_marray.ml", "extraction/ocaml/snapshots/darkness_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/darkness.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/darkness_extracted.rs", "extraction/rust/submit/darkness.rs"]
+archive = "darkness_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/darkness_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/darkness.ml"
+Rust = "extraction/rust/submit/darkness.rs"

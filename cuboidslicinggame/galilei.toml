@@ -15,14 +15,10 @@ files = ["cuboidslicinggame_implem.v", "cuboidslicinggame.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/cuboidslicinggame_extracted_marray.ml",
-  "extraction/ocaml/cuboidslicinggame_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "cuboidslicinggame_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/cuboidslicinggame_extracted_marray.ml", "extraction/ocaml/snapshots/cuboidslicinggame_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/cuboidslicinggame.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/cuboidslicinggame_extracted.rs", "extraction/rust/submit/cuboidslicinggame.rs"]
+archive = "cuboidslicinggame_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/cuboidslicinggame_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/cuboidslicinggame.ml"
+Rust = "extraction/rust/submit/cuboidslicinggame.rs"

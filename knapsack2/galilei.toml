@@ -15,14 +15,10 @@ files = ["knapsack2_implem.v", "knapsack2.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/knapsack2_extracted_marray.ml",
-  "extraction/ocaml/knapsack2_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "knapsack2_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/knapsack2_extracted_marray.ml", "extraction/ocaml/snapshots/knapsack2_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/knapsack2.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/knapsack2_extracted.rs", "extraction/rust/submit/knapsack2.rs"]
+archive = "knapsack2_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/knapsack2_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/knapsack2.ml"
+Rust = "extraction/rust/submit/knapsack2.rs"

@@ -15,14 +15,10 @@ files = ["ada_implem.v", "ada.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/ada_extracted_marray.ml",
-  "extraction/ocaml/ada_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "ada_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/ada_extracted_marray.ml", "extraction/ocaml/snapshots/ada_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/ada.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/ada_extracted.rs", "extraction/rust/submit/ada.rs"]
+archive = "ada_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/ada_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/ada.ml"
+Rust = "extraction/rust/submit/ada.rs"

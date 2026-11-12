@@ -15,14 +15,10 @@ files = ["antiarithmetic_implem.v", "antiarithmetic.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/antiarithmetic_extracted_marray.ml",
-  "extraction/ocaml/antiarithmetic_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "antiarithmetic_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/antiarithmetic_extracted_marray.ml", "extraction/ocaml/snapshots/antiarithmetic_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/antiarithmetic.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/antiarithmetic_extracted.rs", "extraction/rust/submit/antiarithmetic.rs"]
+archive = "antiarithmetic_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/antiarithmetic_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/antiarithmetic.ml"
+Rust = "extraction/rust/submit/antiarithmetic.rs"

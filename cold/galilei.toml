@@ -18,14 +18,10 @@ files = ["cold_implem.v", "cold.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/cold_extracted_marray.ml",
-  "extraction/ocaml/cold_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "cold_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/cold_extracted_marray.ml", "extraction/ocaml/snapshots/cold_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/cold.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/cold_extracted.rs", "extraction/rust/submit/cold.rs"]
+archive = "cold_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/cold_extracted_marray.ml"
-Rust = ""
+OCaml = "extraction/ocaml/submit/cold.ml"
+Rust = "extraction/rust/submit/cold.rs"

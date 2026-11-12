@@ -15,14 +15,10 @@ files = ["polygonarea_implem.v", "polygonarea.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/polygonarea_extracted_marray.ml",
-  "extraction/ocaml/polygonarea_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "polygonarea_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/polygonarea_extracted_marray.ml", "extraction/ocaml/snapshots/polygonarea_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/polygonarea.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/polygonarea_extracted.rs", "extraction/rust/submit/polygonarea.rs"]
+archive = "polygonarea_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/polygonarea_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/polygonarea.ml"
+Rust = "extraction/rust/submit/polygonarea.rs"

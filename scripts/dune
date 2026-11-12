@@ -1,0 +1,4 @@
+(rule
+ (alias runtest)
+ (deps test-assemble-submission-rust.py assemble-submission-rust.py compact_rust_source.py)
+ (action (run %{bin:python3} -B test-assemble-submission-rust.py)))

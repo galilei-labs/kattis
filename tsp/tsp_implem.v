@@ -3,7 +3,7 @@
    matrix), then the preorder walk of the tree from vertex 0.
 
    Code.  Exactness: [fex] reads every coordinate as m * 2^e (m, e in Z,
-   from [frshiftexp] / [normfr_mantissa], [zofi] digit by digit, no nat);
+   from [frshiftexp] / [normfr_mantissa] and the standard [Uint63.to_Z]);
    E is the least exponent of all the coordinates, and GX, GY hold the
    coordinates as integers on the grid 2^E (exact).  [Dz a b] is the exact
    squared distance in units of 2^(2E), a Z: Prim compares these, so its
@@ -82,24 +82,8 @@ End Loop.
 
 (* -- Exact arithmetic, used only to settle close comparisons. -------- *)
 
-Lemma dec_half : forall i : int, (i =? 0) = false -> Zwf 0 (to_Z (i / 2)) (to_Z i).
-Proof.
-  intros i H. assert (to_Z i <> 0%Z).
-  { intros E. assert (i = 0) by (apply to_Z_inj; exact E). subst i. discriminate. }
-  pose proof (to_Z_bounded i). unfold Zwf. sia.
-Qed.
-
-(* the integer a machine word denotes, by binary digits (no nat) *)
-Fixpoint zofi_rec (i : int) (H : Acc (Zwf 0) (to_Z i)) {struct H} : Z :=
-  match bdec (i =? 0) with
-  | left _ => 0%Z
-  | right Hn =>
-      let r := zofi_rec (i / 2) (Acc_inv H (dec_half i Hn)) in
-      let bit := if i mod 2 =? 0 then 0%Z else 1%Z in
-      (2 * r + bit)%Z
-  end.
-
-Definition zofi (i : int) : Z := zofi_rec i (Zwf_well_founded 0 (to_Z i)).
+Definition zofi (i : int) : Z :=
+  Uint63.to_Z i.
 
 (* A dyadic number (m, e) denotes m * 2^e. *)
 Definition dal (d : Z * Z) (e : Z) : Z := Z.shiftl (fst d) (snd d - e).
@@ -113,10 +97,16 @@ Definition dlt (a b : Z * Z) : bool :=
 
 (* the exact value of a finite float, from its normalised mantissa and
    exponent: f = m * 2^(e - 2101 - 53) *)
-Definition fex (f : float) : Z * Z :=
+Definition fex_raw (f : float) : Z * Z :=
   let (z, e) := frshiftexp f in
   let m := zofi (normfr_mantissa z) in
   ((if (f <? 0)%float then - m else m)%Z, (zofi e - 2154)%Z).
+
+(* Zero needs no fine grid: an exponent of -2154 otherwise inflates every
+   nonzero coordinate by roughly 2100 bits when an input coordinate is zero. *)
+Definition fex (f : float) : Z * Z :=
+  let '(m, e) := fex_raw f in
+  if Z.eqb m 0 then (0, 0)%Z else (m, e).
 
 (* the exact squared distance between points a and b *)
 Definition dex (x y : array float) (a b : int) : Z * Z :=
@@ -151,7 +141,16 @@ Definition key_init (GX GY : array Z) (w : int) (K : array Z) : array Z :=
 
 (* the vertex outside the tree (rank n) of least key; n if none *)
 Definition amin_step (n : int) (rk : array int) (K : array Z) (w b : int) : int :=
+  if rk.[w] =? n then
+    if b =? n then w else if Z.ltb K.[w] K.[b] then w else b
+  else b.
+
+Lemma amin_step_projected n rk K w b :
+  amin_step n rk K w b =
   if andb (rk.[w] =? n) (orb (b =? n) (Z.ltb K.[w] K.[b])) then w else b.
+Proof.
+  unfold amin_step. destruct (rk.[w] =? n), (b =? n), (Z.ltb K.[w] K.[b]); reflexivity.
+Qed.
 
 Definition relax_step (GX GY : array Z) (n : int) (rk : array int) (v : int) (w : int)
     (st : array Z * array int) : array Z * array int :=
@@ -183,8 +182,7 @@ Definition ds_cnt (s : DS) : int := snd s.
 (* at the top u of the stack: scan the next vertex c; when c is a child of
    u, output it and push it; when u has been scanned to n, pop it *)
 Definition dfs_step (n : int) (P : array int) (j : int) (s : DS) : DS :=
-  let it := ds_it s in let stk := ds_stk s in let sp := ds_sp s in
-  let out := ds_out s in let cnt := ds_cnt s in
+  let '((((it, stk), sp), out), cnt) := s in
   let u := stk.[sp - 1] in
   let c := it.[u] in
   if c <? n then
@@ -307,34 +305,20 @@ Proof. reflexivity. Qed.
 (* Exact arithmetic                                                    *)
 (* ------------------------------------------------------------------ *)
 
-Lemma zofi_rec_eq : forall i H, zofi_rec i H =
-  match bdec (i =? 0) with
-  | left _ => 0%Z
-  | right Hn =>
-      let r := zofi_rec (i / 2) (Acc_inv H (dec_half i Hn)) in
-      let bit := if i mod 2 =? 0 then 0%Z else 1%Z in
-      (2 * r + bit)%Z
-  end.
-Proof. intros. destruct H; reflexivity. Qed.
-
 Lemma zofi_spec : forall i, zofi i = to_Z i.
-Proof.
-  assert (G : forall n i H, to_Z i = n -> zofi_rec i H = to_Z i).
-  { intros n. induction n as [n IH] using (well_founded_induction (Zwf_well_founded 0)).
-    intros i H En. rewrite zofi_rec_eq. destruct (bdec (i =? 0)) as [E | E].
-    - apply Uint63.eqb_spec in E. subst i. reflexivity.
-    - cbv zeta. rewrite (IH (to_Z (i / 2))); [| rewrite <- En; apply dec_half; exact E | reflexivity].
-      pose proof (to_Z_bounded i).
-      destruct (i mod 2 =? 0) eqn:Em.
-      + apply Uint63.eqb_spec in Em. apply (f_equal to_Z) in Em. sia.
-      + apply Uint63.eqb_false_spec in Em.
-        assert (to_Z (i mod 2) <> 0%Z) by (intros E'; apply Em, to_Z_inj; exact E'). sia. }
-  intros i. unfold zofi. apply (G _ i _ eq_refl).
-Qed.
+Proof. reflexivity. Qed.
 
 Local Notation bp := (Raux.bpow Zaux.radix2).
 
 Definition dval (d : Z * Z) : R := (IZR (fst d) * bp (snd d))%R.
+
+Lemma fex_zero_normalization_value f :
+  dval (fex f) = dval (fex_raw f).
+Proof.
+  unfold fex. destruct (fex_raw f) as [m e].
+  destruct (Z.eqb m 0) eqn:E; [apply Z.eqb_eq in E; subst m | reflexivity].
+  unfold dval; cbn [fst snd]. ring.
+Qed.
 
 Lemma IZR_pow2 : forall k, (0 <= k)%Z -> IZR (2 ^ k) = bp k.
 Proof. intros k Hk. destruct k as [| p | p]; [reflexivity | reflexivity | lia]. Qed.
@@ -381,14 +365,14 @@ Qed.
 Lemma repr_zero : repr 0%float 0%R.
 Proof. split; reflexivity. Qed.
 
-Lemma fex_val : forall (f : float) r, repr f r -> dval (fex f) = r.
+Lemma fex_raw_val : forall (f : float) r, repr f r -> dval (fex_raw f) = r.
 Proof.
   intros f r Hf.
   assert (Hs : (f <? 0)%float = Raux.Rlt_bool r 0) by (apply repr_ltb; [exact Hf | exact repr_zero]).
   pose proof Hf as Hf'. apply repr_float_iff in Hf' as [Fin Ev].
-  unfold fex. pose proof (Flocq.IEEE754.PrimFloat.frshiftexp_equiv f) as Fr.
+  unfold fex_raw. pose proof (Flocq.IEEE754.PrimFloat.frshiftexp_equiv f) as Fr.
   destruct (frshiftexp f) as [z e]. rewrite Hs. unfold dval; simpl fst; simpl snd.
-  rewrite !zofi_spec, Flocq.IEEE754.PrimFloat.normfr_mantissa_equiv.
+  unfold zofi. rewrite Flocq.IEEE754.PrimFloat.normfr_mantissa_equiv.
   rewrite <- Ev. clear Hs Ev Hf. revert Fr Fin.
   destruct (Flocq.IEEE754.PrimFloat.Prim2B f) as [s|s| |s m ex Hb]; intros Fr Fin; try discriminate.
   - simpl in Fr. injection Fr as Ez _. rewrite Ez. simpl.
@@ -420,6 +404,10 @@ Qed.
 (* ------------------------------------------------------------------ *)
 (* Generic lemmas: sums, the triangle inequality, pigeonholes          *)
 (* ------------------------------------------------------------------ *)
+
+Lemma fex_val f r :
+  repr f r -> dval (fex f) = r.
+Proof. rewrite fex_zero_normalization_value. apply fex_raw_val. Qed.
 
 Local Open Scope R_scope.
 
@@ -912,7 +900,7 @@ Proof.
   - change (to_Z 0) with 0%Z; lia.
   - left. split; [reflexivity |]. intros w Hw. change (to_Z 0) with 0%Z in Hw.
     pose proof (to_Z_bounded w). lia.
-  - intros j b Hj Pb. unfold amin_step.
+  - intros j b Hj Pb. rewrite amin_step_projected.
     rewrite (succ_V j) by lia.
     destruct (rk.[j] =? nx) eqn:Rj0; simpl andb;
       [assert (Rj : rk.[j] = nx) by (apply Uint63.eqb_spec; exact Rj0)

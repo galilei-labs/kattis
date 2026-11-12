@@ -65,15 +65,65 @@ Record fh : Type := FH {
   hmin : int          (* the minimum root, nil when empty *)
 }.
 
-Definition s_key h i v := FH (hkey h).[i <- v] (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
-Definition s_par h i v := FH (hkey h) (hpar h).[i <- v] (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
-Definition s_chd h i v := FH (hkey h) (hpar h) (hchd h).[i <- v] (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
-Definition s_lft h i v := FH (hkey h) (hpar h) (hchd h) (hlft h).[i <- v] (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
-Definition s_rgt h i v := FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h).[i <- v] (hdeg h) (hmrk h) (hbuf h) (hmin h).
-Definition s_deg h i v := FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h).[i <- v] (hmrk h) (hbuf h) (hmin h).
-Definition s_mrk h i v := FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h).[i <- v] (hbuf h) (hmin h).
-Definition s_buf h i v := FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h).[i <- v] (hmin h).
-Definition s_min h v := FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) v.
+(* Destructure once so extraction can consume the record and reuse its fields,
+   rather than cloning a boxed heap for each projection. *)
+Definition s_key (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key.[i <- v] par chd lft rgt deg mrk buf mn.
+Definition s_par (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par.[i <- v] chd lft rgt deg mrk buf mn.
+Definition s_chd (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd.[i <- v] lft rgt deg mrk buf mn.
+Definition s_lft (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft.[i <- v] rgt deg mrk buf mn.
+Definition s_rgt (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft rgt.[i <- v] deg mrk buf mn.
+Definition s_deg (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft rgt deg.[i <- v] mrk buf mn.
+Definition s_mrk (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft rgt deg mrk.[i <- v] buf mn.
+Definition s_buf (h : fh) (i v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft rgt deg mrk buf.[i <- v] mn.
+Definition s_min (h : fh) (v : int) : fh :=
+  let '(FH key par chd lft rgt deg mrk buf mn) := h in
+  FH key par chd lft rgt deg mrk buf v.
+
+(* The old projection equations remain available to the invariant proofs. *)
+Lemma s_key_projected h i v :
+  s_key h i v = FH (hkey h).[i <- v] (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_par_projected h i v :
+  s_par h i v = FH (hkey h) (hpar h).[i <- v] (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_chd_projected h i v :
+  s_chd h i v = FH (hkey h) (hpar h) (hchd h).[i <- v] (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_lft_projected h i v :
+  s_lft h i v = FH (hkey h) (hpar h) (hchd h) (hlft h).[i <- v] (hrgt h) (hdeg h) (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_rgt_projected h i v :
+  s_rgt h i v = FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h).[i <- v] (hdeg h) (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_deg_projected h i v :
+  s_deg h i v = FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h).[i <- v] (hmrk h) (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_mrk_projected h i v :
+  s_mrk h i v = FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h).[i <- v] (hbuf h) (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_buf_projected h i v :
+  s_buf h i v = FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h).[i <- v] (hmin h).
+Proof. destruct h; reflexivity. Qed.
+Lemma s_min_projected h v :
+  s_min h v = FH (hkey h) (hpar h) (hchd h) (hlft h) (hrgt h) (hdeg h) (hmrk h) (hbuf h) v.
+Proof. destruct h; reflexivity. Qed.
+
 
 (* Splice x into a circular doubly linked list, right after a. *)
 Definition ring_ins (h : fh) (a x : int) : fh :=
@@ -576,8 +626,15 @@ Qed.
 (* The heap invariant                                                  *)
 (* ------------------------------------------------------------------ *)
 
-Ltac sx := cbn [s_key s_par s_chd s_lft s_rgt s_deg s_mrk s_buf s_min
-                hkey hpar hchd hlft hrgt hdeg hmrk hbuf hmin] in *.
+Ltac sx :=
+  repeat (progress (first
+    [ rewrite s_key_projected in * | rewrite s_par_projected in *
+    | rewrite s_chd_projected in * | rewrite s_lft_projected in *
+    | rewrite s_rgt_projected in * | rewrite s_deg_projected in *
+    | rewrite s_mrk_projected in * | rewrite s_buf_projected in *
+    | rewrite s_min_projected in * ];
+    cbn [hkey hpar hchd hlft hrgt hdeg hmrk hbuf hmin] in *));
+  cbn [hkey hpar hchd hlft hrgt hdeg hmrk hbuf hmin] in *.
 
 Definition kv (h : fh) (v : int) : Z := (φ ((hkey h).[v])).
 
@@ -761,7 +818,7 @@ Proof.
     { rewrite Hp. apply perm_swap. }
     unfold ring_ins.
     destruct (_ <? _) eqn:Ek; sx.
-    + split; [apply lens_min, lens_lft, lens_rgt, lens_lft, lens_rgt, Hl|].
+    + split; [lens_tac|].
       split; [|repeat split; try reflexivity; apply Hfr; assumption].
       exists (hmin h :: x :: t). split; [exact Hperm|]. right. sx. split; [exact Hri|split].
       * right; left; reflexivity.
@@ -771,7 +828,7 @@ Proof.
         assert (Hvn : v <> nil).
         { intro E. pose proof (Hb v (or_intror Hv')) as B. subst v. rewrite nil_val in B. lia. }
         specialize (Hk v Hv' Hvn). unfold kv in Hk. lia.
-    + split; [apply lens_lft, lens_rgt, lens_lft, lens_rgt, Hl|].
+    + split; [lens_tac|].
       split; [|repeat split; try reflexivity; apply Hfr; assumption].
       exists (hmin h :: x :: t). split; [exact Hperm|]. right. sx. split; [exact Hri|split].
       * left; reflexivity.
@@ -845,14 +902,14 @@ Proof.
     - intros v Hv. unfold h1; sx. rewrite gso by (apply Hne; exact Hv).
       destruct (Hp v Hv) as [E|E]; [congruence|]. intro E'. rewrite E' in E. contradiction. }
   assert (R1 : roots_ok h1 ns nil).
-  { apply (roots_frame h); [exact Hro | reflexivity | |].
+  { apply (roots_frame h); [exact Hro | unfold h1; sx; reflexivity | |].
     - intros v Hv. unfold h1; sx. rewrite !gso by (apply Hne; exact Hv). tauto.
     - intros i _ _. unfold h1; sx. tauto. }
   destruct (roots_bound _ _ _ _ _ C1 R1) as (Lr & Hnd & Hm & Hrr & Hb).
   assert (HxL : ~ In x Lr) by (intro E; apply Hm in E; tauto).
   destruct (root_add_spec h1 N Lr x L1 Hnd ltac:(intros v [E|Hv]; [subst; exact Bx | auto]) HxL Hrr)
     as (L2 & (Lr' & Hperm & Hrr') & K2 & P2 & Ch2 & D2 & M2 & B2 & F2).
-  split; [|rewrite K2; reflexivity].
+  split; [|rewrite K2; unfold h1; sx; reflexivity].
   constructor.
   - apply (core_frame h1); [exact C1' | exact L2 | |].
     + intros v _. rewrite K2, P2, Ch2, D2. tauto.
@@ -1031,7 +1088,7 @@ Proof.
       destruct Hxl as [E|[]]. subst. reflexivity. }
     cbv beta iota zeta. sx.
     apply cut_finish; sx; try assumption; try reflexivity.
-    + apply lens_mrk, lens_par, lens_deg, lens_chd, Hl.
+    + lens_tac.
     + intros p Hpy. rewrite !gso by exact Hpy. tauto.
     + intros i _. tauto.
     + unfold kids_ok; sx; change (hpar h).[x] with y. left. split.
@@ -1063,7 +1120,7 @@ Proof.
     destruct ((hchd h).[y] =? x) eqn:E2; sx.
     + apply eqb_spec in E2.
       apply cut_finish; sx; try assumption; try reflexivity.
-      * apply lens_mrk, lens_par, lens_deg, lens_chd, lens_lft, lens_rgt, Hl.
+      * lens_tac.
       * intros p Hpy. rewrite !gso by exact Hpy. tauto.
       * intros i Hi. rewrite !gso; [tauto | |]; intro E; subst i; apply Hi; apply Pt; assumption.
       * unfold kids_ok; sx; change (hpar h).[x] with y. right. exists t. split; [exact Hrt|split; [exact Hndt|split; [|split]]].
@@ -1080,7 +1137,7 @@ Proof.
                  apply (Permutation_in _ Hperm) in Hvl. destruct Hvl as [E|E]; [congruence | exact E].
     + apply eqb_false_spec in E2.
       apply cut_finish; sx; try assumption; try reflexivity.
-      * apply lens_mrk, lens_par, lens_deg, lens_lft, lens_rgt, Hl.
+      * lens_tac.
       * intros p Hpy. rewrite !gso by exact Hpy. tauto.
       * intros i Hi. rewrite !gso; [tauto | |]; intro E; subst i; apply Hi; apply Pt; assumption.
       * unfold kids_ok; sx; change (hpar h).[x] with y. right. exists t. split; [exact Hrt|split; [exact Hndt|split; [|split]]].
@@ -1107,7 +1164,7 @@ Proof.
   - apply (core_frame h); [exact C | apply lens_mrk, (co_len _ _ _ _ C) | |]; intros; sx; tauto.
   - sx. exact Hp.
   - sx. exact Hb.
-  - apply (roots_frame h); [exact Hr | reflexivity | |]; intros; sx; tauto.
+  - apply (roots_frame h); [exact Hr | sx; reflexivity | |]; intros; sx; tauto.
 Qed.
 
 Lemma HI_ex : forall h N ns em x, HI h N ns nil em -> HI h N ns x em.
@@ -1169,7 +1226,8 @@ Proof.
   pose proof (co_len _ _ _ _ C) as Hl. pose proof Hl as (LK & _).
   pose proof (co_range _ _ _ _ C x Hx) as Bx.
   destruct C as [C1 C2 C3 C4 C5 C6].
-  constructor; [apply lens_key; exact C1 | exact C2 | exact C3 | exact C4 | | exact C6].
+  rewrite s_key_projected.
+  constructor; [lens_tac | exact C2 | exact C3 | exact C4 | | exact C6].
   - intros v Hv Hne Hpv. sx. unfold kv; sx.
     assert (NNv : v <> nil) by (intro E; subst v; pose proof (C3 _ Hv); pose proof (lens_N _ _ C1); rewrite nil_val in *; lia).
     pose proof (C5 v Hv NNv Hpv) as O. unfold kv in O.
@@ -1196,7 +1254,7 @@ Proof.
   destruct (roots_bound _ _ _ _ _ C Hro) as (Lr & Hnd & Hm & Hrr & HbL).
   assert (NN : forall v, In v ns -> v <> nil) by (intros v Hv; exact (node_not_nil _ _ _ _ _ C Hv)).
   destruct ((hkey h).[x] <? (hkey h).[hmin h]) eqn:E; constructor; sx; auto.
-  - apply (core_frame h); [exact C | apply lens_min, (co_len _ _ _ _ C) | |]; intros; sx; tauto.
+  - apply (core_frame h); [exact C | exact (co_len _ _ _ _ C) | |]; intros; sx; tauto.
   - rewrite ltb_spec in E.
     assert (Px : (hpar h).[x] = nil) by (destruct Hc as [Hc|Hc]; [exact Hc | unfold kv in Hc; lia]).
     exists Lr. split; [exact Hnd | split; [intros v; sx; apply Hm|]].
@@ -1216,7 +1274,8 @@ Qed.
 Lemma roots_key : forall h ns x k, roots_ok h ns nil -> (hpar h).[x] <> nil ->
   roots_ok (s_key h x k) ns nil.
 Proof.
-  intros h ns x k (Lr & Hnd & Hm & Hrr) Px. exists Lr. split; [exact Hnd|split; [exact Hm|]].
+  intros h ns x k (Lr & Hnd & Hm & Hrr) Px. rewrite s_key_projected.
+  exists Lr. split; [exact Hnd|split; [exact Hm|]].
   destruct Hrr as [H1 | (Hr & Hmin & Hk)]; [left; exact H1|]. right. sx.
   split; [exact Hr|split; [exact Hmin|]].
   assert (Hmx : hmin h <> x) by (intro E; apply Px; rewrite <- E; apply Hm; exact Hmin).
@@ -1238,7 +1297,8 @@ Proof.
   destruct ((hpar (s_key h x k)).[x] =? nil) eqn:E1.
   - apply eqb_spec in E1. sx. rewrite <- Kx at 1.
     split; [|destruct (_ <? _); reflexivity].
-    apply (fixmin_spec (s_key h x k)); [| exact Hx | left; exact E1].
+    pose proof (fixmin_spec (s_key h x k) N ns x) as Fix. sx.
+    apply Fix; [| exact Hx | left; exact E1].
     constructor; sx.
     + apply (core_noex _ _ _ x C1). sx. rewrite E1. intro E. exfalso. exact (nil_notin _ _ _ _ C E).
     + exact Hp.
@@ -1255,31 +1315,36 @@ Proof.
         exact (node_not_nil _ _ _ _ _ C (proj1 (proj1 (Hm v) Hv))).
   - apply eqb_false_spec in E1. sx.
     assert (Hpx : In (hpar h).[x] ns) by (destruct (Hp x Hx); [contradiction | assumption]).
+    pose proof (roots_key h ns x k Hro E1) as R. sx.
     assert (HI1 : HI (s_key h x k) N ns x nil).
-    { constructor; sx; [exact C1 | exact Hp | exact Hb |]. apply roots_key; assumption. }
+    { constructor; sx; [exact C1 | exact Hp | exact Hb | exact R]. }
     destruct (k <? (hkey h).[x <- k].[(hpar h).[x]]) eqn:E2.
     + destruct (cut_spec _ _ _ _ HI1 Hx ltac:(sx; exact Hpx)) as (HI2 & K2 & P2).
       sx.
       set (h2 := fh_cut (s_key h x k) x (hpar h).[x]) in *.
+      assert (H2 : fh_cut (s_key h x k) x (hpar h).[x] = h2) by reflexivity.
+      rewrite s_key_projected in H2. rewrite H2 in HI2, K2, P2. rewrite H2.
       destruct (ccut_spec _ (PArray.length (hpar h)) (Zwf_well_founded 0 _) h2 N ns
                   (hpar h).[x] eq_refl HI2 Hpx) as (HI3 & K3 & P3).
       set (h3 := ccut h2 (hpar h).[x] (PArray.length (hpar h)) _) in *.
       assert (K3x : (hkey h3).[x] = k) by (rewrite K3, K2; exact Kx).
       rewrite <- K3x at 1. split; [|destruct (k <? (hkey h3).[hmin h3]); sx; rewrite K3, K2; reflexivity].
-      apply (fixmin_spec h3); [| exact Hx | left].
+      pose proof (fixmin_spec h3 N ns x) as Fix. sx.
+      apply Fix; [| exact Hx | left].
       * constructor; [apply HI3 | apply HI3 | apply HI3 |]. destruct (hi_roots _ _ _ _ _ HI3) as (Lr & Hnd & Hm & Hrr).
         exists Lr. split; [exact Hnd|split; [exact Hm|]].
         destruct Hrr as [H1 | (Hr & Hmin & Hkk)]; [left; exact H1|]. right. split; [exact Hr|split; [exact Hmin|]].
         intros v Hv _. apply Hkk; [exact Hv|]. apply (node_not_nil _ _ _ _ _ (hi_core _ _ _ _ _ HI3)).
         apply Hm in Hv. tauto.
       * apply P3. rewrite P2. apply gss. rewrite LP. exact Bx.
-    + rewrite <- Kx at 1. split; [|destruct (k <? (hkey (s_key h x k)).[hmin (s_key h x k)]); reflexivity].
+    + rewrite <- Kx at 1. split; [|sx; destruct (k <? (hkey h).[x<-k].[hmin h]); reflexivity].
       rewrite <- Bool.not_true_iff_false, ltb_spec in E2.
       assert (HI2 : HI (s_key h x k) N ns nil nil).
-      { constructor; sx; [| exact Hp | exact Hb | apply roots_key; assumption].
+      { constructor; sx; [| exact Hp | exact Hb | exact R].
         apply (core_noex _ _ _ x C1). intros _. unfold kv. sx. rewrite Kx.
         lia. }
-      apply (fixmin_spec (s_key h x k)); [| exact Hx | right].
+      pose proof (fixmin_spec (s_key h x k) N ns x) as Fix. sx.
+      apply Fix; [| exact Hx | right].
       * apply HI_ex_m. exact HI2.
       * destruct (HI_min _ _ _ HI2 x Hx) as (_ & _ & O). exact O.
 Qed.
@@ -1414,7 +1479,7 @@ Proof.
     assert (D1 : (φ ((hdeg h).[x] + 1)) = 1%Z) by (rewrite E; reflexivity).
     split; [|split; [reflexivity|split; [reflexivity|split; [reflexivity|split; [reflexivity|split]]]]].
     + apply (link_core h _ N ns x y C Hx Hy Hxy Px Py Kxy); sx.
-      * apply lens_mrk, lens_deg, lens_par, lens_rgt, lens_lft, lens_chd, Hl.
+      * lens_tac.
       * reflexivity.
       * reflexivity.
       * intros p Hp. rewrite !gso by exact Hp. tauto.
@@ -1450,7 +1515,7 @@ Proof.
     unfold ring_ins. cbv beta iota zeta. sx.
     split; [|split; [reflexivity|split; [reflexivity|split; [reflexivity|split; [reflexivity|split]]]]].
     + apply (link_core h _ N ns x y C Hx Hy Hxy Px Py Kxy); sx.
-      * apply lens_mrk, lens_deg, lens_par, lens_lft, lens_rgt, lens_lft, lens_rgt, Hl.
+      * lens_tac.
       * reflexivity.
       * reflexivity.
       * intros p Hp. rewrite !gso by exact Hp. tauto.
@@ -1538,7 +1603,8 @@ Proof.
   assert (Pl : (hpar h).[l] = nil) by (destruct Hwl as [[-> ->]|[-> ->]]; assumption).
   assert (Dw : (hdeg h).[w] = d) by (destruct Hwl as [[-> ->]|[-> ->]]; assumption).
   pose proof (core_buf _ _ _ _ d nil C) as C1.
-  destruct (link_spec (s_buf h d nil) N ns w l C1 Hw Hl' Hwl' Pw Pl Kwl)
+  destruct (link_spec (s_buf h d nil) N ns w l C1 Hw Hl' Hwl'
+    ltac:(sx; exact Pw) ltac:(sx; exact Pl) ltac:(unfold kv in *; sx; exact Kwl))
     as (C2 & P2 & K2 & B2' & M2 & D2w & D2 & LR2).
   fold h2 in C2, P2, K2, B2', M2, D2w, D2, LR2. clearbody h2. sx.
   assert (P2v : forall v, v <> l -> (hpar h2).[v] = (hpar h).[v]) by (intros v Hv; rewrite P2; apply gso; exact Hv).
@@ -1640,7 +1706,7 @@ Proof.
     assert (Bx : (hbuf h).[d <- x].[d] = x) by (apply gss; rewrite LB; exact Bd).
     assert (Bo : forall i, i <> d -> (hbuf h).[d <- x].[i] = (hbuf h).[i]) by (intros; apply gso; assumption).
     exists (x :: as_). constructor; sx.
-    + apply core_buf. exact C.
+    + pose proof (core_buf h N ns nil d x C) as B. sx. exact B.
     + intros v Hv. destruct (Cp v Hv) as [H1|[H1|[H1|H1]]]; [left; exact H1| right; left; right; exact H1
         | right; left; left; exact H1 | right; right; exact H1].
     + intros v [[E|Hv]|Hv]; apply Ct; [right; left; exact E | left; exact Hv | right; right; exact Hv].
@@ -1671,7 +1737,7 @@ Proof.
       destruct (IH (gap N (d + 1)) ltac:(rewrite <- Hz; apply dec_step; exact Hd) (d + 1)
                  (Acc_inv H (dec_step N d Hd)) _ ns _ _ P md eq_refl HC2 P2 D2)
         as (Hc & K3 & M3 & R3).
-      split; [exact Hc|]. split; [rewrite K3; exact K2|]. split; [rewrite M3; exact M2|].
+      sx. split; [exact Hc|]. split; [rewrite K3; exact K2|]. split; [rewrite M3; exact M2|].
       intros i Hi. rewrite R3 by exact Hi. apply R2. exact Hi.
     + rewrite <- Bool.not_true_iff_false, ltb_spec in Ek.
       destruct (link_step h N ns as_ x P md d (hbuf h).[d] x (hbuf h).[d] HC Px Dx Bd eq_refl Hy Dy
@@ -1680,7 +1746,7 @@ Proof.
       destruct (IH (gap N (d + 1)) ltac:(rewrite <- Hz; apply dec_step; exact Hd) (d + 1)
                  (Acc_inv H (dec_step N d Hd)) _ ns _ _ P md eq_refl HC2 P2 D2)
         as (Hc & K3 & M3 & R3).
-      split; [exact Hc|]. split; [rewrite K3; exact K2|]. split; [rewrite M3; exact M2|].
+      sx. split; [exact Hc|]. split; [rewrite K3; exact K2|]. split; [rewrite M3; exact M2|].
       intros i Hi. rewrite R3 by exact Hi. apply R2. exact Hi.
 Qed.
 
@@ -1726,7 +1792,8 @@ Proof.
   assert (P'v : forall v, v <> w -> (hpar (s_par h w nil)).[v] = (hpar h).[v]) by (intros; sx; apply gso; assumption).
   assert (HC1 : CI (s_par h w nil) N ns as_ (w :: P) md).
   { constructor; sx; try assumption.
-    - apply core_par_top; try tauto. exact (nil_notin _ _ _ _ C).
+    - pose proof (core_par_top h N ns nil w nil C (proj1 Hw) (proj2 Hw)
+        (nil_notin _ _ _ _ C)) as C1. sx. exact C1.
     - intros v Hv. destruct (Uint63.eq_dec v w) as [E|E]; [subst; right; right; left; reflexivity|].
       rewrite gso by exact E. apply Cp. exact Hv.
     - intros v Hv. destruct (Uint63.eq_dec v w) as [E|E].
@@ -1846,18 +1913,19 @@ Proof.
       destruct (root_add_spec (s_buf h d nil) N Lr x (lens_buf _ _ _ _ Hl) NL
                  ltac:(intros v [E|Hv]; [rewrite <- E; exact (co_range _ _ _ _ C x Hxn) |
                        apply (co_range _ _ _ _ C); apply Rt; right; exact Hv])
-                 HxL Rr)
+                 HxL ltac:(unfold rr, kv in *; sx; exact Rr))
         as (L2 & (Lr' & Hperm & Hrr') & K2 & P2 & Ch2 & D2 & M2 & B2' & FR).
       sx.
       assert (Bdn : (hbuf h).[d <- nil].[d] = nil) by (apply gss; rewrite LB; exact Bd).
       assert (Bo : forall i, i <> d -> (hbuf h).[d <- nil].[i] = (hbuf h).[i]) by (intros; apply gso; assumption).
-      set (h2 := root_add (s_buf h d nil) x) in *.
+      rewrite <- (s_buf_projected h d nil) in *.
+      set (h2 := root_add (s_buf h d nil) x) in *. clearbody h2.
       assert (Tops : forall v, In v (x :: Lr) -> (hpar h).[v] = nil) by
         (intros v [E|Hv]; [rewrite <- E; exact Px | apply Rt; right; exact Hv]).
       destruct (IH _ Hlt (d + 1) (Acc_inv H (dec_step (md + 1) d Hd)) h2 ns (rem x as_) Lr' eq_refl)
         as [HI2 K]; [| split; [exact HI2 | rewrite K, K2; reflexivity]].
       constructor; rewrite ?K2, ?P2, ?Ch2, ?D2, ?B2'; sx.
-      * apply (core_frame (s_buf h d nil)); [exact C1 | exact L2 | |].
+      * eapply core_frame; [exact C1 | exact L2 | |].
         -- intros v _. rewrite K2, P2, Ch2, D2. tauto.
         -- intros i Hi Hpi. apply FR. intro F. sx. rewrite (Tops i F) in Hpi.
            exact (NN _ Hpi eq_refl).
@@ -1979,7 +2047,7 @@ Proof.
   (* consolidation starts *)
   assert (CI0 : CI (s_min h nil) N ns' [] (t ++ K) 0).
   { constructor; sx.
-    - apply (core_frame h); [| apply lens_min, Hl | intros; sx; tauto | intros; sx; tauto].
+    - apply (core_frame h); [| lens_tac | intros; sx; tauto | intros; sx; tauto].
       apply core_rem_root; assumption.
     - intros v Hv. apply rem_In in Hv. destruct Hv as [Hv Hvz].
       destruct (Hp v Hv) as [P|P].
@@ -2006,11 +2074,15 @@ Proof.
     - change (φ 0) with 0%Z. pose proof (to_Z_bounded z). lia. }
   unfold fh_extract. cbv zeta. fold z. cbn [fst snd].
   split; [exact Hz|]. split; [exact Hmin|].
-  change (hrgt (s_min h nil)).[z] with (hrgt h).[z]. rewrite (Rz : (hrgt h).[z] = hd z t).
+  assert (Rmin : hrgt (s_min h nil) = hrgt h) by (sx; reflexivity).
+  rewrite Rmin, (Rz : (hrgt h).[z] = hd z t).
   destruct (walk_spec _ (PArray.length (hbuf h)) (Zwf_well_founded 0 _) (s_min h nil) N ns' [] t K z 0
-              eq_refl CI0 Rt Hzt (Hlen t NDt (fun v Hv => proj2 (rem_In z ns v) (conj (proj1 (Ht v Hv)) (proj2 (proj2 (Ht v Hv)))))))
+              eq_refl CI0 ltac:(rewrite Rmin; exact Rt) Hzt (Hlen t NDt (fun v Hv => proj2 (rem_In z ns v) (conj (proj1 (Ht v Hv)) (proj2 (proj2 (Ht v Hv)))))))
     as ((as1 & HC1) & K1 & M1 & R1).
   set (r1 := walk (s_min h nil) (hd z t) z 0 (PArray.length (hbuf h)) _) in *.
+  assert (Kmin : hkey (s_min h nil) = hkey h) by (sx; reflexivity).
+  assert (Mmin : hmin (s_min h nil) = nil) by (sx; reflexivity).
+  rewrite Kmin in K1. rewrite Mmin in M1. rewrite Rmin in R1.
   assert (Fin : forall r2 as3, CI (fst r2) N ns' as3 [] (snd r2) -> hmin (fst r2) = nil ->
             hkey (fst r2) = hkey h ->
             forall H3, HI (rebuild (fst r2) 0 (snd r2 + 1) H3) N (rem z ns) nil nil /\
@@ -2029,7 +2101,7 @@ Proof.
     apply (Fin r1 as1 HC1); [rewrite M1; reflexivity | exact K1].
   - destruct ((hdeg h).[z] =? 0) eqn:E0; [apply eqb_spec in E0; contradiction|]. cbv zeta.
     subst K.
-    rewrite R1 by (left; reflexivity). change (hrgt (s_min h nil)) with (hrgt h). rewrite Rc.
+    rewrite R1 by (left; reflexivity). rewrite Rc.
     destruct (proc_spec (fst r1) N ns' as1 (hchd h).[z] t2 (snd r1) HC1) as ((as2 & HC2) & K2 & M2 & R2).
     assert (Rt2' : rseq (hrgt (fst (proc (fst r1) (hchd h).[z] (snd r1)))) t2 (hchd h).[z]).
     { apply (rseq_frame (hrgt h)); [exact Rt2|]. intros i Hi. rewrite R2 by exact Hi. apply R1. right. exact Hi. }

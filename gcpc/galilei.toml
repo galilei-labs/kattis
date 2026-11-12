@@ -15,14 +15,10 @@ files = ["gcpc_implem.v", "gcpc.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/gcpc_extracted_marray.ml",
-  "extraction/ocaml/gcpc_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "gcpc_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/gcpc_extracted_marray.ml", "extraction/ocaml/snapshots/gcpc_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/gcpc.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/gcpc_extracted.rs", "extraction/rust/submit/gcpc.rs"]
+archive = "gcpc_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/gcpc_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/gcpc.ml"
+Rust = "extraction/rust/submit/gcpc.rs"

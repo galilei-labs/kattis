@@ -15,14 +15,10 @@ files = ["remainderreminder_implem.v", "remainderreminder.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/remainderreminder_extracted_marray.ml",
-  "extraction/ocaml/remainderreminder_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "remainderreminder_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/remainderreminder_extracted_marray.ml", "extraction/ocaml/snapshots/remainderreminder_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/remainderreminder.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/remainderreminder_extracted.rs", "extraction/rust/submit/remainderreminder.rs"]
+archive = "remainderreminder_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/remainderreminder_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/remainderreminder.ml"
+Rust = "extraction/rust/submit/remainderreminder.rs"

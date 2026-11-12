@@ -15,14 +15,10 @@ files = ["knapsack_implem.v", "knapsack.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/knapsack_extracted_arrays_bigint.ml",
-  "extraction/ocaml/knapsack_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "knapsack_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/knapsack_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/knapsack_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/knapsack.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/knapsack_extracted.rs", "extraction/rust/submit/knapsack.rs"]
+archive = "knapsack_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/knapsack_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/knapsack.ml"
+Rust = "extraction/rust/submit/knapsack.rs"

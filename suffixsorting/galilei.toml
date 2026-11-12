@@ -15,14 +15,10 @@ files = ["suffixsorting_implem.v", "suffixsorting.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/suffixsorting_extracted_arrays_bigint.ml",
-  "extraction/ocaml/suffixsorting_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "suffixsorting_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/suffixsorting_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/suffixsorting_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/suffixsorting.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/suffixsorting_extracted.rs", "extraction/rust/submit/suffixsorting.rs"]
+archive = "suffixsorting_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/suffixsorting_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/suffixsorting.ml"
+Rust = "extraction/rust/submit/suffixsorting.rs"

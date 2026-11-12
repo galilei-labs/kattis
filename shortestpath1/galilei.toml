@@ -15,14 +15,10 @@ files = ["shortestpath1_implem.v", "shortestpath1.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/shortestpath1_extracted_marray.ml",
-  "extraction/ocaml/shortestpath1_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "shortestpath1_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/shortestpath1_extracted_marray.ml", "extraction/ocaml/snapshots/shortestpath1_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/shortestpath1.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/shortestpath1_extracted.rs", "extraction/rust/submit/shortestpath1.rs"]
+archive = "shortestpath1_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/shortestpath1_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/shortestpath1.ml"
+Rust = "extraction/rust/submit/shortestpath1.rs"

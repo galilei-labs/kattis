@@ -15,14 +15,10 @@ files = ["knigsoftheforest_implem.v", "knigsoftheforest.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/knigsoftheforest_extracted_marray.ml",
-  "extraction/ocaml/knigsoftheforest_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "knigsoftheforest_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/knigsoftheforest_extracted_marray.ml", "extraction/ocaml/snapshots/knigsoftheforest_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/knigsoftheforest.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/knigsoftheforest_extracted.rs", "extraction/rust/submit/knigsoftheforest.rs"]
+archive = "knigsoftheforest_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/knigsoftheforest_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/knigsoftheforest.ml"
+Rust = "extraction/rust/submit/knigsoftheforest.rs"

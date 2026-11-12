@@ -15,14 +15,10 @@ files = ["roberthood_implem.v", "roberthood.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/roberthood_extracted_marray.ml",
-  "extraction/ocaml/roberthood_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "roberthood_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/roberthood_extracted_marray.ml", "extraction/ocaml/snapshots/roberthood_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/roberthood.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/roberthood_extracted.rs", "extraction/rust/submit/roberthood.rs"]
+archive = "roberthood_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/roberthood_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/roberthood.ml"
+Rust = "extraction/rust/submit/roberthood.rs"

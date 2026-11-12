@@ -15,14 +15,10 @@ files = ["numbersetshard_implem.v", "numbersetshard.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/numbersetshard_extracted_arrays_bigint.ml",
-  "extraction/ocaml/numbersetshard_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "numbersetshard_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/numbersetshard_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/numbersetshard_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/numbersetshard.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/numbersetshard_extracted.rs", "extraction/rust/submit/numbersetshard.rs"]
+archive = "numbersetshard_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/numbersetshard_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/numbersetshard.ml"
+Rust = "extraction/rust/submit/numbersetshard.rs"

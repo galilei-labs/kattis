@@ -15,14 +15,10 @@ files = ["bracketsequence_implem.v", "bracketsequence.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/bracketsequence_extracted_marray.ml",
-  "extraction/ocaml/bracketsequence_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "bracketsequence_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/bracketsequence_extracted_marray.ml", "extraction/ocaml/snapshots/bracketsequence_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/bracketsequence.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/bracketsequence_extracted.rs", "extraction/rust/submit/bracketsequence.rs"]
+archive = "bracketsequence_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/bracketsequence_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/bracketsequence.ml"
+Rust = "extraction/rust/submit/bracketsequence.rs"

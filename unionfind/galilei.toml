@@ -15,14 +15,10 @@ files = ["unionfind_implem.v", "unionfind.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/unionfind_extracted_marray.ml",
-  "extraction/ocaml/unionfind_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "unionfind_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/unionfind_extracted_marray.ml", "extraction/ocaml/snapshots/unionfind_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/unionfind.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/unionfind_extracted.rs", "extraction/rust/submit/unionfind.rs"]
+archive = "unionfind_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/unionfind_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/unionfind.ml"
+Rust = "extraction/rust/submit/unionfind.rs"

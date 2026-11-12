@@ -1,0 +1,9 @@
+// I/O adapter ported from the historical Rust survey; no algorithm changes.
+const STACK_MIB: usize = 256;
+use kattis_io::*;
+
+fn solve(input: &str) -> String {
+    let mut t = Tokens::new(input); let cases = t.uint();
+    lines((0..cases).map(|_| { let n = t.uint(); run()(t.uints(n)) }))
+}
+fn main() { entry(solve); }

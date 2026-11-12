@@ -15,14 +15,10 @@ files = ["stringmultimatching_implem.v", "stringmultimatching.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/stringmultimatching_extracted_marray.ml",
-  "extraction/ocaml/stringmultimatching_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "stringmultimatching_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/stringmultimatching_extracted_marray.ml", "extraction/ocaml/snapshots/stringmultimatching_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/stringmultimatching.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/stringmultimatching_extracted.rs", "extraction/rust/submit/stringmultimatching.rs"]
+archive = "stringmultimatching_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/stringmultimatching_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/stringmultimatching.ml"
+Rust = "extraction/rust/submit/stringmultimatching.rs"

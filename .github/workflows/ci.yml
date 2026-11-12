@@ -31,6 +31,12 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Install Rust
+        uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          toolchain: stable
+          cache: false
+
       - name: Create read-only dependency token
         id: dependency-token
         uses: actions/create-github-app-token@v2
@@ -42,6 +48,7 @@ jobs:
             opam
             rocq-speck
             std-galilei
+            rust-extraction
           permission-contents: read
 
       - name: Configure private dependency access
@@ -92,8 +99,11 @@ jobs:
           path: /home/rocq/.opam
           key: ${{ steps.dependencies.outputs.cache-primary-key }}
 
-      - name: Build all Rocq theories and OCaml extractions
+      - name: Build all Rocq theories and OCaml/Rust extractions
         run: opam exec -- dune build @all --display short -j 2
 
       - name: Check extraction snapshots are current
-        run: opam exec -- dune build @check-snapshot --display short -j 2
+        run: opam exec -- make check-snapshot DUNEFLAGS="--display short -j 2"
+
+      - name: Check standalone OCaml/Rust bundles and assembler
+        run: opam exec -- dune build @check-submission @check-rust-submission @scripts/runtest --display short -j 2

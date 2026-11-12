@@ -15,14 +15,10 @@ files = ["timing_implem.v", "timing.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/timing_extracted_arrays_bigint.ml",
-  "extraction/ocaml/timing_extracted_arrays_bigint.mli",
-  "extraction/ocaml/bigint.ml",
-]
-archive = "timing_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_arrays_bigint.v", "extraction/ocaml/snapshots/timing_extracted_arrays_bigint.ml", "extraction/ocaml/snapshots/timing_extracted_arrays_bigint.mli", "extraction/ocaml/snapshots/bigint.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/timing.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/timing_extracted.rs", "extraction/rust/submit/timing.rs"]
+archive = "timing_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/timing_extracted_arrays_bigint.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/timing.ml"
+Rust = "extraction/rust/submit/timing.rs"

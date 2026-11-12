@@ -3,7 +3,7 @@ name: "kattis"
 synopsis: "Kattis specifications and Rocq implementations"
 description: """
 Dependencies for checking the Kattis specifications and Rocq implementations,
-and building the Cold OCaml extraction.
+and building the selected OCaml and Rust extractions.
 """
 maintainer: "Galilei Labs"
 authors: "Galilei Labs"
@@ -14,7 +14,8 @@ depends: [
   "dune" {>= "3.21"}
   "rocq-core" {= "9.2.0"}
   "rocq-stdlib" {= "9.2.0"}
-  "std-galilei" {= "dev.2026-11-09.0.ad62f8f2"}
+  "std-galilei" {= "dev.2026-11-11.0.774d6859"}
+  "rust-verified-extraction" {= "dev.2026-11-12.0.77365add"}
   "rocq-speck" {= "dev.2026-11-05.0.05f85dca"}
   "coq-flocq" {= "4.2.2"}
   "ocamlfind"

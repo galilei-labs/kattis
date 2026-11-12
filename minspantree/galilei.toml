@@ -15,14 +15,10 @@ files = ["minspantree_implem.v", "minspantree.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/minspantree_extracted_marray.ml",
-  "extraction/ocaml/minspantree_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "minspantree_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/minspantree_extracted_marray.ml", "extraction/ocaml/snapshots/minspantree_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/minspantree.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/minspantree_extracted.rs", "extraction/rust/submit/minspantree.rs"]
+archive = "minspantree_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/minspantree_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/minspantree.ml"
+Rust = "extraction/rust/submit/minspantree.rs"

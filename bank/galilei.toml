@@ -15,14 +15,10 @@ files = ["bank_implem.v", "bank.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/bank_extracted_marray.ml",
-  "extraction/ocaml/bank_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "bank_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/bank_extracted_marray.ml", "extraction/ocaml/snapshots/bank_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/bank.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/bank_extracted.rs", "extraction/rust/submit/bank.rs"]
+archive = "bank_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/bank_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/bank.ml"
+Rust = "extraction/rust/submit/bank.rs"

@@ -15,14 +15,10 @@ files = ["slowleak_implem.v", "slowleak.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/slowleak_extracted_marray.ml",
-  "extraction/ocaml/slowleak_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "slowleak_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/slowleak_extracted_marray.ml", "extraction/ocaml/snapshots/slowleak_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/slowleak.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/slowleak_extracted.rs", "extraction/rust/submit/slowleak.rs"]
+archive = "slowleak_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/slowleak_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/slowleak.ml"
+Rust = "extraction/rust/submit/slowleak.rs"

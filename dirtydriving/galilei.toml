@@ -15,14 +15,10 @@ files = ["dirtydriving_implem.v", "dirtydriving.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/dirtydriving_extracted_marray.ml",
-  "extraction/ocaml/dirtydriving_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "dirtydriving_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/dirtydriving_extracted_marray.ml", "extraction/ocaml/snapshots/dirtydriving_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/dirtydriving.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/dirtydriving_extracted.rs", "extraction/rust/submit/dirtydriving.rs"]
+archive = "dirtydriving_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/dirtydriving_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/dirtydriving.ml"
+Rust = "extraction/rust/submit/dirtydriving.rs"

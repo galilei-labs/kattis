@@ -15,14 +15,10 @@ files = ["joinstrings_implem.v", "joinstrings.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/joinstrings_extracted_marray.ml",
-  "extraction/ocaml/joinstrings_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "joinstrings_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/joinstrings_extracted_marray.ml", "extraction/ocaml/snapshots/joinstrings_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/joinstrings.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/joinstrings_extracted.rs", "extraction/rust/submit/joinstrings.rs"]
+archive = "joinstrings_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/joinstrings_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/joinstrings.ml"
+Rust = "extraction/rust/submit/joinstrings.rs"

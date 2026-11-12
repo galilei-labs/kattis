@@ -15,14 +15,10 @@ files = ["intervalcover_implem.v", "intervalcover.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/intervalcover_extracted_marray.ml",
-  "extraction/ocaml/intervalcover_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "intervalcover_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/intervalcover_extracted_marray.ml", "extraction/ocaml/snapshots/intervalcover_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/intervalcover.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/intervalcover_extracted.rs", "extraction/rust/submit/intervalcover.rs"]
+archive = "intervalcover_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/intervalcover_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/intervalcover.ml"
+Rust = "extraction/rust/submit/intervalcover.rs"

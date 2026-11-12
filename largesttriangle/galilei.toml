@@ -15,14 +15,10 @@ files = ["largesttriangle_implem.v", "largesttriangle.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/largesttriangle_extracted_marray.ml",
-  "extraction/ocaml/largesttriangle_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "largesttriangle_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/largesttriangle_extracted_marray.ml", "extraction/ocaml/snapshots/largesttriangle_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/largesttriangle.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/largesttriangle_extracted.rs", "extraction/rust/submit/largesttriangle.rs"]
+archive = "largesttriangle_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/largesttriangle_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/largesttriangle.ml"
+Rust = "extraction/rust/submit/largesttriangle.rs"

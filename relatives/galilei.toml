@@ -15,14 +15,10 @@ files = ["relatives_implem.v", "relatives.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/relatives_extracted_marray.ml",
-  "extraction/ocaml/relatives_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "relatives_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/relatives_extracted_marray.ml", "extraction/ocaml/snapshots/relatives_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/relatives.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/relatives_extracted.rs", "extraction/rust/submit/relatives.rs"]
+archive = "relatives_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/relatives_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/relatives.ml"
+Rust = "extraction/rust/submit/relatives.rs"

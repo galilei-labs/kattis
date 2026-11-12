@@ -15,14 +15,10 @@ files = ["pascal_implem.v", "pascal.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/pascal_extracted_marray.ml",
-  "extraction/ocaml/pascal_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "pascal_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/pascal_extracted_marray.ml", "extraction/ocaml/snapshots/pascal_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/pascal.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/pascal_extracted.rs", "extraction/rust/submit/pascal.rs"]
+archive = "pascal_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/pascal_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/pascal.ml"
+Rust = "extraction/rust/submit/pascal.rs"

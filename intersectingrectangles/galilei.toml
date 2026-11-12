@@ -15,14 +15,10 @@ files = ["intersectingrectangles_implem.v", "intersectingrectangles.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/intersectingrectangles_extracted_marray.ml",
-  "extraction/ocaml/intersectingrectangles_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "intersectingrectangles_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/intersectingrectangles_extracted_marray.ml", "extraction/ocaml/snapshots/intersectingrectangles_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/intersectingrectangles.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/intersectingrectangles_extracted.rs", "extraction/rust/submit/intersectingrectangles.rs"]
+archive = "intersectingrectangles_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/intersectingrectangles_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/intersectingrectangles.ml"
+Rust = "extraction/rust/submit/intersectingrectangles.rs"

@@ -15,14 +15,10 @@ files = ["sumsets_implem.v", "sumsets.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/sumsets_extracted_marray.ml",
-  "extraction/ocaml/sumsets_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "sumsets_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/sumsets_extracted_marray.ml", "extraction/ocaml/snapshots/sumsets_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/sumsets.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/sumsets_extracted.rs", "extraction/rust/submit/sumsets.rs"]
+archive = "sumsets_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/sumsets_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/sumsets.ml"
+Rust = "extraction/rust/submit/sumsets.rs"

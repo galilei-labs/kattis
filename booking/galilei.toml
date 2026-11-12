@@ -15,14 +15,10 @@ files = ["booking_implem.v", "booking.spec"]
 
 [extraction]
 languages = ["OCaml", "Rust", "Python", "Wasm", "C", "C++"]
-extracted = ["OCaml"]
-files = [
-  "extraction/ocaml/booking_extracted_marray.ml",
-  "extraction/ocaml/booking_extracted_marray.mli",
-  "extraction/ocaml/marray.ml",
-]
-archive = "booking_ocaml.zip"
+extracted = ["OCaml", "Rust"]
+files = ["extraction/ocaml/extract_marray.v", "extraction/ocaml/snapshots/booking_extracted_marray.ml", "extraction/ocaml/snapshots/booking_extracted_marray.mli", "extraction/ocaml/snapshots/marray.ml", "extraction/ocaml/submit/main.ml", "extraction/ocaml/submit/booking.ml", "extraction/rust/extract.v", "extraction/rust/harness.rs", "extraction/rust/snapshots/booking_extracted.rs", "extraction/rust/submit/booking.rs"]
+archive = "booking_extractions.zip"
 
 [extraction.interface]
-OCaml = "extraction/ocaml/booking_extracted_marray.ml"
-"Rust" = ""
+OCaml = "extraction/ocaml/submit/booking.ml"
+Rust = "extraction/rust/submit/booking.rs"
