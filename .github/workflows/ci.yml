@@ -1,8 +1,8 @@
 name: CI
 
 on:
-  push:
-  pull_request:
+  # Automatic CI is temporarily disabled; keep manual runs available.
+  workflow_dispatch:
 
 permissions:
   contents: read
