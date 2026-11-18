@@ -38,8 +38,6 @@ type char63 = Uint63.t
 
 type string = Pstring.t
 
-val make0 : Uint63.t -> char63 -> string
-
 val length0 : string -> Uint63.t
 
 val get0 : string -> Uint63.t -> char63

@@ -100,13 +100,48 @@ let rec scan xu xa xb q k par rk out =
               (set out k (eqb (fst fa) (fst fb)))
   else out
 
+(** val run_ops_raw :
+    uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
+
+let run_ops_raw xn xu xa xb =
+  let q = length xu in
+  scan xu xa xb q (Uint63.of_int (0)) (init_par xn)
+    (make xn (Uint63.of_int (0))) (make q false)
+
+(** val count_queries :
+    bool Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t **)
+
+let rec count_queries xu q k c =
+  if bdec (ltb k q)
+  then count_queries xu q (add k (Uint63.of_int (1)))
+         (if get xu k then c else add c (Uint63.of_int (1)))
+  else c
+
+(** val pack_queries :
+    bool Marray.t -> bool Marray.t -> Uint63.t -> Uint63.t -> Uint63.t ->
+    bool Marray.t -> bool Marray.t **)
+
+let rec pack_queries xu raw q k c out =
+  if bdec (ltb k q)
+  then if get xu k
+       then pack_queries xu raw q (add k (Uint63.of_int (1))) c out
+       else pack_queries xu raw q (add k (Uint63.of_int (1)))
+              (add c (Uint63.of_int (1))) (set out c (get raw k))
+  else out
+
+(** val compact_queries : bool Marray.t -> bool Marray.t -> bool Marray.t **)
+
+let compact_queries xu raw =
+  let q = length xu in
+  let count = count_queries xu q (Uint63.of_int (0)) (Uint63.of_int (0)) in
+  pack_queries xu raw q (Uint63.of_int (0)) (Uint63.of_int (0))
+    (make count false)
+
 (** val run_ops_impl :
     uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)
 
 let run_ops_impl xn xu xa xb =
-  let q = length xu in
-  scan xu xa xb q (Uint63.of_int (0)) (init_par xn)
-    (make xn (Uint63.of_int (0))) (make q false)
+  compact_queries xu (run_ops_raw xn xu xa xb)
 
 (** val run_ops :
     uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t **)

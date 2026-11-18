@@ -20,12 +20,21 @@
    Delta^(d+1) f = 0, closed under constants, sums, shifts and x * f; a
    polynomial with n+1 coefficients has [polydeg n].  The vector
    [Delta^0 f m; ...; Delta^n f m] is mapped by [step] to the same vector
-   at m+1, so i iterations give f(i) at the head. *)
+   at m+1, so i iterations give f(i) at the head.
+
+   Cost.  [Elpi complexity] translates sumbool, bdec,
+   horner_loop, eval_loop, diff_inner, diff_outer, plot_impl and plot
+   (callee first).  With G = gap len 0 = n+1: horner_loop from j costs at
+   most 100 (len - j) + 100 steps, eval_loop from x at most
+   (len - x)(100 G + 200) + 10, diff_inner from i at most 100 (i - lo) + 100,
+   diff_outer from s at most (len - s)(100 G + 200) + 10; plot_time with
+   c1 = 600, c2 = 100. *)
 
 From Plot.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -77,6 +86,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -110,6 +121,8 @@ Fixpoint horner_loop (y : array int) (len x j h : int)
         (Acc_inv H (dec_step len j Hj))
   | right _ => h
   end.
+Elpi complexity horner_loop.
+Arguments horner_loop_cost : simpl never.
 
 Lemma horner_loop_eq : forall y len x j h H,
   horner_loop y len x j h H =
@@ -131,6 +144,8 @@ Fixpoint eval_loop (y : array int) (len x : int) (d : array int)
         (Acc_inv H (dec_step len x Hx))
   | right _ => d
   end.
+Elpi complexity eval_loop.
+Arguments eval_loop_cost : simpl never.
 
 Lemma eval_loop_eq : forall y len x d H,
   eval_loop y len x d H =
@@ -153,6 +168,8 @@ Fixpoint diff_inner (lo i : int) (d : array int)
       diff_inner lo (i - 1) d.[i <- v] (Acc_inv H (dec_down lo i Hi))
   | right _ => d
   end.
+Elpi complexity diff_inner.
+Arguments diff_inner_cost : simpl never.
 
 Lemma diff_inner_eq : forall lo i d H,
   diff_inner lo i d H =
@@ -174,6 +191,8 @@ Fixpoint diff_outer (len s : int) (d : array int)
         (Acc_inv H (dec_step len s Hs))
   | right _ => d
   end.
+Elpi complexity diff_outer.
+Arguments diff_outer_cost : simpl never.
 
 Lemma diff_outer_eq : forall len s d H,
   diff_outer len s d H =
@@ -191,6 +210,8 @@ Definition plot_impl (n : uint) (y : array sint) : array sint :=
   let d := eval_loop y len 0 (PArray.make len 0%uint63)
              (Zwf_well_founded 0 (gap len 0)) in
   diff_outer len 0 d (Zwf_well_founded 0 (gap len 0)).
+Elpi complexity plot_impl.
+Arguments plot_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Math side: finite differences                                       *)
@@ -318,23 +339,23 @@ Qed.
 
 Lemma step_vec : forall f L j m,
   (forall m', dk (S (j + L)) f m' = 0) ->
-  step (vec f m j (S L)) = vec f (m + 1) j (S L).
+  Prelude.step (vec f m j (S L)) = vec f (m + 1) j (S L).
 Proof.
   intros f L. induction L as [| L IH]; intros j m H.
-  - cbn [vec step]. f_equal. specialize (H m). rewrite Nat.add_0_r in H.
+  - cbn [vec Prelude.step]. f_equal. specialize (H m). rewrite Nat.add_0_r in H.
     cbn [dk] in H. lia.
   - change (vec f m j (S (S L))) with (dk j f m :: vec f m (S j) (S L)).
     change (vec f (m + 1) j (S (S L)))
       with (dk j f (m + 1) :: vec f (m + 1) (S j) (S L)).
     change (vec f m (S j) (S L)) with (dk (S j) f m :: vec f m (S (S j)) L).
-    cbn [step]. rewrite <- IH.
+    cbn [Prelude.step]. rewrite <- IH.
     + f_equal. cbn [dk]. ring.
     + intros m'. replace (S j + L)%nat with (j + S L)%nat by lia. apply H.
 Qed.
 
 Lemma iter_vec : forall f n,
   (forall m', dk (S n) f m' = 0) ->
-  forall i : N, N.iter i step (vec f 0 0 (S n)) = vec f (Z.of_N i) 0 (S n).
+  forall i : N, N.iter i Prelude.step (vec f 0 0 (S n)) = vec f (Z.of_N i) 0 (S n).
 Proof.
   intros f n H i. induction i as [| i IH] using N.peano_ind.
   - reflexivity.
@@ -720,8 +741,209 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition plot : uint -> array sint -> array sint := plot_impl.
+Elpi complexity plot.
 
 Definition plot_correct : forall (n : N) (a : list Z) (x : uint) (y : array sint),
   valid_input n a -> repr x n -> repr y a ->
   exists c : list Z, repr (plot x y) c /\ plot_spec n a c
   := plot_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma gap_succ m i : (i <? m)%uint63 = true ->
+  (Z.to_nat (gap m (i + 1)) < Z.to_nat (gap m i))%nat.
+Proof. intros H. pose proof (dec_step m i H) as [_ X]. unfold gap in *. lia. Qed.
+
+Lemma horner_time y yC len lenC x xC j jC h hC H HC :
+  (cost (extract (extract (extract (extract (extract (horner_loop_cost stepsCM y yC) len lenC) x xC) j jC) h hC) H HC) <= Z.to_nat (gap len j) * 100 + 100)%nat.
+Proof.
+  unfold horner_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G y yC len lenC x xC j jC h hC H HC)] =>
+    assert (HG : forall k j jC h hC H HC, (Z.to_nat (gap len j) <= k)%nat ->
+       (cost (G y yC len lenC x xC j jC h hC H HC) <= k * 100 + 100)%nat) end.
+  { induction k as [|k IH]; intros j' jC' h' hC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (j' <? len)%uint63 (bool_w (j' <? len)%uint63)) as HB;
+      cost_destruct (bdec (j' <? len)%uint63); cost_simpl.
+    all: try lia.
+    all: try (exfalso; pose proof (gap_succ len j' e); lia).
+    pose proof (gap_succ len j' e) as Hg.
+    assert (Hk' : (Z.to_nat (gap len (j' + 1)) <= k)%nat) by lia.
+    match goal with |- context [@cost ?T (?G' y yC len lenC x xC (j' + 1)%uint63 ?w1 ?hh ?w2 ?a ?e)] =>
+      have HI := (IH (j' + 1)%uint63 w1 hh w2 a e Hk' : (@cost T (G' y yC len lenC x xC (j' + 1)%uint63 w1 hh w2 a e) <= _)%nat) end.
+    lia. }
+  match goal with |- context [@cost ?T (?G y yC len lenC x xC j jC h hC H HC)] =>
+    exact (HG _ j jC h hC H HC (le_n _) : (@cost T (G y yC len lenC x xC j jC h hC H HC) <= _)%nat) end.
+Qed.
+
+Ltac z0 f := repeat match goal with |- context [cost (f ?a ?b ?c)] => change (cost (f a b c)) with 0%nat end.
+Ltac z1 f := repeat match goal with |- context [cost (extract (f ?a ?b ?c) ?d ?e)] =>
+  change (cost (extract (f a b c) d e)) with 0%nat end.
+Ltac z2 f := repeat match goal with |- context [cost (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1)] =>
+  change (cost (extract (extract (f a b c) d e) d1 e1)) with 0%nat end.
+Ltac z3 f := repeat match goal with |- context [cost (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2)] =>
+  change (cost (extract (extract (extract (f a b c) d e) d1 e1) d2 e2)) with 0%nat end.
+Ltac z4 f := repeat match goal with |- context [cost (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3)] =>
+  change (cost (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3)) with 0%nat end.
+
+Ltac set_simpl :=
+  repeat match goal with
+  | |- context [cost (extract (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g) ?h ?i)] =>
+      change (cost (extract (extract (extract (set_cost a b c) d e) f g) h i)) with 1%nat
+  | |- context [cost (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (set_cost a b c) d e) f g)) with 0%nat
+  | |- context [cost (extract (set_cost ?a ?b ?c) ?d ?e)] =>
+      change (cost (extract (set_cost a b c) d e)) with 0%nat
+  | |- context [cost (set_cost ?a ?b ?c)] =>
+      change (cost (set_cost a b c)) with 0%nat
+  end.
+
+Ltac gen_horner := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (horner_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+    let Hc := fresh "Hhorner" in
+    have Hc := (horner_time a aC b bC c cC d dC e eC f fC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma eval_time y yC len lenC x xC d dC H HC :
+  (cost (extract (extract (extract (extract (eval_loop_cost stepsCM y yC) len lenC) x xC) d dC) H HC)
+   <= Z.to_nat (gap len x) * (Z.to_nat (gap len 0) * 100 + 200) + 10)%nat.
+Proof.
+  remember (Z.to_nat (gap len 0)) as GL eqn:EGL.
+  unfold eval_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G y yC len lenC x xC d dC H HC)] =>
+    assert (HG : forall k x xC d dC H HC, (Z.to_nat (gap len x) <= k)%nat ->
+       (cost (G y yC len lenC x xC d dC H HC) <= k * (GL * 100 + 200) + 10)%nat) end.
+  { induction k as [|k IH]; intros x' xC' d' dC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (x' <? len)%uint63 (bool_w (x' <? len)%uint63)) as HB;
+      cost_destruct (bdec (x' <? len)%uint63); cost_simpl.
+    all: try lia.
+    all: try (exfalso; pose proof (gap_succ len x' e); lia).
+    pose proof (gap_succ len x' e) as Hg.
+    assert (Hk' : (Z.to_nat (gap len (x' + 1)) <= k)%nat) by lia.
+    z0 horner_loop_cost; z1 horner_loop_cost; z2 horner_loop_cost; z3 horner_loop_cost; z4 horner_loop_cost.
+    gen_horner. rewrite <- EGL in Hhorner. set_simpl.
+    match goal with |- context [@cost ?T (?G' y yC len lenC (x' + 1)%uint63 ?w1 ?dd ?w2 ?a ?e)] =>
+      have HI := (IH (x' + 1)%uint63 w1 dd w2 a e Hk' : (@cost T (G' y yC len lenC (x' + 1)%uint63 w1 dd w2 a e) <= _)%nat) end.
+    lia. }
+  match goal with |- context [@cost ?T (?G y yC len lenC x xC d dC H HC)] =>
+    exact (HG _ x xC d dC H HC (le_n _) : (@cost T (G y yC len lenC x xC d dC H HC) <= _)%nat) end.
+Qed.
+
+Lemma gap_down lo i : (lo <? i)%uint63 = true ->
+  (Z.to_nat (gap (i - 1) lo) < Z.to_nat (gap i lo))%nat.
+Proof. intros H. pose proof (dec_down lo i H) as [_ X]. unfold gap in *. lia. Qed.
+
+Lemma diff_inner_time lo loC i iC d dC H HC :
+  (cost (extract (extract (extract (diff_inner_cost stepsCM lo loC) i iC) d dC) H HC)
+   <= Z.to_nat (gap i lo) * 100 + 100)%nat.
+Proof.
+  unfold diff_inner_cost. cbn.
+  match goal with |- context [@cost ?T (?G lo loC i iC d dC H HC)] =>
+    assert (HG : forall k i iC d dC H HC, (Z.to_nat (gap i lo) <= k)%nat ->
+       (cost (G lo loC i iC d dC H HC) <= k * 100 + 100)%nat) end.
+  { induction k as [|k IH]; intros i' iC' d' dC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (lo <? i')%uint63 (bool_w (lo <? i')%uint63)) as HB;
+      cost_destruct (bdec (lo <? i')%uint63); cost_simpl.
+    all: try lia.
+    all: try (exfalso; pose proof (gap_down lo i' e); lia).
+    pose proof (gap_down lo i' e) as Hg.
+    assert (Hk' : (Z.to_nat (gap (i' - 1) lo) <= k)%nat) by lia.
+    set_simpl.
+    match goal with |- context [@cost ?T (?G' lo loC (i' - 1)%uint63 ?w1 ?dd ?w2 ?a ?e)] =>
+      have HI := (IH (i' - 1)%uint63 w1 dd w2 a e Hk' : (@cost T (G' lo loC (i' - 1)%uint63 w1 dd w2 a e) <= _)%nat) end.
+    lia. }
+  match goal with |- context [@cost ?T (?G lo loC i iC d dC H HC)] =>
+    exact (HG _ i iC d dC H HC (le_n _) : (@cost T (G lo loC i iC d dC H HC) <= _)%nat) end.
+Qed.
+
+Ltac gen_inner := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (diff_inner_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+    let Hc := fresh "Hinner" in
+    have Hc := (diff_inner_time a aC b bC c cC d dC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma gap_inner len s : (s <? len)%uint63 = true ->
+  (Z.to_nat (gap (len - 1) s) <= Z.to_nat (gap len 0))%nat.
+Proof.
+  intros H. rewrite ltb_spec in H. unfold gap. change (φ 0) with 0%Z.
+  assert (φ (len - 1) = φ len - 1)%Z by sia. pose proof (to_Z_bounded s). lia.
+Qed.
+
+Lemma diff_outer_time len lenC s sC d dC H HC :
+  (cost (extract (extract (extract (diff_outer_cost stepsCM len lenC) s sC) d dC) H HC)
+   <= Z.to_nat (gap len s) * (Z.to_nat (gap len 0) * 100 + 200) + 10)%nat.
+Proof.
+  remember (Z.to_nat (gap len 0)) as GL eqn:EGL.
+  unfold diff_outer_cost. cbn.
+  match goal with |- context [@cost ?T (?G len lenC s sC d dC H HC)] =>
+    assert (HG : forall k s sC d dC H HC, (Z.to_nat (gap len s) <= k)%nat ->
+       (cost (G len lenC s sC d dC H HC) <= k * (GL * 100 + 200) + 10)%nat) end.
+  { induction k as [|k IH]; intros s' sC' d' dC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (s' <? len)%uint63 (bool_w (s' <? len)%uint63)) as HB;
+      cost_destruct (bdec (s' <? len)%uint63); cost_simpl.
+    all: try lia.
+    all: try (exfalso; pose proof (gap_succ len s' e); lia).
+    pose proof (gap_succ len s' e) as Hg.
+    pose proof (gap_inner len s' e) as Hgi. rewrite <- EGL in Hgi.
+    assert (Hk' : (Z.to_nat (gap len (s' + 1)) <= k)%nat) by lia.
+    z0 diff_inner_cost; z1 diff_inner_cost; z2 diff_inner_cost; z3 diff_inner_cost.
+    gen_inner.
+    match goal with |- context [@cost ?T (?G' len lenC (s' + 1)%uint63 ?w1 ?dd ?w2 ?a ?e)] =>
+      have HI := (IH (s' + 1)%uint63 w1 dd w2 a e Hk' : (@cost T (G' len lenC (s' + 1)%uint63 w1 dd w2 a e) <= _)%nat) end.
+    lia. }
+  match goal with |- context [@cost ?T (?G len lenC s sC d dC H HC)] =>
+    exact (HG _ s sC d dC H HC (le_n _) : (@cost T (G len lenC s sC d dC H HC) <= _)%nat) end.
+Qed.
+
+Ltac gen_eval := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (eval_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC =>
+    let Hc := fresh "Heval" in
+    have Hc := (eval_time a aC b bC c cC d dC e eC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+Ltac gen_outer := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (diff_outer_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+    let Hc := fresh "Houter" in
+    have Hc := (diff_outer_time a aC b bC c cC d dC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Theorem plot_time : exists c1 c2 : nat,
+  forall (degree : N) (coefficients : list Z) (degree_int : uint)
+  (coefficients_arr : array sint),
+  valid_input degree coefficients ->
+  repr degree_int degree ->
+  repr coefficients_arr coefficients ->
+  (cost2 plot_cost degree_int coefficients_arr <= c1 * ((size degree_int + 1) * (size degree_int + 1)) + c2)%nat.
+Proof.
+  exists 600%nat, 100%nat.
+  intros n a x y Hv Hx Ha.
+  remember (600 * ((size x + 1) * (size x + 1)) + 100)%nat as R eqn:ER.
+  unfold cost2, plot_cost, plot_impl_cost. cost_simpl.
+  z0 eval_loop_cost; z1 eval_loop_cost; z2 eval_loop_cost; z3 eval_loop_cost.
+  z0 diff_outer_cost; z1 diff_outer_cost; z2 diff_outer_cost.
+  gen_eval. gen_outer.
+  z0 make_cost. z1 make_cost.
+  repeat match goal with
+  | |- context [cost (extract (extract (make_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (make_cost a b c) d e) f g)) with 1%nat
+  end.
+  assert (EG : Z.to_nat (gap (length y) 0) = (size x + 1)%nat).
+  { pose proof Hv as [_ Hla _ _]. unfold len in Hla.
+    pose proof (repr_length y a Ha) as Ly.
+    unfold gap, size, size_uint. change (φ 0) with 0%Z.
+    unfold repr, repr_uint in Hx. rewrite Z.sub_0_r Ly.
+    pose proof (to_Z_bounded x). lia. }
+  rewrite EG in Heval Houter. subst R. nia.
+Qed.
+
+Print Assumptions plot_correct.
+Print Assumptions plot_time.

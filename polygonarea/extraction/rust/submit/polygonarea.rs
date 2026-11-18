@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type sint = u64;
 
-// Rocq: Polygonarea.polygonarea_implem.signed_area2
-// Variant: uncurried
-pub fn signed_area2() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64 = signed_area2_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Polygonarea.polygonarea_implem.signed_area2
-pub fn signed_area2_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> = signed_area2_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
 // Variant: uncurried
 pub fn sub(v0: u64, v1: u64) -> u64 {
@@ -698,13 +682,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Polygonarea.polygonarea_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -729,22 +710,16 @@ pub fn area_loop_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, m: u64, i: u64, acc: u6
 // Rocq: Polygonarea.polygonarea_implem.area_loop (local: area_loop)
 // Variant: uncurried, lifted
 pub fn area_loop(x: Rc<Array<u64>>, y: Rc<Array<u64>>, m: u64, i: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(i, m);
-  match bdec(v13) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v28 = &x;
-      let v31 = rocq_array::get::<u64>(&v28, i);
-      let v39 = add(i, 1u64);
-      let v40 = &y;
-      let v43 = rocq_array::get::<u64>(&v40, v39);
-      let v53 = add(acc, mul(v31, v43));
-      let v62 = add(i, 1u64);
-      let v63 = &x;
-      let v66 = rocq_array::get::<u64>(&v63, v62);
-      let v67 = &y;
-      let v70 = rocq_array::get::<u64>(&v67, i);
-      area_loop(x, y, m, v24, sub(v53, mul(v66, v70)), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, i);
+      let tmp_3 = rocq_array::get::<u64>(&y, add(i, 1u64));
+      let tmp_4 = add(acc, mul(tmp_2, tmp_3));
+      let tmp_5 = rocq_array::get::<u64>(&x, add(i, 1u64));
+      let tmp_6 = rocq_array::get::<u64>(&y, i);
+      area_loop(x, y, m, tmp_1, sub(tmp_4, mul(tmp_5, tmp_6)), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -757,38 +732,19 @@ pub fn area_loop(x: Rc<Array<u64>>, y: Rc<Array<u64>>, m: u64, i: u64, acc: u64,
 // Rocq: Polygonarea.polygonarea_implem.signed_area2_impl
 // Variant: uncurried
 pub fn signed_area2_impl(x: Rc<Array<u64>>, y: Rc<Array<u64>>) -> u64 {
-  let v3 = &x;
-  let v4 = rocq_array::length::<u64>(&v3);
-  let m = sub(v4, 1u64);
-  let v19 = Rc::clone(&x);
-  let v22 = Rc::clone(&y);
-  let s = area_loop_1(v19, v22, m, 0u64, 0u64);
-  let v33 = &x;
-  let v36 = rocq_array::get::<u64>(&v33, m);
-  let v38 = 0u64;
-  let v39 = &y;
-  let v42 = rocq_array::get::<u64>(&v39, v38);
-  let v52 = add(s, mul(v36, v42));
-  let v55 = 0u64;
-  let v56 = &x;
-  let v59 = rocq_array::get::<u64>(&v56, v55);
+  let tmp = rocq_array::length::<u64>(&x);
+  let m = sub(tmp, 1u64);
+  let x_clone = Rc::clone(&x);
+  let y_clone = Rc::clone(&y);
+  let s = area_loop_1(x_clone, y_clone, m, 0u64, 0u64);
+  let tmp_1 = rocq_array::get::<u64>(&x, m);
+  let tmp_2 = rocq_array::get::<u64>(&y, 0u64);
+  let tmp_3 = add(s, mul(tmp_1, tmp_2));
+  let tmp_4 = rocq_array::get::<u64>(&x, 0u64);
   std::mem::drop(x);
-  let v60 = &y;
-  let v63 = rocq_array::get::<u64>(&v60, m);
+  let tmp_5 = rocq_array::get::<u64>(&y, m);
   std::mem::drop(y);
-  sub(v52, mul(v59, v63))
-}
-
-// Rocq: Polygonarea.polygonarea_implem.signed_area2_impl
-pub fn signed_area2_impl_curried(x: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> u64 {
-      let v9 = Rc::clone(&x);
-      signed_area2_impl(v9, y)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v3);
-  v15
+  sub(tmp_3, mul(tmp_4, tmp_5))
 }
 
 mod __rocq_reuse {
@@ -940,12 +896,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = __rocq_global_165.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_165: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = signed_area2(); }
-std::thread_local! { static __rocq_global_168: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = signed_area2_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1026,7 +976,7 @@ fn main() { submission_io::entry(|input| {
     loop { let n = t.uint(); if n == 0 { break; }
         let (mut xs, mut ys) = (Vec::new(), Vec::new());
         for _ in 0..n { xs.push(t.int()); ys.push(t.int()); }
-        let twice = submission_io::decoded(run()(submission_io::ints(xs), submission_io::ints(ys)));
+        let twice = submission_io::decoded(signed_area2_impl(submission_io::ints(xs), submission_io::ints(ys)));
         writeln!(out, "{} {}.{}", if twice < 0 { "CW" } else { "CCW" },
                  twice.abs() / 2, if twice.abs() % 2 == 0 { 0 } else { 5 }).unwrap();
     }

@@ -21,4 +21,4 @@ archive = "doublets_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/doublets.ml"
-Rust = "extraction/rust/submit/doublets.rs"
+Rust = "extraction/rust/snapshots/doublets_extracted.rs.interface.json"

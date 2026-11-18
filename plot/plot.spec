@@ -2,9 +2,17 @@
 
 (** ** Description *)
 
-(** Convert a polynomial's coefficients into initial finite differences.
-    Starting with these values and repeatedly adding each next entry to its
-    predecessor must produce the polynomial's values at 0, 1, 2 and so on.
+(** Plot a polynomial at the integer inputs $0, 1, 2, \ldots$ using only
+    additions after initialization. Find initial constants $C_0, \ldots, C_n$
+    so that the first entry initially equals the polynomial's value at zero.
+    To advance to the next input, replace every entry except the last by
+    itself plus its next entry, using the old values for all additions.
+    The last entry stays fixed. The first entry must then give the next
+    polynomial value.
+
+    These constants are the initial finite differences. For example, for
+    $p(x) = x^2$, start with $(0, 1, 2)$; successive updates give
+    $(1, 3, 2)$, $(4, 5, 2)$, and $(9, 7, 2)$, producing $0, 1, 4, 9$.
 
     [@kattis plot]
     - Difficulty: 2.4
@@ -12,7 +20,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Polynomial degree in $[1, 6]$.
+    - Polynomial degree: $1 \le n \le 6$.
     - Integer coefficients with absolute value at most $50$; leading
       coefficient nonzero. *)
 
@@ -35,23 +43,25 @@ Output:
                     (a_n first) and returns the n+1 constants C_0, ..., C_n
                     with which the statement's pseudocode produces p(i) at
                     every integer point i = 0, 1, 2, ...
+                    It runs in at most c1 * (n + 1)^2 + c2 steps of the cost
+                    model on a valid input, n the degree (the finite-
+                    difference table), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Z_scope.
 
 (** ** Definitions *)
 
-(** Math side. The coefficients are listed as the input line gives them,
-    a_n first; the constants C_0 first. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The value at point of the polynomial whose coefficients, highest
-    degree first, are coefficients: a_n point^n + ... + a_1 point +
-    a_0. *)
+(** Evaluate the polynomial [coefficients] at [point], with coefficients in
+    decreasing degree order. *)
 Fixpoint pval (coefficients : list Z) (point : Z) : Z :=
   match coefficients with
   | [] => 0
@@ -60,9 +70,8 @@ Fixpoint pval (coefficients : list Z) (point : Z) : Z :=
         lower point
   end.
 
-(** One iteration of the pseudocode's loop body on the variables [p;
-    t_1; ...; t_n]: each variable but the last is increased by the
-    next one, read before that one is updated; t_n is unchanged. *)
+(** Perform one finite-difference update: add each entry's old successor to it,
+    leaving the last entry unchanged. *)
 Fixpoint step (variables : list Z) : list Z :=
   match variables with
   | current :: ((following :: _) as rest) => (current +
@@ -70,9 +79,8 @@ Fixpoint step (variables : list Z) : list Z :=
   | _ => variables
   end.
 
-(** The value of p(point) that the pseudocode computes from the
-    constants: p(0) = C_0, t_k = C_k, then point iterations of the
-    loop body. *)
+(** The first entry after [point] finite-difference updates beginning with
+    [constants]. *)
 Definition plotted (constants : list Z) (point : N) : Z :=
   hd 0 (N.iter point step constants).
 
@@ -103,15 +111,29 @@ Definition plot_spec (degree : N) (coefficients : list Z)
   forall point : N, plotted output point = pval coefficients
     (Z.of_N point).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((d+1)^2)$ steps, where $d$ is the polynomial degree. *)
+Definition plot_time_spec (c1 c2 n_degree steps : nat) : Prop :=
+  (steps <= c1 * ((n_degree + 1) * (n_degree + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Convert a polynomial's coefficients into initial finite differences. Starting with these
-    values and repeatedly adding each next entry to its predecessor must produce the
-    polynomial's values at 0, 1, 2 and so on.
+(** Initialize an addition-only polynomial plotter: the first returned entry
+    is the value at zero. Each simultaneous update adds every entry's old
+    successor to it, leaving the last unchanged; the first entry then gives
+    the polynomial value at the next integer input.
     - Input [degree]: Degree of the polynomial.
     - Input [coefficients]: Coefficients $a_n,\ldots,a_0$ in decreasing degree order.
     - Output [output]: The output contains the initial finite differences that generate the polynomial's values at every nonnegative integer input. *)
 Program plot : uint -> array sint -> array sint.
+
+(** [@example plot]
+    - Sample: 1
+    - Input [degree]: 1
+    - Input [coefficients]: [5; 2]%Z
+    - Output [output]: [2; 5]%Z
+*)
 
 (** ** Bridge *)
 
@@ -128,6 +150,23 @@ Specification plot_correct :
   exists output : list Z,
     repr (plot degree_int coefficients_arr) output /\
     plot_spec degree coefficients output.
+
+(** ** Complexity *)
+
+(** [@hide] [plot_cost] is the cost translation of [plot] (the judge
+    recomputes it and compares) ... *)
+Complexity plot_cost for plot.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1)^2 + c2 steps of the cost model on a valid input, n the degree (the finite-difference table), for two constants
+    quantified before the inputs, on every valid input. [@requirement plot_time_spec] *)
+Specification plot_time : exists c1 c2 : nat,
+  forall (degree : N) (coefficients : list Z) (degree_int :
+  uint)
+  (coefficients_arr : array sint),
+  valid_input degree coefficients ->
+  repr degree_int degree ->
+  repr coefficients_arr coefficients ->
+  plot_time_spec c1 c2 (size degree_int) (cost2 plot_cost degree_int coefficients_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

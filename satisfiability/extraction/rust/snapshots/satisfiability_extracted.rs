@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -28,21 +27,6 @@ impl<A: Clone + 'static> Clone for literal<A> {
 
 pub type uint = u64;
 
-// Rocq: Satisfiability.satisfiability_implem.satisfiable
-// Variant: uncurried
-pub fn satisfiable() -> Rc<dyn Fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> {
-  let v0: fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool = satisfiable_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Satisfiability.satisfiability_implem.satisfiable
-pub fn satisfiable_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> = satisfiable_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl
 // Variant: uncurried
 pub fn lsl(v0: u64, v1: u64) -> u64 {
@@ -69,39 +53,30 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Satisfiability.satisfiability_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
 // Rocq: Satisfiability.satisfiability_implem.clause_ok
 // Variant: uncurried
 pub fn clause_ok(t: u64, p: u64, q: u64) -> bool {
-  let v9 = land(p, t);
-  match eqb(v9, 0u64) {
-    true => {
-      negb(eqb(land(q, t), q))
-    },
-    false => {
-      true
-    },
+  let tmp = land(p, t);
+  if eqb(tmp, 0u64) {
+    negb(eqb(land(q, t), q))
+  } else {
+    true
   }
 }
 
@@ -120,22 +95,17 @@ pub fn check_loop_1(pos: Rc<Array<u64>>, neg: Rc<Array<u64>>, m: u64, k: u64, t:
 // Rocq: Satisfiability.satisfiability_implem.check_loop (local: check_loop)
 // Variant: uncurried, lifted
 pub fn check_loop(pos: Rc<Array<u64>>, neg: Rc<Array<u64>>, m: u64, k: u64, t: u64, _H: ()) -> bool {
-  let v13 = ltb(k, m);
-  match bdec(v13) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &pos;
-      let v21 = rocq_array::get::<u64>(&v18, k);
-      let v22 = &neg;
-      let v25 = rocq_array::get::<u64>(&v22, k);
-      match clause_ok(t, v21, v25) {
-        true => {
-          check_loop(pos, neg, m, add(k, 1u64), t, ())
-        },
-        false => {
-          std::mem::drop(pos);
-          std::mem::drop(neg);
-          false
-        },
+      let tmp_1 = rocq_array::get::<u64>(&pos, k);
+      let tmp_2 = rocq_array::get::<u64>(&neg, k);
+      if clause_ok(t, tmp_1, tmp_2) {
+        check_loop(pos, neg, m, add(k, 1u64), t, ())
+      } else {
+        std::mem::drop(pos);
+        std::mem::drop(neg);
+        false
       }
     },
     sumbool::right => {
@@ -161,20 +131,17 @@ pub fn search_loop_1(pos: Rc<Array<u64>>, neg: Rc<Array<u64>>, m: u64, lim: u64,
 // Rocq: Satisfiability.satisfiability_implem.search_loop (local: search_loop)
 // Variant: uncurried, lifted
 pub fn search_loop(pos: Rc<Array<u64>>, neg: Rc<Array<u64>>, m: u64, lim: u64, t: u64, _H: ()) -> bool {
-  let v13 = ltb(t, lim);
-  match bdec(v13) {
+  let tmp = ltb(t, lim);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = Rc::clone(&pos);
-      let v23 = Rc::clone(&neg);
-      match check_all(v20, v23, m, t) {
-        true => {
-          std::mem::drop(pos);
-          std::mem::drop(neg);
-          true
-        },
-        false => {
-          search_loop(pos, neg, m, lim, add(t, 1u64), ())
-        },
+      let pos_clone = Rc::clone(&pos);
+      let neg_clone = Rc::clone(&neg);
+      if check_all(pos_clone, neg_clone, m, t) {
+        std::mem::drop(pos);
+        std::mem::drop(neg);
+        true
+      } else {
+        search_loop(pos, neg, m, lim, add(t, 1u64), ())
       }
     },
     sumbool::right => {
@@ -209,23 +176,17 @@ pub fn lit_bits(s: bool, l: Rc<literal<u64>>) -> u64 {
   std::mem::drop(v3);
   match v2 {
     literal::X(v9) => {
-      match s {
-        true => {
-          bitof(v9)
-        },
-        false => {
-          0u64
-        },
+      if s {
+        bitof(v9)
+      } else {
+        0u64
       }
     },
     literal::NotX(v25) => {
-      match s {
-        true => {
-          0u64
-        },
-        false => {
-          bitof(v25)
-        },
+      if s {
+        0u64
+      } else {
+        bitof(v25)
       }
     },
   }
@@ -240,14 +201,13 @@ pub fn mask_loop_1(s: bool, c: Rc<Array<Rc<literal<u64>>>>, len: u64, i: u64, ac
 // Rocq: Satisfiability.satisfiability_implem.mask_loop (local: mask_loop)
 // Variant: uncurried, lifted
 pub fn mask_loop(s: bool, c: Rc<Array<Rc<literal<u64>>>>, len: u64, i: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(i, len);
-  match bdec(v13) {
+  let tmp = ltb(i, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v27 = &c;
-      let v30 = rocq_array::get::<Rc<literal<u64>>>(&v27, i);
-      let v35 = lit_bits(s, v30);
-      mask_loop(s, c, len, v24, lor(acc, v35), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<Rc<literal<u64>>>(&c, i);
+      let tmp_3 = lit_bits(s, tmp_2);
+      mask_loop(s, c, len, tmp_1, lor(acc, tmp_3), ())
     },
     sumbool::right => {
       std::mem::drop(c);
@@ -259,9 +219,8 @@ pub fn mask_loop(s: bool, c: Rc<Array<Rc<literal<u64>>>>, len: u64, i: u64, acc:
 // Rocq: Satisfiability.satisfiability_implem.clause_mask
 // Variant: uncurried
 pub fn clause_mask(s: bool, c: Rc<Array<Rc<literal<u64>>>>) -> u64 {
-  let v3 = &c;
-  let v4 = rocq_array::length::<Rc<literal<u64>>>(&v3);
-  mask_loop_1(s, c, v4, 0u64, 0u64)
+  let tmp = rocq_array::length::<Rc<literal<u64>>>(&c);
+  mask_loop_1(s, c, tmp, 0u64, 0u64)
 }
 
 // Rocq: Satisfiability.satisfiability_implem.fill_loop
@@ -273,15 +232,15 @@ pub fn fill_loop_1(s: bool, y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>, m: u64, k
 // Rocq: Satisfiability.satisfiability_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(s: bool, y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>, m: u64, k: u64, r: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(k, m);
-  match bdec(v13) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(k, 1u64);
-      let v28 = Rc::clone(&y);
-      let v32 = rocq_array::get::<Rc<Array<Rc<literal<u64>>>>>(&v28, k);
-      std::mem::drop(v28);
-      let v44 = rocq_array::set::<u64>(r, k, clause_mask(s, v32));
-      fill_loop(s, y, m, v24, v44, ())
+      let tmp_1 = add(k, 1u64);
+      let y_clone = Rc::clone(&y);
+      let tmp_2 = rocq_array::get::<Rc<Array<Rc<literal<u64>>>>>(&y_clone, k);
+      std::mem::drop(y_clone);
+      let tmp_3 = rocq_array::set::<u64>(r, k, clause_mask(s, tmp_2));
+      fill_loop(s, y, m, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(y);
@@ -293,36 +252,21 @@ pub fn fill_loop(s: bool, y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>, m: u64, k: 
 // Rocq: Satisfiability.satisfiability_implem.masks
 // Variant: uncurried
 pub fn masks(s: bool, y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> Rc<Array<u64>> {
-  let v3 = &y;
-  let v4 = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&v3);
-  let v7 = &y;
-  let v8 = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&v7);
-  let v15 = rocq_array::make::<u64>(v8, 0u64);
-  fill_loop_1(s, y, v4, 0u64, v15)
+  let tmp = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&y);
+  let tmp_1 = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&y);
+  let tmp_2 = rocq_array::make::<u64>(tmp_1, 0u64);
+  fill_loop_1(s, y, tmp, 0u64, tmp_2)
 }
 
 // Rocq: Satisfiability.satisfiability_implem.satisfiable_impl
 // Variant: uncurried
 pub fn satisfiable_impl(n: u64, y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool {
-  let v2 = &y;
-  let m = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&v2);
+  let m = rocq_array::length::<Rc<Array<Rc<literal<u64>>>>>(&y);
   let lim = lsl(1u64, n);
-  let v20 = Rc::clone(&y);
-  let v21 = masks(true, v20);
-  let v29 = masks(false, y);
-  search_loop_1(v21, v29, m, lim, 0u64)
-}
-
-// Rocq: Satisfiability.satisfiability_implem.satisfiable_impl
-pub fn satisfiable_impl_curried(n: u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> {
-  let v3 = {
-    move |y: Rc<Array<Rc<Array<Rc<literal<u64>>>>>>| -> bool {
-      let v9 = Clone::clone(&n);
-      satisfiable_impl(v9, y)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> = Rc::new(v3);
-  v15
+  let y_clone = Rc::clone(&y);
+  let tmp = masks(true, y_clone);
+  let tmp_1 = masks(false, y);
+  search_loop_1(tmp, tmp_1, m, lim, 0u64)
 }
 
 mod __rocq_reuse {
@@ -473,10 +417,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> = __rocq_global_461.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_461: Rc<dyn Fn(u64, Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool> = satisfiable(); }
-std::thread_local! { static __rocq_global_464: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<Rc<literal<u64>>>>>>) -> bool>> = satisfiable_curried(); }

@@ -2,9 +2,15 @@
 
 (** ** Description *)
 
-(** Compute the maximum flow between two designated vertices of an
-    undirected capacitated network, initially and after each edge-capacity
-    increase.
+(** A water company sends water from its pumping station (station one) to
+    a mansion (station two) through a network of stations and pipes. A pipe
+    can carry water in either direction, up to its capacity. Intermediate
+    stations pass on all the water they receive.
+
+    Find the greatest amount of water the mansion can receive initially
+    and after each improvement. An improvement permanently adds capacity
+    between two stations, installing a pipe if necessary. Improvements
+    accumulate: each answer includes all preceding increases.
 
     [@kattis water]
     - Difficulty: 3.9
@@ -13,8 +19,8 @@
 
     **Kattis Bounds**
     - Vertex count: $2 \le n \le 100$; at most $n(n-1)/2$ initial edges.
-    - $1\text{ to }10{,}000$ updates; initial capacities and capacity increases from $1$
-      to $1{,}000$.
+    - Update count: $1 \le k \le 10^{4}$; initial capacities and capacity increases satisfy
+      $1 \le c \le 10^{3}$.
     - Initial edges have distinct endpoint pairs. *)
 
 (** ** Examples *)
@@ -49,31 +55,42 @@ Output:
                     improvement_ends_t). It returns k+1 values: value t is
                     the maximum amount of water that can flow from station 1
                     to station 2 once the first t improvements are made.
+                    It runs in at most c1 * ((n + 1)^2 * (C + k + 1) + p) +
+                    c2 steps of the cost model on a valid input, n the
+                    number of stations, p of pipes, k of improvements and C
+                    the total capacity of the pipes and improvements
+                    ([sizes]): every augmentation raises the flow by at
+                    least one unit, the flow never exceeds the total
+                    capacity, and an augmentation is one breadth-first
+                    search over the n x n residual table plus a walk; the n
+                    p bound of Edmonds-Karp on the number of augmentations
+                    is not stated, for two constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Bool Uint63
   PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. The pipes of each section are three
+(* The pipes of each section are three
    parallel lists, one per column of the lines "a b c". *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** Element j of l (0 beyond the end). *)
+(** The entry at zero-based index [j] in [l], or zero beyond the end. *)
 Definition get (l : list N) (j : N) : N :=
   nth (N.to_nat j) l 0.
 
-(** node is a [station]. *)
+(** [node] is a valid one-based station number. *)
 Definition station (station_count node : N) : Prop :=
   1 <= node <= station_count.
 
-(** term 0 + term 1 + ... + term (count - 1). *)
+(** The sum of [term] over zero-based indices below [count]. *)
 Fixpoint sum_below (term : N -> N) (count : nat) : N :=
   match count with
   | O => 0
@@ -81,11 +98,8 @@ Fixpoint sum_below (term : N -> N) (count : nat) : N :=
     (N.of_nat count')
   end.
 
-(** The [capacity] between node and other of the first
-    prefix_count pipes of the section starts ends
-    amounts: a pipe joins its two stations in both
-    directions, and capacities of the same pair add up
-    (an improvement increases the pipe's [capacity]). *)
+(** The combined undirected capacity between [node] and [other] from the first
+    [prefix_count] listed pipes. Parallel pipes contribute additively. *)
 Definition cap_upto (starts ends amounts : list N)
   (prefix_count : N)
     (node other : N) : N :=
@@ -96,8 +110,8 @@ Definition cap_upto (starts ends amounts : list N)
                       then get amounts j else 0)
             (N.to_nat prefix_count).
 
-(** The [capacity] between node and other after the first
-    applied_count improvements. *)
+(** The capacity between [node] and [other] after the first [applied_count]
+    improvements. *)
 Definition capacity
   (pipe_starts pipe_ends pipe_capacities : list N)
     (improvement_starts improvement_ends improvement_amounts
@@ -109,7 +123,7 @@ Definition capacity
     improvement_amounts
       applied_count node other.
 
-(** term 1 + term 2 + ... + term count. *)
+(** The sum of [term] over one-based station indices from one through [count]. *)
 Fixpoint sum_stations (term : N -> Z) (count : nat) : Z :=
   match count with
   | O => 0%Z
@@ -117,16 +131,14 @@ Fixpoint sum_stations (term : N -> Z) (count : nat) : Z :=
     (sum_stations term count' + term (N.of_nat count))%Z
   end.
 
-(** The net amount of [water] leaving [station] node
-    under flow. *)
+(** The net flow leaving station [node]. *)
 Definition net_out (station_count : N) (flow : N -> N -> Z)
   (node : N) : Z :=
   sum_stations (flow node) (N.to_nat station_count).
 
-(** flow node other is the net amount of [water] sent
-    from node to other through the pipes joining them: it
-    is antisymmetric, at most the [capacity], and every
-    [station] other than 1 and 2 keeps no [water]. *)
+(** [flow] assigns an antisymmetric net flow to each pair of stations, respecting
+    capacity bounds and conserving flow at every station except source one and sink
+    two. *)
 Definition is_flow (station_count : N)
   (capacity_of : N -> N -> N)
     (flow : N -> N -> Z) : Prop :=
@@ -141,9 +153,8 @@ Definition is_flow (station_count : N)
     node <> 2 ->
      net_out station_count flow node = 0%Z).
 
-(** amount is the maximum amount of [water] reaching the
-    mansion: some flow brings amount, and no flow brings
-    more. *)
+(** Some valid flow attains [amount] at the sink, and no valid flow attains a
+    greater amount. *)
 Definition max_flow (station_count : N) (capacity_of : N ->
   N -> N)
     (amount : N) : Prop :=
@@ -166,12 +177,12 @@ Record valid_input (station_count : N)
     (station_count - 1) / 2;
   vi_pb : len pipe_ends = len pipe_starts;
   vi_pc : len pipe_capacities = len pipe_starts;
-  (* 1 <= k <= 10 000, the k lines of the improvements
+  (* 1 <= k <= 10^4, the k lines of the improvements
      being "a b c" *)
   vi_k : 1 <= len improvement_starts <= 10000;
   vi_ib : len improvement_ends = len improvement_starts;
   vi_ic : len improvement_amounts = len improvement_starts;
-  (* initial pipes: 1 <= a < b <= n and 1 <= c <= 1 000 *)
+  (* initial pipes: 1 <= a < b <= n and 1 <= c <= 10^3 *)
   vi_pab : forall j, j < len pipe_starts ->
     1 <= get pipe_starts j < get pipe_ends j /\
     get pipe_ends j <= station_count;
@@ -180,7 +191,7 @@ Record valid_input (station_count : N)
   (* no (a, b) pair will appear more than once in this
      section *)
   vi_pdistinct : NoDup (combine pipe_starts pipe_ends);
-  (* improvements: 1 <= a < b <= n and 1 <= c <= 1 000 *)
+  (* improvements: 1 <= a < b <= n and 1 <= c <= 10^3 *)
   vi_iab : forall t, t < len improvement_starts ->
     1 <= get improvement_starts t < get improvement_ends t
       /\
@@ -192,8 +203,8 @@ Record valid_input (station_count : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output gives the maximum flow initially and after each capacity increase, in
-    update order. *)
+    The output gives the maximum water delivery from pumping station one to
+    mansion station two, initially and after each cumulative pipe improvement. *)
 Definition water_spec
   (station_count : N)
   (pipe_starts pipe_ends pipe_capacities : list N)
@@ -209,21 +220,39 @@ Definition water_spec
            improvement_amounts t)
       (get output t).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((V+1)^2(C+A+q+1)+E)$ steps, where $V$ is the station count, $E$ the initial pipe count, $q$ the number of improvements, $C$ the sum of initial pipe capacities, and $A$ the sum of improvement amounts. *)
+Definition water_time_spec (c1 c2 n_station_count total_pipe_capacities total_improvement_amounts n_improvement_starts n_pipe_starts steps : nat) : Prop :=
+  (steps <= c1 * ((n_station_count + 1) * (n_station_count + 1) * (total_pipe_capacities + total_improvement_amounts + n_improvement_starts + 1) + n_pipe_starts + 1) + c2)%nat.
+
 (** ** Interface *)
 
-(** Compute the maximum flow between two designated vertices of an undirected capacitated
-    network, initially and after each edge-capacity increase.
-    - Input [station_count]: Number of vertices in the network.
-    - Input [pipe_starts]: First endpoint of each initial edge.
-    - Input [pipe_ends]: Second endpoint of each initial edge.
-    - Input [pipe_capacities]: Initial capacity of each edge.
-    - Input [improvement_starts]: First endpoint of each capacity update.
-    - Input [improvement_ends]: Second endpoint of each capacity update.
-    - Input [improvement_amounts]: Capacity added by each corresponding update.
-    - Output [output]: The output gives the maximum flow initially and after each capacity increase, in update order. *)
+(** Maximize water delivered from pumping station one to mansion station two,
+    initially and after each permanent pipe-capacity improvement.
+    - Input [station_count]: Number of water stations.
+    - Input [pipe_starts]: First station of each original pipe.
+    - Input [pipe_ends]: Second station of each corresponding pipe.
+    - Input [pipe_capacities]: Capacity of each original pipe, usable in either direction.
+    - Input [improvement_starts]: First station of each improvement.
+    - Input [improvement_ends]: Second station of each corresponding improvement.
+    - Input [improvement_amounts]: Additional capacity between the two stations; zero existing capacity is allowed.
+    - Output [output]: Maximum water delivery initially, then after each improvement in order, including all increases so far. *)
 Program water : uint -> array uint -> array uint ->
   array uint ->
   array uint -> array uint -> array uint -> array uint.
+
+(** [@example water]
+    - Sample: 1
+    - Input [station_count]: 3
+    - Input [pipe_starts]: [1; 2]
+    - Input [pipe_ends]: [3; 3]
+    - Input [pipe_capacities]: [10; 1]
+    - Input [improvement_starts]: [2]
+    - Input [improvement_ends]: [3]
+    - Input [improvement_amounts]: [15]
+    - Output [output]: [1; 10]
+*)
 
 (** ** Bridge *)
 
@@ -263,6 +292,38 @@ Specification water_correct :
       pipe_capacities
       improvement_starts improvement_ends
         improvement_amounts output.
+
+(** ** Complexity *)
+
+(** [@hide] [water_cost] is the cost translation of [water] (the judge
+    recomputes it and compares) ... *)
+Complexity water_cost for water.
+
+(** [@fold complexity bound] ... and runs in at most c1 * ((n + 1)^2 * (C + k + 1) + p) + c2 steps of the cost model on a valid input, n the number of stations, p of pipes, k of improvements and C the total capacity of the pipes and improvements ([sizes]): every augmentation raises the flow by at least one unit, the flow never exceeds the total capacity, and an augmentation is one breadth-first search over the n x n residual table plus a walk; the n p bound of Edmonds-Karp on the number of augmentations is not stated, for two constants
+    quantified before the inputs, on every valid input. [@requirement water_time_spec] *)
+Specification water_time : exists c1 c2 : nat,
+  forall (station_count : N) (pipe_starts pipe_ends
+  pipe_capacities : list N )
+  (improvement_starts improvement_ends
+  improvement_amounts : list N )
+  (station_count_int : uint)
+  (pipe_starts_arr pipe_ends_arr pipe_capacities_arr
+  : array uint )
+  (improvement_starts_arr improvement_ends_arr :
+  array uint )
+  (improvement_amounts_arr : array uint),
+  valid_input station_count pipe_starts pipe_ends
+  pipe_capacities
+  improvement_starts improvement_ends improvement_amounts
+  ->
+  repr station_count_int station_count ->
+  repr pipe_starts_arr pipe_starts -> repr pipe_ends_arr
+  pipe_ends ->
+  repr pipe_capacities_arr pipe_capacities ->
+  repr improvement_starts_arr improvement_starts ->
+  repr improvement_ends_arr improvement_ends ->
+  repr improvement_amounts_arr improvement_amounts ->
+  water_time_spec c1 c2 (size station_count_int) (sizes pipe_capacities_arr) (sizes improvement_amounts_arr) (size improvement_starts_arr) (size pipe_starts_arr) (cost7 water_cost station_count_int pipe_starts_arr pipe_ends_arr pipe_capacities_arr improvement_starts_arr improvement_ends_arr improvement_amounts_arr).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

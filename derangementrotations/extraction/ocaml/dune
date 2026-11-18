@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules derangementrotations_extracted_marray)
- (theories Derangementrotations Derangementrotations.spec Stdlib stdpp StdGalilei))
+ (theories Derangementrotations Derangementrotations.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name derangementrotations_extraction)

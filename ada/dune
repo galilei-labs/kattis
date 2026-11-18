@@ -6,9 +6,11 @@
  (rocq.theory
   (name Ada.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Ada)
  (modules ada_implem)
- (theories Ada.spec Stdlib stdpp StdGalilei))
+  (theories Ada.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

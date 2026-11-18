@@ -2,8 +2,12 @@
 
 (** ** Description *)
 
-(** Decide whether an undirected graph contains a set of the requested size
-    with no edge between any two selected vertices.
+(** The police want to place traffic drones at city intersections. A drone
+    must not be placed at an intersection directly connected by a street to
+    another drone's intersection. Decide whether exactly the requested number
+    of drones can be placed at distinct intersections under this restriction.
+    Each intersection has at most four neighbors. Intersections and streets
+    form an undirected graph; valid drone locations form an independent set.
 
     [@kattis basincity]
     - Difficulty: 8.2
@@ -11,7 +15,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Vertex count: $1 \le n \le 100{,}000$; requested set size in $[0, 15]$.
+    - Vertex count: $1 \le n \le 10^{5}$; requested set size: $0 \le k \le 15$.
     - At most four distinct neighbors per vertex; no self-loops. *)
 
 (** ** Examples *)
@@ -45,14 +49,23 @@ impossible
                     intersection-1 of neighbour_lists is the line of
                     intersection intersection (numbered 1..n): the numbers
                     of its at most four neighbours.
+                    It runs in at most c1 * (5^k * (n + 1) + m) + c2 steps
+                    of the cost model on a valid input, k the number of
+                    drones, n the number of lines and m the total length of
+                    the neighbour lists ([sizes]): a search tree of depth at
+                    most k with at most five children per node (the vertex
+                    and its four neighbours), a linear scan per node; the
+                    4^k of the binding branching rule is not stated, for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  neighbour_lists is the list of the n input
+(* neighbour_lists is the list of the n input
   lines,
    intersection intersection being described by line
      intersection (1-based,
@@ -60,30 +73,28 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** intersection is the number of an intersection. *)
+(** [intersection] is a valid intersection number. *)
 Definition is_intersection (neighbour_lists : list (list N))
     (intersection : N) : Prop :=
   1 <= intersection <= len neighbour_lists.
 
-(** The neighbour numbers given on the line of
-    intersection intersection. *)
+(** The list of neighbours supplied for [intersection]. *)
 Definition line (neighbour_lists : list (list N))
   (intersection : N)
     : list N :=
   nth (N.to_nat (intersection - 1)) neighbour_lists [].
 
-(** other is listed as a neighbour of intersection. *)
+(** [other] is listed as a neighbour of [intersection]. *)
 Definition neighbours (neighbour_lists : list (list N))
     (intersection other : N) : Prop :=
   In other (line neighbour_lists intersection).
 
-(** drone_spots is a placement of drone_count drones:
-    drone_count distinct intersections, no two of them
-    neighbours. *)
+(** [drone_spots] contains [drone_count] distinct intersections, with no two
+    adjacent. *)
 Definition placement (neighbour_lists : list (list N))
   (drone_count : N)
     (drone_spots : list N) : Prop :=
@@ -101,7 +112,7 @@ Record valid_input (drone_count : N)
     : Prop := {
   (* 0 <= k <= 15, k the number of drones *)
   vi_k : drone_count <= 15;
-  (* 1 <= n <= 100 000, the total number of intersections *)
+  (* 1 <= n <= 10^5, the total number of intersections *)
   vi_n : 1 <= len neighbour_lists <= 100000;
   (* 0 <= d <= 4, the number of intersections neighbouring
     the i-th one *)
@@ -132,28 +143,36 @@ Record valid_input (drone_count : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is true exactly when the graph contains an independent set of the
-    requested size. *)
+    The output is true exactly when the requested number of drones can be
+    placed at distinct intersections with no two at neighboring intersections. *)
 Definition basincity_spec (drone_count : N)
   (neighbour_lists : list (list N))
     (output : bool) : Prop :=
-  match output with
-  | true =>
-      exists drone_spots, placement neighbour_lists
-        drone_count drone_spots
-  | false =>
-      ~ exists drone_spots, placement neighbour_lists
-        drone_count drone_spots
-  end.
+  output = true <->
+    exists drone_spots, placement neighbour_lists
+      drone_count drone_spots.
+
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(5^k(n+1)+L)$ steps, where $k$ is the drone count, $n$ the number of neighbour lists, and $L$ their total length. *)
+Definition basincity_time_spec (c1 c2 n_drone_count n_neighbour_lists total_neighbour_lists steps : nat) : Prop :=
+  (steps <= c1 * (5 ^ (n_drone_count) * (n_neighbour_lists + 1) + total_neighbour_lists + 1) + c2)%nat.
 
 (** ** Interface *)
 
-(** Decide whether an undirected graph contains a set of the requested size with no edge
-    between any two selected vertices.
-    - Input [drone_count]: Required number of mutually nonadjacent vertices.
-    - Input [neighbour_lists]: Neighbors of each vertex in the graph.
-    - Output [output]: The output is true exactly when the graph contains an independent set of the requested size. *)
+(** Decide whether the requested number of traffic drones can be placed at
+    distinct intersections with no two at neighboring intersections.
+    - Input [drone_count]: Number of drones to place.
+    - Input [neighbour_lists]: Directly neighboring intersections for each intersection, using one-based intersection numbers.
+    - Output [output]: [true] exactly when a placement of all requested drones exists. *)
 Program basincity : uint -> array (array uint) -> bool.
+
+(** [@example basincity]
+    - Sample: 1
+    - Input [drone_count]: 4
+    - Input [neighbour_lists]: [[2; 4]; [1; 3; 5]; [2]; [1; 5]; [2; 6; 4; 7]; [5; 7]; [6; 5]]
+    - Output [output]: false
+*)
 
 (** ** Bridge *)
 
@@ -172,6 +191,23 @@ Specification basincity_correct :
     repr (basincity drone_count_int neighbour_lists_arr)
       output /\
     basincity_spec drone_count neighbour_lists output.
+
+(** ** Complexity *)
+
+(** [@hide] [basincity_cost] is the cost translation of [basincity] (the judge
+    recomputes it and compares) ... *)
+Complexity basincity_cost for basincity.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (5^k * (n + 1) + m) + c2 steps of the cost model on a valid input, k the number of drones, n the number of lines and m the total length of the neighbour lists ([sizes]): a search tree of depth at most k with at most five children per node (the vertex and its four neighbours), a linear scan per node; the 4^k of the binding branching rule is not stated, for two constants
+    quantified before the inputs, on every valid input. [@requirement basincity_time_spec] *)
+Specification basincity_time : exists c1 c2 : nat,
+  forall (drone_count : N) (neighbour_lists : list (list N))
+  (drone_count_int : uint)
+  (neighbour_lists_arr : array (array uint)),
+  valid_input drone_count neighbour_lists ->
+  repr drone_count_int drone_count ->
+  repr neighbour_lists_arr neighbour_lists ->
+  basincity_time_spec c1 c2 (size drone_count_int) (size neighbour_lists_arr) (sizes neighbour_lists_arr) (cost2 basincity_cost drone_count_int neighbour_lists_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Derangementrotations.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Derangementrotations)
  (modules derangementrotations_implem)
- (theories Derangementrotations.spec Stdlib stdpp StdGalilei))
+  (theories Derangementrotations.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

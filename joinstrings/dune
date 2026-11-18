@@ -6,9 +6,11 @@
  (rocq.theory
   (name Joinstrings.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Joinstrings)
  (modules joinstrings_implem)
- (theories Joinstrings.spec Stdlib stdpp StdGalilei))
+  (theories Joinstrings.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

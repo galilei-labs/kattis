@@ -21,4 +21,4 @@ archive = "addemup_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/addemup.ml"
-Rust = "extraction/rust/submit/addemup.rs"
+Rust = "extraction/rust/snapshots/addemup_extracted.rs.interface.json"

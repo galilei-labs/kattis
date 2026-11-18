@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -692,21 +691,6 @@ pub fn INF() -> u64 {
   4611686018427387903u64
 }
 
-// Rocq: Shortestpath3.shortestpath3_implem.shortestpath3
-// Variant: uncurried
-pub fn shortestpath3() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> {
-  let v0: fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>> = shortestpath3_impl;
-  let v1: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Shortestpath3.shortestpath3_implem.shortestpath3
-pub fn shortestpath3_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>> = shortestpath3_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -721,13 +705,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Shortestpath3.shortestpath3_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -746,41 +727,30 @@ pub fn ltsb(v0: u64, v1: u64) -> bool {
 // Rocq: Shortestpath3.shortestpath3_implem.relax
 // Variant: uncurried
 pub fn relax(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, j: u64, d: Rc<Array<u64>>, ch: bool) -> (Rc<Array<u64>>, bool) {
-  let v6 = &us;
-  let v9 = rocq_array::get::<u64>(&v6, j);
-  let v10 = &d;
-  let du = rocq_array::get::<u64>(&v10, v9);
-  match eqb(du, __rocq_global_7) {
-    true => {
+  let tmp = rocq_array::get::<u64>(&us, j);
+  let du = rocq_array::get::<u64>(&d, tmp);
+  if eqb(du, __rocq_global_7) {
+    std::mem::drop(vs);
+    std::mem::drop(ws);
+    std::mem::drop(us);
+    (d, ch)
+  } else {
+    let v = rocq_array::get::<u64>(&vs, j);
+    let tmp_1 = rocq_array::get::<u64>(&ws, j);
+    let nd = add(du, tmp_1);
+    let tmp_2 = rocq_array::get::<u64>(&d, v);
+    if ltsb(nd, tmp_2) {
+      std::mem::drop(vs);
+      std::mem::drop(ws);
+      std::mem::drop(us);
+      let tmp_3 = rocq_array::set::<u64>(d, v, nd);
+      (tmp_3, true)
+    } else {
       std::mem::drop(vs);
       std::mem::drop(ws);
       std::mem::drop(us);
       (d, ch)
-    },
-    false => {
-      let v30 = &vs;
-      let v = rocq_array::get::<u64>(&v30, j);
-      let v35 = &ws;
-      let v38 = rocq_array::get::<u64>(&v35, j);
-      let nd = add(du, v38);
-      let v45 = &d;
-      let v48 = rocq_array::get::<u64>(&v45, v);
-      match ltsb(nd, v48) {
-        true => {
-          std::mem::drop(vs);
-          std::mem::drop(ws);
-          std::mem::drop(us);
-          let v61 = rocq_array::set::<u64>(d, v, nd);
-          (v61, true)
-        },
-        false => {
-          std::mem::drop(vs);
-          std::mem::drop(ws);
-          std::mem::drop(us);
-          (d, ch)
-        },
-      }
-    },
+    }
   }
 }
 
@@ -793,14 +763,14 @@ pub fn edges_loop_1(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, 
 // Rocq: Shortestpath3.shortestpath3_implem.edges_loop (local: edges_loop)
 // Variant: uncurried, lifted
 pub fn edges_loop(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, m: u64, j: u64, d: Rc<Array<u64>>, ch: bool, _H: ()) -> (Rc<Array<u64>>, bool) {
-  let v15 = ltb(j, m);
-  match bdec(v15) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = Rc::clone(&us);
-      let v25 = Rc::clone(&vs);
-      let v28 = Rc::clone(&ws);
-      let v35 = relax(v22, v25, v28, j, d, ch);
-      match v35 {
+      let us_clone = Rc::clone(&us);
+      let vs_clone = Rc::clone(&vs);
+      let ws_clone = Rc::clone(&ws);
+      let tmp_1 = relax(us_clone, vs_clone, ws_clone, j, d, ch);
+      match tmp_1 {
         (v37, v39) => {
           edges_loop(us, vs, ws, m, add(j, 1u64), v37, v39, ())
         },
@@ -824,25 +794,22 @@ pub fn rounds_loop_1(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>,
 // Rocq: Shortestpath3.shortestpath3_implem.rounds_loop (local: rounds_loop)
 // Variant: uncurried, lifted
 pub fn rounds_loop(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, m: u64, R: u64, k: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(k, R);
-  match bdec(v15) {
+  let tmp = ltb(k, R);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = Rc::clone(&us);
-      let v29 = Rc::clone(&vs);
-      let v32 = Rc::clone(&ws);
-      let v41 = edges_loop_1(v26, v29, v32, m, 0u64, d, false);
-      match v41 {
+      let us_clone = Rc::clone(&us);
+      let vs_clone = Rc::clone(&vs);
+      let ws_clone = Rc::clone(&ws);
+      let tmp_1 = edges_loop_1(us_clone, vs_clone, ws_clone, m, 0u64, d, false);
+      match tmp_1 {
         (v43, v45) => {
-          match v45 {
-            true => {
-              rounds_loop(us, vs, ws, m, R, add(k, 1u64), v43, ())
-            },
-            false => {
-              std::mem::drop(us);
-              std::mem::drop(vs);
-              std::mem::drop(ws);
-              v43
-            },
+          if v45 {
+            rounds_loop(us, vs, ws, m, R, add(k, 1u64), v43, ())
+          } else {
+            std::mem::drop(us);
+            std::mem::drop(vs);
+            std::mem::drop(ws);
+            v43
           }
         },
       }
@@ -865,25 +832,19 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -896,35 +857,26 @@ pub fn seed_loop_1(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, d
 // Rocq: Shortestpath3.shortestpath3_implem.seed_loop (local: seed_loop)
 // Variant: uncurried, lifted
 pub fn seed_loop(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, d: Rc<Array<u64>>, m: u64, j: u64, mk: Rc<Array<u64>>, q: Rc<Array<u64>>, tl: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v17 = ltb(j, m);
-  match bdec(v17) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &us;
-      let v24 = rocq_array::get::<u64>(&v21, j);
-      let v25 = &d;
-      let du = rocq_array::get::<u64>(&v25, v24);
-      let v29 = &vs;
-      let v = rocq_array::get::<u64>(&v29, j);
-      let v45 = negb(eqb(du, __rocq_global_7));
-      let v48 = &ws;
-      let v51 = rocq_array::get::<u64>(&v48, j);
-      let v56 = add(du, v51);
-      let v57 = &d;
-      let v60 = rocq_array::get::<u64>(&v57, v);
-      let v70 = andb(v45, ltsb(v56, v60));
-      let v72 = &mk;
-      let v75 = rocq_array::get::<u64>(&v72, v);
-      let v82 = eqb(v75, 0u64);
-      match andb(v70, v82) {
-        true => {
-          let v96 = add(j, 1u64);
-          let v105 = rocq_array::set::<u64>(mk, v, 1u64);
-          let v112 = rocq_array::set::<u64>(q, tl, v);
-          seed_loop(us, vs, ws, d, m, v96, v105, v112, add(tl, 1u64), ())
-        },
-        false => {
-          seed_loop(us, vs, ws, d, m, add(j, 1u64), mk, q, tl, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&us, j);
+      let du = rocq_array::get::<u64>(&d, tmp_1);
+      let v = rocq_array::get::<u64>(&vs, j);
+      let tmp_2 = negb(eqb(du, __rocq_global_7));
+      let tmp_3 = rocq_array::get::<u64>(&ws, j);
+      let tmp_4 = add(du, tmp_3);
+      let tmp_5 = rocq_array::get::<u64>(&d, v);
+      let tmp_6 = andb(tmp_2, ltsb(tmp_4, tmp_5));
+      let tmp_7 = rocq_array::get::<u64>(&mk, v);
+      let tmp_8 = eqb(tmp_7, 0u64);
+      if andb(tmp_6, tmp_8) {
+        let tmp_9 = add(j, 1u64);
+        let tmp_10 = rocq_array::set::<u64>(mk, v, 1u64);
+        let tmp_11 = rocq_array::set::<u64>(q, tl, v);
+        seed_loop(us, vs, ws, d, m, tmp_9, tmp_10, tmp_11, add(tl, 1u64), ())
+      } else {
+        seed_loop(us, vs, ws, d, m, add(j, 1u64), mk, q, tl, ())
       }
     },
     sumbool::right => {
@@ -946,17 +898,15 @@ pub fn build_loop_1(us: Rc<Array<u64>>, m: u64, j: u64, hd: Rc<Array<u64>>, nx: 
 // Rocq: Shortestpath3.shortestpath3_implem.build_loop (local: build_loop)
 // Variant: uncurried, lifted
 pub fn build_loop(us: Rc<Array<u64>>, m: u64, j: u64, hd: Rc<Array<u64>>, nx: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v13 = ltb(j, m);
-  match bdec(v13) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &us;
-      let u = rocq_array::get::<u64>(&v17, j);
-      let v21 = &hd;
-      let h = rocq_array::get::<u64>(&v21, u);
-      let v32 = add(j, 1u64);
-      let v47 = rocq_array::set::<u64>(hd, u, add(j, 1u64));
-      let v54 = rocq_array::set::<u64>(nx, j, h);
-      build_loop(us, m, v32, v47, v54, ())
+      let u = rocq_array::get::<u64>(&us, j);
+      let h = rocq_array::get::<u64>(&hd, u);
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(hd, u, add(j, 1u64));
+      let tmp_3 = rocq_array::set::<u64>(nx, j, h);
+      build_loop(us, m, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(us);
@@ -974,28 +924,22 @@ pub fn adj_loop_1(vs: Rc<Array<u64>>, nx: Rc<Array<u64>>, e: u64, mk: Rc<Array<u
 // Rocq: Shortestpath3.shortestpath3_implem.adj_loop (local: adj_loop)
 // Variant: uncurried, lifted
 pub fn adj_loop(vs: Rc<Array<u64>>, nx: Rc<Array<u64>>, e: u64, mk: Rc<Array<u64>>, q: Rc<Array<u64>>, tl: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v16 = ltb(0u64, e);
-  match bdec(v16) {
+  let tmp = ltb(0u64, e);
+  match bdec(tmp) {
     sumbool::left => {
       let j = sub(e, 1u64);
-      let v28 = &vs;
-      let v = rocq_array::get::<u64>(&v28, j);
-      let v32 = &nx;
-      let e_ = rocq_array::get::<u64>(&v32, j);
-      let v43 = ltb(e_, e);
-      match bdec(v43) {
+      let v = rocq_array::get::<u64>(&vs, j);
+      let e_ = rocq_array::get::<u64>(&nx, j);
+      let tmp_1 = ltb(e_, e);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v48 = &mk;
-          let v51 = rocq_array::get::<u64>(&v48, v);
-          match eqb(v51, 0u64) {
-            true => {
-              let v68 = rocq_array::set::<u64>(mk, v, 1u64);
-              let v75 = rocq_array::set::<u64>(q, tl, v);
-              adj_loop(vs, nx, e_, v68, v75, add(tl, 1u64), ())
-            },
-            false => {
-              adj_loop(vs, nx, e_, mk, q, tl, ())
-            },
+          let tmp_2 = rocq_array::get::<u64>(&mk, v);
+          if eqb(tmp_2, 0u64) {
+            let tmp_3 = rocq_array::set::<u64>(mk, v, 1u64);
+            let tmp_4 = rocq_array::set::<u64>(q, tl, v);
+            adj_loop(vs, nx, e_, tmp_3, tmp_4, add(tl, 1u64), ())
+          } else {
+            adj_loop(vs, nx, e_, mk, q, tl, ())
           }
         },
         sumbool::right => {
@@ -1022,20 +966,18 @@ pub fn bfs_loop_1(vs: Rc<Array<u64>>, hd: Rc<Array<u64>>, nx: Rc<Array<u64>>, n:
 // Rocq: Shortestpath3.shortestpath3_implem.bfs_loop (local: bfs_loop)
 // Variant: uncurried, lifted
 pub fn bfs_loop(vs: Rc<Array<u64>>, hd: Rc<Array<u64>>, nx: Rc<Array<u64>>, n: u64, h: u64, mk: Rc<Array<u64>>, q: Rc<Array<u64>>, tl: u64, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(h, tl);
-  match bdec(v16) {
+  let tmp = ltb(h, tl);
+  match bdec(tmp) {
     sumbool::left => {
-      let v27 = ltb(h, n);
-      match bdec(v27) {
+      let tmp_1 = ltb(h, n);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v31 = &q;
-          let x = rocq_array::get::<u64>(&v31, h);
-          let v36 = &hd;
-          let v39 = rocq_array::get::<u64>(&v36, x);
-          let v42 = Rc::clone(&vs);
-          let v45 = Rc::clone(&nx);
-          let v54 = adj_loop_1(v42, v45, v39, mk, q, tl);
-          match v54 {
+          let x = rocq_array::get::<u64>(&q, h);
+          let tmp_2 = rocq_array::get::<u64>(&hd, x);
+          let vs_clone = Rc::clone(&vs);
+          let nx_clone = Rc::clone(&nx);
+          let tmp_3 = adj_loop_1(vs_clone, nx_clone, tmp_2, mk, q, tl);
+          match tmp_3 {
             (v56, v58) => {
               match v56 {
                 (v61, v63) => {
@@ -1067,30 +1009,22 @@ pub fn bfs_loop(vs: Rc<Array<u64>>, hd: Rc<Array<u64>>, nx: Rc<Array<u64>>, n: u
 // Rocq: Shortestpath3.shortestpath3_implem.answer_of
 // Variant: uncurried
 pub fn answer_of(d: Rc<Array<u64>>, mk: Rc<Array<u64>>, t: u64) -> Rc<answer<u64>> {
-  let v3 = &d;
-  let x = rocq_array::get::<u64>(&v3, t);
-  match eqb(x, __rocq_global_7) {
-    true => {
+  let x = rocq_array::get::<u64>(&d, t);
+  if eqb(x, __rocq_global_7) {
+    std::mem::drop(mk);
+    std::mem::drop(d);
+    Rc::new(answer::<u64>::Impossible)
+  } else {
+    let tmp = rocq_array::get::<u64>(&mk, t);
+    if eqb(tmp, 0u64) {
       std::mem::drop(mk);
       std::mem::drop(d);
-      Rc::new(answer::<u64>::Impossible)
-    },
-    false => {
-      let v21 = &mk;
-      let v24 = rocq_array::get::<u64>(&v21, t);
-      match eqb(v24, 0u64) {
-        true => {
-          std::mem::drop(mk);
-          std::mem::drop(d);
-          Rc::new(answer::<u64>::Dist { distance: x })
-        },
-        false => {
-          std::mem::drop(mk);
-          std::mem::drop(d);
-          Rc::new(answer::<u64>::MinusInfinity)
-        },
-      }
-    },
+      Rc::new(answer::<u64>::Dist { distance: x })
+    } else {
+      std::mem::drop(mk);
+      std::mem::drop(d);
+      Rc::new(answer::<u64>::MinusInfinity)
+    }
   }
 }
 
@@ -1103,17 +1037,16 @@ pub fn ans_loop_1(d: Rc<Array<u64>>, mk: Rc<Array<u64>>, qs: Rc<Array<u64>>, Q: 
 // Rocq: Shortestpath3.shortestpath3_implem.ans_loop (local: ans_loop)
 // Variant: uncurried, lifted
 pub fn ans_loop(d: Rc<Array<u64>>, mk: Rc<Array<u64>>, qs: Rc<Array<u64>>, Q: u64, i: u64, out: Rc<Array<Rc<answer<u64>>>>, _H: ()) -> Rc<Array<Rc<answer<u64>>>> {
-  let v14 = ltb(i, Q);
-  match bdec(v14) {
+  let tmp = ltb(i, Q);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &qs;
-      let v22 = rocq_array::get::<u64>(&v19, i);
-      let v25 = Rc::clone(&d);
-      let v28 = Rc::clone(&mk);
-      let a = answer_of(v25, v28, v22);
-      let v39 = add(i, 1u64);
-      let v46 = rocq_array::set::<Rc<answer<u64>>>(out, i, a);
-      ans_loop(d, mk, qs, Q, v39, v46, ())
+      let tmp_1 = rocq_array::get::<u64>(&qs, i);
+      let d_clone = Rc::clone(&d);
+      let mk_clone = Rc::clone(&mk);
+      let a = answer_of(d_clone, mk_clone, tmp_1);
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::set::<Rc<answer<u64>>>(out, i, a);
+      ans_loop(d, mk, qs, Q, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(d);
@@ -1127,101 +1060,39 @@ pub fn ans_loop(d: Rc<Array<u64>>, mk: Rc<Array<u64>>, qs: Rc<Array<u64>>, Q: u6
 // Rocq: Shortestpath3.shortestpath3_implem.shortestpath3_impl
 // Variant: uncurried
 pub fn shortestpath3_impl(n: u64, s: u64, us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, qs: Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>> {
-  let v6 = &us;
-  let m = rocq_array::length::<u64>(&v6);
-  let v13 = rocq_array::make::<u64>(n, __rocq_global_7);
-  let d0 = rocq_array::set::<u64>(v13, s, 0u64);
-  let v31 = sub(n, 1u64);
-  let v36 = Rc::clone(&us);
-  let v39 = Rc::clone(&vs);
-  let v42 = Rc::clone(&ws);
-  let d = rounds_loop_1(v36, v39, v42, m, v31, 0u64, d0);
-  let v61 = rocq_array::make::<u64>(n, 0u64);
-  let v68 = rocq_array::make::<u64>(n, 0u64);
-  let v73 = Rc::clone(&us);
-  let v76 = Rc::clone(&vs);
-  let v81 = Rc::clone(&d);
-  let v92 = seed_loop_1(v73, v76, ws, v81, m, 0u64, v61, v68, 0u64);
-  match v92 {
+  let m = rocq_array::length::<u64>(&us);
+  let tmp = rocq_array::make::<u64>(n, __rocq_global_7);
+  let d0 = rocq_array::set::<u64>(tmp, s, 0u64);
+  let tmp_1 = sub(n, 1u64);
+  let us_clone = Rc::clone(&us);
+  let vs_clone = Rc::clone(&vs);
+  let ws_clone = Rc::clone(&ws);
+  let d = rounds_loop_1(us_clone, vs_clone, ws_clone, m, tmp_1, 0u64, d0);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let us_clone_1 = Rc::clone(&us);
+  let vs_clone_1 = Rc::clone(&vs);
+  let d_clone = Rc::clone(&d);
+  let tmp_4 = seed_loop_1(us_clone_1, vs_clone_1, ws, d_clone, m, 0u64, tmp_2, tmp_3, 0u64);
+  match tmp_4 {
     (v94, v96) => {
       match v94 {
         (v99, v101) => {
-          let v112 = rocq_array::make::<u64>(n, 0u64);
-          let v119 = rocq_array::make::<u64>(m, 0u64);
-          let v130 = build_loop_1(us, m, 0u64, v112, v119);
-          match v130 {
+          let tmp_5 = rocq_array::make::<u64>(n, 0u64);
+          let tmp_6 = rocq_array::make::<u64>(m, 0u64);
+          let tmp_7 = build_loop_1(us, m, 0u64, tmp_5, tmp_6);
+          match tmp_7 {
             (v132, v134) => {
               let mk_ = bfs_loop_1(vs, v132, v134, n, 0u64, v99, v101, v96);
-              let v156 = &qs;
-              let Q = rocq_array::length::<u64>(&v156);
-              let v168 = rocq_array::make::<Rc<answer<u64>>>(Q, Rc::new(answer::<u64>::Impossible));
-              ans_loop_1(d, mk_, qs, Q, 0u64, v168)
+              let Q = rocq_array::length::<u64>(&qs);
+              let tmp_8 = rocq_array::make::<Rc<answer<u64>>>(Q, Rc::new(answer::<u64>::Impossible));
+              ans_loop_1(d, mk_, qs, Q, 0u64, tmp_8)
             },
           }
         },
       }
     },
   }
-}
-
-// Rocq: Shortestpath3.shortestpath3_implem.shortestpath3_impl
-pub fn shortestpath3_impl_curried(n: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>> {
-  let v3 = {
-    move |s: u64| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |us: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>> {
-          let n = &v8;
-          let s = &s;
-          let v18 = Clone::clone(n);
-          let v20 = Clone::clone(s);
-          let v23 = {
-            move |vs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>> {
-              let n = &v18;
-              let s = &v20;
-              let us = &us;
-              let v32 = Clone::clone(n);
-              let v34 = Clone::clone(s);
-              let v36 = Rc::clone(us);
-              let v39 = {
-                move |ws: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> {
-                  let n = &v32;
-                  let s = &v34;
-                  let us = &v36;
-                  let vs = &vs;
-                  let v50 = Clone::clone(n);
-                  let v52 = Clone::clone(s);
-                  let v54 = Rc::clone(us);
-                  let v56 = Rc::clone(vs);
-                  let v59 = {
-                    move |qs: Rc<Array<u64>>| -> Rc<Array<Rc<answer<u64>>>> {
-                      let v73 = Clone::clone(&v50);
-                      let v75 = Clone::clone(&v52);
-                      let v77 = Rc::clone(&v54);
-                      let v79 = Rc::clone(&v56);
-                      let v81 = Rc::clone(&ws);
-                      shortestpath3_impl(v73, v75, v77, v79, v81, qs)
-                    }
-                  };
-                  let v87: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> = Rc::new(v59);
-                  v87
-                }
-              };
-              let v91: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>> = Rc::new(v39);
-              v91
-            }
-          };
-          let v95: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>> = Rc::new(v23);
-          v95
-        }
-      };
-      let v99: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>> = Rc::new(v11);
-      v99
-    }
-  };
-  let v103: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>> = Rc::new(v3);
-  v103
 }
 
 mod __rocq_reuse {
@@ -1372,14 +1243,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> {
-  let v0: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> = __rocq_global_763.with(Clone::clone);
-  v0
-}
 const __rocq_global_7: u64 = 4611686018427387903u64;
-std::thread_local! { static __rocq_global_763: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>> = shortestpath3(); }
-std::thread_local! { static __rocq_global_766: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<answer<u64>>>>>>>>>> = shortestpath3_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1461,7 +1325,7 @@ fn solve(input: &str) -> String {
         if n == 0 && m == 0 && q == 0 && s == 0 { break; }
         let [u,v,w] = columns(&mut t,m,true); let qs = t.uints(q);
         if !out.is_empty() { out.push('\n'); }
-        out.push_str(&lines(values(&run()(n,s,u,v,w,qs)).iter().map(|item| match item.as_ref() {
+        out.push_str(&lines(values(&shortestpath3_impl(n,s,u,v,w,qs)).iter().map(|item| match item.as_ref() {
             answer::Dist { distance: d } => decoded(*d).to_string(), answer::Impossible { } => "Impossible".into(), answer::MinusInfinity { } => "-Infinity".into(),
         })));
     }

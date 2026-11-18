@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -27,21 +26,6 @@ impl<A: Clone + 'static> Clone for option<A> {
 
 pub type uint = u64;
 
-// Rocq: Generalchineseremainder.generalchineseremainder_implem.crt
-// Variant: uncurried
-pub fn crt() -> Rc<dyn Fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>>> {
-  let v0: fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>> = crt_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Generalchineseremainder.generalchineseremainder_implem.crt
-pub fn crt_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>> = crt_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -50,13 +34,10 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Generalchineseremainder.generalchineseremainder_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -99,17 +80,17 @@ pub fn egcd_loop_1(m: u64, r0: u64, r1: u64, s0: u64, s1: u64) -> (u64, u64) {
 // Rocq: Generalchineseremainder.generalchineseremainder_implem.egcd_loop (local: egcd_loop)
 // Variant: uncurried, lifted
 pub fn egcd_loop(m: u64, r0: u64, r1: u64, s0: u64, s1: u64, _H: ()) -> (u64, u64) {
-  let v15 = eqb(r1, 0u64);
-  match bdec(v15) {
+  let tmp = eqb(r1, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       (r0, s0)
     },
     sumbool::right => {
-      let v32 = mod_(r0, r1);
-      let v40 = add(s0, m);
-      let v58 = mod_(mul(div(r0, r1), s1), m);
-      let v68 = mod_(sub(v40, v58), m);
-      egcd_loop(m, r1, v32, s1, v68, ())
+      let tmp_1 = mod_(r0, r1);
+      let tmp_2 = add(s0, m);
+      let tmp_3 = mod_(mul(div(r0, r1), s1), m);
+      let tmp_4 = mod_(sub(tmp_2, tmp_3), m);
+      egcd_loop(m, r1, tmp_1, s1, tmp_4, ())
     },
   }
 }
@@ -117,58 +98,23 @@ pub fn egcd_loop(m: u64, r0: u64, r1: u64, s0: u64, s1: u64, _H: ()) -> (u64, u6
 // Rocq: Generalchineseremainder.generalchineseremainder_implem.crt_impl
 // Variant: uncurried
 pub fn crt_impl(a: u64, n: u64, b: u64, m: u64) -> Rc<option<(u64, u64)>> {
-  let v12 = mod_(1u64, m);
-  let v25 = egcd_loop_1(m, n, m, v12, 0u64);
-  match v25 {
+  let tmp = mod_(1u64, m);
+  let tmp_1 = egcd_loop_1(m, n, m, tmp, 0u64);
+  match tmp_1 {
     (v27, v29) => {
       let mg = div(m, v27);
-      let v44 = add(b, m);
-      let v50 = mod_(a, m);
-      let d = mod_(sub(v44, v50), m);
-      let v67 = mod_(d, v27);
-      match eqb(v67, 0u64) {
-        true => {
-          let t = mod_(mul(div(d, v27), v29), mg);
-          Rc::new(option::<(u64, u64)>::Some((add(a, mul(n, t)), mul(n, mg))))
-        },
-        false => {
-          Rc::new(option::<(u64, u64)>::None)
-        },
+      let tmp_2 = add(b, m);
+      let tmp_3 = mod_(a, m);
+      let d = mod_(sub(tmp_2, tmp_3), m);
+      let tmp_4 = mod_(d, v27);
+      if eqb(tmp_4, 0u64) {
+        let t = mod_(mul(div(d, v27), v29), mg);
+        Rc::new(option::<(u64, u64)>::Some((add(a, mul(n, t)), mul(n, mg))))
+      } else {
+        Rc::new(option::<(u64, u64)>::None)
       }
     },
   }
-}
-
-// Rocq: Generalchineseremainder.generalchineseremainder_implem.crt_impl
-pub fn crt_impl_curried(a: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>> {
-  let v3 = {
-    move |n: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>> {
-      let a = &a;
-      let v8 = Clone::clone(a);
-      let v11 = {
-        move |b: u64| -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>> {
-          let a = &v8;
-          let n = &n;
-          let v18 = Clone::clone(a);
-          let v20 = Clone::clone(n);
-          let v23 = {
-            move |m: u64| -> Rc<option<(u64, u64)>> {
-              let v33 = Clone::clone(&v18);
-              let v35 = Clone::clone(&v20);
-              let v37 = Clone::clone(&b);
-              crt_impl(v33, v35, v37, m)
-            }
-          };
-          let v43: Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>> = Rc::new(v3);
-  v51
 }
 
 mod __rocq_reuse {
@@ -319,10 +265,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>>> {
-  let v0: Rc<dyn Fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>>> = __rocq_global_208.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_208: Rc<dyn Fn(u64, u64, u64, u64) -> Rc<option<(u64, u64)>>> = crt(); }
-std::thread_local! { static __rocq_global_211: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<(u64, u64)>>>>>> = crt_curried(); }

@@ -1262,13 +1262,21 @@ let row_of n m hd nx vs ws r bad p u =
   for_loop (fun v r0 -> set r0 v (cell n r neg d p u v)) (Uint63.of_int (0))
     n (make n Impossible)
 
-(** val allpairspath_impl :
-    Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t
-    -> Uint63.t answer Marray.t Marray.t **)
+(** val apsp_rows :
+    Uint63.t -> Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t ->
+    Uint63.t Marray.t -> Uint63.t Marray.t -> bool Marray.t -> bool Marray.t
+    -> Uint63.t Marray.t -> Uint63.t answer Marray.t Marray.t **)
 
-let allpairspath_impl n us vs ws =
-  let m = length us in
-  let (hd, nx) = build_adj n m us in
+let apsp_rows n m hd nx vs ws r bad p =
+  for_loop (fun u res -> set res u (row_of n m hd nx vs ws r bad p u))
+    (Uint63.of_int (0)) n (make n (make (Uint63.of_int (0)) Impossible))
+
+(** val apsp_core :
+    Uint63.t -> Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t ->
+    Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t
+    answer Marray.t Marray.t **)
+
+let apsp_core n m us vs ws hd nx =
   let r = reach_matrix n hd nx vs in
   let h1 =
     bf n m us vs ws (fun k -> get r (add (mul (get vs k) n) (get us k)))
@@ -1280,8 +1288,15 @@ let allpairspath_impl n us vs ws =
     bf n m us vs ws (fun k ->
       (&&) (negb (get bad (get us k))) (negb (get bad (get vs k))))
   in
-  for_loop (fun u res -> set res u (row_of n m hd nx vs ws r bad p u))
-    (Uint63.of_int (0)) n (make n (make (Uint63.of_int (0)) Impossible))
+  apsp_rows n m hd nx vs ws r bad p
+
+(** val allpairspath_impl :
+    Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t
+    -> Uint63.t answer Marray.t Marray.t **)
+
+let allpairspath_impl n us vs ws =
+  let m = length us in
+  let (hd, nx) = build_adj n m us in apsp_core n m us vs ws hd nx
 
 (** val allpairspath :
     uint -> uint Marray.t -> uint Marray.t -> sint Marray.t -> sint answer

@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -671,26 +670,11 @@ pub type uint = u64;
 
 pub type char63 = u64;
 
-// Rocq: Palindromes.palindromes_implem.palindromes
-// Variant: uncurried
-pub fn palindromes() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = palindromes_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Palindromes.palindromes_implem.palindromes
-pub fn palindromes_curried() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = palindromes_impl_curried;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -719,13 +703,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Palindromes.palindromes_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -738,13 +719,10 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 // Rocq: Palindromes.palindromes_implem.imin
 // Variant: uncurried
 pub fn imin(a: u64, b: u64) -> u64 {
-  match ltb(a, b) {
-    true => {
-      a
-    },
-    false => {
-      b
-    },
+  if ltb(a, b) {
+    a
+  } else {
+    b
   }
 }
 
@@ -757,13 +735,10 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -776,22 +751,22 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Palindromes.palindromes_implem.hcond
 // Variant: uncurried
 pub fn hcond(x: Rc<rocq_string::RocqString>, n: u64, q: u64, k: u64) -> bool {
-  let v19 = leb(k, lsr(q, 1u64));
-  let v30 = add(q, 1u64);
-  let v52 = andb(v19, ltb(add(lsr(v30, 1u64), k), n));
-  let v68 = sub(lsr(q, 1u64), k);
-  let v71 = Rc::clone(&x);
-  let v74 = get(v71, v68);
-  let v85 = add(q, 1u64);
-  andb(v52, eqb(v74, get(x, add(lsr(v85, 1u64), k))))
+  let tmp = leb(k, lsr(q, 1u64));
+  let tmp_1 = add(q, 1u64);
+  let tmp_2 = andb(tmp, ltb(add(lsr(tmp_1, 1u64), k), n));
+  let tmp_3 = sub(lsr(q, 1u64), k);
+  let x_clone = Rc::clone(&x);
+  let tmp_4 = get(x_clone, tmp_3);
+  let tmp_5 = add(q, 1u64);
+  andb(tmp_2, eqb(tmp_4, get(x, add(lsr(tmp_5, 1u64), k))))
 }
 
 // Rocq: Palindromes.palindromes_implem.expand
@@ -803,18 +778,15 @@ pub fn expand_1(x: Rc<rocq_string::RocqString>, n: u64, q: u64, k: u64) -> u64 {
 // Rocq: Palindromes.palindromes_implem.expand (local: expand)
 // Variant: uncurried, lifted
 pub fn expand(x: Rc<rocq_string::RocqString>, n: u64, q: u64, k: u64, _H: ()) -> u64 {
-  let v12 = ltb(k, n);
-  match bdec(v12) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = Rc::clone(&x);
-      match hcond(v19, n, q, k) {
-        true => {
-          expand(x, n, q, add(k, 1u64), ())
-        },
-        false => {
-          std::mem::drop(x);
-          k
-        },
+      let x_clone = Rc::clone(&x);
+      if hcond(x_clone, n, q, k) {
+        expand(x, n, q, add(k, 1u64), ())
+      } else {
+        std::mem::drop(x);
+        k
       }
     },
     sumbool::right => {
@@ -833,33 +805,25 @@ pub fn man_1(x: Rc<rocq_string::RocqString>, n: u64, n2: u64, cnt: Rc<Array<u64>
 // Rocq: Palindromes.palindromes_implem.man (local: man)
 // Variant: uncurried, lifted
 pub fn man(x: Rc<rocq_string::RocqString>, n: u64, n2: u64, cnt: Rc<Array<u64>>, q: u64, Q: u64, rb: u64, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(q, n2);
-  match bdec(v15) {
+  let tmp = ltb(q, n2);
+  match bdec(tmp) {
     sumbool::left => {
       let bq = lsr(add(q, 1u64), 1u64);
-      let k0 = match ltb(bq, rb) {
-        true => {
-          let v54 = sub(add(Q, Q), q);
-          let v55 = &cnt;
-          let v58 = rocq_array::get::<u64>(&v55, v54);
-          imin(v58, sub(rb, bq))
-        },
-        false => {
-          0u64
-        },
+      let k0 = if ltb(bq, rb) {
+        let tmp_1 = rocq_array::get::<u64>(&cnt, sub(add(Q, Q), q));
+        imin(tmp_1, sub(rb, bq))
+      } else {
+        0u64
       };
-      let v80 = Rc::clone(&x);
-      let c = expand_1(v80, n, q, k0);
-      let v94 = add(bq, c);
-      match ltb(rb, v94) {
-        true => {
-          let v107 = rocq_array::set::<u64>(cnt, q, c);
-          man(x, n, n2, v107, add(q, 1u64), q, add(bq, c), ())
-        },
-        false => {
-          let v150 = rocq_array::set::<u64>(cnt, q, c);
-          man(x, n, n2, v150, add(q, 1u64), Q, rb, ())
-        },
+      let x_clone = Rc::clone(&x);
+      let c = expand_1(x_clone, n, q, k0);
+      let tmp_2 = add(bq, c);
+      if ltb(rb, tmp_2) {
+        let tmp_3 = rocq_array::set::<u64>(cnt, q, c);
+        man(x, n, n2, tmp_3, add(q, 1u64), q, add(bq, c), ())
+      } else {
+        let tmp_4 = rocq_array::set::<u64>(cnt, q, c);
+        man(x, n, n2, tmp_4, add(q, 1u64), Q, rb, ())
       }
     },
     sumbool::right => {
@@ -871,11 +835,11 @@ pub fn man(x: Rc<rocq_string::RocqString>, n: u64, n2: u64, cnt: Rc<Array<u64>>,
 
 // Rocq: Palindromes.palindromes_implem.manacher
 pub fn manacher(x: Rc<rocq_string::RocqString>) -> Rc<Array<u64>> {
-  let v4 = Rc::clone(&x);
-  let n = length(v4);
-  let v12 = add(n, n);
-  let v25 = rocq_array::make::<u64>(add(n, n), 0u64);
-  man_1(x, n, v12, v25, 0u64, 0u64, 0u64)
+  let x_clone = Rc::clone(&x);
+  let n = length(x_clone);
+  let tmp = add(n, n);
+  let tmp_1 = rocq_array::make::<u64>(add(n, n), 0u64);
+  man_1(x, n, tmp, tmp_1, 0u64, 0u64, 0u64)
 }
 
 // Rocq: Palindromes.palindromes_implem.tab_loop
@@ -887,14 +851,14 @@ pub fn tab_loop_1(f: Rc<dyn Fn(u64) -> u64>, n: u64, i: u64, a: Rc<Array<u64>>) 
 // Rocq: Palindromes.palindromes_implem.tab_loop (local: tab_loop)
 // Variant: uncurried, lifted
 pub fn tab_loop(f: Rc<dyn Fn(u64) -> u64>, n: u64, i: u64, a: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v24: &Rc<dyn Fn(u64) -> u64> = &f;
-      let v27 = v24(i);
-      let v34 = rocq_array::set::<u64>(a, i, v27);
-      tab_loop(f, n, v23, v34, ())
+      let tmp_1 = add(i, 1u64);
+      let f_ref: &Rc<dyn Fn(u64) -> u64> = &f;
+      let tmp_2 = f_ref(i);
+      let tmp_3 = rocq_array::set::<u64>(a, i, tmp_2);
+      tab_loop(f, n, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(f);
@@ -906,8 +870,8 @@ pub fn tab_loop(f: Rc<dyn Fn(u64) -> u64>, n: u64, i: u64, a: Rc<Array<u64>>, _H
 // Rocq: Palindromes.palindromes_implem.tab
 // Variant: uncurried
 pub fn tab(n: u64, f: Rc<dyn Fn(u64) -> u64>) -> Rc<Array<u64>> {
-  let v11 = rocq_array::make::<u64>(n, 0u64);
-  tab_loop_1(f, n, 0u64, v11)
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  tab_loop_1(f, n, 0u64, tmp)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
@@ -925,17 +889,15 @@ pub fn build_1(ts: Rc<Array<u64>>, m: u64, k: u64, head: Rc<Array<u64>>, next: R
 // Rocq: Palindromes.palindromes_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(ts: Rc<Array<u64>>, m: u64, k: u64, head: Rc<Array<u64>>, next: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v13 = ltb(k, m);
-  match bdec(v13) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &ts;
-      let t = rocq_array::get::<u64>(&v17, k);
-      let v21 = &head;
-      let h = rocq_array::get::<u64>(&v21, t);
-      let v32 = add(k, 1u64);
-      let v47 = rocq_array::set::<u64>(head, t, add(k, 1u64));
-      let v54 = rocq_array::set::<u64>(next, k, h);
-      build(ts, m, v32, v47, v54, ())
+      let t = rocq_array::get::<u64>(&ts, k);
+      let h = rocq_array::get::<u64>(&head, t);
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(head, t, add(k, 1u64));
+      let tmp_3 = rocq_array::set::<u64>(next, k, h);
+      build(ts, m, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(ts);
@@ -953,14 +915,13 @@ pub fn fen_sum_1(t: Rc<Array<u64>>, j: u64, acc: u64) -> u64 {
 // Rocq: Palindromes.palindromes_implem.fen_sum (local: fen_sum)
 // Variant: uncurried, lifted
 pub fn fen_sum(t: Rc<Array<u64>>, j: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(0u64, j);
-  match bdec(v13) {
+  let tmp = ltb(0u64, j);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = sub(j, 1u64);
-      let v30 = land(j, v25);
-      let v32 = &t;
-      let v35 = rocq_array::get::<u64>(&v32, j);
-      fen_sum(t, v30, add(acc, v35), ())
+      let tmp_1 = sub(j, 1u64);
+      let tmp_2 = land(j, tmp_1);
+      let tmp_3 = rocq_array::get::<u64>(&t, j);
+      fen_sum(t, tmp_2, add(acc, tmp_3), ())
     },
     sumbool::right => {
       std::mem::drop(t);
@@ -977,27 +938,27 @@ pub fn fsum(t: Rc<Array<u64>>, j: u64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Palindromes.palindromes_implem.fval
 // Variant: uncurried
 pub fn fval(t: (Rc<Array<u64>>, Rc<Array<u64>>), a: u64) -> u64 {
-  let v6 = Clone::clone(&t);
-  let v8 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v6);
-  let v21 = fsum(v8, add(a, 1u64));
-  let v27 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(t);
-  let v35 = add(a, 1u64);
-  add(v21, mul(a, fsum(v27, v35)))
+  let t_clone = Clone::clone(&t);
+  let tmp = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(t_clone);
+  let tmp_1 = fsum(tmp, add(a, 1u64));
+  let tmp_2 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(t);
+  let tmp_3 = add(a, 1u64);
+  add(tmp_1, mul(a, fsum(tmp_2, tmp_3)))
 }
 
 // Rocq: Palindromes.palindromes_implem.walk
@@ -1009,18 +970,16 @@ pub fn walk_1(as_: Rc<Array<u64>>, next: Rc<Array<u64>>, t: (Rc<Array<u64>>, Rc<
 // Rocq: Palindromes.palindromes_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(as_: Rc<Array<u64>>, next: Rc<Array<u64>>, t: (Rc<Array<u64>>, Rc<Array<u64>>), v: Rc<Array<u64>>, ptr: u64, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(0u64, ptr);
-  match bdec(v15) {
+  let tmp = ltb(0u64, ptr);
+  match bdec(tmp) {
     sumbool::left => {
       let k = sub(ptr, 1u64);
-      let v27 = &next;
-      let nx = rocq_array::get::<u64>(&v27, k);
-      let v32 = &as_;
-      let v35 = rocq_array::get::<u64>(&v32, k);
-      let v37 = Clone::clone(&t);
-      let v_ = rocq_array::set::<u64>(v, k, fval(v37, v35));
-      let v56 = ltb(nx, ptr);
-      match bdec(v56) {
+      let nx = rocq_array::get::<u64>(&next, k);
+      let tmp_1 = rocq_array::get::<u64>(&as_, k);
+      let t_clone = Clone::clone(&t);
+      let v_ = rocq_array::set::<u64>(v, k, fval(t_clone, tmp_1));
+      let tmp_2 = ltb(nx, ptr);
+      match bdec(tmp_2) {
         sumbool::left => {
           walk(as_, next, t, v_, nx, ())
         },
@@ -1043,9 +1002,9 @@ pub fn walk(as_: Rc<Array<u64>>, next: Rc<Array<u64>>, t: (Rc<Array<u64>>, Rc<Ar
 
 // Rocq: Palindromes.palindromes_implem.lowb
 pub fn lowb(j: u64) -> u64 {
-  let v10 = sub(j, 1u64);
-  let v15 = land(j, v10);
-  sub(j, v15)
+  let tmp = sub(j, 1u64);
+  let tmp_1 = land(j, tmp);
+  sub(j, tmp_1)
 }
 
 // Rocq: Palindromes.palindromes_implem.fen_add
@@ -1057,16 +1016,15 @@ pub fn fen_add_1(t: Rc<Array<u64>>, N: u64, j: u64, delta: u64) -> Rc<Array<u64>
 // Rocq: Palindromes.palindromes_implem.fen_add (local: fen_add)
 // Variant: uncurried, lifted
 pub fn fen_add(t: Rc<Array<u64>>, N: u64, j: u64, delta: u64, _H: ()) -> Rc<Array<u64>> {
-  let v26 = andb(ltb(0u64, j), leb(j, N));
-  match bdec(v26) {
+  let tmp = andb(ltb(0u64, j), leb(j, N));
+  match bdec(tmp) {
     sumbool::left => {
-      let v31 = &t;
-      let v35 = rocq_array::get::<u64>(&v31, j);
-      let t_ = rocq_array::set::<u64>(t, j, add(v35, delta));
-      let v51 = lowb(j);
-      let nj = add(j, v51);
-      let v64 = ltb(j, nj);
-      match bdec(v64) {
+      let tmp_1 = rocq_array::get::<u64>(&t, j);
+      let t_ = rocq_array::set::<u64>(t, j, add(tmp_1, delta));
+      let tmp_2 = lowb(j);
+      let nj = add(j, tmp_2);
+      let tmp_3 = ltb(j, nj);
+      match bdec(tmp_3) {
         sumbool::left => {
           fen_add(t_, N, nj, delta, ())
         },
@@ -1092,13 +1050,13 @@ pub fn fadd(t: Rc<Array<u64>>, N: u64, j: u64, delta: u64) -> Rc<Array<u64>> {
 pub fn insert(NN: u64, t: (Rc<Array<u64>>, Rc<Array<u64>>), i: u64, di: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   let dd = imin(di, add(i, 1u64));
   let lft = sub(add(i, 1u64), dd);
-  let v35 = Clone::clone(&t);
-  let v37 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v35);
-  let t0 = fadd(v37, NN, 1u64, dd);
+  let t_clone = Clone::clone(&t);
+  let tmp = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(t_clone);
+  let t0 = fadd(tmp, NN, 1u64, dd);
   let t0_1 = fadd(t0, NN, add(lft, 2u64), lft);
   let t0_2 = fadd(t0_1, NN, add(i, 2u64), sub(0u64, add(i, 1u64)));
-  let v105 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(t);
-  let t1 = fadd(v105, NN, add(lft, 2u64), sub(0u64, 1u64));
+  let tmp_1 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(t);
+  let t1 = fadd(tmp_1, NN, add(lft, 2u64), sub(0u64, 1u64));
   let t1_1 = fadd(t1, NN, add(i, 2u64), 1u64);
   (t0_2, t1_1)
 }
@@ -1112,24 +1070,19 @@ pub fn sweep_1(d: Rc<Array<u64>>, as_: Rc<Array<u64>>, head: Rc<Array<u64>>, nex
 // Rocq: Palindromes.palindromes_implem.sweep (local: sweep)
 // Variant: uncurried, lifted
 pub fn sweep(d: Rc<Array<u64>>, as_: Rc<Array<u64>>, head: Rc<Array<u64>>, next: Rc<Array<u64>>, n: u64, n1: u64, NN: u64, t: (Rc<Array<u64>>, Rc<Array<u64>>), v: Rc<Array<u64>>, tau: u64, _H: ()) -> Rc<Array<u64>> {
-  let v18 = ltb(tau, n1);
-  match bdec(v18) {
+  let tmp = ltb(tau, n1);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = &head;
-      let v26 = rocq_array::get::<u64>(&v23, tau);
-      let v29 = Rc::clone(&as_);
-      let v32 = Rc::clone(&next);
-      let v34 = Clone::clone(&t);
-      let v_ = walk_1(v29, v32, v34, v, v26);
-      let t_ = match ltb(tau, n) {
-        true => {
-          let v49 = &d;
-          let v52 = rocq_array::get::<u64>(&v49, tau);
-          insert(NN, t, tau, v52)
-        },
-        false => {
-          t
-        },
+      let tmp_1 = rocq_array::get::<u64>(&head, tau);
+      let as__clone = Rc::clone(&as_);
+      let next_clone = Rc::clone(&next);
+      let t_clone = Clone::clone(&t);
+      let v_ = walk_1(as__clone, next_clone, t_clone, v, tmp_1);
+      let t_ = if ltb(tau, n) {
+        let tmp_2 = rocq_array::get::<u64>(&d, tau);
+        insert(NN, t, tau, tmp_2)
+      } else {
+        t
       };
       sweep(d, as_, head, next, n, n1, NN, t_, v_, add(tau, 1u64), ())
     },
@@ -1147,25 +1100,25 @@ pub fn sweep(d: Rc<Array<u64>>, as_: Rc<Array<u64>>, head: Rc<Array<u64>>, next:
 // Rocq: Palindromes.palindromes_implem.lsum_all
 // Variant: uncurried
 pub fn lsum_all(n: u64, m: u64, d: Rc<Array<u64>>, as_: Rc<Array<u64>>, ts: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v22 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let v29 = rocq_array::make::<u64>(m, 0u64);
-  let hn = build_1(ts, m, 0u64, v22, v29);
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  let tmp_1 = rocq_array::make::<u64>(m, 0u64);
+  let hn = build_1(ts, m, 0u64, tmp, tmp_1);
   let NN = add(n, 2u64);
-  let v52 = Clone::clone(&hn);
-  let v54 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v52);
-  let v58 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(hn);
-  let v66 = add(n, 1u64);
-  let v81 = rocq_array::make::<u64>(add(NN, 1u64), 0u64);
-  let v96 = rocq_array::make::<u64>(add(NN, 1u64), 0u64);
-  let v101 = (v81, v96);
-  let v109 = rocq_array::make::<u64>(m, 0u64);
-  sweep_1(d, as_, v54, v58, n, v66, NN, v101, v109, 0u64)
+  let hn_clone = Clone::clone(&hn);
+  let tmp_2 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(hn_clone);
+  let tmp_3 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(hn);
+  let tmp_4 = add(n, 1u64);
+  let tmp_5 = rocq_array::make::<u64>(add(NN, 1u64), 0u64);
+  let tmp_6 = rocq_array::make::<u64>(add(NN, 1u64), 0u64);
+  let tmp_7 = (tmp_5, tmp_6);
+  let tmp_8 = rocq_array::make::<u64>(m, 0u64);
+  sweep_1(d, as_, tmp_2, tmp_3, n, tmp_4, NN, tmp_7, tmp_8, 0u64)
 }
 
 // Rocq: Palindromes.palindromes_implem.fam
 // Variant: uncurried
 pub fn fam(n: u64, m: u64, cnt: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr: Rc<Array<u64>>, par: u64, rev: bool) -> Rc<Array<u64>> {
-  let v16 = {
+  let callback: Rc<dyn Fn(u64) -> u64> = Rc::new({
     let __anf_capture_17 = rev;
     let __anf_capture_19 = n;
     let __anf_capture_21 = par;
@@ -1174,51 +1127,43 @@ pub fn fam(n: u64, m: u64, cnt: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr: Rc<Array
       let n = &__anf_capture_19;
       let par = &__anf_capture_21;
       let cnt = &cnt;
-      let v29 = 2u64;
-      let v30 = match rev {
-        true => {
-          let v34 = 1u64;
-          let v40 = sub(Clone::clone(n), v34);
-          sub(v40, i)
-        },
-        false => {
-          i
-        },
+      let tmp = 2u64;
+      let tmp_1 = if *rev {
+        let tmp_2 = 1u64;
+        let tmp_3 = sub(Clone::clone(n), tmp_2);
+        sub(tmp_3, i)
+      } else {
+        i
       };
-      let v60 = add(mul(v29, v30), Clone::clone(par));
-      rocq_array::get::<u64>(&cnt, v60)
+      let tmp_4 = add(mul(tmp, tmp_1), Clone::clone(par));
+      rocq_array::get::<u64>(cnt, tmp_4)
     }
-  };
-  let v65: Rc<dyn Fn(u64) -> u64> = Rc::new(v16);
-  let d = tab(n, v65);
-  let v77 = Rc::clone(&xr);
-  let v84 = Rc::clone(&xl);
-  let v85 = {
+  });
+  let d = tab(n, callback);
+  let xr_clone = Rc::clone(&xr);
+  let xl_clone = Rc::clone(&xl);
+  let callback_1: Rc<dyn Fn(u64) -> u64> = Rc::new({
     let __anf_capture_86 = rev;
     let __anf_capture_90 = par;
     let __anf_capture_92 = n;
     move |k: u64| -> u64 {
       let rev = &__anf_capture_86;
-      let xr = &v77;
+      let xr = &xr_clone;
       let par = &__anf_capture_90;
       let n = &__anf_capture_92;
-      let xl = &v84;
-      match rev {
-        true => {
-          let v107 = sub(rocq_array::get::<u64>(&xr, k), Clone::clone(par));
-          let v109 = Clone::clone(n);
-          sub(v109, v107)
-        },
-        false => {
-          let v118 = rocq_array::get::<u64>(&xl, k);
-          sub(v118, 1u64)
-        },
+      let xl = &xl_clone;
+      if *rev {
+        let tmp_5 = sub(rocq_array::get::<u64>(xr, k), Clone::clone(par));
+        let n_clone = Clone::clone(n);
+        sub(n_clone, tmp_5)
+      } else {
+        let tmp_6 = rocq_array::get::<u64>(xl, k);
+        sub(tmp_6, 1u64)
       }
     }
-  };
-  let v131: Rc<dyn Fn(u64) -> u64> = Rc::new(v85);
-  let as_ = tab(m, v131);
-  let v149 = {
+  });
+  let as_ = tab(m, callback_1);
+  let callback_2: Rc<dyn Fn(u64) -> u64> = Rc::new({
     let __anf_capture_150 = xl;
     let __anf_capture_152 = xr;
     let __anf_capture_154 = par;
@@ -1230,79 +1175,52 @@ pub fn fam(n: u64, m: u64, cnt: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr: Rc<Array
       let par = &__anf_capture_154;
       let rev = &__anf_capture_156;
       let n = &__anf_capture_158;
-      let h = lsr(sub(add(rocq_array::get::<u64>(&xl, k), rocq_array::get::<u64>(&xr, k)), Clone::clone(par)), 1u64);
-      match rev {
-        true => {
-          let v190 = Clone::clone(n);
-          sub(v190, h)
-        },
-        false => {
-          h
-        },
+      let h = lsr(sub(add(rocq_array::get::<u64>(xl, k), rocq_array::get::<u64>(xr, k)), Clone::clone(par)), 1u64);
+      if *rev {
+        let n_clone_1 = Clone::clone(n);
+        sub(n_clone_1, h)
+      } else {
+        h
       }
     }
-  };
-  let v201: Rc<dyn Fn(u64) -> u64> = Rc::new(v149);
-  let ts = tab(m, v201);
+  });
+  let ts = tab(m, callback_2);
   lsum_all(n, m, d, as_, ts)
 }
 
 // Rocq: Palindromes.palindromes_implem.palindromes_impl
 // Variant: uncurried
 pub fn palindromes_impl(x: Rc<rocq_string::RocqString>, xl: Rc<Array<u64>>, xr: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v6 = Rc::clone(&x);
-  let n = length(v6);
-  let v8 = &xl;
-  let m = rocq_array::length::<u64>(&v8);
+  let x_clone = Rc::clone(&x);
+  let n = length(x_clone);
+  let m = rocq_array::length::<u64>(&xl);
   let cnt = manacher(x);
-  let v25 = Rc::clone(&cnt);
-  let v28 = Rc::clone(&xl);
-  let v31 = Rc::clone(&xr);
-  let v0 = fam(n, m, v25, v28, v31, 0u64, false);
-  let v48 = Rc::clone(&cnt);
-  let v51 = Rc::clone(&xl);
-  let v54 = Rc::clone(&xr);
-  let v1 = fam(n, m, v48, v51, v54, 0u64, true);
-  let v71 = Rc::clone(&cnt);
-  let v74 = Rc::clone(&xl);
-  let v77 = Rc::clone(&xr);
-  let v2 = fam(n, m, v71, v74, v77, 1u64, false);
+  let cnt_clone = Rc::clone(&cnt);
+  let xl_clone = Rc::clone(&xl);
+  let xr_clone = Rc::clone(&xr);
+  let v0 = fam(n, m, cnt_clone, xl_clone, xr_clone, 0u64, false);
+  let cnt_clone_1 = Rc::clone(&cnt);
+  let xl_clone_1 = Rc::clone(&xl);
+  let xr_clone_1 = Rc::clone(&xr);
+  let v1 = fam(n, m, cnt_clone_1, xl_clone_1, xr_clone_1, 0u64, true);
+  let cnt_clone_2 = Rc::clone(&cnt);
+  let xl_clone_2 = Rc::clone(&xl);
+  let xr_clone_2 = Rc::clone(&xr);
+  let v2 = fam(n, m, cnt_clone_2, xl_clone_2, xr_clone_2, 1u64, false);
   let v3_1 = fam(n, m, cnt, xl, xr, 1u64, true);
-  let v112 = {
+  let callback: Rc<dyn Fn(u64) -> u64> = Rc::new({
     move |k: u64| -> u64 {
       let v0 = &v0;
       let v1 = &v1;
       let v2 = &v2;
       let v3 = &v3_1;
-      let v135 = add(rocq_array::get::<u64>(&v0, k), rocq_array::get::<u64>(&v1, k));
-      let v143 = add(v135, rocq_array::get::<u64>(&v2, k));
-      let v146 = rocq_array::get::<u64>(&v3, k);
-      add(v143, v146)
+      let tmp = add(rocq_array::get::<u64>(v0, k), rocq_array::get::<u64>(v1, k));
+      let tmp_1 = add(tmp, rocq_array::get::<u64>(v2, k));
+      let tmp_2 = rocq_array::get::<u64>(v3, k);
+      add(tmp_1, tmp_2)
     }
-  };
-  let v154: Rc<dyn Fn(u64) -> u64> = Rc::new(v112);
-  tab(m, v154)
-}
-
-// Rocq: Palindromes.palindromes_implem.palindromes_impl
-pub fn palindromes_impl_curried(x: Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v3 = {
-    move |xl: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-      let x = &x;
-      let v8 = Rc::clone(x);
-      let v11 = {
-        move |xr: Rc<Array<u64>>| -> Rc<Array<u64>> {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&xl);
-          palindromes_impl(v19, v21, xr)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v3);
-  v31
+  });
+  tab(m, callback)
 }
 
 mod __rocq_reuse {
@@ -1454,12 +1372,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_1058.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_1058: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = palindromes(); }
-std::thread_local! { static __rocq_global_1061: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = palindromes_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1537,6 +1449,6 @@ use kattis_io::*;
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let s = string(t.next()); let m = t.uint(); let mut ls = Vec::new(); let mut rs = Vec::new();
     for _ in 0..m { ls.push(t.uint()); rs.push(t.uint()); }
-    lines(values(&run()(s, ints(ls), ints(rs))))
+    lines(values(&palindromes_impl(s, ints(ls), ints(rs))))
 }
 fn main() { entry(solve); }

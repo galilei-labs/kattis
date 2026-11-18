@@ -21,4 +21,4 @@ archive = "generalchineseremainder_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/generalchineseremainder.ml"
-Rust = "extraction/rust/submit/generalchineseremainder.rs"
+Rust = "extraction/rust/snapshots/generalchineseremainder_extracted.rs.interface.json"

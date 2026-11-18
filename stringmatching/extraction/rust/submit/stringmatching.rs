@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -667,36 +666,40 @@ pub enum sumbool {
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
-pub type uint = u64;
+pub type buffer = (Rc<Array<u64>>, Rc<Array<u64>>);
 
 pub type char63 = u64;
 
-// Rocq: Stringmatching.stringmatching_implem.find_all
-// Variant: uncurried
-pub fn find_all() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>> = find_all_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Stringmatching.stringmatching_implem.find_all
-pub fn find_all_curried() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>>> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> = find_all_impl_curried;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
   rocq_int63::ltb(v0, v1)
+}
+
+// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
+// Variant: uncurried
+pub fn sub(v0: u64, v1: u64) -> u64 {
+  rocq_int63::sub(v0, v1)
+}
+
+// Rocq: Stringmatching.stringmatching_implem.bmake
+pub fn bmake(n: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = 4194303u64;
+  let tmp_2 = if ltb(tmp_1, n) {
+    sub(n, 4194303u64)
+  } else {
+    0u64
+  };
+  let tmp_3 = rocq_array::make::<u64>(tmp_2, 0u64);
+  (tmp, tmp_3)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -707,34 +710,25 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Stringmatching.stringmatching_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
   rocq_int63::add(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
-// Variant: uncurried
-pub fn sub(v0: u64, v1: u64) -> u64 {
-  rocq_int63::sub(v0, v1)
 }
 
 // Rocq: Stringmatching.stringmatching_implem.fall
@@ -746,40 +740,35 @@ pub fn fall_1(xp: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, c: u64, q: u
 // Rocq: Stringmatching.stringmatching_implem.fall (local: fall)
 // Variant: uncurried, lifted
 pub fn fall(xp: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, c: u64, q: u64, _H: ()) -> u64 {
-  let v9 = Rc::clone(&xp);
-  let v13 = get(v9, q);
-  match eqb(v13, c) {
-    true => {
-      std::mem::drop(xp);
-      std::mem::drop(tbl);
-      add(q, 1u64)
-    },
-    false => {
-      let v38 = ltb(0u64, q);
-      match bdec(v38) {
-        sumbool::left => {
-          let v49 = sub(q, 1u64);
-          let v50 = &tbl;
-          let q_ = rocq_array::get::<u64>(&v50, v49);
-          let v61 = ltb(q_, q);
-          match bdec(v61) {
-            sumbool::left => {
-              fall(xp, tbl, c, q_, ())
-            },
-            sumbool::right => {
-              std::mem::drop(xp);
-              std::mem::drop(tbl);
-              0u64
-            },
-          }
-        },
-        sumbool::right => {
-          std::mem::drop(xp);
-          std::mem::drop(tbl);
-          0u64
-        },
-      }
-    },
+  let xp_clone = Rc::clone(&xp);
+  let tmp = get(xp_clone, q);
+  if eqb(tmp, c) {
+    std::mem::drop(xp);
+    std::mem::drop(tbl);
+    add(q, 1u64)
+  } else {
+    let tmp_1 = ltb(0u64, q);
+    match bdec(tmp_1) {
+      sumbool::left => {
+        let q_ = rocq_array::get::<u64>(&tbl, sub(q, 1u64));
+        let tmp_2 = ltb(q_, q);
+        match bdec(tmp_2) {
+          sumbool::left => {
+            fall(xp, tbl, c, q_, ())
+          },
+          sumbool::right => {
+            std::mem::drop(xp);
+            std::mem::drop(tbl);
+            0u64
+          },
+        }
+      },
+      sumbool::right => {
+        std::mem::drop(xp);
+        std::mem::drop(tbl);
+        0u64
+      },
+    }
   }
 }
 
@@ -792,16 +781,16 @@ pub fn build_1(xp: Rc<rocq_string::RocqString>, m: u64, tbl: Rc<Array<u64>>, i: 
 // Rocq: Stringmatching.stringmatching_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(xp: Rc<rocq_string::RocqString>, m: u64, tbl: Rc<Array<u64>>, i: u64, q: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, m);
-  match bdec(v13) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = Rc::clone(&xp);
-      let v24 = get(v21, i);
-      let v27 = Rc::clone(&xp);
-      let v30 = Rc::clone(&tbl);
-      let r = fall_1(v27, v30, v24, q);
-      let v42 = rocq_array::set::<u64>(tbl, i, r);
-      build(xp, m, v42, add(i, 1u64), r, ())
+      let xp_clone = Rc::clone(&xp);
+      let tmp_1 = get(xp_clone, i);
+      let xp_clone_1 = Rc::clone(&xp);
+      let tbl_clone = Rc::clone(&tbl);
+      let r = fall_1(xp_clone_1, tbl_clone, tmp_1, q);
+      let tmp_2 = rocq_array::set::<u64>(tbl, i, r);
+      build(xp, m, tmp_2, add(i, 1u64), r, ())
     },
     sumbool::right => {
       std::mem::drop(xp);
@@ -810,22 +799,75 @@ pub fn build(xp: Rc<rocq_string::RocqString>, m: u64, tbl: Rc<Array<u64>>, i: u6
   }
 }
 
+// Rocq: Stringmatching.stringmatching_implem.alen
+pub fn alen_owned(a: Rc<Array<u64>>) -> u64 {
+  let tmp = rocq_array::length::<u64>(&a);
+  std::mem::drop(a);
+  tmp
+}
+
+// Rocq: Stringmatching.stringmatching_implem.alen
+// Variant: borrowed
+pub fn alen(a: &Rc<Array<u64>>) -> u64 {
+  rocq_array::length::<u64>(a)
+}
+
+// Rocq: Stringmatching.stringmatching_implem.bset
+// Variant: uncurried
+pub fn bset(t: (Rc<Array<u64>>, Rc<Array<u64>>), i: u64, v: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+  match t {
+    (v4, v6) => {
+      let b = &v4;
+      let tmp = alen(b);
+      if ltb(i, tmp) {
+        let tmp_1 = rocq_array::set::<u64>(v4, i, v);
+        (tmp_1, v6)
+      } else {
+        let tmp_2 = alen(b);
+        let tmp_3 = rocq_array::set::<u64>(v6, sub(i, tmp_2), v);
+        (v4, tmp_3)
+      }
+    },
+  }
+}
+
+// Rocq: Stringmatching.stringmatching_implem.bget
+// Variant: uncurried
+pub fn bget(t: (Rc<Array<u64>>, Rc<Array<u64>>), i: u64) -> u64 {
+  match t {
+    (v3, v5) => {
+      let b = &v3;
+      let a = &v5;
+      let tmp = alen(b);
+      if ltb(i, tmp) {
+        std::mem::drop(v5);
+        let tmp_1 = rocq_array::get::<u64>(b, i);
+        std::mem::drop(v3);
+        tmp_1
+      } else {
+        let tmp_2 = rocq_array::get::<u64>(a, sub(i, alen_owned(v3)));
+        std::mem::drop(v5);
+        tmp_2
+      }
+    },
+  }
+}
+
 // Rocq: Stringmatching.stringmatching_implem.copy
 // Variant: uncurried
-pub fn copy_1(buf: Rc<Array<u64>>, res: Rc<Array<u64>>, c: u64, k: u64) -> Rc<Array<u64>> {
+pub fn copy_1(buf: (Rc<Array<u64>>, Rc<Array<u64>>), res: (Rc<Array<u64>>, Rc<Array<u64>>), c: u64, k: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   copy(buf, res, c, k, ())
 }
 
 // Rocq: Stringmatching.stringmatching_implem.copy (local: copy)
 // Variant: uncurried, lifted
-pub fn copy(buf: Rc<Array<u64>>, res: Rc<Array<u64>>, c: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, c);
-  match bdec(v12) {
+pub fn copy(buf: (Rc<Array<u64>>, Rc<Array<u64>>), res: (Rc<Array<u64>>, Rc<Array<u64>>), c: u64, k: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+  let tmp = ltb(k, c);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &buf;
-      let v19 = rocq_array::get::<u64>(&v16, k);
-      let v26 = rocq_array::set::<u64>(res, k, v19);
-      copy(buf, v26, c, add(k, 1u64), ())
+      let buf_clone = Clone::clone(&buf);
+      let tmp_1 = bget(buf_clone, k);
+      copy(buf, bset(res, k, tmp_1), c, add(k, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(buf);
@@ -836,78 +878,57 @@ pub fn copy(buf: Rc<Array<u64>>, res: Rc<Array<u64>>, c: u64, k: u64, _H: ()) ->
 
 // Rocq: Stringmatching.stringmatching_implem.scan
 // Variant: uncurried
-pub fn scan_1(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, m: u64, n: u64, buf: Rc<Array<u64>>, i: u64, q: u64, cnt: u64) -> Rc<Array<u64>> {
+pub fn scan_1(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, m: u64, n: u64, buf: (Rc<Array<u64>>, Rc<Array<u64>>), i: u64, q: u64, cnt: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   scan(xp, xt, tbl, m, n, buf, i, q, cnt, ())
 }
 
 // Rocq: Stringmatching.stringmatching_implem.scan (local: scan)
 // Variant: uncurried, lifted
-pub fn scan(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, m: u64, n: u64, buf: Rc<Array<u64>>, i: u64, q: u64, cnt: u64, _H: ()) -> Rc<Array<u64>> {
-  let v17 = ltb(i, n);
-  match bdec(v17) {
+pub fn scan(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>, tbl: Rc<Array<u64>>, m: u64, n: u64, buf: (Rc<Array<u64>>, Rc<Array<u64>>), i: u64, q: u64, cnt: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = Rc::clone(&xt);
-      let v28 = get(v25, i);
-      let v31 = Rc::clone(&xp);
-      let v34 = Rc::clone(&tbl);
-      let r = fall_1(v31, v34, v28, q);
-      match eqb(r, m) {
-        true => {
-          let v67 = rocq_array::set::<u64>(buf, cnt, sub(add(i, 1u64), m));
-          let v75 = add(i, 1u64);
-          let v83 = sub(m, 1u64);
-          let v84 = &tbl;
-          let v87 = rocq_array::get::<u64>(&v84, v83);
-          scan(xp, xt, tbl, m, n, v67, v75, v87, add(cnt, 1u64), ())
-        },
-        false => {
-          scan(xp, xt, tbl, m, n, buf, add(i, 1u64), r, cnt, ())
-        },
+      let xt_clone = Rc::clone(&xt);
+      let tmp_1 = get(xt_clone, i);
+      let xp_clone = Rc::clone(&xp);
+      let tbl_clone = Rc::clone(&tbl);
+      let r = fall_1(xp_clone, tbl_clone, tmp_1, q);
+      if eqb(r, m) {
+        let tmp_2 = bset(buf, cnt, sub(add(i, 1u64), m));
+        let tmp_3 = add(i, 1u64);
+        let tmp_4 = rocq_array::get::<u64>(&tbl, sub(m, 1u64));
+        scan(xp, xt, tbl, m, n, tmp_2, tmp_3, tmp_4, add(cnt, 1u64), ())
+      } else {
+        scan(xp, xt, tbl, m, n, buf, add(i, 1u64), r, cnt, ())
       }
     },
     sumbool::right => {
       std::mem::drop(xp);
       std::mem::drop(xt);
       std::mem::drop(tbl);
-      let v166 = rocq_array::make::<u64>(cnt, 0u64);
-      copy_1(buf, v166, cnt, 0u64)
+      copy_1(buf, bmake(cnt), cnt, 0u64)
     },
   }
 }
 
 // Rocq: Stringmatching.stringmatching_implem.find_all_impl
 // Variant: uncurried
-pub fn find_all_impl(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>) -> Rc<Array<u64>> {
-  let v5 = Rc::clone(&xp);
-  let m = length(v5);
-  let v10 = Rc::clone(&xt);
-  let n = length(v10);
-  match ltb(n, m) {
-    true => {
-      std::mem::drop(xp);
-      std::mem::drop(xt);
-      rocq_array::make::<u64>(0u64, 0u64)
-    },
-    false => {
-      let v37 = rocq_array::make::<u64>(m, 0u64);
-      let v44 = Rc::clone(&xp);
-      let tbl = build_1(v44, m, v37, 1u64, 0u64);
-      let v75 = rocq_array::make::<u64>(add(sub(n, m), 1u64), 0u64);
-      scan_1(xp, xt, tbl, m, n, v75, 0u64, 0u64, 0u64)
-    },
+pub fn find_all_impl(xp: Rc<rocq_string::RocqString>, xt: Rc<rocq_string::RocqString>) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+  let xp_clone = Rc::clone(&xp);
+  let m = length(xp_clone);
+  let xt_clone = Rc::clone(&xt);
+  let n = length(xt_clone);
+  if ltb(n, m) {
+    std::mem::drop(xp);
+    std::mem::drop(xt);
+    bmake(0u64)
+  } else {
+    let tmp = rocq_array::make::<u64>(m, 0u64);
+    let xp_clone_1 = Rc::clone(&xp);
+    let tbl = build_1(xp_clone_1, m, tmp, 1u64, 0u64);
+    let tmp_1 = sub(n, m);
+    scan_1(xp, xt, tbl, m, n, bmake(add(tmp_1, 1u64)), 0u64, 0u64, 0u64)
   }
-}
-
-// Rocq: Stringmatching.stringmatching_implem.find_all_impl
-pub fn find_all_impl_curried(xp: Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> {
-  let v3 = {
-    move |xt: Rc<rocq_string::RocqString>| -> Rc<Array<u64>> {
-      let v9 = Rc::clone(&xp);
-      find_all_impl(v9, xt)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> = Rc::new(v3);
-  v15
 }
 
 mod __rocq_reuse {
@@ -1059,12 +1080,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> = __rocq_global_389.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_389: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<rocq_string::RocqString>) -> Rc<Array<u64>>> = find_all(); }
-std::thread_local! { static __rocq_global_392: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<Array<u64>>>> = find_all_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1136,13 +1151,17 @@ pub fn entry_streaming(solve: fn(String, &mut dyn std::io::Write)) {
 }
 use kattis_io as submission_io;
 // I/O adapter ported from the historical Rust survey; no algorithm changes.
-const STACK_MIB: usize = 256;
+const STACK_MIB: usize = if cfg!(debug_assertions) { 16384 } else { 1024 };
 use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut input_lines = input.lines(); let mut out = String::new();
     while let Some(pattern) = input_lines.next() {
-        let txt = input_lines.next().unwrap_or(""); out.push_str(&format!("{}\n",numbers(values(&run()(string(pattern),string(txt))))));
+        let txt = input_lines.next().unwrap_or("");
+        let (first, second) = find_all_impl(string(pattern), string(txt));
+        let mut positions = values(&first);
+        positions.extend(values(&second));
+        out.push_str(&format!("{}\n", numbers(positions)));
     }
     out
 }

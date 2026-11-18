@@ -6,9 +6,11 @@
  (rocq.theory
   (name Plot.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Plot)
  (modules plot_implem)
- (theories Plot.spec Stdlib stdpp StdGalilei))
+  (theories Plot.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

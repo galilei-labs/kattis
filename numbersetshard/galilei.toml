@@ -21,4 +21,4 @@ archive = "numbersetshard_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/numbersetshard.ml"
-Rust = "extraction/rust/submit/numbersetshard.rs"
+Rust = "extraction/rust/snapshots/numbersetshard_extracted.rs.interface.json"

@@ -14,8 +14,8 @@
 
     **Kattis Bounds**
     - Vertex count: $1 \le n \le 30$ and at most $100$ roads.
-    - Road lengths in $[1, 1{,}000]$ km; speeds in $[30, 60]$ km/h.
-    - $1\text{ to }100$ observations and Query count: $1 \le q \le 100$; each pair has a unique
+    - Road lengths: $1 \le d_i \le 10^{3}$ km; speeds: $30 \le v_i \le 60$ km/h.
+    - Observation count: $1 \le r \le 100$ and Query count: $1 \le q \le 100$; each pair has a unique
       shortest-distance route.
     - Some assignment of road speeds is consistent with all observations. *)
 
@@ -69,7 +69,7 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. Cities are 0 .. n-1; the deliveries and the
+(* Cities are 0 .. n-1; the deliveries and the
    queries are parallel lists, one per column of their
    input lines. A delivery time is a uint: the statement
    says integer, and a consistent delivery time
@@ -77,22 +77,20 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th element, for k < [len] l (0 outside, never
-    relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_N (l : list N) (k : N) : N :=
   nth (N.to_nat k) l 0.
 
-(** The j-th value of the i-th line of the matrix. *)
+(** The matrix entry at zero-based row [i] and column [j]. *)
 Definition entry (distances : list (list Z)) (i j : N) : Z
   :=
   nth (N.to_nat j) (nth (N.to_nat i) distances []) 0%Z.
 
-(** There is a (one-way) [road] from city source to city
-    destination. *)
+(** An input road leads from [source] to [destination]. Roads are directed. *)
 Definition road (distances : list (list Z))
   (source destination : N)
     : Prop :=
@@ -105,8 +103,9 @@ Definition road_count (distances : list (list Z)) : N :=
   len (filter (fun value => Z.ltb 0 value) (concat
     distances)).
 
-(** cities lists the cities of a [route] from source to
-    destination, consecutive ones joined by a [road]. *)
+(** [route distances source destination cities] means that [cities] lists a
+    directed route from [source] to [destination] in the road matrix [distances],
+    with a road between every consecutive pair. *)
 Inductive route (distances : list (list Z)) : N -> N -> list
   N -> Prop :=
 | route_here : forall source, source < len distances ->
@@ -116,7 +115,7 @@ Inductive route (distances : list (list Z)) : N -> N -> list
       destination cities ->
     route distances source destination (source :: cities).
 
-(** The [distance] travelled along cities, in km. *)
+(** The total road distance along [cities], in kilometres. *)
 Fixpoint distance (distances : list (list Z)) (cities :
   list N ) : Z :=
   match cities with
@@ -126,7 +125,7 @@ Fixpoint distance (distances : list (list Z)) (cities :
   | _ => 0%Z
   end.
 
-(** Shortest [route]. *)
+(** The route has minimum total road distance between its endpoints. *)
 Definition shortest_route distances source destination
   cities : Prop :=
   route distances source destination cities /\
@@ -135,7 +134,7 @@ Definition shortest_route distances source destination
     (distance distances cities <= distance distances
       cities')%Z.
 
-(** Unique shortest [route]. *)
+(** Exactly one route has minimum total road distance between the endpoints. *)
 Definition unique_shortest_route distances source
   destination : Prop :=
   exists cities, shortest_route distances source destination
@@ -144,8 +143,8 @@ Definition unique_shortest_route distances source
       destination cities' ->
       cities' = cities.
 
-(** The minutes needed to drive cities when [road] (city,
-    next) is driven at speed city next km/h. *)
+(** The journey duration along [cities], in minutes, using the road speeds supplied
+    by [speed] in kilometres per hour. *)
 Fixpoint duration distances (speed : N -> N -> R)
   (cities : list N) : R :=
   match cities with
@@ -164,8 +163,9 @@ Definition speeds_ok distances (speed : N -> N -> R) : Prop
     destination ->
     (30 <= speed source destination <= 60)%R.
 
-(** The trip from source to destination, along its
-    minimum-[distance] [route], takes minutes minutes. *)
+(** Every minimum-distance route from [source] to [destination] takes [minutes]
+    minutes at the supplied road speeds. Valid inputs require the minimum-distance
+    route to be unique. *)
 Definition trip_takes distances speed source destination
   (minutes : R)
     : Prop :=
@@ -173,8 +173,7 @@ Definition trip_takes distances speed source destination
     cities ->
     duration distances speed cities = minutes.
 
-(** Every delivery k took past_minutes_k minutes at the
-    speed limits speed. *)
+(** The road speeds reproduce every observed delivery duration in [past_minutes]. *)
 Definition matches_deliveries distances
     (past_sources past_destinations past_minutes : list N)
       speed : Prop :=
@@ -183,8 +182,8 @@ Definition matches_deliveries distances
       (get_list_N past_destinations k)
       (IZR (Z.of_N (get_list_N past_minutes k))).
 
-(** minutes minutes is a [possible] [duration] of the
-    trip source -> destination. *)
+(** Some road speeds satisfying the limits and all observed deliveries give the
+    queried journey duration [minutes]. *)
 Definition possible distances past_sources past_destinations
   past_minutes
     source destination (minutes : R) : Prop :=
@@ -194,7 +193,8 @@ Definition possible distances past_sources past_destinations
       past_minutes speed /\
     trip_takes distances speed source destination minutes.
 
-(** Least [possible]. *)
+(** [minutes] is an attainable journey duration, and no consistent choice of road
+    speeds gives a smaller duration. *)
 Definition least_possible distances past_sources
   past_destinations
     past_minutes source destination (minutes : R) : Prop :=
@@ -206,7 +206,8 @@ Definition least_possible distances past_sources
     past_minutes source destination minutes' -> (minutes <=
       minutes')%R.
 
-(** Greatest [possible]. *)
+(** [minutes] is an attainable journey duration, and no consistent choice of road
+    speeds gives a larger duration. *)
 Definition greatest_possible distances past_sources
   past_destinations
     past_minutes source destination (minutes : R) : Prop :=
@@ -218,8 +219,7 @@ Definition greatest_possible distances past_sources
     past_minutes source destination minutes' -> (minutes' <=
       minutes)%R.
 
-(** approx is within absolute or relative error 10^-6 of
-    exact. *)
+(** [approx] is within absolute or relative error $10^{-6}$ of [exact]. *)
 Definition close (approx exact : R) : Prop :=
   (Rabs (approx - exact) <= / 1000000 \/
    Rabs (approx - exact) <= Rabs exact / 1000000)%R.
@@ -238,7 +238,7 @@ Record valid_input (distances : list (list Z))
   vi_diag : forall i, i < len distances -> entry distances i
     i = 0%Z;
   (* a value of -1 indicates there is no road ...; all
-     other distances are positive and at most 1 000 *)
+     other distances are positive and at most 10^3 *)
   vi_dist : forall i j, i < len distances -> j < len
     distances -> i <> j ->
     entry distances i j = (-1)%Z \/
@@ -316,20 +316,31 @@ Definition roadtimes_spec
 (** ** Interface *)
 
 (** Given a road network and observed journey durations, find the minimum and maximum
-    possible duration of each queried journey. All journeys use their unique shortest-
-    distance route, and each road has a fixed unknown speed between 30 and 60 km/h
+    possible duration of each queried journey. All journeys use their unique
+    shortest-distance route, and each road has a fixed unknown speed between 30 and 60 km/h
     consistent with the observations.
-    - Input [distances]: Road-distance matrix, including missing-road indicators.
-    - Input [past_sources]: Starting vertex of each observed journey.
-    - Input [past_destinations]: Destination vertex of each observed journey.
+    - Input [distances]: Square matrix with zero-based source rows and destination columns. Positive entries are directed road lengths in kilometres; -1 denotes no road and diagonal entries are zero.
+    - Input [past_sources]: Zero-based starting city of each observed journey.
+    - Input [past_destinations]: Zero-based destination city of each observed journey.
     - Input [past_minutes]: Recorded duration of each journey, in minutes.
-    - Input [query_sources]: Starting vertex of each queried journey.
-    - Input [query_destinations]: Destination vertex of each queried journey.
-    - Output [output]: Each output entry approximates the tight minimum and maximum travel times consistent with all observations and speed constraints, within the specified tolerance. *)
+    - Input [query_sources]: Zero-based starting city of each queried journey.
+    - Input [query_destinations]: Zero-based destination city of each queried journey.
+    - Output [output]: A pair (minimum, maximum) of travel times in minutes per query, in query order, approximating the tight bounds consistent with all observations within the specified tolerance. *)
 Program roadtimes : array (array sint) -> array uint ->
   array uint ->
   array uint -> array uint -> array uint -> array (float *
     float).
+
+(** [@example roadtimes]
+    - Sample: 1
+    - Input [distances]: [[0; 50; -1]; [55; 0; 40]; [-1; 40; 0]]%Z
+    - Input [past_sources]: [0]
+    - Input [past_destinations]: [2]
+    - Input [past_minutes]: [120]
+    - Input [query_sources]: [0; 1; 1]
+    - Input [query_destinations]: [1; 2; 0]
+    - Output [output]: [(50, 80); (40, 70); (55, 110)]%R
+*)
 
 (** ** Bridge *)
 

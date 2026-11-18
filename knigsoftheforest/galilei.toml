@@ -21,4 +21,4 @@ archive = "knigsoftheforest_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/knigsoftheforest.ml"
-Rust = "extraction/rust/submit/knigsoftheforest.rs"
+Rust = "extraction/rust/snapshots/knigsoftheforest_extracted.rs.interface.json"

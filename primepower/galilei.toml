@@ -21,4 +21,4 @@ archive = "primepower_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/primepower.ml"
-Rust = "extraction/rust/submit/primepower.rs"
+Rust = "extraction/rust/snapshots/primepower_extracted.rs.interface.json"

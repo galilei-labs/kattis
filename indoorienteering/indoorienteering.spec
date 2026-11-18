@@ -2,8 +2,11 @@
 
 (** ** Description *)
 
-(** Decide whether a tour can visit every vertex exactly once, return to its
-    start, and have exactly a specified total length.
+(** Plan an indoor orienteering race through the given control points.
+    Distances between every pair of points are supplied. The race must visit
+    every control point exactly once and then return to its starting point.
+    Decide whether some visiting order gives exactly the requested total
+    length, including the final leg back to the start.
 
     [@kattis indoorienteering]
     - Difficulty: 6.6
@@ -11,14 +14,14 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Vertex count: $2 \le n \le 14$; target length in $[1, 10^{15}]$.
-    - Distances are symmetric, zero on the diagonal, and otherwise from $1$ to
-      the target length; they satisfy the triangle inequality. *)
+    - Vertex count: $2 \le n \le 14$; target length: $1 \le L \le 10^{15}$.
+    - Distances are symmetric, zero on the diagonal, and otherwise satisfy
+      $1 \le d_{ij} \le L$; they satisfy the triangle inequality. *)
 
 (** ** Examples *)
 
 (** - Input convention: Vertex count and target tour length, followed by a square distance matrix.
-    - Output convention: possible if a tour of exactly the requested length exists; impossible otherwise. *)
+    - Output convention: The function returns [true] if a tour of exactly the requested length exists, and [false] otherwise. The Kattis text format prints these as "possible" and "impossible", respectively. *)
 (* Input:
 4 10
 0 3 2 1
@@ -53,18 +56,19 @@ Open Scope N_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** d_ij, the distance between control points i and j. *)
+(** The matrix distance between control points [i] and [j]. *)
 Definition dist (distances : list (list N)) (i j : N) : N :=
   nth (N.to_nat j) (nth (N.to_nat i) distances []) 0.
 
-(** order lists every control point 0 .. n-1 exactly once. *)
+(** [order] lists every zero-based control-point index exactly once. *)
 Definition visiting_order (distances : list (list N))
   (order : list N)
     : Prop :=
   NoDup order /\ forall point, In point order <-> point <
     len distances.
 
-(** The sum of the distances between consecutive points of order. *)
+(** The sum of distances between consecutive vertices in [order], without
+    adding the closing leg back to the first vertex. *)
 Fixpoint path_length (distances : list (list N))
   (order : list N) : N :=
   match order with
@@ -73,8 +77,8 @@ Fixpoint path_length (distances : list (list N))
   | _ => 0
   end.
 
-(** The race along order, then directly back from its last point to its
-    first. *)
+(** The total distance along [order], including the return from the final point to
+    the first. *)
 Definition race_length (distances : list (list N))
   (order : list N) : N :=
   match order with
@@ -118,30 +122,30 @@ Record valid_input (distances : list (list N))
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is true exactly when a tour visits every vertex once, returns to its
-    start and has the specified total length. *)
+    The output is true exactly when a race visits every control point once,
+    returns to its start, and has exactly the requested total length. *)
 Definition indoorienteering_spec (distances : list (list N))
     (desired_length : N) (output : bool) : Prop :=
-  match output with
-  | true =>
-      exists order, visiting_order distances order /\
-            race_length distances order =
-            desired_length
-  | false =>
-      ~ exists order, visiting_order distances order /\
-            race_length distances order =
-            desired_length
-  end.
+  output = true <->
+    exists order, visiting_order distances order /\
+      race_length distances order = desired_length.
 
 (** ** Interface *)
 
-(** Decide whether a tour can visit every vertex exactly once, return to its start, and have
-    exactly a specified total length.
-    - Input [distances]: Matrix of pairwise distances between vertices.
+(** Decide whether an orienteering race can visit every control point once
+    and return to its start with exactly the requested total length.
+    - Input [distances]: Matrix of pairwise distances between control points.
     - Input [desired_length]: Required total length of the closed tour.
-    - Output [output]: The output is true exactly when a tour visits every vertex once, returns to its start and has the specified total length. *)
+    - Output [output]: [true] if such a tour of total length [desired_length] exists, and [false] otherwise. *)
 Program indoorienteering : array
   (array uint) -> uint -> bool.
+
+(** [@example indoorienteering]
+    - Sample: 1
+    - Input [distances]: [[0; 3; 2; 1]; [3; 0; 1; 3]; [2; 1; 0; 2]; [1; 3; 2; 0]]
+    - Input [desired_length]: 10
+    - Output [output]: true
+*)
 
 (** ** Bridge *)
 

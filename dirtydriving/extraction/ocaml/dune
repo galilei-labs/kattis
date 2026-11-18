@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules dirtydriving_extracted_marray)
- (theories Dirtydriving Dirtydriving.spec Stdlib stdpp StdGalilei))
+ (theories Dirtydriving Dirtydriving.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name dirtydriving_extraction)

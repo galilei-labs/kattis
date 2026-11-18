@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -35,23 +34,13 @@ pub enum sumbool {
 
 pub type uint = u64;
 
-// Rocq: Mazemovement.mazemovement_implem.mazemovement
-pub fn mazemovement() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = mazemovement_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -63,10 +52,9 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Mazemovement.mazemovement_implem.nn
 pub fn nn(x: Rc<Array<u64>>) -> u64 {
-  let v1 = &x;
-  let v2 = rocq_array::length::<u64>(&v1);
+  let tmp = rocq_array::length::<u64>(&x);
   std::mem::drop(x);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -83,13 +71,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Mazemovement.mazemovement_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -108,23 +93,18 @@ pub fn rng_ok_1(x: Rc<Array<u64>>, n: u64, i: u64) -> bool {
 // Rocq: Mazemovement.mazemovement_implem.rng_ok (local: rng_ok)
 // Variant: uncurried, lifted
 pub fn rng_ok(x: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> bool {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &x;
-      let v22 = rocq_array::get::<u64>(&v19, i);
-      let v27 = leb(2u64, v22);
-      let v29 = &x;
-      let v32 = rocq_array::get::<u64>(&v29, i);
-      let v39 = leb(v32, 2000000000u64);
-      match andb(v27, v39) {
-        true => {
-          rng_ok(x, n, add(i, 1u64), ())
-        },
-        false => {
-          std::mem::drop(x);
-          false
-        },
+      let tmp_1 = rocq_array::get::<u64>(&x, i);
+      let tmp_2 = leb(2u64, tmp_1);
+      let tmp_3 = rocq_array::get::<u64>(&x, i);
+      let tmp_4 = leb(tmp_3, 2000000000u64);
+      if andb(tmp_2, tmp_4) {
+        rng_ok(x, n, add(i, 1u64), ())
+      } else {
+        std::mem::drop(x);
+        false
       }
     },
     sumbool::right => {
@@ -136,13 +116,10 @@ pub fn rng_ok(x: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> bool {
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -155,23 +132,18 @@ pub fn amin_1(x: Rc<Array<u64>>, n: u64, i: u64, best: u64) -> u64 {
 // Rocq: Mazemovement.mazemovement_implem.amin (local: amin)
 // Variant: uncurried, lifted
 pub fn amin(x: Rc<Array<u64>>, n: u64, i: u64, best: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v25 = &x;
-      let v28 = rocq_array::get::<u64>(&v25, i);
-      let v29 = &x;
-      let v32 = rocq_array::get::<u64>(&v29, best);
-      let v38 = match ltb(v28, v32) {
-        true => {
-          i
-        },
-        false => {
-          best
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, i);
+      let tmp_3 = rocq_array::get::<u64>(&x, best);
+      let tmp_4 = if ltb(tmp_2, tmp_3) {
+        i
+      } else {
+        best
       };
-      amin(x, n, v23, v38, ())
+      amin(x, n, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -182,8 +154,8 @@ pub fn amin(x: Rc<Array<u64>>, n: u64, i: u64, best: u64, _H: ()) -> u64 {
 
 // Rocq: Mazemovement.mazemovement_implem.ss
 pub fn ss(x: Rc<Array<u64>>) -> u64 {
-  let v5 = Rc::clone(&x);
-  amin_1(x, nn(v5), 1u64, 0u64)
+  let x_clone = Rc::clone(&x);
+  amin_1(x, nn(x_clone), 1u64, 0u64)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.amax
@@ -195,23 +167,18 @@ pub fn amax_1(x: Rc<Array<u64>>, n: u64, i: u64, best: u64) -> u64 {
 // Rocq: Mazemovement.mazemovement_implem.amax (local: amax)
 // Variant: uncurried, lifted
 pub fn amax(x: Rc<Array<u64>>, n: u64, i: u64, best: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v25 = &x;
-      let v28 = rocq_array::get::<u64>(&v25, best);
-      let v29 = &x;
-      let v32 = rocq_array::get::<u64>(&v29, i);
-      let v38 = match ltb(v28, v32) {
-        true => {
-          i
-        },
-        false => {
-          best
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, best);
+      let tmp_3 = rocq_array::get::<u64>(&x, i);
+      let tmp_4 = if ltb(tmp_2, tmp_3) {
+        i
+      } else {
+        best
       };
-      amax(x, n, v23, v38, ())
+      amax(x, n, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -222,22 +189,22 @@ pub fn amax(x: Rc<Array<u64>>, n: u64, i: u64, best: u64, _H: ()) -> u64 {
 
 // Rocq: Mazemovement.mazemovement_implem.tt
 pub fn tt(x: Rc<Array<u64>>) -> u64 {
-  let v5 = Rc::clone(&x);
-  amax_1(x, nn(v5), 1u64, 0u64)
+  let x_clone = Rc::clone(&x);
+  amax_1(x, nn(x_clone), 1u64, 0u64)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.guard
 pub fn guard(x: Rc<Array<u64>>) -> bool {
-  let v10 = Rc::clone(&x);
-  let v16 = leb(2u64, nn(v10));
-  let v21 = Rc::clone(&x);
-  let v34 = andb(v16, leb(nn(v21), 1000u64));
-  let v39 = Rc::clone(&x);
-  let v40 = nn(v39);
-  let v45 = Rc::clone(&x);
-  let v55 = andb(v34, rng_ok_1(v45, v40, 0u64));
-  let v61 = Rc::clone(&x);
-  andb(v55, negb(eqb(ss(v61), tt(x))))
+  let x_clone = Rc::clone(&x);
+  let tmp = leb(2u64, nn(x_clone));
+  let x_clone_1 = Rc::clone(&x);
+  let tmp_1 = andb(tmp, leb(nn(x_clone_1), 1000u64));
+  let x_clone_2 = Rc::clone(&x);
+  let tmp_2 = nn(x_clone_2);
+  let x_clone_3 = Rc::clone(&x);
+  let tmp_3 = andb(tmp_1, rng_ok_1(x_clone_3, tmp_2, 0u64));
+  let x_clone_4 = Rc::clone(&x);
+  andb(tmp_3, negb(eqb(ss(x_clone_4), tt(x))))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mod
@@ -255,14 +222,14 @@ pub fn gcd_loop_1(a: u64, b: u64) -> u64 {
 // Rocq: Mazemovement.mazemovement_implem.gcd_loop (local: gcd_loop)
 // Variant: uncurried, lifted
 pub fn gcd_loop(a: u64, b: u64, _H: ()) -> u64 {
-  let v12 = eqb(b, 0u64);
-  match bdec(v12) {
+  let tmp = eqb(b, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       a
     },
     sumbool::right => {
-      let v23 = mod_(a, b);
-      gcd_loop(b, v23, ())
+      let tmp_1 = mod_(a, b);
+      gcd_loop(b, tmp_1, ())
     },
   }
 }
@@ -276,28 +243,20 @@ pub fn igcd(a: u64, b: u64) -> u64 {
 // Rocq: Mazemovement.mazemovement_implem.capf
 // Variant: uncurried
 pub fn capf(x: Rc<Array<u64>>, i: u64, j: u64) -> u64 {
-  match eqb(i, j) {
-    true => {
+  if eqb(i, j) {
+    std::mem::drop(x);
+    0u64
+  } else {
+    let tmp = rocq_array::get::<u64>(&x, i);
+    let tmp_1 = rocq_array::get::<u64>(&x, j);
+    let g = igcd(tmp, tmp_1);
+    if ltb(1u64, g) {
+      std::mem::drop(x);
+      g
+    } else {
       std::mem::drop(x);
       0u64
-    },
-    false => {
-      let v15 = &x;
-      let v18 = rocq_array::get::<u64>(&v15, i);
-      let v19 = &x;
-      let v22 = rocq_array::get::<u64>(&v19, j);
-      let g = igcd(v18, v22);
-      match ltb(1u64, g) {
-        true => {
-          std::mem::drop(x);
-          g
-        },
-        false => {
-          std::mem::drop(x);
-          0u64
-        },
-      }
-    },
+    }
   }
 }
 
@@ -316,14 +275,14 @@ pub fn fill_row_1(x: Rc<Array<u64>>, n: u64, i: u64, tbl: Rc<Array<u64>>, j: u64
 // Rocq: Mazemovement.mazemovement_implem.fill_row (local: fill_row)
 // Variant: uncurried, lifted
 pub fn fill_row(x: Rc<Array<u64>>, n: u64, i: u64, tbl: Rc<Array<u64>>, j: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(j, n);
-  match bdec(v13) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = Rc::clone(&x);
-      let c = capf(v20, i, j);
-      let v44 = rocq_array::set::<u64>(tbl, add(mul(i, n), j), c);
-      let v63 = rocq_array::set::<u64>(v44, add(mul(j, n), i), c);
-      fill_row(x, n, i, v63, add(j, 1u64), ())
+      let x_clone = Rc::clone(&x);
+      let c = capf(x_clone, i, j);
+      let tmp_1 = rocq_array::set::<u64>(tbl, add(mul(i, n), j), c);
+      let tmp_2 = rocq_array::set::<u64>(tmp_1, add(mul(j, n), i), c);
+      fill_row(x, n, i, tmp_2, add(j, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -341,12 +300,12 @@ pub fn fill_tab_1(x: Rc<Array<u64>>, n: u64, tbl: Rc<Array<u64>>, i: u64) -> Rc<
 // Rocq: Mazemovement.mazemovement_implem.fill_tab (local: fill_tab)
 // Variant: uncurried, lifted
 pub fn fill_tab(x: Rc<Array<u64>>, n: u64, tbl: Rc<Array<u64>>, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = Rc::clone(&x);
-      let v28 = fill_row_1(v19, n, i, tbl, i);
-      fill_tab(x, n, v28, add(i, 1u64), ())
+      let x_clone = Rc::clone(&x);
+      let tmp_1 = fill_row_1(x_clone, n, i, tbl, i);
+      fill_tab(x, n, tmp_1, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -364,36 +323,26 @@ pub fn sat_1(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, q:
 // Rocq: Mazemovement.mazemovement_implem.sat (local: sat)
 // Variant: uncurried, lifted
 pub fn sat(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, q: Rc<Array<u64>>, ql: u64, v: u64, _H: ()) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64) {
-  let v16 = ltb(v, n);
-  match bdec(v16) {
+  let tmp = ltb(v, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v31 = add(mul(s, n), v);
-      let v32 = &tbl;
-      let c = rocq_array::get::<u64>(&v32, v31);
+      let c = rocq_array::get::<u64>(&tbl, add(mul(s, n), v));
       let tbl1 = rocq_array::set::<u64>(tbl, add(mul(s, n), v), 0u64);
-      let v68 = add(mul(v, n), s);
-      let v81 = add(mul(v, n), s);
-      let v82 = &tbl1;
-      let v86 = rocq_array::get::<u64>(&v82, v81);
-      let tbl2 = rocq_array::set::<u64>(tbl1, v68, add(v86, c));
+      let tmp_1 = add(mul(v, n), s);
+      let tmp_2 = rocq_array::get::<u64>(&tbl1, add(mul(v, n), s));
+      let tbl2 = rocq_array::set::<u64>(tbl1, tmp_1, add(tmp_2, c));
       let ex1 = rocq_array::set::<u64>(ex, v, c);
-      let v129 = andb(ltb(0u64, c), negb(eqb(v, t)));
-      let b = andb(v129, negb(eqb(v, s)));
-      let q1 = match &b {
-        true => {
-          rocq_array::set::<u64>(q, ql, v)
-        },
-        false => {
-          q
-        },
+      let tmp_3 = andb(ltb(0u64, c), negb(eqb(v, t)));
+      let b = andb(tmp_3, negb(eqb(v, s)));
+      let q1 = if b {
+        rocq_array::set::<u64>(q, ql, v)
+      } else {
+        q
       };
-      let ql1 = match &b {
-        true => {
-          add(ql, 1u64)
-        },
-        false => {
-          ql
-        },
+      let ql1 = if b {
+        add(ql, 1u64)
+      } else {
+        ql
       };
       sat(n, s, t, tbl2, ex1, q1, ql1, add(v, 1u64), ())
     },
@@ -412,19 +361,15 @@ pub fn has_val_1(d: Rc<Array<u64>>, n: u64, L: u64, j: u64) -> bool {
 // Rocq: Mazemovement.mazemovement_implem.has_val (local: has_val)
 // Variant: uncurried, lifted
 pub fn has_val(d: Rc<Array<u64>>, n: u64, L: u64, j: u64, _H: ()) -> bool {
-  let v12 = ltb(j, n);
-  match bdec(v12) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &d;
-      let v21 = rocq_array::get::<u64>(&v17, j);
-      match eqb(v21, L) {
-        true => {
-          std::mem::drop(d);
-          true
-        },
-        false => {
-          has_val(d, n, L, add(j, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&d, j);
+      if eqb(tmp_1, L) {
+        std::mem::drop(d);
+        true
+      } else {
+        has_val(d, n, L, add(j, 1u64), ())
       }
     },
     sumbool::right => {
@@ -443,22 +388,18 @@ pub fn amap_1(F: Rc<dyn Fn(u64, u64) -> u64>, a: Rc<Array<u64>>, i: u64, m: u64)
 // Rocq: Mazemovement.mazemovement_implem.amap (local: amap)
 // Variant: uncurried, lifted
 pub fn amap(F: Rc<dyn Fn(u64, u64) -> u64>, a: Rc<Array<u64>>, i: u64, m: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, m);
-  match bdec(v12) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &a;
-      let o = rocq_array::get::<u64>(&v16, i);
-      let v20: &Rc<dyn Fn(u64, u64) -> u64> = &F;
-      let w = v20(i, o);
-      let v32 = match eqb(w, o) {
-        true => {
-          a
-        },
-        false => {
-          rocq_array::set::<u64>(a, i, w)
-        },
+      let o = rocq_array::get::<u64>(&a, i);
+      let F_ref: &Rc<dyn Fn(u64, u64) -> u64> = &F;
+      let w = F_ref(i, o);
+      let tmp_1 = if eqb(w, o) {
+        a
+      } else {
+        rocq_array::set::<u64>(a, i, w)
       };
-      amap(F, v32, add(i, 1u64), m, ())
+      amap(F, tmp_1, add(i, 1u64), m, ())
     },
     sumbool::right => {
       std::mem::drop(F);
@@ -475,17 +416,12 @@ pub fn relaxF(tbl: &Rc<Array<u64>>, n: u64, b: u64, L1: u64, a: u64, o: u64) -> 
   let L1_1 = L1;
   let a_1 = a;
   let o_1 = o;
-  let v26 = add(mul(a_1, n_1), b_1);
-  let v27 = tbl;
-  let v35 = ltb(0u64, rocq_array::get::<u64>(&v27, v26));
-  let v41 = ltb(L1_1, o_1);
-  match andb(v35, v41) {
-    true => {
-      L1_1
-    },
-    false => {
-      o_1
-    },
+  let tmp = ltb(0u64, rocq_array::get::<u64>(tbl, add(mul(a_1, n_1), b_1)));
+  let tmp_1 = ltb(L1_1, o_1);
+  if andb(tmp, tmp_1) {
+    L1_1
+  } else {
+    o_1
   }
 }
 
@@ -498,34 +434,29 @@ pub fn lscan_1(tbl: Rc<Array<u64>>, n: u64, L: u64, d: Rc<Array<u64>>, j: u64) -
 // Rocq: Mazemovement.mazemovement_implem.lscan (local: lscan)
 // Variant: uncurried, lifted
 pub fn lscan(tbl: Rc<Array<u64>>, n: u64, L: u64, d: Rc<Array<u64>>, j: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(j, n);
-  match bdec(v13) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &d;
-      let v22 = rocq_array::get::<u64>(&v18, j);
-      let v27 = match eqb(v22, L) {
-        true => {
-          let v36 = add(L, 1u64);
-          let v39 = Rc::clone(&tbl);
-          let v46 = {
-            let __anf_capture_49 = n;
-            let __anf_capture_51 = j;
-            move |v55: u64, v56: u64| -> u64 {
-              let tbl = &v39;
-              let v58 = Clone::clone(&__anf_capture_49);
-              let v60 = Clone::clone(&__anf_capture_51);
-              let v62 = Clone::clone(&v36);
-              relaxF(tbl, v58, v60, v62, v55, v56)
-            }
-          };
-          let v72: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v46);
-          amap_1(v72, d, 0u64, n)
-        },
-        false => {
-          d
-        },
+      let tmp_1 = rocq_array::get::<u64>(&d, j);
+      let tmp_2 = if eqb(tmp_1, L) {
+        let tmp_3 = add(L, 1u64);
+        let tbl_clone = Rc::clone(&tbl);
+        let callback: Rc<dyn Fn(u64, u64) -> u64> = Rc::new({
+          let __anf_capture_49 = n;
+          let __anf_capture_51 = j;
+          move |v55: u64, v56: u64| -> u64 {
+            let tbl = &tbl_clone;
+            let tmp_4 = Clone::clone(&__anf_capture_49);
+            let tmp_5 = Clone::clone(&__anf_capture_51);
+            let tmp_6 = Clone::clone(&tmp_3);
+            relaxF(tbl, tmp_4, tmp_5, tmp_6, v55, v56)
+          }
+        });
+        amap_1(callback, d, 0u64, n)
+      } else {
+        d
       };
-      lscan(tbl, n, L, v27, add(j, 1u64), ())
+      lscan(tbl, n, L, tmp_2, add(j, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(tbl);
@@ -543,21 +474,18 @@ pub fn layers_1(tbl: Rc<Array<u64>>, n: u64, L: u64, d: Rc<Array<u64>>) -> Rc<Ar
 // Rocq: Mazemovement.mazemovement_implem.layers (local: layers)
 // Variant: uncurried, lifted
 pub fn layers(tbl: Rc<Array<u64>>, n: u64, L: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(L, n);
-  match bdec(v12) {
+  let tmp = ltb(L, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = Rc::clone(&d);
-      match has_val_1(v21, n, L, 0u64) {
-        true => {
-          let v37 = add(L, 1u64);
-          let v43 = Rc::clone(&tbl);
-          let v52 = lscan_1(v43, n, L, d, 0u64);
-          layers(tbl, n, v37, v52, ())
-        },
-        false => {
-          std::mem::drop(tbl);
-          d
-        },
+      let d_clone = Rc::clone(&d);
+      if has_val_1(d_clone, n, L, 0u64) {
+        let tmp_1 = add(L, 1u64);
+        let tbl_clone = Rc::clone(&tbl);
+        let tmp_2 = lscan_1(tbl_clone, n, L, d, 0u64);
+        layers(tbl, n, tmp_1, tmp_2, ())
+      } else {
+        std::mem::drop(tbl);
+        d
       }
     },
     sumbool::right => {
@@ -570,9 +498,9 @@ pub fn layers(tbl: Rc<Array<u64>>, n: u64, L: u64, d: Rc<Array<u64>>, _H: ()) ->
 // Rocq: Mazemovement.mazemovement_implem.bfs
 // Variant: uncurried
 pub fn bfs(tbl: Rc<Array<u64>>, n: u64, t: u64) -> Rc<Array<u64>> {
-  let v10 = rocq_array::make::<u64>(n, n);
-  let v19 = rocq_array::set::<u64>(v10, t, 0u64);
-  layers_1(tbl, n, 0u64, v19)
+  let tmp = rocq_array::make::<u64>(n, n);
+  let tmp_1 = rocq_array::set::<u64>(tmp, t, 0u64);
+  layers_1(tbl, n, 0u64, tmp_1)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.maxF
@@ -580,16 +508,11 @@ pub fn bfs(tbl: Rc<Array<u64>>, n: u64, t: u64) -> Rc<Array<u64>> {
 pub fn maxF(d: &Rc<Array<u64>>, y: u64, o: u64) -> u64 {
   let y_1 = y;
   let o_1 = o;
-  let v6 = d;
-  let v9 = rocq_array::get::<u64>(&v6, y_1);
-  match ltb(o_1, v9) {
-    true => {
-      let v16 = d;
-      rocq_array::get::<u64>(&v16, y_1)
-    },
-    false => {
-      o_1
-    },
+  let tmp = rocq_array::get::<u64>(d, y_1);
+  if ltb(o_1, tmp) {
+    rocq_array::get::<u64>(d, y_1)
+  } else {
+    o_1
   }
 }
 
@@ -597,27 +520,26 @@ pub fn maxF(d: &Rc<Array<u64>>, y: u64, o: u64) -> u64 {
 // Variant: uncurried
 pub fn glob(tbl: Rc<Array<u64>>, n: u64, t: u64, h: Rc<Array<u64>>) -> Rc<Array<u64>> {
   let d = bfs(tbl, n, t);
-  let v15 = {
+  let callback: Rc<dyn Fn(u64, u64) -> u64> = Rc::new({
     move |v18: u64, v19: u64| -> u64 {
       maxF(&d, v18, v19)
     }
-  };
-  let v29: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v15);
-  amap_1(v29, h, 0u64, n)
+  });
+  amap_1(callback, h, 0u64, n)
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.cntl
@@ -629,15 +551,13 @@ pub fn cntl_1(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Arra
 // Rocq: Mazemovement.mazemovement_implem.cntl (local: cntl)
 // Variant: uncurried, lifted
 pub fn cntl(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &h;
-      let k = rocq_array::get::<u64>(&v16, i);
-      let v21 = &cnt;
-      let v24 = rocq_array::get::<u64>(&v21, k);
-      let v38 = rocq_array::set::<u64>(cnt, k, add(v24, 1u64));
-      cntl(h, v38, n, add(i, 1u64), ())
+      let k = rocq_array::get::<u64>(&h, i);
+      let tmp_1 = rocq_array::get::<u64>(&cnt, k);
+      let tmp_2 = rocq_array::set::<u64>(cnt, k, add(tmp_1, 1u64));
+      cntl(h, tmp_2, n, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(h);
@@ -649,55 +569,51 @@ pub fn cntl(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> R
 // Rocq: Mazemovement.mazemovement_implem.count
 // Variant: uncurried
 pub fn count(h: Rc<Array<u64>>, n: u64) -> Rc<Array<u64>> {
-  let v17 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  cntl_1(h, v17, n, 0u64)
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  cntl_1(h, tmp, n, 0u64)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.init_state
 pub fn init_state(x: Rc<Array<u64>>) -> Rc<st> {
-  let v4 = Rc::clone(&x);
-  let n = nn(v4);
-  let v9 = Rc::clone(&x);
-  let s = ss(v9);
-  let v14 = Rc::clone(&x);
-  let t = tt(v14);
-  let v29 = rocq_array::make::<u64>(mul(n, n), 0u64);
-  let tbl0 = fill_tab_1(x, n, v29, 0u64);
-  let v48 = rocq_array::make::<u64>(n, 0u64);
-  let v55 = rocq_array::make::<u64>(n, 0u64);
-  let p = sat_1(n, s, t, tbl0, v48, v55, 0u64, 0u64);
-  let v84 = rocq_array::make::<u64>(n, 0u64);
-  let h0 = rocq_array::set::<u64>(v84, s, n);
-  let v96 = Clone::clone(&p);
-  let v105 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(v96)));
-  let h1 = glob(v105, n, t, h0);
-  let v118 = Clone::clone(&p);
-  let v126 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(v118)));
-  let v131 = Clone::clone(&p);
-  let v139 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(v131)));
-  let v146 = rocq_array::make::<u64>(n, 0u64);
-  let v150 = Rc::clone(&h1);
-  let v153 = count(v150, n);
-  let v157 = Clone::clone(&p);
-  let v162 = snd::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(v157));
-  Rc::new(st { s_tbl: v126, s_ex: v139, s_h: h1, s_cur: v146, s_cnt: v153, s_q: v162, s_qh: 0u64, s_ql: snd::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p), s_cu: n, s_rl: 0u64 })
+  let x_clone = Rc::clone(&x);
+  let n = nn(x_clone);
+  let x_clone_1 = Rc::clone(&x);
+  let s = ss(x_clone_1);
+  let x_clone_2 = Rc::clone(&x);
+  let t = tt(x_clone_2);
+  let tmp = rocq_array::make::<u64>(mul(n, n), 0u64);
+  let tbl0 = fill_tab_1(x, n, tmp, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let p = sat_1(n, s, t, tbl0, tmp_1, tmp_2, 0u64, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let h0 = rocq_array::set::<u64>(tmp_3, s, n);
+  let p_clone = Clone::clone(&p);
+  let tmp_4 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p_clone)));
+  let h1 = glob(tmp_4, n, t, h0);
+  let p_clone_1 = Clone::clone(&p);
+  let tmp_5 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p_clone_1)));
+  let p_clone_2 = Clone::clone(&p);
+  let tmp_6 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p_clone_2)));
+  let tmp_7 = rocq_array::make::<u64>(n, 0u64);
+  let h1_clone = Rc::clone(&h1);
+  let tmp_8 = count(h1_clone, n);
+  let p_clone_3 = Clone::clone(&p);
+  let tmp_9 = snd::<(Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>>(fst::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p_clone_3));
+  Rc::new(st { s_tbl: tmp_5, s_ex: tmp_6, s_h: h1, s_cur: tmp_7, s_cnt: tmp_8, s_q: tmp_9, s_qh: 0u64, s_ql: snd::<((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64>(p), s_cu: n, s_rl: 0u64 })
 }
 
 // Rocq: Mazemovement.mazemovement_implem.adm
 // Variant: uncurried
 pub fn adm(tbl: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, u: u64, v: u64) -> bool {
-  let v8 = 0u64;
-  let v20 = add(mul(u, n), v);
-  let v21 = &tbl;
-  let v24 = rocq_array::get::<u64>(&v21, v20);
+  let tmp = 0u64;
+  let tmp_1 = rocq_array::get::<u64>(&tbl, add(mul(u, n), v));
   std::mem::drop(tbl);
-  let v29 = ltb(v8, v24);
-  let v31 = &h;
-  let v34 = rocq_array::get::<u64>(&v31, u);
-  let v36 = &h;
-  let v39 = rocq_array::get::<u64>(&v36, v);
+  let tmp_2 = ltb(tmp, tmp_1);
+  let tmp_3 = rocq_array::get::<u64>(&h, u);
+  let tmp_4 = rocq_array::get::<u64>(&h, v);
   std::mem::drop(h);
-  andb(v29, eqb(v34, add(v39, 1u64)))
+  andb(tmp_2, eqb(tmp_3, add(tmp_4, 1u64)))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -710,13 +626,10 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Variant: uncurried
 pub fn enq_pos(qh: u64, ql: u64, n: u64) -> u64 {
   let p = add(qh, ql);
-  match ltb(p, n) {
-    true => {
-      p
-    },
-    false => {
-      sub(p, n)
-    },
+  if ltb(p, n) {
+    p
+  } else {
+    sub(p, n)
   }
 }
 
@@ -729,28 +642,21 @@ pub fn rmin_1(tbl: Rc<Array<u64>>, n: u64, u: u64, h: Rc<Array<u64>>, b: u64, ac
 // Rocq: Mazemovement.mazemovement_implem.rmin (local: rmin)
 // Variant: uncurried, lifted
 pub fn rmin(tbl: Rc<Array<u64>>, n: u64, u: u64, h: Rc<Array<u64>>, b: u64, acc: u64, _H: ()) -> u64 {
-  let v14 = ltb(b, n);
-  match bdec(v14) {
+  let tmp = ltb(b, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(b, 1u64);
-      let v41 = add(mul(u, n), b);
-      let v42 = &tbl;
-      let v45 = rocq_array::get::<u64>(&v42, v41);
-      let v50 = ltb(0u64, v45);
-      let v53 = &h;
-      let v56 = rocq_array::get::<u64>(&v53, b);
-      let v68 = ltb(add(v56, 1u64), acc);
-      let v74 = match andb(v50, v68) {
-        true => {
-          let v76 = &h;
-          let v79 = rocq_array::get::<u64>(&v76, b);
-          add(v79, 1u64)
-        },
-        false => {
-          acc
-        },
+      let tmp_1 = add(b, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&tbl, add(mul(u, n), b));
+      let tmp_3 = ltb(0u64, tmp_2);
+      let tmp_4 = rocq_array::get::<u64>(&h, b);
+      let tmp_5 = ltb(add(tmp_4, 1u64), acc);
+      let tmp_6 = if andb(tmp_3, tmp_5) {
+        let tmp_7 = rocq_array::get::<u64>(&h, b);
+        add(tmp_7, 1u64)
+      } else {
+        acc
       };
-      rmin(tbl, n, u, h, v25, v74, ())
+      rmin(tbl, n, u, h, tmp_1, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(tbl);
@@ -769,19 +675,15 @@ pub fn no_height_1(h: Rc<Array<u64>>, n: u64, k: u64, i: u64) -> bool {
 // Rocq: Mazemovement.mazemovement_implem.no_height (local: no_height)
 // Variant: uncurried, lifted
 pub fn no_height(h: Rc<Array<u64>>, n: u64, k: u64, i: u64, _H: ()) -> bool {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &h;
-      let v21 = rocq_array::get::<u64>(&v17, i);
-      match eqb(v21, k) {
-        true => {
-          std::mem::drop(h);
-          false
-        },
-        false => {
-          no_height(h, n, k, add(i, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&h, i);
+      if eqb(tmp_1, k) {
+        std::mem::drop(h);
+        false
+      } else {
+        no_height(h, n, k, add(i, 1u64), ())
       }
     },
     sumbool::right => {
@@ -800,24 +702,19 @@ pub fn cnt_lift_1(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, k: u64, i: u64
 // Rocq: Mazemovement.mazemovement_implem.cnt_lift (local: cnt_lift)
 // Variant: uncurried, lifted
 pub fn cnt_lift(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, k: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &h;
-      let o = rocq_array::get::<u64>(&v17, i);
-      let v27 = ltb(k, o);
-      let v33 = ltb(o, n);
-      let v39 = match andb(v27, v33) {
-        true => {
-          let v41 = &cnt;
-          let v44 = rocq_array::get::<u64>(&v41, o);
-          rocq_array::set::<u64>(cnt, o, sub(v44, 1u64))
-        },
-        false => {
-          cnt
-        },
+      let o = rocq_array::get::<u64>(&h, i);
+      let tmp_1 = ltb(k, o);
+      let tmp_2 = ltb(o, n);
+      let tmp_3 = if andb(tmp_1, tmp_2) {
+        let tmp_4 = rocq_array::get::<u64>(&cnt, o);
+        rocq_array::set::<u64>(cnt, o, sub(tmp_4, 1u64))
+      } else {
+        cnt
       };
-      cnt_lift(h, v39, n, k, add(i, 1u64), ())
+      cnt_lift(h, tmp_3, n, k, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(h);
@@ -829,47 +726,41 @@ pub fn cnt_lift(h: Rc<Array<u64>>, cnt: Rc<Array<u64>>, n: u64, k: u64, i: u64, 
 // Rocq: Mazemovement.mazemovement_implem.liftF
 // Variant: uncurried
 pub fn liftF(n: u64, k: u64, _y: u64, o: u64) -> u64 {
-  let v10 = ltb(k, o);
-  let v16 = ltb(o, n);
-  match andb(v10, v16) {
-    true => {
-      n
-    },
-    false => {
-      o
-    },
+  let tmp = ltb(k, o);
+  let tmp_1 = ltb(o, n);
+  if andb(tmp, tmp_1) {
+    n
+  } else {
+    o
   }
 }
 
 // Rocq: Mazemovement.mazemovement_implem.lift
 // Variant: uncurried
 pub fn lift(h: Rc<Array<u64>>, n: u64, k: u64) -> Rc<Array<u64>> {
-  let v8 = {
+  let callback: Rc<dyn Fn(u64, u64) -> u64> = Rc::new({
     let __anf_capture_9 = n;
     move |v13: u64, v14: u64| -> u64 {
-      let v17 = Clone::clone(&__anf_capture_9);
-      let v19 = Clone::clone(&k);
-      liftF(v17, v19, v13, v14)
+      let tmp = Clone::clone(&__anf_capture_9);
+      let k_clone = Clone::clone(&k);
+      liftF(tmp, k_clone, v13, v14)
     }
-  };
-  let v27: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v8);
-  amap_1(v27, h, 0u64, n)
+  });
+  amap_1(callback, h, 0u64, n)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.active
 // Variant: uncurried
 pub fn active(ex: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, s: u64, t: u64, v: u64) -> bool {
-  let v11 = 0u64;
-  let v12 = &ex;
-  let v15 = rocq_array::get::<u64>(&v12, v);
+  let tmp = 0u64;
+  let tmp_1 = rocq_array::get::<u64>(&ex, v);
   std::mem::drop(ex);
-  let v20 = ltb(v11, v15);
-  let v22 = &h;
-  let v25 = rocq_array::get::<u64>(&v22, v);
+  let tmp_2 = ltb(tmp, tmp_1);
+  let tmp_3 = rocq_array::get::<u64>(&h, v);
   std::mem::drop(h);
-  let v35 = andb(v20, ltb(v25, n));
-  let v50 = andb(v35, negb(eqb(v, s)));
-  andb(v50, negb(eqb(v, t)))
+  let tmp_4 = andb(tmp_2, ltb(tmp_3, n));
+  let tmp_5 = andb(tmp_4, negb(eqb(v, s)));
+  andb(tmp_5, negb(eqb(v, t)))
 }
 
 // Rocq: Mazemovement.mazemovement_implem.find_act
@@ -881,20 +772,17 @@ pub fn find_act_1(ex: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, s: u64, t: u64,
 // Rocq: Mazemovement.mazemovement_implem.find_act (local: find_act)
 // Variant: uncurried, lifted
 pub fn find_act(ex: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, s: u64, t: u64, i: u64, _H: ()) -> u64 {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = Rc::clone(&ex);
-      let v24 = Rc::clone(&h);
-      match active(v21, v24, n, s, t, i) {
-        true => {
-          std::mem::drop(ex);
-          std::mem::drop(h);
-          i
-        },
-        false => {
-          find_act(ex, h, n, s, t, add(i, 1u64), ())
-        },
+      let ex_clone = Rc::clone(&ex);
+      let h_clone = Rc::clone(&h);
+      if active(ex_clone, h_clone, n, s, t, i) {
+        std::mem::drop(ex);
+        std::mem::drop(h);
+        i
+      } else {
+        find_act(ex, h, n, s, t, add(i, 1u64), ())
       }
     },
     sumbool::right => {
@@ -914,202 +802,151 @@ pub fn mloop_1(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, 
 // Rocq: Mazemovement.mazemovement_implem.mloop (local: mloop)
 // Variant: uncurried, lifted
 pub fn mloop(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, h: Rc<Array<u64>>, cur: Rc<Array<u64>>, cnt: Rc<Array<u64>>, q: Rc<Array<u64>>, qh: u64, ql: u64, cu: u64, rl: u64, _H: ()) -> u64 {
-  let v21 = ltb(cu, n);
-  match bdec(v21) {
+  let tmp = ltb(cu, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = &cur;
-      let v = rocq_array::get::<u64>(&v25, cu);
-      let v36 = ltb(v, n);
-      match bdec(v36) {
+      let v = rocq_array::get::<u64>(&cur, cu);
+      let tmp_1 = ltb(v, n);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v44 = Rc::clone(&tbl);
-          let v47 = Rc::clone(&h);
-          let v55 = adm(v44, v47, n, cu, v);
-          match bdec(v55) {
+          let tbl_clone = Rc::clone(&tbl);
+          let h_clone = Rc::clone(&h);
+          let tmp_2 = adm(tbl_clone, h_clone, n, cu, v);
+          match bdec(tmp_2) {
             sumbool::left => {
-              let v70 = add(mul(cu, n), v);
-              let v71 = &tbl;
-              let r = rocq_array::get::<u64>(&v71, v70);
-              let v75 = &ex;
-              let e = rocq_array::get::<u64>(&v75, cu);
-              let d = match ltb(e, r) {
-                true => {
-                  e
-                },
-                false => {
-                  r
-                },
+              let r = rocq_array::get::<u64>(&tbl, add(mul(cu, n), v));
+              let e = rocq_array::get::<u64>(&ex, cu);
+              let d = if ltb(e, r) {
+                e
+              } else {
+                r
               };
               let tbl1 = rocq_array::set::<u64>(tbl, add(mul(cu, n), v), sub(r, d));
-              let v127 = add(mul(v, n), cu);
-              let v140 = add(mul(v, n), cu);
-              let v141 = &tbl1;
-              let v145 = rocq_array::get::<u64>(&v141, v140);
-              let tbl2 = rocq_array::set::<u64>(tbl1, v127, add(v145, d));
-              let v157 = &ex;
-              let ev = rocq_array::get::<u64>(&v157, v);
+              let tmp_3 = add(mul(v, n), cu);
+              let tmp_4 = rocq_array::get::<u64>(&tbl1, add(mul(v, n), cu));
+              let tbl2 = rocq_array::set::<u64>(tbl1, tmp_3, add(tmp_4, d));
+              let ev = rocq_array::get::<u64>(&ex, v);
               let ex1 = rocq_array::set::<u64>(ex, cu, sub(e, d));
               let ex2 = rocq_array::set::<u64>(ex1, v, add(ev, d));
-              let v212 = andb(eqb(ev, 0u64), negb(eqb(v, t)));
-              let v227 = andb(v212, negb(eqb(v, s)));
-              let b = andb(v227, ltb(ql, n));
-              let q1 = match &b {
-                true => {
-                  rocq_array::set::<u64>(q, enq_pos(qh, ql, n), v)
-                },
-                false => {
-                  q
-                },
+              let tmp_5 = andb(eqb(ev, 0u64), negb(eqb(v, t)));
+              let tmp_6 = andb(tmp_5, negb(eqb(v, s)));
+              let b = andb(tmp_6, ltb(ql, n));
+              let q1 = if b {
+                rocq_array::set::<u64>(q, enq_pos(qh, ql, n), v)
+              } else {
+                q
               };
-              let ql1 = match &b {
-                true => {
-                  add(ql, 1u64)
-                },
-                false => {
-                  ql
-                },
+              let ql1 = if b {
+                add(ql, 1u64)
+              } else {
+                ql
               };
-              let v282 = sub(e, d);
-              let v284 = 0u64;
-              let cu1 = match eqb(v282, v284) {
-                true => {
-                  n
-                },
-                false => {
-                  cu
-                },
+              let tmp_7 = sub(e, d);
+              let tmp_8 = 0u64;
+              let cu1 = if eqb(tmp_7, tmp_8) {
+                n
+              } else {
+                cu
               };
               mloop(n, s, t, tbl2, ex2, h, cur, cnt, q1, qh, ql1, cu1, rl, ())
             },
             sumbool::right => {
-              let v344 = rocq_array::set::<u64>(cur, cu, add(v, 1u64));
-              mloop(n, s, t, tbl, ex, h, v344, cnt, q, qh, ql, cu, rl, ())
+              let tmp_9 = rocq_array::set::<u64>(cur, cu, add(v, 1u64));
+              mloop(n, s, t, tbl, ex, h, tmp_9, cnt, q, qh, ql, cu, rl, ())
             },
           }
         },
         sumbool::right => {
-          let v382 = &h;
-          let oh = rocq_array::get::<u64>(&v382, cu);
-          let v391 = Rc::clone(&tbl);
-          let v398 = Rc::clone(&h);
-          let nh = rmin_1(v391, n, cu, v398, 0u64, n);
+          let oh = rocq_array::get::<u64>(&h, cu);
+          let tbl_clone_1 = Rc::clone(&tbl);
+          let h_clone_1 = Rc::clone(&h);
+          let nh = rmin_1(tbl_clone_1, n, cu, h_clone_1, 0u64, n);
           let h1 = rocq_array::set::<u64>(h, cu, nh);
           let cur1 = rocq_array::set::<u64>(cur, cu, 0u64);
-          let v421 = &cnt;
-          let v424 = rocq_array::get::<u64>(&v421, oh);
-          let co = sub(v424, 1u64);
+          let tmp_10 = rocq_array::get::<u64>(&cnt, oh);
+          let co = sub(tmp_10, 1u64);
           let cnt1 = rocq_array::set::<u64>(cnt, oh, co);
-          let v440 = &cnt1;
-          let v443 = rocq_array::get::<u64>(&v440, nh);
-          let cnt2 = rocq_array::set::<u64>(cnt1, nh, add(v443, 1u64));
-          let v481 = andb(eqb(co, 0u64), ltb(0u64, oh));
-          let v492 = andb(v481, ltb(oh, n));
-          let v498 = Rc::clone(&h1);
-          let g = andb(v492, no_height_1(v498, n, oh, 0u64));
-          let cnt3 = match &g {
-            true => {
-              let v518 = Rc::clone(&h1);
-              cnt_lift_1(v518, cnt2, n, oh, 0u64)
-            },
-            false => {
-              cnt2
-            },
+          let tmp_11 = rocq_array::get::<u64>(&cnt1, nh);
+          let cnt2 = rocq_array::set::<u64>(cnt1, nh, add(tmp_11, 1u64));
+          let tmp_12 = andb(eqb(co, 0u64), ltb(0u64, oh));
+          let tmp_13 = andb(tmp_12, ltb(oh, n));
+          let h1_clone = Rc::clone(&h1);
+          let g = andb(tmp_13, no_height_1(h1_clone, n, oh, 0u64));
+          let cnt3 = if g {
+            let h1_clone_1 = Rc::clone(&h1);
+            cnt_lift_1(h1_clone_1, cnt2, n, oh, 0u64)
+          } else {
+            cnt2
           };
-          let h2 = match &g {
-            true => {
-              lift(h1, n, oh)
-            },
-            false => {
-              h1
-            },
+          let h2 = if g {
+            lift(h1, n, oh)
+          } else {
+            h1
           };
           let rl1 = add(rl, 1u64);
           let gl = leb(n, rl1);
-          let h3 = match &gl {
-            true => {
-              let v567 = Rc::clone(&tbl);
-              glob(v567, n, t, h2)
-            },
-            false => {
-              h2
-            },
+          let h3 = if gl {
+            let tbl_clone_2 = Rc::clone(&tbl);
+            glob(tbl_clone_2, n, t, h2)
+          } else {
+            h2
           };
-          let cur2 = match &gl {
-            true => {
-              std::mem::drop(cur1);
-              rocq_array::make::<u64>(n, 0u64)
-            },
-            false => {
-              cur1
-            },
+          let cur2 = if gl {
+            std::mem::drop(cur1);
+            rocq_array::make::<u64>(n, 0u64)
+          } else {
+            cur1
           };
-          let cnt4 = match &gl {
-            true => {
-              std::mem::drop(cnt3);
-              let v599 = Rc::clone(&h3);
-              count(v599, n)
-            },
-            false => {
-              cnt3
-            },
+          let cnt4 = if gl {
+            std::mem::drop(cnt3);
+            let h3_clone = Rc::clone(&h3);
+            count(h3_clone, n)
+          } else {
+            cnt3
           };
-          let rl2 = match &gl {
-            true => {
-              0u64
-            },
-            false => {
-              rl1
-            },
+          let rl2 = if gl {
+            0u64
+          } else {
+            rl1
           };
-          let v618 = &h3;
-          let v622 = rocq_array::get::<u64>(&v618, cu);
-          let cu1 = match ltb(v622, n) {
-            true => {
-              cu
-            },
-            false => {
-              n
-            },
+          let tmp_14 = rocq_array::get::<u64>(&h3, cu);
+          let cu1 = if ltb(tmp_14, n) {
+            cu
+          } else {
+            n
           };
           mloop(n, s, t, tbl, ex, h3, cur2, cnt4, q, qh, ql, cu1, rl2, ())
         },
       }
     },
     sumbool::right => {
-      let v679 = ltb(0u64, ql);
-      match bdec(v679) {
+      let tmp_15 = ltb(0u64, ql);
+      match bdec(tmp_15) {
         sumbool::left => {
-          let v683 = &q;
-          let v = rocq_array::get::<u64>(&v683, qh);
-          let v696 = add(qh, 1u64);
-          let qh1 = match eqb(v696, n) {
-            true => {
-              0u64
-            },
-            false => {
-              add(qh, 1u64)
-            },
+          let v = rocq_array::get::<u64>(&q, qh);
+          let tmp_16 = add(qh, 1u64);
+          let qh1 = if eqb(tmp_16, n) {
+            0u64
+          } else {
+            add(qh, 1u64)
           };
-          let v723 = ltb(v, n);
-          let v727 = Rc::clone(&ex);
-          let v730 = Rc::clone(&h);
-          let v739 = active(v727, v730, n, s, t, v);
-          let cu1 = match andb(v723, v739) {
-            true => {
-              v
-            },
-            false => {
-              n
-            },
+          let tmp_17 = ltb(v, n);
+          let ex_clone = Rc::clone(&ex);
+          let h_clone_2 = Rc::clone(&h);
+          let tmp_18 = active(ex_clone, h_clone_2, n, s, t, v);
+          let cu1 = if andb(tmp_17, tmp_18) {
+            v
+          } else {
+            n
           };
           mloop(n, s, t, tbl, ex, h, cur, cnt, q, qh1, sub(ql, 1u64), cu1, rl, ())
         },
         sumbool::right => {
-          let v798 = Rc::clone(&ex);
-          let v801 = Rc::clone(&h);
-          let v = find_act_1(v798, v801, n, s, t, 0u64);
-          let v818 = ltb(v, n);
-          match bdec(v818) {
+          let ex_clone_1 = Rc::clone(&ex);
+          let h_clone_3 = Rc::clone(&h);
+          let v = find_act_1(ex_clone_1, h_clone_3, n, s, t, 0u64);
+          let tmp_19 = ltb(v, n);
+          match bdec(tmp_19) {
             sumbool::left => {
               mloop(n, s, t, tbl, ex, h, cur, cnt, q, qh, ql, v, rl, ())
             },
@@ -1119,10 +956,9 @@ pub fn mloop(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, h:
               std::mem::drop(cur);
               std::mem::drop(cnt);
               std::mem::drop(q);
-              let v856 = &ex;
-              let v859 = rocq_array::get::<u64>(&v856, t);
+              let tmp_20 = rocq_array::get::<u64>(&ex, t);
               std::mem::drop(ex);
-              v859
+              tmp_20
             },
           }
         },
@@ -1133,103 +969,103 @@ pub fn mloop(n: u64, s: u64, t: u64, tbl: Rc<Array<u64>>, ex: Rc<Array<u64>>, h:
 
 // Rocq: Mazemovement.mazemovement_implem.s_tbl
 pub fn s_tbl(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_tbl));
+  let s_s_tbl_clone = Rc::clone(&s.s_tbl);
   std::mem::drop(s);
-  v3
+  s_s_tbl_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_ex
 pub fn s_ex(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_ex));
+  let s_s_ex_clone = Rc::clone(&s.s_ex);
   std::mem::drop(s);
-  v3
+  s_s_ex_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_h
 pub fn s_h(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_h));
+  let s_s_h_clone = Rc::clone(&s.s_h);
   std::mem::drop(s);
-  v3
+  s_s_h_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_cur
 pub fn s_cur(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_cur));
+  let s_s_cur_clone = Rc::clone(&s.s_cur);
   std::mem::drop(s);
-  v3
+  s_s_cur_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_cnt
 pub fn s_cnt(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_cnt));
+  let s_s_cnt_clone = Rc::clone(&s.s_cnt);
   std::mem::drop(s);
-  v3
+  s_s_cnt_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_q
 pub fn s_q(s: Rc<st>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).s_q));
+  let s_s_q_clone = Rc::clone(&s.s_q);
   std::mem::drop(s);
-  v3
+  s_s_q_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_qh
 // Variant: borrowed
 pub fn s_qh(s: &Rc<st>) -> u64 {
-  let v1 = s;
-  Clone::clone((&(&**v1).s_qh))
+  let tmp = s;
+  Clone::clone(&tmp.s_qh)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_ql
 // Variant: borrowed
 pub fn s_ql(s: &Rc<st>) -> u64 {
-  let v1 = s;
-  Clone::clone((&(&**v1).s_ql))
+  let tmp = s;
+  Clone::clone(&tmp.s_ql)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_cu
 // Variant: borrowed
 pub fn s_cu(s: &Rc<st>) -> u64 {
-  let v1 = s;
-  Clone::clone((&(&**v1).s_cu))
+  let tmp = s;
+  Clone::clone(&tmp.s_cu)
 }
 
 // Rocq: Mazemovement.mazemovement_implem.s_rl
 pub fn s_rl(s: Rc<st>) -> u64 {
-  let v3 = Clone::clone((&(&**&s).s_rl));
+  let s_s_rl_clone = Clone::clone(&s.s_rl);
   std::mem::drop(s);
-  v3
+  s_s_rl_clone
 }
 
 // Rocq: Mazemovement.mazemovement_implem.mazemovement_impl
 pub fn mazemovement_impl(x: Rc<Array<u64>>) -> u64 {
-  let v5 = Rc::clone(&x);
-  let v7 = guard(v5);
-  match bdec(v7) {
+  let x_clone = Rc::clone(&x);
+  let tmp = guard(x_clone);
+  match bdec(tmp) {
     sumbool::left => {
-      let v14 = Rc::clone(&x);
-      let S = init_state(v14);
-      let v20 = Rc::clone(&x);
-      let v21 = nn(v20);
-      let v25 = Rc::clone(&x);
-      let v26 = ss(v25);
-      let v30 = tt(x);
-      let v34 = Rc::clone(&S);
-      let v35 = s_tbl(v34);
-      let v39 = Rc::clone(&S);
-      let v40 = s_ex(v39);
-      let v44 = Rc::clone(&S);
-      let v45 = s_h(v44);
-      let v49 = Rc::clone(&S);
-      let v50 = s_cur(v49);
-      let v54 = Rc::clone(&S);
-      let v55 = s_cnt(v54);
-      let v59 = Rc::clone(&S);
-      let v60 = s_q(v59);
-      let v64 = s_qh(&S);
-      let v68 = s_ql(&S);
-      let v72 = s_cu(&S);
-      mloop_1(v21, v26, v30, v35, v40, v45, v50, v55, v60, v64, v68, v72, s_rl(S))
+      let x_clone_1 = Rc::clone(&x);
+      let S = init_state(x_clone_1);
+      let x_clone_2 = Rc::clone(&x);
+      let tmp_1 = nn(x_clone_2);
+      let x_clone_3 = Rc::clone(&x);
+      let tmp_2 = ss(x_clone_3);
+      let tmp_3 = tt(x);
+      let S_clone = Rc::clone(&S);
+      let tmp_4 = s_tbl(S_clone);
+      let S_clone_1 = Rc::clone(&S);
+      let tmp_5 = s_ex(S_clone_1);
+      let S_clone_2 = Rc::clone(&S);
+      let tmp_6 = s_h(S_clone_2);
+      let S_clone_3 = Rc::clone(&S);
+      let tmp_7 = s_cur(S_clone_3);
+      let S_clone_4 = Rc::clone(&S);
+      let tmp_8 = s_cnt(S_clone_4);
+      let S_clone_5 = Rc::clone(&S);
+      let tmp_9 = s_q(S_clone_5);
+      let tmp_10 = s_qh(&S);
+      let tmp_11 = s_ql(&S);
+      let tmp_12 = s_cu(&S);
+      mloop_1(tmp_1, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, tmp_10, tmp_11, tmp_12, s_rl(S))
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -1386,9 +1222,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_1947.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_1947: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = mazemovement(); }

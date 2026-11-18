@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules mazemovement_extracted_marray)
- (theories Mazemovement Mazemovement.spec Stdlib stdpp StdGalilei))
+ (theories Mazemovement Mazemovement.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name mazemovement_extraction)

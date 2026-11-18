@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Point count: $3 \le n \le 5{,}000$.
-    - Integer coordinates in $[0, 40{,}000{,}000]$. *)
+    - Point count: $3 \le n \le 5 \times 10^{3}$.
+    - Integer coordinates: $0 \le x_i, y_i \le 4 \times 10^{7}$. *)
 
 (** ** Examples *)
 
@@ -42,35 +42,40 @@ Output:
                     coincident or collinear corners give area 0, so the
                     answer is 0 when no proper triangle exists), as a
                     finite float within 10^-5 of that area.
+                    It runs in at most c1 * (N + 1) * (N + log2 N + 1) + c2
+                    steps of the cost model on a valid input, N the number
+                    of points (the sort and the hull in N log N, then the
+                    two-pointer sweep over the h hull vertices in h^2 <=
+                    N^2), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Floats Reals.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The points are two parallel lists, one per column of the
-    input lines "x y". The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th coordinate, for k < len l (0 outside, never relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_N (l : list N) (k : N) : N :=
   nth (N.to_nat k) l 0.
 
-(** Three of the N points: three distinct indices; two indices may hold
-    the same point ("the points are not necessarily distinct"). *)
+(** Three distinct valid input indices. The corresponding point coordinates need not
+    be distinct. *)
 Definition is_triple (x_coordinates : list N)
   (i j k : N) : Prop :=
   i < len x_coordinates /\ j < len x_coordinates /\ k < len
     x_coordinates /\
   i <> j /\ j <> k /\ i <> k.
 
-(** The area of the triangle with corners the points i, j, k: half the
-    absolute value of the cross product (P_j - P_i) x (P_k - P_i). *)
+(** The area of the triangle at indices [i], [j], and [k]: half the absolute cross
+    product of its edge vectors. *)
 Definition area (x_coordinates y_coordinates : list N)
   (i j k : N) : R :=
   let x_of index :=
@@ -81,8 +86,8 @@ Definition area (x_coordinates y_coordinates : list N)
               - (x_of k - x_of i) * (y_of j - y_of i))) /
                 2)%R.
 
-(** largest_area is the largest area over all triples of points:
-    attained by one, at least that of every one. *)
+(** [largest_area] is attained by a triple of points and is at least the area
+    of every other triple. *)
 Definition is_largest_area
   (x_coordinates y_coordinates : list N)
     (largest_area : R) : Prop :=
@@ -96,7 +101,7 @@ Definition is_largest_area
 (** [@inside largest_triangle_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list N) : Prop := {
-  (* 3 <= N <= 5 000 *)
+  (* 3 <= N <= 5 * 10^3 *)
   vi_n : 3 <= len x_coordinates <= 5000;
   (* each of the next N lines contains two integers x and
      y *)
@@ -121,6 +126,12 @@ Definition largest_triangle_spec
       /\
     (Rabs (output - largest_area) <= / 100000)%R.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n^2)$ steps, where $n$ is the number of points. *)
+Definition largest_triangle_time_spec (c1 c2 n_x_coordinates steps : nat) : Prop :=
+  (steps <= c1 * ((n_x_coordinates + 1) * (n_x_coordinates + Nat.log2 (n_x_coordinates) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Find the maximum area of a triangle formed by three input points, returning zero if all
@@ -130,6 +141,13 @@ Definition largest_triangle_spec
     - Output [output]: The output approximates the maximum area of a triangle formed by input points, with absolute error at most $10^{-5}$. *)
 Program largest_triangle : array uint -> array uint ->
   float.
+
+(** [@example largest_triangle]
+    - Sample: 1
+    - Input [x_coordinates]: [0; 0; 7; 0; 0; 20; 10]
+    - Input [y_coordinates]: [0; 5; 7; 10; 0; 0; 10]
+    - Output [output]: 100%R
+*)
 
 (** ** Bridge *)
 
@@ -148,6 +166,22 @@ Specification largest_triangle_correct :
         output /\
       largest_triangle_spec x_coordinates y_coordinates
         output.
+
+(** ** Complexity *)
+
+(** [@hide] [largest_triangle_cost] is the cost translation of [largest_triangle] (the judge
+    recomputes it and compares) ... *)
+Complexity largest_triangle_cost for largest_triangle.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (N + 1) * (N + log2 N + 1) + c2 steps of the cost model on a valid input, N the number of points (the sort and the hull in N log N, then the two-pointer sweep over the h hull vertices in h^2 <= N^2), for two constants
+    quantified before the inputs, on every valid input. [@requirement largest_triangle_time_spec] *)
+Specification largest_triangle_time : exists c1 c2 : nat,
+  forall (x_coordinates y_coordinates : list N)
+  (x_coordinates_arr y_coordinates_arr : array uint),
+  valid_input x_coordinates y_coordinates ->
+  repr x_coordinates_arr x_coordinates ->
+  repr y_coordinates_arr y_coordinates ->
+  largest_triangle_time_spec c1 c2 (size x_coordinates_arr) (cost2 largest_triangle_cost x_coordinates_arr y_coordinates_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

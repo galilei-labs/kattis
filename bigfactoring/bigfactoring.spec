@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Integer in $[2, 10^{24}]$. *)
+    - Integer: $2 \le n \le 10^{24}$. *)
 
 (** ** Examples *)
 
@@ -49,12 +49,12 @@ Open Scope Z_scope.
 Instance repr_Z : Repr Z Z :=
   fun bignum value => bignum = value.
 
-(* Math side. *)
-
-(** The product of the elements of factors; 1 for the
-    empty list. *)
-Definition product (factors : list Z) : Z :=
-  fold_right Z.mul 1 factors.
+(** The product of the entries in [factors], with value one for an empty list. *)
+Fixpoint product (factors : list Z) : Z :=
+  match factors with
+  | [] => 1
+  | factor :: rest => factor * product rest
+  end.
 
 (** [@inside bigfactoring_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (number : Z) : Prop := {
@@ -78,6 +78,12 @@ Definition bigfactoring_spec (number : Z)
     - Input [number]: Positive integer to factor into primes.
     - Output [output]: The output is the ascending list of prime factors whose product equals the input, including multiplicities. *)
 Program bigfactoring : Z -> array Z.
+
+(** [@example bigfactoring]
+    - Sample: 1
+    - Input [number]: 166448%Z
+    - Output [output]: [2; 2; 2; 2; 101; 103]%Z
+*)
 
 (** ** Bridge *)
 

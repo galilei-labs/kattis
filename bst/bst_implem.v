@@ -20,6 +20,7 @@ From Bst.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorting.Sorted.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -68,8 +69,11 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
+Arguments gap : simpl never.
 
 Lemma dec_step : forall m i : int,
   (i <? m) = true -> Zwf 0 (gap m (i + 1)) (gap m i).
@@ -84,10 +88,12 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Inductive color : Type := Red | Black.
+Elpi complexity color.
 
 Inductive rbt : Type :=
 | RE : rbt
 | RN : color -> rbt -> int -> rbt -> rbt.
+Elpi complexity rbt.
 
 (* Okasaki's balance, the red-red violation being on the left. *)
 Definition lbal (l : rbt) (k : int) (r : rbt) : rbt :=
@@ -96,6 +102,8 @@ Definition lbal (l : rbt) (k : int) (r : rbt) : rbt :=
   | RN Red a x (RN Red b y c) => RN Red (RN Black a x b) y (RN Black c k r)
   | _ => RN Black l k r
   end.
+Elpi complexity lbal.
+Arguments lbal_cost : simpl never.
 
 (* The same, the violation being on the right. *)
 Definition rbal (l : rbt) (k : int) (r : rbt) : rbt :=
@@ -104,6 +112,8 @@ Definition rbal (l : rbt) (k : int) (r : rbt) : rbt :=
   | RN Red b y (RN Red c z d) => RN Red (RN Black l k b) y (RN Black c z d)
   | _ => RN Black l k r
   end.
+Elpi complexity rbal.
+Arguments rbal_cost : simpl never.
 
 Fixpoint rb_ins (y : int) (t : rbt) : rbt :=
   match t with
@@ -121,14 +131,20 @@ Fixpoint rb_ins (y : int) (t : rbt) : rbt :=
         end
       else t
   end.
+Elpi complexity rb_ins.
+Arguments rb_ins_cost : simpl never.
 
 Definition make_black (t : rbt) : rbt :=
   match t with
   | RE => RE
   | RN _ l k r => RN Black l k r
   end.
+Elpi complexity make_black.
+Arguments make_black_cost : simpl never.
 
 Definition rb_insert (y : int) (t : rbt) : rbt := make_black (rb_ins y t).
+Elpi complexity rb_insert.
+Arguments rb_insert_cost : simpl never.
 
 (* The predecessor and the successor of y among the keys of t, p and s
    being returned when t has none below / above y on the search path. *)
@@ -137,8 +153,14 @@ Fixpoint around (y : int) (t : rbt) (p s : int) : int * int :=
   | RE => (p, s)
   | RN _ l k r => if y <? k then around y l p k else around y r k s
   end.
+Elpi complexity around.
+Arguments around_cost : simpl never.
 
 Definition imax (u v : int) : int := if u <? v then v else u.
+Elpi complexity imax.
+Arguments imax_cost : simpl never.
+Elpi complexity fst.
+Elpi complexity snd.
 
 (* Insertions j, j+1, ..., n-1. *)
 Fixpoint loop (x : array uint) (n j : int) (t : rbt) (d : array int)
@@ -154,6 +176,9 @@ Fixpoint loop (x : array uint) (n j : int) (t : rbt) (d : array int)
         (Acc_inv H (dec_step n j Hj))
   | right _ => o
   end.
+
+Elpi complexity loop.
+Arguments loop_cost : simpl never.
 
 Lemma loop_eq : forall x n j t d c o H,
   loop x n j t d c o H =
@@ -173,6 +198,8 @@ Definition bst_impl (x : array uint) : array uint :=
   let n := PArray.length x in
   loop x n 0 RE (PArray.make (n + 2) 0) 0 (PArray.make n 0)
     (Zwf_well_founded 0 (gap n 0)).
+Elpi complexity bst_impl.
+Arguments bst_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: the statement's tree                                     *)
@@ -286,7 +313,7 @@ Lemma E_insert_self : forall t y, E (insert y t) y = N.succ (depth y (insert y t
 Proof. intros t y. unfold E. rewrite memb_insert_self. reflexivity. Qed.
 
 Lemma fold_In : forall l t x,
-  In_tree x (fold_left (fun t y => insert y t) l t) <-> In x l \/ In_tree x t.
+  In_tree x (tree_from l t) <-> In x l \/ In_tree x t.
 Proof.
   induction l as [|y l IH]; intros t x; simpl; [tauto|].
   assert (Hs : forall a b : N, a = b <-> b = a) by (split; auto).
@@ -297,7 +324,7 @@ Lemma tree_of_In : forall l x, In_tree x (tree_of l) <-> In x l.
 Proof. intros l x. unfold tree_of. rewrite fold_In. simpl. tauto. Qed.
 
 Lemma fold_sbst : forall l t, sbst t ->
-  sbst (fold_left (fun t y => insert y t) l t).
+  sbst (tree_from l t).
 Proof.
   induction l as [|y l IH]; intros t Ht; simpl; [exact Ht|].
   apply IH, insert_sbst, Ht.
@@ -600,8 +627,16 @@ Proof.
   rewrite IH by lia. reflexivity.
 Qed.
 
+Lemma tree_from_app : forall l r t,
+  tree_from (l ++ r) t = tree_from r (tree_from l t).
+Proof.
+  induction l as [|x l IH]; intros r t; cbn [app tree_from].
+  - reflexivity.
+  - apply IH.
+Qed.
+
 Lemma tree_of_snoc : forall l y, tree_of (l ++ [y]) = insert y (tree_of l).
-Proof. intros l y. unfold tree_of. rewrite fold_left_app. reflexivity. Qed.
+Proof. intros l y. unfold tree_of. rewrite tree_from_app. reflexivity. Qed.
 
 Lemma nodup_nth_firstn : forall (l : list N) j, NoDup l -> (j < List.length l)%nat ->
   ~ In (nth j l 0) (firstn j l).
@@ -844,8 +879,401 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition bst : array uint -> array uint := bst_impl.
+Elpi complexity bst.
 
 Definition bst_correct : forall (a : list N) (x : array uint),
   valid_input a -> repr x a ->
   exists c : list N, repr (bst x) c /\ bst_spec a c
   := bst_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Complexity                                                          *)
+(* ------------------------------------------------------------------ *)
+
+(* The bound needs the depth of the red-black tree to be logarithmic:
+   the red-black invariant (proof-only, the program is unchanged), kept
+   by insertion (Okasaki's balance), bounds the height by twice the black
+   height, itself at most log2 (size + 1); every insertion adds at most
+   one node. *)
+
+Local Open Scope nat_scope.
+
+Fixpoint height (t : rbt) : nat :=
+  match t with RE => 0 | RN _ l _ r => S (Nat.max (height l) (height r)) end.
+
+Fixpoint tsize (t : rbt) : nat :=
+  match t with RE => 0 | RN _ l _ r => S (tsize l + tsize r) end.
+
+(* is_rb t c n: t is a red-black tree of black height n that may hang
+   below a parent of colour c (a red parent wants a black or empty t). *)
+Inductive is_rb : rbt -> color -> nat -> Prop :=
+| IsRB_leaf c : is_rb RE c 0
+| IsRB_r l k r n : is_rb l Red n -> is_rb r Red n -> is_rb (RN Red l k r) Black n
+| IsRB_b c l k r n : is_rb l Black n -> is_rb r Black n -> is_rb (RN Black l k r) c (S n).
+
+(* the same, a red-red violation allowed at the root *)
+Inductive nearly_rb : rbt -> nat -> Prop :=
+| nrRB_r l k r n : is_rb l Black n -> is_rb r Black n -> nearly_rb (RN Red l k r) n
+| nrRB_b l k r n : is_rb l Black n -> is_rb r Black n -> nearly_rb (RN Black l k r) (S n).
+
+Lemma is_rb_black : forall t n, is_rb t Red n -> is_rb t Black n.
+Proof. intros t n H. inversion H; subst; constructor; auto. Qed.
+
+Ltac inv_rb :=
+  repeat match goal with
+  | H : is_rb (RN _ _ _ _) _ _ |- _ => inversion H; clear H; subst
+  | H : is_rb RE _ _ |- _ => inversion H; clear H; subst
+  | H : nearly_rb _ _ |- _ => inversion H; clear H; subst
+  end.
+
+Ltac split_trees :=
+  repeat match goal with
+  | |- context [match ?t with RE => _ | RN _ _ _ _ => _ end] => destruct t
+  | |- context [match ?c with Red => _ | Black => _ end] => destruct c
+  end.
+
+Lemma lbal_rb : forall l k r n, nearly_rb l n -> is_rb r Black n ->
+  is_rb (lbal l k r) Black (S n).
+Proof.
+  intros l k r n Hl Hr. unfold lbal.
+  inversion Hl; subst; split_trees; inv_rb;
+    repeat (constructor; auto using is_rb_black).
+Qed.
+
+Lemma rbal_rb : forall l k r n, is_rb l Black n -> nearly_rb r n ->
+  is_rb (rbal l k r) Black (S n).
+Proof.
+  intros l k r n Hl Hr. unfold rbal.
+  inversion Hr; subst; split_trees; inv_rb;
+    repeat (constructor; auto using is_rb_black).
+Qed.
+
+Lemma rb_black_nearly : forall t n, is_rb t Black n -> t <> RE -> nearly_rb t n.
+Proof.
+  intros t n H Ht. inversion H; subst; [congruence| |]; constructor; auto using is_rb_black.
+Qed.
+
+Lemma rb_ins_rb : forall y t,
+  (forall n, is_rb t Red n -> is_rb (rb_ins y t) Black n) /\
+  (forall n, is_rb t Black n -> nearly_rb (rb_ins y t) n).
+Proof.
+  intros y t. induction t as [|c l [IHl1 IHl2] k r [IHr1 IHr2]].
+  - split; intros n H; inversion H; subst; simpl; repeat constructor.
+  - simpl. destruct c.
+    + split; intros n H; inversion H; subst.
+      destruct (y <? k)%uint63; [|destruct (k <? y)%uint63];
+        constructor; auto using is_rb_black.
+    + assert (G : forall c n, is_rb (RN Black l k r) c n ->
+                 is_rb (if (y <? k)%uint63 then lbal (rb_ins y l) k r
+                        else if (k <? y)%uint63 then rbal l k (rb_ins y r)
+                        else RN Black l k r) Black n).
+      { intros c0 n H. inversion H; subst.
+        destruct (y <? k)%uint63; [|destruct (k <? y)%uint63].
+        - apply lbal_rb; auto.
+        - apply rbal_rb; auto.
+        - constructor; auto. }
+      split; intros n H.
+      * exact (G _ _ H).
+      * apply rb_black_nearly; [exact (G _ _ H)|].
+        destruct (y <? k)%uint63; [|destruct (k <? y)%uint63].
+        -- unfold lbal. split_trees; discriminate.
+        -- unfold rbal. split_trees; discriminate.
+        -- discriminate.
+Qed.
+
+Lemma make_black_rb : forall t n, is_rb t Black n -> exists m, is_rb (make_black t) Red m.
+Proof.
+  intros t n H. inversion H; subst; simpl.
+  - exists 0. constructor.
+  - exists (S n). constructor; auto using is_rb_black.
+  - exists (S n0). constructor; auto.
+Qed.
+
+Definition rb_inv (t : rbt) : Prop := exists n, is_rb t Red n.
+
+Lemma rb_insert_inv : forall y t, rb_inv t -> rb_inv (rb_insert y t).
+Proof.
+  intros y t [n H]. unfold rb_insert.
+  exact (make_black_rb _ _ (proj1 (rb_ins_rb y t) n H)).
+Qed.
+
+Lemma height_rb : forall t c n, is_rb t c n ->
+  height t <= 2 * n + (match c with Red => 0 | Black => 1 end).
+Proof.
+  intros t c n H. induction H; simpl in *; try destruct c; lia.
+Qed.
+
+Lemma size_rb : forall t c n, is_rb t c n -> 2 ^ n <= tsize t + 1.
+Proof.
+  intros t c n H. induction H; simpl in *; lia.
+Qed.
+
+Lemma height_inv : forall t, rb_inv t -> height t <= 2 * Nat.log2 (tsize t + 1).
+Proof.
+  intros t [n H]. pose proof (height_rb _ _ _ H) as H1. simpl in H1.
+  pose proof (size_rb _ _ _ H) as H2.
+  apply Nat.log2_le_pow2 in H2; [lia|lia].
+Qed.
+
+Lemma tsize_lbal : forall l k r, tsize (lbal l k r) = S (tsize l + tsize r).
+Proof. intros. unfold lbal. split_trees; simpl; lia. Qed.
+Lemma tsize_rbal : forall l k r, tsize (rbal l k r) = S (tsize l + tsize r).
+Proof. intros. unfold rbal. split_trees; simpl; lia. Qed.
+
+Lemma tsize_rb_ins : forall y t, tsize (rb_ins y t) <= S (tsize t).
+Proof.
+  intros y t. induction t as [|c l IHl k r IHr]; simpl; [lia|].
+  destruct (y <? k)%uint63; [|destruct (k <? y)%uint63]; destruct c;
+    rewrite ?tsize_lbal, ?tsize_rbal; simpl; lia.
+Qed.
+
+Lemma tsize_rb_insert : forall y t, tsize (rb_insert y t) <= S (tsize t).
+Proof.
+  intros y t. unfold rb_insert. pose proof (tsize_rb_ins y t).
+  destruct (rb_ins y t); simpl in *; lia.
+Qed.
+
+(* The cost lemmas, in the program's scope. *)
+Local Open Scope uint63_scope.
+
+Lemma around_time1 y yC t (tC : rbt_cost stepsCM t) :
+  cost (extract (around_cost stepsCM y yC) t tC) = 1%nat.
+Proof. unfold around_cost. destruct tC; cost_simpl; reflexivity. Qed.
+
+Lemma around_time2 y yC t (tC : rbt_cost stepsCM t) p pC :
+  cost (extract (extract (around_cost stepsCM y yC) t tC) p pC) = 0%nat.
+Proof. unfold around_cost. destruct tC; cost_simpl; reflexivity. Qed.
+
+Lemma around_time y yC t (tC : rbt_cost stepsCM t) p pC s sC :
+  (cost (extract (extract (extract (around_cost stepsCM y yC) t tC) p pC) s sC)
+    <= height t * 50 + 10)%nat.
+Proof.
+  unfold around_cost. revert p pC s sC. induction tC; intros p pC s sC; cost_simpl.
+  - lia.
+  - cost_destruct (y <? i); cost_simpl.
+    + specialize (IHtC1 p pC i _C0). cost_simpl_in IHtC1.
+      pose proof (around_time1 y yC r tC1) as H1. unfold around_cost in H1. cost_simpl_in H1.
+      pose proof (around_time2 y yC r tC1 p pC) as H2. unfold around_cost in H2. cost_simpl_in H2.
+      lia.
+    + specialize (IHtC2 i _C0 s sC). cost_simpl_in IHtC2.
+      pose proof (around_time1 y yC r0 tC2) as H1. unfold around_cost in H1. cost_simpl_in H1.
+      pose proof (around_time2 y yC r0 tC2 i _C0) as H2. unfold around_cost in H2. cost_simpl_in H2.
+      lia.
+Qed.
+
+Ltac crush_w r n :=
+  cost_simpl; try lia;
+  lazymatch n with
+  | S ?m =>
+    match goal with
+    | w : color_cost _ _ |- _ => destruct w; crush_w r m
+    | w : rbt_cost _ ?t |- _ => assert_fails (constr_eq t r); destruct w; crush_w r m
+    end
+  end.
+
+Lemma lbal_time l lC k kC r rC :
+  (cost (extract (extract (lbal_cost stepsCM l lC) k kC) r rC) <= 40)%nat.
+Proof.
+  unfold lbal_cost. crush_w r constr:(6%nat).
+Qed.
+
+Lemma rbal_time l lC k kC r rC :
+  (cost (extract (extract (rbal_cost stepsCM l lC) k kC) r rC) <= 40)%nat.
+Proof.
+  unfold rbal_cost. crush_w l constr:(6%nat).
+Qed.
+
+Lemma lbal_time0 l lC : cost (lbal_cost stepsCM l lC) = 0%nat.
+Proof. unfold lbal_cost. cost_simpl. reflexivity. Qed.
+Lemma lbal_time1 l lC k kC : cost (extract (lbal_cost stepsCM l lC) k kC) = 0%nat.
+Proof. unfold lbal_cost. cost_simpl. reflexivity. Qed.
+Lemma rbal_time0 l lC : cost (rbal_cost stepsCM l lC) = 0%nat.
+Proof. unfold rbal_cost. cost_simpl. reflexivity. Qed.
+Lemma rbal_time1 l lC k kC : cost (extract (rbal_cost stepsCM l lC) k kC) = 0%nat.
+Proof. unfold rbal_cost. cost_simpl. reflexivity. Qed.
+
+Ltac bound_calls :=
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with
+    | extract (extract (lbal_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+        pose proof (lbal_time a aC b bC c cC : (@cost T X <= _)%nat) as Hc;
+        revert Hc; generalize (@cost T X); intros ? Hc
+    | extract (extract (rbal_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+        pose proof (rbal_time a aC b bC c cC : (@cost T X <= _)%nat) as Hc;
+        revert Hc; generalize (@cost T X); intros ? Hc
+    | extract (lbal_cost stepsCM ?a ?aC) ?b ?bC =>
+        change (@cost T X) with 0%nat
+    | extract (rbal_cost stepsCM ?a ?aC) ?b ?bC =>
+        change (@cost T X) with 0%nat
+    | lbal_cost stepsCM ?a ?aC =>
+        change (@cost T X) with 0%nat
+    | rbal_cost stepsCM ?a ?aC =>
+        change (@cost T X) with 0%nat
+    end end.
+
+Lemma rb_ins_time y yC t (tC : rbt_cost stepsCM t) :
+  (cost (extract (rb_ins_cost stepsCM y yC) t tC) <= height t * 80 + 10)%nat.
+Proof.
+  unfold rb_ins_cost. induction tC; cost_simpl.
+  - lia.
+  - cost_simpl_in IHtC1. cost_simpl_in IHtC2.
+    cost_destruct (y <? i); cost_simpl.
+    + destruct _C; cost_simpl; bound_calls; lia.
+    + cost_destruct (i <? y); cost_simpl.
+      * destruct _C; cost_simpl; bound_calls; lia.
+      * lia.
+Qed.
+
+Lemma make_black_time t tC : (cost (make_black_cost stepsCM t tC) <= 5)%nat.
+Proof. unfold make_black_cost. destruct tC; cost_simpl; lia. Qed.
+
+Lemma imax_time u uC v vC : (cost (extract (imax_cost stepsCM u uC) v vC) <= 10)%nat.
+Proof. unfold imax_cost. cost_simpl. cost_destruct (u <? v); cost_simpl; lia. Qed.
+
+Lemma rb_ins_time0 y yC : cost (rb_ins_cost stepsCM y yC) = 0%nat.
+Proof. reflexivity. Qed.
+
+Lemma rb_insert_time y yC t (tC : rbt_cost stepsCM t) :
+  (cost (extract (rb_insert_cost stepsCM y yC) t tC) <= height t * 80 + 20)%nat.
+Proof.
+  unfold rb_insert_cost. cost_simpl.
+  rewrite rb_ins_time0.
+  pose proof (rb_ins_time y yC t tC).
+  pose proof (make_black_time (rb_ins y t) (extract (extract (rb_ins_cost stepsCM y yC) t tC))).
+  lia.
+Qed.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. unfold bdec_cost. destruct w; cost_simpl; lia. Qed.
+
+Ltac zero_partials :=
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch T with forall _, _ => change (@cost T X) with 0%nat end end.
+
+Ltac bound_with X T lem :=
+  let Hc := fresh "Hc" in
+  pose proof lem as Hc; change (@cost T X) with (@cost T X) in Hc;
+  revert Hc; generalize (@cost T X); intros ? Hc.
+
+Ltac bound_loop_calls :=
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with
+    | extract (extract (extract (around_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+        bound_with X T (around_time a aC b bC c cC d dC : (@cost T X <= _)%nat)
+    | extract (extract (around_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+        bound_with X T (around_time2 a aC b bC c cC : (@cost T X = _)%nat)
+    | extract (around_cost stepsCM ?a ?aC) ?b ?bC =>
+        bound_with X T (around_time1 a aC b bC : (@cost T X = _)%nat)
+    | extract (rb_insert_cost stepsCM ?a ?aC) ?b ?bC =>
+        bound_with X T (rb_insert_time a aC b bC : (@cost T X <= _)%nat)
+    | extract (imax_cost stepsCM ?a ?aC) ?b ?bC =>
+        bound_with X T (imax_time a aC b bC : (@cost T X <= _)%nat)
+    | extract (extract (extract (set_cost _ _ _) _ _) _ _) _ _ =>
+        change (@cost T X) with 1%nat
+    end end.
+
+Lemma loop_time x xC n nC j jC t tC d dC c cC o oC H HC (L : nat) :
+  (forall t', rb_inv t' -> (tsize t' <= Z.to_nat (φ n))%nat -> (height t' <= L)%nat) ->
+  rb_inv t -> (tsize t <= Z.to_nat (φ j))%nat ->
+  (cost (extract (extract (extract (extract (extract (extract (extract (loop_cost stepsCM x xC) n nC) j jC) t tC) d dC) c cC) o oC) H HC)
+     <= Z.to_nat (gap n j) * (L * 200 + 300) + 10)%nat.
+Proof.
+  intros HL. unfold loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC n nC j jC t tC d dC c cC o oC H HC)] =>
+    assert (HG : forall k j jC t tC d dC c cC o oC H HC, (Z.to_nat (gap n j) <= k)%nat ->
+       rb_inv t -> (tsize t <= Z.to_nat (φ j))%nat ->
+       (cost (G x xC n nC j jC t tC d dC c cC o oC H HC) <= k * (L * 200 + 300) + 10)%nat) end.
+  { induction k as [|k IH]; intros j' jC' t' tC' d' dC' c' cC' o' oC' [g] HC' Hk Hinv Hsz;
+      cost_simpl;
+      pose proof (bdec_time (j' <? n) (bool_w (j' <? n))) as HB;
+      cost_destruct (bdec (j' <? n)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - zero_partials.
+      bound_loop_calls.
+      match goal with |- context [extract (extract (extract (extract (around_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC)] =>
+        set (W := extract (extract (extract (extract (around_cost stepsCM a aC) b bC) c cC) d dC)) end.
+      clearbody W. revert W. generalize (around x.[j'] t' 0 (n + 1)) as o0. intros o0 W.
+      destruct W as [p pC q qC]. cost_simpl. zero_partials. bound_loop_calls.
+      match goal with |- context [@cost ?T (?G' x xC n nC (j' + 1)%uint63 ?w ?t2 ?tC2 ?d2 ?dC2 ?c2 ?cC2 ?o2 ?oC2 ?h ?e)] =>
+        pose proof (IH (j' + 1)%uint63 w t2 tC2 d2 dC2 c2 cC2 o2 oC2 h e
+          : _ -> _ -> _ -> (@cost T (G' x xC n nC (j' + 1)%uint63 w t2 tC2 d2 dC2 c2 cC2 o2 oC2 h e) <= _)%nat) as HI;
+        revert HI; generalize (@cost T (G' x xC n nC (j' + 1)%uint63 w t2 tC2 d2 dC2 c2 cC2 o2 oC2 h e)); intros ? HI end.
+      clear IH.
+      pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hj1 : φ (j' + 1) = (φ j' + 1)%Z) by (zify; Z.to_euclidean_division_equations; lia).
+      pose proof (to_Z_bounded j') as Bj. pose proof (to_Z_bounded n) as Bn.
+      change (to_nat j') with (Z.to_nat (φ j')) in Hsz.
+      change (to_nat n) with (Z.to_nat (φ n)) in HL.
+      specialize (HI ltac:(unfold gap in *; lia) (rb_insert_inv _ _ Hinv)).
+      pose proof (tsize_rb_insert x.[j'] t') as Hs1.
+      specialize (HI ltac:(change (to_nat (j' + 1)) with (Z.to_nat (φ (j' + 1))); lia)).
+      pose proof (HL t' Hinv ltac:(lia)) as Hh.
+      clear Hj1 Hk Hlt Bj Bn Hsz HL Hs1.
+      remember (k * (L * 200 + 300))%nat as KM.
+      lia.
+    - lia. }
+  intros Hinv Hsz.
+  match goal with |- context [@cost ?T (?G x xC n nC j jC t tC d dC c cC o oC H HC)] =>
+    exact (HG _ j jC t tC d dC c cC o oC H HC (le_n _) Hinv Hsz
+           : (@cost T (G x xC n nC j jC t tC d dC c cC o oC H HC) <= _)%nat) end.
+Qed.
+
+Lemma height_bound (N : nat) : forall t, rb_inv t -> (tsize t <= N)%nat ->
+  (height t <= 2 * Nat.log2 (N + 1))%nat.
+Proof.
+  intros t Hi Hs. pose proof (height_inv t Hi).
+  pose proof (Nat.log2_le_mono (tsize t + 1) (N + 1) ltac:(lia)). lia.
+Qed.
+
+Lemma bst_impl_time x xC :
+  (cost (bst_impl_cost stepsCM x xC) <= Z.to_nat (φ (PArray.length x)) * (2 * Nat.log2 (Z.to_nat (φ (PArray.length x)) + 1) * 200 + 300) + 100)%nat.
+Proof.
+  remember (Z.to_nat (φ (PArray.length x))) as N eqn:EN.
+  remember (2 * Nat.log2 (N + 1))%nat as L eqn:EL.
+  assert (HL : forall t', rb_inv t' -> (tsize t' <= Z.to_nat (φ (PArray.length x)))%nat -> (height t' <= L)%nat)
+    by (subst; apply height_bound).
+  assert (Hinv0 : rb_inv RE) by (exists 0%nat; constructor).
+  assert (Hg : Z.to_nat (gap (PArray.length x) 0) = N) by (unfold gap; subst N; f_equal; change (φ 0) with 0%Z; lia).
+  remember (N * (L * 200 + 300) + 100)%nat as R eqn:ER.
+  unfold bst_impl_cost. cost_simpl. zero_partials.
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with
+    | extract (extract (make_cost _ _ _) _ _) _ _ => change (@cost T X) with 1%nat
+    end end.
+  match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with
+    | extract (extract (extract (extract (extract (extract (extract (loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      bound_with X T (loop_time a aC b bC c cC d dC e eC f fC g gC h hC L HL Hinv0 (le_0_n _) : (@cost T X <= _)%nat)
+    end end.
+  rewrite Hg in Hc. subst R. clear -Hc.
+  remember (N * (L * 200 + 300))%nat as M. lia.
+Qed.
+
+Lemma bst_time_concrete x :
+  (cost1 bst_cost x <= (size x + 1) * (Nat.log2 (size x) + 1) * 1000 + 1000)%nat.
+Proof.
+  remember ((size x + 1) * (Nat.log2 (size x) + 1) * 1000 + 1000)%nat as R eqn:ER.
+  unfold cost1, bst_cost. cost_simpl.
+  match goal with |- context [@cost ?T ?X] =>
+    pose proof (bst_impl_time x (witness x) : (@cost T X <= _)%nat) as H;
+    revert H; generalize (@cost T X); intros C H end.
+  change (Z.to_nat (φ (PArray.length x))) with (size x) in H.
+  subst R. revert H. generalize (size x) as N. intros N H.
+  pose proof (Nat.log2_succ_le N) as HS. replace (S N) with (N + 1)%nat in HS by lia.
+  revert H HS. generalize (Nat.log2 (N + 1)) as A. generalize (Nat.log2 N) as G. intros G A H HS.
+  assert (H1 : (N * (2 * A * 200 + 300) <= N * (G * 400 + 700))%nat) by (apply Nat.mul_le_mono_l; lia).
+  assert (H2 : (N * (G * 400 + 700) <= (N + 1) * (G + 1) * 1000)%nat) by nia.
+  lia.
+Qed.
+
+Theorem bst_time : exists c1 c2 : nat,
+  forall (sequence : list N) (sequence_arr : array uint),
+  valid_input sequence -> repr sequence_arr sequence ->
+  (cost1 bst_cost sequence_arr <= c1 * ((size sequence_arr + 1) * (Nat.log2 (size sequence_arr) + 1)) + c2)%nat.
+Proof.
+  exists 1000%nat, 1000%nat. intros sequence sequence_arr _ _.
+  pose proof (bst_time_concrete sequence_arr) as H.
+  remember ((size sequence_arr + 1) * (Nat.log2 (size sequence_arr) + 1))%nat as P.
+  lia.
+Qed.

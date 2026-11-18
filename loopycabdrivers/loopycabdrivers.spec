@@ -2,10 +2,13 @@
 
 (** ** Description *)
 
-(** Find the strongly connected components of a directed graph that contain
-    at least two vertices. Sort the names within each component and the
-    components lexicographically, and list the remaining vertices
-    separately.
+(** A cab driver waiting outside a store must drive around and return to
+    pick up the passenger. The streets are one-way, so returning is not
+    always possible. Find the maximal groups of at least two stores in which
+    every store can be reached from every other by following the streets.
+    These are the regions in which the driver can circulate and return.
+    Sort store names within each group and the groups lexicographically;
+    list all stores outside these groups separately in sorted order.
 
     [@kattis loopycabdrivers]
     - Difficulty: 5.1
@@ -13,8 +16,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Directed edge count: $0 \le m \le 10{,}000$, with no repeated edge or self-loop.
-    - Vertex names contain $1\text{ to }20$ uppercase or lowercase letters. *)
+    - Directed edge count: $0 \le m \le 10^{4}$, with no repeated edge or self-loop.
+    - Vertex name length: $1 \le \ell \le 20$ uppercase or lowercase letters. *)
 
 (** ** Examples *)
 
@@ -59,17 +62,15 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The input lines are two parallel lists, one per column
-    (line k is "origins_k destinations_k"). The number of elements
-    of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The number of characters of name. *)
+(** The number of characters in [name]. *)
 Definition slen (name : string) : N :=
   N.of_nat (String.length name).
 
-(** Every character of name is a letter, a-z or A-Z. *)
+(** Every character of [name] is an uppercase or lowercase English letter. *)
 Definition letters (name : string) : Prop :=
   forall k letter, String.get k name = Some letter ->
     (65 <= N_of_ascii letter <= 90) \/ (97 <= N_of_ascii
@@ -91,39 +92,38 @@ Fixpoint lex_lt (names names' : list string) : Prop :=
         rest')
   end.
 
-(** One can drive from name to name' along one street. *)
+(** A directed input street leads from [name] to [name']. *)
 Definition street (origins destinations : list string)
   (name name' : string)
     : Prop :=
   In (name, name') (combine origins destinations).
 
-(** name is a store of the city: it is named on some input line. *)
+(** [name] appears as an endpoint of some input street. *)
 Definition store (origins destinations : list string)
   (name : string)
     : Prop :=
   In name origins \/ In name destinations.
 
-(** One can drive from name to name' along zero or more streets. *)
+(** A walk of zero or more streets leads from [name] to [name']. *)
 Definition reaches (origins destinations : list string)
     : string -> string -> Prop :=
   clos_refl_trans string (street origins destinations).
 
-(** name and name' can be visited together indefinitely. *)
+(** [name] and [name'] are mutually reachable by directed streets. *)
 Definition together (origins destinations : list string)
     (name name' : string) : Prop :=
   reaches origins destinations name name' /\
   reaches origins destinations name' name.
 
-(** name can be visited indefinitely in conjunction with at least one
-    other store. *)
+(** [name] belongs to a mutually reachable group containing at least one other
+    store. *)
 Definition loopy (origins destinations : list string)
   (name : string)
     : Prop :=
   exists other, other <> name /\ together origins
     destinations name other.
 
-(** members is a group: two or more stores, exactly those that can be
-    visited together with one of them. *)
+(** [members] lists a maximal mutually reachable group of at least two stores. *)
 Definition group (origins destinations : list string)
   (members : list string)
     : Prop :=
@@ -135,7 +135,7 @@ Definition group (origins destinations : list string)
 (** [@inside loopy_regions_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (origins destinations : list string) : Prop := {
-  (* a line containing an integer 0 <= n <= 10 000 *)
+  (* a line containing an integer 0 <= n <= 10^4 *)
   vi_n : len origins <= 10000;
   (* following this are n lines, each containing a pair
      of store names *)
@@ -158,9 +158,9 @@ Record valid_input
 (** ** Correctness *)
 
 (** [@requirement]
-    The output lists strongly connected components of size at least two with names and
-    groups sorted lexicographically, followed separately by the remaining names in
-    sorted order. *)
+    The output lists maximal mutually reachable groups of at least two stores,
+    with names and groups sorted lexicographically, and separately lists all
+    remaining store names in sorted order. *)
 Definition loopy_regions_spec
   (origins destinations : list string)
     (output : list (list string) * list string) : Prop :=
@@ -181,15 +181,21 @@ Definition loopy_regions_spec
 
 (** ** Interface *)
 
-(** Find the strongly connected components of a directed graph that contain at least two
-    vertices. Sort the names within each component and the components lexicographically,
-    and list the remaining vertices separately.
-    - Input [origins]: Source name of each directed edge.
-    - Input [destinations]: Destination name of each corresponding edge.
-    - Output [output]: The output lists strongly connected components of size at least two with names and groups sorted lexicographically, followed separately by the remaining names in sorted order. *)
+(** Find maximal mutually reachable groups of at least two stores connected
+    by one-way streets, and separately list stores outside these groups.
+    - Input [origins]: Starting store of each one-way street.
+    - Input [destinations]: Destination store of each corresponding street.
+    - Output [output]: Groups with names and groups sorted lexicographically, paired with the sorted list of remaining stores. *)
 Program loopy_regions :
   array PrimString.string -> array PrimString.string ->
   array (array PrimString.string) * array PrimString.string.
+
+(** [@example loopy_regions]
+    - Sample: 1
+    - Input [origins]: ["Starbucks"; "BahamaBucks"; "CVS"; "CVS"; "HEB"; "BahamaBucks"]%string
+    - Input [destinations]: ["HEB"; "CVS"; "HEB"; "BahamaBucks"; "Starbucks"; "OfficeDepot"]%string
+    - Output [output]: ([["BahamaBucks"; "CVS"]; ["HEB"; "Starbucks"]], ["OfficeDepot"])%string
+*)
 
 (** ** Bridge *)
 

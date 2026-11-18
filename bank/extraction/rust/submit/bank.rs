@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Bank.bank_implem.bank
-// Variant: uncurried
-pub fn bank() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64 = bank_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Bank.bank_implem.bank
-pub fn bank_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = bank_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -698,13 +682,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Bank.bank_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -723,12 +704,12 @@ pub fn init_loop_1(m: u64, k: u64, a: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Bank.bank_implem.init_loop (local: init_loop)
 // Variant: uncurried, lifted
 pub fn init_loop(m: u64, k: u64, a: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(k, m);
-  match bdec(v11) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(k, 1u64);
-      let v29 = rocq_array::set::<u64>(a, k, k);
-      init_loop(m, v22, v29, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(a, k, k);
+      init_loop(m, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       a
@@ -738,9 +719,9 @@ pub fn init_loop(m: u64, k: u64, a: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -764,34 +745,24 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Bank.bank_implem.take_left
 // Variant: uncurried
 pub fn take_left(cash: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64) -> bool {
-  match ltb(i, mid) {
-    true => {
-      match ltb(j, hi) {
-        true => {
-          let v21 = &src;
-          let v24 = rocq_array::get::<u64>(&v21, j);
-          let v25 = &cash;
-          let v28 = rocq_array::get::<u64>(&v25, v24);
-          let v29 = &src;
-          let v32 = rocq_array::get::<u64>(&v29, i);
-          std::mem::drop(src);
-          let v33 = &cash;
-          let v36 = rocq_array::get::<u64>(&v33, v32);
-          std::mem::drop(cash);
-          leb(v28, v36)
-        },
-        false => {
-          std::mem::drop(cash);
-          std::mem::drop(src);
-          true
-        },
-      }
-    },
-    false => {
+  if ltb(i, mid) {
+    if ltb(j, hi) {
+      let tmp = rocq_array::get::<u64>(&src, j);
+      let tmp_1 = rocq_array::get::<u64>(&cash, tmp);
+      let tmp_2 = rocq_array::get::<u64>(&src, i);
+      std::mem::drop(src);
+      let tmp_3 = rocq_array::get::<u64>(&cash, tmp_2);
+      std::mem::drop(cash);
+      leb(tmp_1, tmp_3)
+    } else {
       std::mem::drop(cash);
       std::mem::drop(src);
-      false
-    },
+      true
+    }
+  } else {
+    std::mem::drop(cash);
+    std::mem::drop(src);
+    false
   }
 }
 
@@ -804,28 +775,23 @@ pub fn merge_loop_1(cash: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64
 // Rocq: Bank.bank_implem.merge_loop (local: merge_loop)
 // Variant: uncurried, lifted
 pub fn merge_loop(cash: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(k, hi);
-  match bdec(v16) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = Rc::clone(&cash);
-      let v26 = Rc::clone(&src);
-      match take_left(v23, v26, mid, hi, i, j) {
-        true => {
-          let v44 = add(i, 1u64);
-          let v52 = add(k, 1u64);
-          let v53 = &src;
-          let v56 = rocq_array::get::<u64>(&v53, i);
-          let v63 = rocq_array::set::<u64>(dst, k, v56);
-          merge_loop(cash, src, mid, hi, v44, j, v52, v63, ())
-        },
-        false => {
-          let v95 = add(j, 1u64);
-          let v103 = add(k, 1u64);
-          let v104 = &src;
-          let v107 = rocq_array::get::<u64>(&v104, j);
-          let v114 = rocq_array::set::<u64>(dst, k, v107);
-          merge_loop(cash, src, mid, hi, i, v95, v103, v114, ())
-        },
+      let cash_clone = Rc::clone(&cash);
+      let src_clone = Rc::clone(&src);
+      if take_left(cash_clone, src_clone, mid, hi, i, j) {
+        let tmp_1 = add(i, 1u64);
+        let tmp_2 = add(k, 1u64);
+        let tmp_3 = rocq_array::get::<u64>(&src, i);
+        let tmp_4 = rocq_array::set::<u64>(dst, k, tmp_3);
+        merge_loop(cash, src, mid, hi, tmp_1, j, tmp_2, tmp_4, ())
+      } else {
+        let tmp_5 = add(j, 1u64);
+        let tmp_6 = add(k, 1u64);
+        let tmp_7 = rocq_array::get::<u64>(&src, j);
+        let tmp_8 = rocq_array::set::<u64>(dst, k, tmp_7);
+        merge_loop(cash, src, mid, hi, i, tmp_5, tmp_6, tmp_8, ())
       }
     },
     sumbool::right => {
@@ -845,14 +811,13 @@ pub fn copy_loop_1(src: Rc<Array<u64>>, hi: u64, k: u64, dst: Rc<Array<u64>>) ->
 // Rocq: Bank.bank_implem.copy_loop (local: copy_loop)
 // Variant: uncurried, lifted
 pub fn copy_loop(src: Rc<Array<u64>>, hi: u64, k: u64, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, hi);
-  match bdec(v12) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(k, 1u64);
-      let v24 = &src;
-      let v27 = rocq_array::get::<u64>(&v24, k);
-      let v34 = rocq_array::set::<u64>(dst, k, v27);
-      copy_loop(src, hi, v23, v34, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&src, k);
+      let tmp_3 = rocq_array::set::<u64>(dst, k, tmp_2);
+      copy_loop(src, hi, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(src);
@@ -870,30 +835,30 @@ pub fn msort_1(cash: Rc<Array<u64>>, a: Rc<Array<u64>>, b: Rc<Array<u64>>, lo: u
 // Rocq: Bank.bank_implem.msort (local: msort)
 // Variant: uncurried, lifted
 pub fn msort(cash: Rc<Array<u64>>, a: Rc<Array<u64>>, b: Rc<Array<u64>>, lo: u64, len: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(1u64, len);
-  match bdec(v15) {
+  let tmp = ltb(1u64, len);
+  match bdec(tmp) {
     sumbool::left => {
       let len1 = div(len, 2u64);
       let mid = add(lo, len1);
       let hi = add(lo, len);
-      let v44 = Rc::clone(&cash);
-      let v55 = msort(v44, a, b, lo, len1, ());
-      match &v55 {
+      let cash_clone = Rc::clone(&cash);
+      let tmp_1 = msort(cash_clone, a, b, lo, len1, ());
+      match &tmp_1 {
         (b1, a1) => {
-          let v67 = sub(len, len1);
-          let v69 = ();
-          let v73 = Rc::clone(&cash);
-          let v75 = Rc::clone(b1);
-          let v76 = Rc::clone(a1);
-          std::mem::drop(v55);
-          let v84 = msort(v73, v75, v76, mid, v67, v69);
-          match v84 {
+          let tmp_2 = sub(len, len1);
+          let tmp_3 = ();
+          let cash_clone_1 = Rc::clone(&cash);
+          let b1_clone = Rc::clone(b1);
+          let a1_clone = Rc::clone(a1);
+          std::mem::drop(tmp_1);
+          let tmp_4 = msort(cash_clone_1, b1_clone, a1_clone, mid, tmp_2, tmp_3);
+          match tmp_4 {
             (v86, v88) => {
               let b2 = &v86;
-              let v95 = Rc::clone(b2);
-              let b3 = merge_loop_1(cash, v95, mid, hi, lo, mid, lo, v88);
-              let v112 = Rc::clone(&b3);
-              let a3 = copy_loop_1(v112, hi, lo, v86);
+              let b2_clone = Rc::clone(b2);
+              let b3 = merge_loop_1(cash, b2_clone, mid, hi, lo, mid, lo, v88);
+              let b3_clone = Rc::clone(&b3);
+              let a3 = copy_loop_1(b3_clone, hi, lo, v86);
               (a3, b3)
             },
           }
@@ -916,16 +881,15 @@ pub fn find_1(a: Rc<Array<u64>>, x: u64) -> (Rc<Array<u64>>, u64) {
 // Rocq: Bank.bank_implem.find (local: find)
 // Variant: uncurried, lifted
 pub fn find(a: Rc<Array<u64>>, x: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v3 = &a;
-  let p = rocq_array::get::<u64>(&v3, x);
-  let v14 = ltb(p, x);
-  match bdec(v14) {
+  let p = rocq_array::get::<u64>(&a, x);
+  let tmp = ltb(p, x);
+  match bdec(tmp) {
     sumbool::left => {
-      let v27 = find(a, p, ());
-      match v27 {
+      let tmp_1 = find(a, p, ());
+      match tmp_1 {
         (v29, v31) => {
-          let v40 = rocq_array::set::<u64>(v29, x, v31);
-          (v40, v31)
+          let tmp_2 = rocq_array::set::<u64>(v29, x, v31);
+          (tmp_2, v31)
         },
       }
     },
@@ -944,36 +908,27 @@ pub fn greedy_loop_1(cash: Rc<Array<u64>>, dl: Rc<Array<u64>>, perm: Rc<Array<u6
 // Rocq: Bank.bank_implem.greedy_loop (local: greedy_loop)
 // Variant: uncurried, lifted
 pub fn greedy_loop(cash: Rc<Array<u64>>, dl: Rc<Array<u64>>, perm: Rc<Array<u64>>, n: u64, L: u64, j: u64, uf: Rc<Array<u64>>, tot: u64, _H: ()) -> u64 {
-  let v16 = ltb(j, n);
-  match bdec(v16) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &perm;
-      let i = rocq_array::get::<u64>(&v20, j);
-      let v24 = &dl;
-      let d = rocq_array::get::<u64>(&v24, i);
-      let c = match ltb(d, L) {
-        true => {
-          add(d, 1u64)
-        },
-        false => {
-          L
-        },
+      let i = rocq_array::get::<u64>(&perm, j);
+      let d = rocq_array::get::<u64>(&dl, i);
+      let c = if ltb(d, L) {
+        add(d, 1u64)
+      } else {
+        L
       };
-      let v53 = find_1(uf, c);
-      match v53 {
+      let tmp_1 = find_1(uf, c);
+      match tmp_1 {
         (v55, v57) => {
-          match eqb(v57, 0u64) {
-            true => {
-              greedy_loop(cash, dl, perm, n, L, add(j, 1u64), v55, tot, ())
-            },
-            false => {
-              let v107 = add(j, 1u64);
-              let v115 = sub(v57, 1u64);
-              let v122 = rocq_array::set::<u64>(v55, v57, v115);
-              let v124 = &cash;
-              let v127 = rocq_array::get::<u64>(&v124, i);
-              greedy_loop(cash, dl, perm, n, L, v107, v122, add(tot, v127), ())
-            },
+          if eqb(v57, 0u64) {
+            greedy_loop(cash, dl, perm, n, L, add(j, 1u64), v55, tot, ())
+          } else {
+            let tmp_2 = add(j, 1u64);
+            let tmp_3 = sub(v57, 1u64);
+            let tmp_4 = rocq_array::set::<u64>(v55, v57, tmp_3);
+            let tmp_5 = rocq_array::get::<u64>(&cash, i);
+            greedy_loop(cash, dl, perm, n, L, tmp_2, tmp_4, add(tot, tmp_5), ())
           }
         },
       }
@@ -991,46 +946,21 @@ pub fn greedy_loop(cash: Rc<Array<u64>>, dl: Rc<Array<u64>>, perm: Rc<Array<u64>
 // Rocq: Bank.bank_implem.bank_impl
 // Variant: uncurried
 pub fn bank_impl(t: u64, cash: Rc<Array<u64>>, dl: Rc<Array<u64>>) -> u64 {
-  let v3 = &cash;
-  let n = rocq_array::length::<u64>(&v3);
-  let v14 = rocq_array::make::<u64>(n, 0u64);
-  let p0 = init_loop_1(n, 0u64, v14);
-  let v30 = rocq_array::make::<u64>(n, 0u64);
-  let v35 = Rc::clone(&cash);
-  let p = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(msort_1(v35, p0, v30, 0u64, n));
-  let L = match ltb(t, n) {
-    true => {
-      t
-    },
-    false => {
-      n
-    },
+  let n = rocq_array::length::<u64>(&cash);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let p0 = init_loop_1(n, 0u64, tmp);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let cash_clone = Rc::clone(&cash);
+  let p = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(msort_1(cash_clone, p0, tmp_1, 0u64, n));
+  let L = if ltb(t, n) {
+    t
+  } else {
+    n
   };
-  let v68 = add(L, 1u64);
-  let v85 = rocq_array::make::<u64>(add(L, 1u64), 0u64);
-  let uf = init_loop_1(v68, 0u64, v85);
+  let tmp_2 = add(L, 1u64);
+  let tmp_3 = rocq_array::make::<u64>(add(L, 1u64), 0u64);
+  let uf = init_loop_1(tmp_2, 0u64, tmp_3);
   greedy_loop_1(cash, dl, p, n, L, 0u64, uf, 0u64)
-}
-
-// Rocq: Bank.bank_implem.bank_impl
-pub fn bank_impl_curried(t: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> {
-  let v3 = {
-    move |cash: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-      let t = &t;
-      let v8 = Clone::clone(t);
-      let v11 = {
-        move |dl: Rc<Array<u64>>| -> u64 {
-          let v19 = Clone::clone(&v8);
-          let v21 = Rc::clone(&cash);
-          bank_impl(v19, v21, dl)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1182,12 +1112,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = __rocq_global_554.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_554: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = bank(); }
-std::thread_local! { static __rocq_global_557: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> = bank_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1266,6 +1190,6 @@ fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let time = t.uint();
     let mut cash = Vec::new(); let mut deadlines = Vec::new();
     for _ in 0..n { cash.push(t.uint()); deadlines.push(t.uint()); }
-    format!("{}\n", run()(time, ints(cash), ints(deadlines)))
+    format!("{}\n", bank_impl(time, ints(cash), ints(deadlines)))
 }
 fn main() { entry(solve); }

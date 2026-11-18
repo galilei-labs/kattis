@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -21,26 +20,11 @@ pub fn P61() -> u64 {
   2305843009213693951u64
 }
 
-// Rocq: Hashing.hashing_implem.hashes
-// Variant: uncurried
-pub fn hashes() -> Rc<dyn Fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = hashes_impl;
-  let v1: Rc<dyn Fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Hashing.hashing_implem.hashes
-pub fn hashes_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = hashes_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.land
@@ -63,13 +47,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Hashing.hashing_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -95,13 +76,10 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Variant: uncurried
 pub fn addmod(a: u64, b: u64) -> u64 {
   let s = add(a, b);
-  match leb(__rocq_global_81, s) {
-    true => {
-      sub(s, __rocq_global_81)
-    },
-    false => {
-      s
-    },
+  if leb(__rocq_global_81, s) {
+    sub(s, __rocq_global_81)
+  } else {
+    s
   }
 }
 
@@ -132,19 +110,16 @@ pub fn lsl(v0: u64, v1: u64) -> u64 {
 // Rocq: Hashing.hashing_implem.mulmod
 // Variant: uncurried
 pub fn mulmod(a: u64, b: u64) -> u64 {
-  let v7 = mulc(a, b);
-  match v7 {
+  let tmp = mulc(a, b);
+  match tmp {
     (v9, v11) => {
-      let v35 = add(lsl(v9, 2u64), lsr(v11, 61u64));
-      let s = add(v35, land(v11, __rocq_global_81));
+      let tmp_1 = add(lsl(v9, 2u64), lsr(v11, 61u64));
+      let s = add(tmp_1, land(v11, __rocq_global_81));
       let t = add(lsr(s, 61u64), land(s, __rocq_global_81));
-      match leb(__rocq_global_81, t) {
-        true => {
-          sub(t, __rocq_global_81)
-        },
-        false => {
-          t
-        },
+      if leb(__rocq_global_81, t) {
+        sub(t, __rocq_global_81)
+      } else {
+        t
       }
     },
   }
@@ -153,9 +128,9 @@ pub fn mulmod(a: u64, b: u64) -> u64 {
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Hashing.hashing_implem.pre_loop
@@ -167,15 +142,15 @@ pub fn pre_loop_1(r: u64, s: Rc<rocq_string::RocqString>, n: u64, i: u64, t: Rc<
 // Rocq: Hashing.hashing_implem.pre_loop (local: pre_loop)
 // Variant: uncurried, lifted
 pub fn pre_loop(r: u64, s: Rc<rocq_string::RocqString>, n: u64, i: u64, t: Rc<Array<u64>>, acc: u64, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = mulmod(acc, r);
-      let v28 = Rc::clone(&s);
-      let acc_ = addmod(v24, get(v28, i));
-      let v44 = add(i, 1u64);
-      let v59 = rocq_array::set::<u64>(t, add(i, 1u64), acc_);
-      pre_loop(r, s, n, v44, v59, acc_, ())
+      let tmp_1 = mulmod(acc, r);
+      let s_clone = Rc::clone(&s);
+      let acc_ = addmod(tmp_1, get(s_clone, i));
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::set::<u64>(t, add(i, 1u64), acc_);
+      pre_loop(r, s, n, tmp_2, tmp_3, acc_, ())
     },
     sumbool::right => {
       std::mem::drop(s);
@@ -187,8 +162,8 @@ pub fn pre_loop(r: u64, s: Rc<rocq_string::RocqString>, n: u64, i: u64, t: Rc<Ar
 // Rocq: Hashing.hashing_implem.prefix_hashes
 // Variant: uncurried
 pub fn prefix_hashes(r: u64, s: Rc<rocq_string::RocqString>, n: u64) -> Rc<Array<u64>> {
-  let v20 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  pre_loop_1(r, s, n, 0u64, v20, 0u64)
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  pre_loop_1(r, s, n, 0u64, tmp, 0u64)
 }
 
 // Rocq: Hashing.hashing_implem.pow_loop
@@ -200,13 +175,13 @@ pub fn pow_loop_1(r: u64, n: u64, i: u64, t: Rc<Array<u64>>, acc: u64) -> Rc<Arr
 // Rocq: Hashing.hashing_implem.pow_loop (local: pow_loop)
 // Variant: uncurried, lifted
 pub fn pow_loop(r: u64, n: u64, i: u64, t: Rc<Array<u64>>, acc: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
       let acc_ = mulmod(acc, r);
-      let v30 = add(i, 1u64);
-      let v45 = rocq_array::set::<u64>(t, add(i, 1u64), acc_);
-      pow_loop(r, n, v30, v45, acc_, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(t, add(i, 1u64), acc_);
+      pow_loop(r, n, tmp_1, tmp_2, acc_, ())
     },
     sumbool::right => {
       t
@@ -217,36 +192,29 @@ pub fn pow_loop(r: u64, n: u64, i: u64, t: Rc<Array<u64>>, acc: u64, _H: ()) -> 
 // Rocq: Hashing.hashing_implem.powers
 // Variant: uncurried
 pub fn powers(r: u64, n: u64) -> Rc<Array<u64>> {
-  let v19 = rocq_array::make::<u64>(add(n, 1u64), 1u64);
-  pow_loop_1(r, n, 0u64, v19, 1u64)
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 1u64);
+  pow_loop_1(r, n, 0u64, tmp, 1u64)
 }
 
 // Rocq: Hashing.hashing_implem.submod
 // Variant: uncurried
 pub fn submod(a: u64, b: u64) -> u64 {
-  match leb(b, a) {
-    true => {
-      sub(a, b)
-    },
-    false => {
-      sub(add(a, __rocq_global_81), b)
-    },
+  if leb(b, a) {
+    sub(a, b)
+  } else {
+    sub(add(a, __rocq_global_81), b)
   }
 }
 
 // Rocq: Hashing.hashing_implem.hash
 // Variant: uncurried
 pub fn hash(pre: Rc<Array<u64>>, pw: Rc<Array<u64>>, L: u64, R: u64) -> u64 {
-  let v9 = sub(R, L);
-  let v10 = &pw;
-  let k = rocq_array::get::<u64>(&v10, v9);
+  let k = rocq_array::get::<u64>(&pw, sub(R, L));
   std::mem::drop(pw);
-  let v16 = &pre;
-  let v19 = rocq_array::get::<u64>(&v16, R);
-  let v21 = &pre;
-  let v24 = rocq_array::get::<u64>(&v21, L);
+  let tmp = rocq_array::get::<u64>(&pre, R);
+  let tmp_1 = rocq_array::get::<u64>(&pre, L);
   std::mem::drop(pre);
-  addmod(submod(v19, mulmod(v24, k)), k)
+  addmod(submod(tmp, mulmod(tmp_1, k)), k)
 }
 
 // Rocq: Hashing.hashing_implem.q_loop
@@ -258,18 +226,16 @@ pub fn q_loop_1(pre: Rc<Array<u64>>, pw: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr:
 // Rocq: Hashing.hashing_implem.q_loop (local: q_loop)
 // Variant: uncurried, lifted
 pub fn q_loop(pre: Rc<Array<u64>>, pw: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr: Rc<Array<u64>>, q: u64, j: u64, out: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(j, q);
-  match bdec(v15) {
+  let tmp = ltb(j, q);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = add(j, 1u64);
-      let v28 = &xl;
-      let v31 = rocq_array::get::<u64>(&v28, j);
-      let v32 = &xr;
-      let v35 = rocq_array::get::<u64>(&v32, j);
-      let v38 = Rc::clone(&pre);
-      let v41 = Rc::clone(&pw);
-      let v53 = rocq_array::set::<u64>(out, j, hash(v38, v41, v31, v35));
-      q_loop(pre, pw, xl, xr, q, v26, v53, ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&xl, j);
+      let tmp_3 = rocq_array::get::<u64>(&xr, j);
+      let pre_clone = Rc::clone(&pre);
+      let pw_clone = Rc::clone(&pw);
+      let tmp_4 = rocq_array::set::<u64>(out, j, hash(pre_clone, pw_clone, tmp_2, tmp_3));
+      q_loop(pre, pw, xl, xr, q, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(pre);
@@ -284,46 +250,13 @@ pub fn q_loop(pre: Rc<Array<u64>>, pw: Rc<Array<u64>>, xl: Rc<Array<u64>>, xr: R
 // Rocq: Hashing.hashing_implem.hashes_impl
 // Variant: uncurried
 pub fn hashes_impl(r: u64, s: Rc<rocq_string::RocqString>, xl: Rc<Array<u64>>, xr: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v7 = Rc::clone(&s);
-  let n = length(v7);
+  let s_clone = Rc::clone(&s);
+  let n = length(s_clone);
   let pre = prefix_hashes(r, s, n);
   let pw = powers(r, n);
-  let v23 = &xl;
-  let q = rocq_array::length::<u64>(&v23);
-  let v34 = rocq_array::make::<u64>(q, 0u64);
-  q_loop_1(pre, pw, xl, xr, q, 0u64, v34)
-}
-
-// Rocq: Hashing.hashing_implem.hashes_impl
-pub fn hashes_impl_curried(r: u64) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> {
-  let v3 = {
-    move |s: Rc<rocq_string::RocqString>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-      let r = &r;
-      let v8 = Clone::clone(r);
-      let v11 = {
-        move |xl: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-          let r = &v8;
-          let s = &s;
-          let v18 = Clone::clone(r);
-          let v20 = Rc::clone(s);
-          let v23 = {
-            move |xr: Rc<Array<u64>>| -> Rc<Array<u64>> {
-              let v33 = Clone::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&xl);
-              hashes_impl(v33, v35, v37, xr)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = Rc::new(v3);
-  v51
+  let q = rocq_array::length::<u64>(&xl);
+  let tmp = rocq_array::make::<u64>(q, 0u64);
+  q_loop_1(pre, pw, xl, xr, q, 0u64, tmp)
 }
 
 mod __rocq_reuse {
@@ -474,11 +407,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_535.with(Clone::clone);
-  v0
-}
 const __rocq_global_81: u64 = 2305843009213693951u64;
-std::thread_local! { static __rocq_global_535: Rc<dyn Fn(u64, Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = hashes(); }
-std::thread_local! { static __rocq_global_538: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>>> = hashes_curried(); }

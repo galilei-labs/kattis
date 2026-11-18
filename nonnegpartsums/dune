@@ -6,9 +6,11 @@
  (rocq.theory
   (name Nonnegpartsums.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Nonnegpartsums)
  (modules nonnegpartsums_implem)
- (theories Nonnegpartsums.spec Stdlib stdpp StdGalilei))
+  (theories Nonnegpartsums.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

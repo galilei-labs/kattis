@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -12,13 +11,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Relatives.relatives_implem.relatives
-pub fn relatives() -> Rc<dyn Fn(u64) -> u64> {
-  let v0: fn(u64) -> u64 = relatives_impl;
-  let v1: Rc<dyn Fn(u64) -> u64> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
 // Variant: uncurried
@@ -35,20 +27,17 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
+// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
 // Variant: uncurried
-pub fn mul(v0: u64, v1: u64) -> u64 {
-  rocq_int63::mul(v0, v1)
+pub fn div(v0: u64, v1: u64) -> u64 {
+  rocq_int63::div(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
@@ -59,13 +48,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Relatives.relatives_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -73,12 +59,6 @@ pub fn bdec(b: bool) -> sumbool {
 // Variant: uncurried
 pub fn mod_(v0: u64, v1: u64) -> u64 {
   rocq_int63::modulo(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
-// Variant: uncurried
-pub fn div(v0: u64, v1: u64) -> u64 {
-  rocq_int63::div(v0, v1)
 }
 
 // Rocq: Relatives.relatives_implem.divout
@@ -90,13 +70,13 @@ pub fn divout_1(p: u64, m: u64) -> u64 {
 // Rocq: Relatives.relatives_implem.divout (local: divout)
 // Variant: uncurried, lifted
 pub fn divout(p: u64, m: u64, _H: ()) -> u64 {
-  let v18 = eqb(mod_(m, p), 0u64);
-  let v40 = andb(ltb(0u64, m), ltb(1u64, p));
-  let v46 = andb(v18, v40);
-  match bdec(v46) {
+  let tmp = eqb(mod_(m, p), 0u64);
+  let tmp_1 = andb(ltb(0u64, m), ltb(1u64, p));
+  let tmp_2 = andb(tmp, tmp_1);
+  match bdec(tmp_2) {
     sumbool::left => {
-      let v55 = div(m, p);
-      divout(p, v55, ())
+      let tmp_3 = div(m, p);
+      divout(p, tmp_3, ())
     },
     sumbool::right => {
       m
@@ -108,6 +88,12 @@ pub fn divout(p: u64, m: u64, _H: ()) -> u64 {
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
   rocq_int63::add(v0, v1)
+}
+
+// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
+// Variant: uncurried
+pub fn mul(v0: u64, v1: u64) -> u64 {
+  rocq_int63::mul(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -125,28 +111,23 @@ pub fn outer_1(p: u64, m: u64, res: u64) -> u64 {
 // Rocq: Relatives.relatives_implem.outer (local: outer)
 // Variant: uncurried, lifted
 pub fn outer(p: u64, m: u64, res: u64, _H: ()) -> u64 {
-  let v29 = andb(leb(mul(p, p), m), ltb(p, m));
-  match bdec(v29) {
+  let tmp = div(m, p);
+  let tmp_1 = andb(leb(p, tmp), ltb(p, m));
+  match bdec(tmp_1) {
     sumbool::left => {
-      let v39 = mod_(m, p);
-      match eqb(v39, 0u64) {
-        true => {
-          let m_ = divout_1(p, m);
-          outer(add(p, 1u64), m_, mul(div(res, p), sub(p, 1u64)), ())
-        },
-        false => {
-          outer(add(p, 1u64), m, res, ())
-        },
+      let tmp_2 = mod_(m, p);
+      if eqb(tmp_2, 0u64) {
+        let m_ = divout_1(p, m);
+        outer(add(p, 1u64), m_, mul(div(res, p), sub(p, 1u64)), ())
+      } else {
+        outer(add(p, 1u64), m, res, ())
       }
     },
     sumbool::right => {
-      match ltb(1u64, m) {
-        true => {
-          mul(div(res, m), sub(m, 1u64))
-        },
-        false => {
-          res
-        },
+      if ltb(1u64, m) {
+        mul(div(res, m), sub(m, 1u64))
+      } else {
+        res
       }
     },
   }
@@ -154,13 +135,10 @@ pub fn outer(p: u64, m: u64, res: u64, _H: ()) -> u64 {
 
 // Rocq: Relatives.relatives_implem.relatives_impl
 pub fn relatives_impl(n: u64) -> u64 {
-  match leb(n, 1u64) {
-    true => {
-      0u64
-    },
-    false => {
-      outer_1(2u64, n, n)
-    },
+  if leb(n, 1u64) {
+    0u64
+  } else {
+    outer_1(2u64, n, n)
   }
 }
 
@@ -312,9 +290,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64) -> u64> {
-  let v0: Rc<dyn Fn(u64) -> u64> = __rocq_global_258.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_258: Rc<dyn Fn(u64) -> u64> = relatives(); }

@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -12,21 +11,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Derangementrotations.derangementrotations_implem.derangement_rotations
-// Variant: uncurried
-pub fn derangement_rotations() -> Rc<dyn Fn(u64, u64) -> u64> {
-  let v0: fn(u64, u64) -> u64 = derangement_rotations_impl;
-  let v1: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Derangementrotations.derangementrotations_implem.derangement_rotations
-pub fn derangement_rotations_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> u64> = derangement_rotations_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
@@ -42,13 +26,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Derangementrotations.derangementrotations_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -91,25 +72,22 @@ pub fn pow_loop_1(p: u64, base: u64, e: u64, acc: u64) -> u64 {
 // Rocq: Derangementrotations.derangementrotations_implem.pow_loop (local: pow_loop)
 // Variant: uncurried, lifted
 pub fn pow_loop(p: u64, base: u64, e: u64, acc: u64, _H: ()) -> u64 {
-  let v14 = eqb(e, 0u64);
-  match bdec(v14) {
+  let tmp = eqb(e, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       acc
     },
     sumbool::right => {
-      let v31 = mod_(mul(base, base), p);
-      let v39 = div(e, 2u64);
-      let v48 = mod_(e, 2u64);
-      let v50 = 0u64;
-      let v56 = match eqb(v48, v50) {
-        true => {
-          acc
-        },
-        false => {
-          mod_(mul(acc, base), p)
-        },
+      let tmp_1 = mod_(mul(base, base), p);
+      let tmp_2 = div(e, 2u64);
+      let tmp_3 = mod_(e, 2u64);
+      let tmp_4 = 0u64;
+      let tmp_5 = if eqb(tmp_3, tmp_4) {
+        acc
+      } else {
+        mod_(mul(acc, base), p)
       };
-      pow_loop(p, v31, v39, v56, ())
+      pow_loop(p, tmp_1, tmp_2, tmp_5, ())
     },
   }
 }
@@ -129,14 +107,14 @@ pub fn gcd_loop_1(a: u64, b: u64) -> u64 {
 // Rocq: Derangementrotations.derangementrotations_implem.gcd_loop (local: gcd_loop)
 // Variant: uncurried, lifted
 pub fn gcd_loop(a: u64, b: u64, _H: ()) -> u64 {
-  let v12 = eqb(b, 0u64);
-  match bdec(v12) {
+  let tmp = eqb(b, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       a
     },
     sumbool::right => {
-      let v23 = mod_(a, b);
-      gcd_loop(b, v23, ())
+      let tmp_1 = mod_(a, b);
+      gcd_loop(b, tmp_1, ())
     },
   }
 }
@@ -156,15 +134,15 @@ pub fn sum_loop_1(n: u64, m: u64, p: u64, d: u64, acc: u64) -> u64 {
 // Rocq: Derangementrotations.derangementrotations_implem.sum_loop (local: sum_loop)
 // Variant: uncurried, lifted
 pub fn sum_loop(n: u64, m: u64, p: u64, d: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(d, m);
-  match bdec(v13) {
+  let tmp = ltb(d, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(d, 1u64);
-      let v34 = sub(m, d);
-      let v66 = mod_(sub(add(pow2mod(p, gcd63(d, n)), p), 2u64), p);
-      let v76 = mod_(mul(v34, v66), p);
-      let v86 = mod_(add(acc, v76), p);
-      sum_loop(n, m, p, v24, v86, ())
+      let tmp_1 = add(d, 1u64);
+      let tmp_2 = sub(m, d);
+      let tmp_3 = mod_(sub(add(pow2mod(p, gcd63(d, n)), p), 2u64), p);
+      let tmp_4 = mod_(mul(tmp_2, tmp_3), p);
+      let tmp_5 = mod_(add(acc, tmp_4), p);
+      sum_loop(n, m, p, tmp_1, tmp_5, ())
     },
     sumbool::right => {
       acc
@@ -175,20 +153,8 @@ pub fn sum_loop(n: u64, m: u64, p: u64, d: u64, acc: u64, _H: ()) -> u64 {
 // Rocq: Derangementrotations.derangementrotations_implem.derangement_rotations_impl
 // Variant: uncurried
 pub fn derangement_rotations_impl(n: u64, p: u64) -> u64 {
-  let v10 = sub(n, 1u64);
-  sum_loop_1(n, v10, p, 1u64, 0u64)
-}
-
-// Rocq: Derangementrotations.derangementrotations_implem.derangement_rotations_impl
-pub fn derangement_rotations_impl_curried(n: u64) -> Rc<dyn Fn(u64) -> u64> {
-  let v3 = {
-    move |p: u64| -> u64 {
-      let v9 = Clone::clone(&n);
-      derangement_rotations_impl(v9, p)
-    }
-  };
-  let v15: Rc<dyn Fn(u64) -> u64> = Rc::new(v3);
-  v15
+  let tmp = sub(n, 1u64);
+  sum_loop_1(n, tmp, p, 1u64, 0u64)
 }
 
 mod __rocq_reuse {
@@ -339,10 +305,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64) -> u64> {
-  let v0: Rc<dyn Fn(u64, u64) -> u64> = __rocq_global_307.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_307: Rc<dyn Fn(u64, u64) -> u64> = derangement_rotations(); }
-std::thread_local! { static __rocq_global_310: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = derangement_rotations_curried(); }

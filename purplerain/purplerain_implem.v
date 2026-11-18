@@ -21,6 +21,7 @@ From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
 From Stdlib Require PrimString String.
 From Stdlib Require Import Ascii.
+From KattisLib Require Import Cost.
 
 Open Scope uint63_scope.
 
@@ -37,6 +38,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -69,6 +72,8 @@ Fixpoint scan (x : PrimString.string) (n k p mx imx mn imn : int)
         scan x n k' p' mx imx mn imn (Acc_inv H (dec_step n k Hk))
   | right _ => (imx, imn)
   end.
+Elpi complexity scan.
+Arguments scan_cost : simpl never.
 
 Lemma scan_eq : forall x n k p mx imx mn imn H,
   scan x n k p mx imx mn imn H =
@@ -91,6 +96,8 @@ Definition purplerain_impl (x : PrimString.string) : uint * uint :=
   match scan x n 0 n n 0 n 0 (Zwf_well_founded 0 (gap n 0)) with
   | (a, b) => if a <? b then (a + 1, b) else (b + 1, a)
   end.
+Elpi complexity purplerain_impl.
+Arguments purplerain_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: prefix sums on the math string                           *)
@@ -394,8 +401,108 @@ Proof.
 Qed.
 
 Definition purplerain : PrimString.string -> uint * uint := purplerain_impl.
+Elpi complexity purplerain.
 
 Definition purplerain_correct : forall (s : String.string) (x : PrimString.string),
   valid_input s -> repr x s ->
   exists o : N * N, repr (purplerain x) o /\ purplerain_spec s o
   := purplerain_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+(* scan from k costs at most 60 per remaining section plus 10
+   (scan_time, by induction on a nat bound of gap n k, the Acc proof
+   destructed so that cost_simpl unfolds the fix once); purplerain at most
+   60 * size x + 40 (purplerain_time): the partial applications of
+   scan_cost cost 0 by conversion, the full one is bounded by scan_time,
+   the pair result split with cost_destruct_witness. *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Ltac use_IH IH Hk' :=
+  match goal with |- context [@cost ?T (?G' ?x1 ?xC1 ?n1 ?nC1 ?k2 ?kC2 ?p2 ?pC2 ?mx2 ?mxC2 ?imx2 ?imxC2 ?mn2 ?mnC2 ?imn2 ?imnC2 ?h ?e)] =>
+    let HI := fresh "HI" in
+    have HI := (IH k2 kC2 p2 pC2 mx2 mxC2 imx2 imxC2 mn2 mnC2 imn2 imnC2 h e Hk'
+       : (@cost T (G' x1 xC1 n1 nC1 k2 kC2 p2 pC2 mx2 mxC2 imx2 imxC2 mn2 mnC2 imn2 imnC2 h e) <= _)%nat);
+    revert HI; generalize (@cost T (G' x1 xC1 n1 nC1 k2 kC2 p2 pC2 mx2 mxC2 imx2 imxC2 mn2 mnC2 imn2 imnC2 h e)); intros ? HI
+  end.
+
+Lemma scan_time x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (extract
+     (scan_cost stepsCM x xC) n nC) k kC) p pC) mx mxC) imx imxC) mn mnC) imn imnC) H HC)
+   <= Z.to_nat (gap n k) * 60 + 10)%nat.
+Proof.
+  unfold scan_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC)] =>
+    assert (HG : forall m k kC p pC mx mxC imx imxC mn mnC imn imnC H HC,
+       (Z.to_nat (gap n k) <= m)%nat ->
+       (cost (G x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC) <= m * 60 + 10)%nat) end.
+  { induction m as [|m IH]; intros k' kC' p' pC' mx' mxC' imx' imxC' mn' mnC' imn' imnC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (k' <? n) (bool_w (k' <? n))) as HB;
+      cost_destruct (bdec (k' <? n)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hk' : (Z.to_nat (gap n (k' + 1)) <= m)%nat).
+      { unfold gap in *. assert (φ (k' + 1) = φ k' + 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      clear Hlt Hk.
+      cost_destruct (PrimString.get x k' =? 82); cost_simpl.
+      + cost_destruct (mx' <? p' + 1); cost_simpl; [use_IH IH Hk'; lia|].
+        cost_destruct (p' + 1 <? mn'); cost_simpl; use_IH IH Hk'; lia.
+      + cost_destruct (mx' <? p' - 1); cost_simpl; [use_IH IH Hk'; lia|].
+        cost_destruct (p' - 1 <? mn'); cost_simpl; use_IH IH Hk'; lia.
+    - lia.
+  }
+  match goal with |- context [@cost ?T (?G x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC)] =>
+    exact (HG _ k kC p pC mx mxC imx imxC mn mnC imn imnC H HC (le_n _)
+           : (@cost T (G x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC) <= _)%nat) end.
+Qed.
+
+Ltac zero_partial f :=
+  repeat match goal with
+  | |- context [cost (f ?a ?b ?c)] => change (cost (f a b c)) with 0%nat
+  | |- context [cost (extract (f ?a ?b ?c) ?d1 ?e1)] => change (cost (extract (f a b c) d1 e1)) with 0%nat
+  | |- context [cost (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2)] =>
+      change (cost (extract (extract (f a b c) d1 e1) d2 e2)) with 0%nat
+  | |- context [cost (extract (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3)] =>
+      change (cost (extract (extract (extract (f a b c) d1 e1) d2 e2) d3 e3)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4)] =>
+      change (cost (extract (extract (extract (extract (f a b c) d1 e1) d2 e2) d3 e3) d4 e4)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5)] =>
+      change (cost (extract (extract (extract (extract (extract (f a b c) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5) ?d6 ?e6)] =>
+      change (cost (extract (extract (extract (extract (extract (extract (f a b c) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5) d6 e6)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5) ?d6 ?e6) ?d7 ?e7)] =>
+      change (cost (extract (extract (extract (extract (extract (extract (extract (f a b c) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5) d6 e6) d7 e7)) with 0%nat
+  end.
+
+Ltac gen_scan := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (extract (extract (scan_cost stepsCM ?x ?xC) ?n ?nC) ?k ?kC) ?p ?pC) ?mx ?mxC) ?imx ?imxC) ?mn ?mnC) ?imn ?imnC) ?H ?HC =>
+    let Hc := fresh "Hscan" in
+    have Hc := (scan_time x xC n nC k kC p pC mx mxC imx imxC mn mnC imn imnC H HC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Theorem purplerain_time : exists c1 c2 : nat, forall colors_str : PrimString.string,
+  (cost1 purplerain_cost colors_str <= c1 * size colors_str + c2)%nat.
+Proof.
+  exists 60%nat, 40%nat. intros x.
+  enough (Hc : (cost1 purplerain_cost x <= size x * 60 + 40)%nat) by lia.
+  unfold cost1, purplerain_cost, purplerain_impl_cost. cost_simpl.
+  zero_partial scan_cost.
+  gen_scan.
+  cost_destruct_witness (scan x (PrimString.length x) 0 (PrimString.length x) (PrimString.length x) 0
+     (PrimString.length x) 0 (Zwf_well_founded 0 (gap (PrimString.length x) 0))) as [a aC b bC] eqn:E.
+  cost_simpl.
+  cost_destruct (a <? b); cost_simpl.
+  all: unfold gap in Hscan; change (φ 0) with 0%Z in Hscan; rewrite Z.sub_0_r in Hscan;
+    change (Z.to_nat (φ (PrimString.length x))) with (size x) in Hscan.
+  all: lia.
+Qed.
+
+Print Assumptions purplerain_time.

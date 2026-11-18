@@ -12,12 +12,12 @@
 
     **Kattis Bounds**
     - Currency count: $1 \le C \le 200$; at most $C(C-1)$ exchange rates.
-    - Each rate exchanges between $1$ and $100$ units of each of two distinct
+    - Each rate exchanges $1 \le A_i, B_i \le 100$ units of each of two distinct
       currencies. *)
 
 (** ** Examples *)
 
-(** - Input convention: Per case: currency count and names, then exchange rates written as source destination A:B; 0 ends input.
+(** - Input convention: Each case starts with a currency count $C$, followed by $C$ distinct currency names. Next comes an exchange-rate count $R$, followed by $R$ lines of the form [source destination A:B]. Each line means that paying $A$ units of [source] gives $B$ units of [destination]. A currency count of $0$ ends the input.
     - Output convention: Arbitrage if a profitable exchange cycle exists; Ok otherwise. *)
 (* Input:
 2
@@ -79,7 +79,7 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  A currency is its 0-based position in the
+(* A currency is its 0-based position in the
   line of codes (the
    codes of one test case are different); a rate is the k-th
      entry of four
@@ -90,18 +90,16 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th element of l (0 beyond the end, never read
-    there). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get (l : list N) (k : N) : N :=
   nth (N.to_nat k) l 0.
 
-(** Performing the exchanges exchanges in order leads
-    from currency start to currency finish: each one is
-    paid in the currency the previous one produced. *)
+(** The ordered sequence [exchanges] converts currency [start] to currency [finish],
+    with each exchange accepting the currency produced by the preceding one. *)
 Fixpoint leads (from_currencies to_currencies : list N)
   (start finish : N)
     (exchanges : list N) : Prop :=
@@ -113,9 +111,8 @@ Fixpoint leads (from_currencies to_currencies : list N)
         (get to_currencies k) finish rest
   end.
 
-(** The amount held after the exchanges exchanges,
-    starting from amount units: paying amount units at
-    rate A:B gives amount * B / A units. *)
+(** The amount remaining after [exchanges], starting with [amount] units. An
+    exchange quoted as $A:B$ multiplies the amount by $B/A$. *)
 Fixpoint amount_after (paid_units got_units : list N)
   (exchanges : list N)
     (amount : Q) : Q :=
@@ -182,26 +179,82 @@ Definition arbitrage_spec (currency_count : N)
     (from_currencies to_currencies paid_units got_units :
       list N)
     (output : bool) : Prop :=
-  match output with
-  | true => profitable from_currencies to_currencies
-    paid_units got_units
-  | false => ~ profitable from_currencies to_currencies
-    paid_units got_units
-  end.
+  output = true <-> profitable from_currencies to_currencies
+    paid_units got_units.
 
 (** ** Interface *)
 
 (** Decide whether a cycle of currency exchanges can increase the starting amount, using the
     given exact exchange rates.
+    Currencies are numbered from zero in the order their names appear in the
+    input. The four exchange lists each have one entry per exchange-rate
+    line; entries at the same index describe one exchange. A rate [A:B]
+    pays [A] units of the source currency and receives [B] units of the
+    destination currency.
     - Input [currency_count]: Number of currencies.
-    - Input [from_currencies]: Currency paid in each exchange.
-    - Input [to_currencies]: Currency received in each exchange.
-    - Input [paid_units]: Units paid for each exchange rate.
-    - Input [got_units]: Units received for the corresponding payment.
+    - Input [from_currencies]: Zero-based source currency index for each exchange.
+    - Input [to_currencies]: Zero-based destination currency index for each exchange.
+    - Input [paid_units]: Source currency units paid, the A in each rate A:B.
+    - Input [got_units]: Destination currency units received, the B in each rate A:B.
     - Output [output]: The output is true exactly when a cycle of exchanges strictly increases the initial amount of a currency. *)
 Program arbitrage :
   uint -> array uint -> array uint -> array uint
     -> array uint -> bool.
+
+(** [@example arbitrage]
+    - Sample: 1
+    - Case: 1
+    - Input [currency_count]: 2
+    - Input [from_currencies]: [0; 1]
+    - Input [to_currencies]: [1; 0]
+    - Input [paid_units]: [25; 1]
+    - Input [got_units]: [1; 25]
+    - Output [output]: false
+*)
+
+(** [@example arbitrage]
+    - Sample: 1
+    - Case: 2
+    - Input [currency_count]: 2
+    - Input [from_currencies]: [1; 0]
+    - Input [to_currencies]: [0; 1]
+    - Input [paid_units]: [8; 5]
+    - Input [got_units]: [5; 9]
+    - Output [output]: true
+*)
+
+(** [@example arbitrage]
+    - Sample: 1
+    - Case: 3
+    - Input [currency_count]: 3
+    - Input [from_currencies]: [1; 0; 1]
+    - Input [to_currencies]: [0; 2; 2]
+    - Input [paid_units]: [1; 1; 1]
+    - Input [got_units]: [6; 5; 20]
+    - Output [output]: false
+*)
+
+(** [@example arbitrage]
+    - Sample: 1
+    - Case: 4
+    - Input [currency_count]: 3
+    - Input [from_currencies]: [0; 1; 2]
+    - Input [to_currencies]: [1; 2; 0]
+    - Input [paid_units]: [24; 5; 1]
+    - Input [got_units]: [1; 4; 30]
+    - Output [output]: false
+*)
+
+(** [@example arbitrage]
+    - Sample: 1
+    - Case: 5
+    - Input [currency_count]: 3
+    - Input [from_currencies]: [0; 0; 2; 1]
+    - Input [to_currencies]: [1; 2; 0; 2]
+    - Input [paid_units]: [28; 31; 1; 1]
+    - Input [got_units]: [1; 1; 31; 1]
+    - Output [output]: true
+*)
 
 (** ** Bridge *)
 
@@ -238,7 +291,7 @@ Specification arbitrage_correct :
 Allowed Primitive Axioms.
 
 (** [@hide] The four classical axioms Stdlib's reals
-    rest on: the math side is not over R, but an
+    rest on: the specification is not over R, but an
     accepted implementation proves through Stdlib's
     reals (decision of 2026-10-23). *)
 Allowed Axioms ClassicalDedekindReals.sig_forall_dec

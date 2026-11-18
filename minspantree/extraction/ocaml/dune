@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules minspantree_extracted_marray)
- (theories Minspantree Minspantree.spec Stdlib stdpp StdGalilei))
+ (theories Minspantree Minspantree.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name minspantree_extraction)

@@ -21,4 +21,4 @@ archive = "booking_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/booking.ml"
-Rust = "extraction/rust/submit/booking.rs"
+Rust = "extraction/rust/snapshots/booking_extracted.rs.interface.json"

@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -671,21 +670,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Convexhull.convexhull_implem.convex_hull
-// Variant: uncurried
-pub fn convex_hull() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = hull;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Convexhull.convexhull_implem.convex_hull
-pub fn convex_hull_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = hull_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -695,13 +679,10 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -719,26 +700,20 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Convexhull.convexhull_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Convexhull.convexhull_implem.min_i
 // Variant: uncurried
 pub fn min_i(a: u64, b: u64) -> u64 {
-  match ltb(a, b) {
-    true => {
-      a
-    },
-    false => {
-      b
-    },
+  if ltb(a, b) {
+    a
+  } else {
+    b
   }
 }
 
@@ -757,65 +732,47 @@ pub fn lesb(v0: u64, v1: u64) -> bool {
 // Rocq: Convexhull.convexhull_implem.le_pt
 // Variant: uncurried
 pub fn le_pt(x: Rc<Array<u64>>, y: Rc<Array<u64>>, a: u64, b: u64) -> bool {
-  let v4 = &x;
-  let xa = rocq_array::get::<u64>(&v4, a);
-  let v8 = &x;
-  let xb = rocq_array::get::<u64>(&v8, b);
-  match ltsb(xa, xb) {
-    true => {
+  let xa = rocq_array::get::<u64>(&x, a);
+  let xb = rocq_array::get::<u64>(&x, b);
+  if ltsb(xa, xb) {
+    std::mem::drop(y);
+    std::mem::drop(x);
+    true
+  } else {
+    if eqb(xa, xb) {
+      std::mem::drop(x);
+      let tmp = rocq_array::get::<u64>(&y, a);
+      let tmp_1 = rocq_array::get::<u64>(&y, b);
+      std::mem::drop(y);
+      lesb(tmp, tmp_1)
+    } else {
       std::mem::drop(y);
       std::mem::drop(x);
-      true
-    },
-    false => {
-      match eqb(xa, xb) {
-        true => {
-          std::mem::drop(x);
-          let v31 = &y;
-          let v34 = rocq_array::get::<u64>(&v31, a);
-          let v35 = &y;
-          let v38 = rocq_array::get::<u64>(&v35, b);
-          std::mem::drop(y);
-          lesb(v34, v38)
-        },
-        false => {
-          std::mem::drop(y);
-          std::mem::drop(x);
-          false
-        },
-      }
-    },
+      false
+    }
   }
 }
 
 // Rocq: Convexhull.convexhull_implem.take_left
 // Variant: uncurried
 pub fn take_left(x: Rc<Array<u64>>, y: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64) -> bool {
-  match ltb(i, mid) {
-    true => {
-      match ltb(j, hi) {
-        true => {
-          let v22 = &src;
-          let v25 = rocq_array::get::<u64>(&v22, i);
-          let v26 = &src;
-          let v29 = rocq_array::get::<u64>(&v26, j);
-          std::mem::drop(src);
-          le_pt(x, y, v25, v29)
-        },
-        false => {
-          std::mem::drop(x);
-          std::mem::drop(y);
-          std::mem::drop(src);
-          true
-        },
-      }
-    },
-    false => {
+  if ltb(i, mid) {
+    if ltb(j, hi) {
+      let tmp = rocq_array::get::<u64>(&src, i);
+      let tmp_1 = rocq_array::get::<u64>(&src, j);
+      std::mem::drop(src);
+      le_pt(x, y, tmp, tmp_1)
+    } else {
       std::mem::drop(x);
       std::mem::drop(y);
       std::mem::drop(src);
-      false
-    },
+      true
+    }
+  } else {
+    std::mem::drop(x);
+    std::mem::drop(y);
+    std::mem::drop(src);
+    false
   }
 }
 
@@ -828,29 +785,24 @@ pub fn merge_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u
 // Rocq: Convexhull.convexhull_implem.merge (local: merge)
 // Variant: uncurried, lifted
 pub fn merge(x: Rc<Array<u64>>, y: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v17 = ltb(k, hi);
-  match bdec(v17) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = Rc::clone(&x);
-      let v27 = Rc::clone(&y);
-      let v30 = Rc::clone(&src);
-      match take_left(v24, v27, v30, mid, hi, i, j) {
-        true => {
-          let v48 = add(i, 1u64);
-          let v56 = add(k, 1u64);
-          let v57 = &src;
-          let v60 = rocq_array::get::<u64>(&v57, i);
-          let v67 = rocq_array::set::<u64>(dst, k, v60);
-          merge(x, y, src, mid, hi, v48, j, v56, v67, ())
-        },
-        false => {
-          let v101 = add(j, 1u64);
-          let v109 = add(k, 1u64);
-          let v110 = &src;
-          let v113 = rocq_array::get::<u64>(&v110, j);
-          let v120 = rocq_array::set::<u64>(dst, k, v113);
-          merge(x, y, src, mid, hi, i, v101, v109, v120, ())
-        },
+      let x_clone = Rc::clone(&x);
+      let y_clone = Rc::clone(&y);
+      let src_clone = Rc::clone(&src);
+      if take_left(x_clone, y_clone, src_clone, mid, hi, i, j) {
+        let tmp_1 = add(i, 1u64);
+        let tmp_2 = add(k, 1u64);
+        let tmp_3 = rocq_array::get::<u64>(&src, i);
+        let tmp_4 = rocq_array::set::<u64>(dst, k, tmp_3);
+        merge(x, y, src, mid, hi, tmp_1, j, tmp_2, tmp_4, ())
+      } else {
+        let tmp_5 = add(j, 1u64);
+        let tmp_6 = add(k, 1u64);
+        let tmp_7 = rocq_array::get::<u64>(&src, j);
+        let tmp_8 = rocq_array::set::<u64>(dst, k, tmp_7);
+        merge(x, y, src, mid, hi, i, tmp_5, tmp_6, tmp_8, ())
       }
     },
     sumbool::right => {
@@ -871,21 +823,21 @@ pub fn pass_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, src: Rc<Array<u64>>, w: u64,
 // Rocq: Convexhull.convexhull_implem.pass (local: pass)
 // Variant: uncurried, lifted
 pub fn pass(x: Rc<Array<u64>>, y: Rc<Array<u64>>, src: Rc<Array<u64>>, w: u64, n: u64, lo: u64, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v18 = add(lo, w);
-  let v33 = ltb(lo, min_i(add(v18, w), n));
-  match bdec(v33) {
+  let tmp = add(lo, w);
+  let tmp_1 = ltb(lo, min_i(add(tmp, w), n));
+  match bdec(tmp_1) {
     sumbool::left => {
-      let v45 = add(lo, w);
-      let v54 = min_i(add(v45, w), n);
-      let v67 = min_i(add(lo, w), n);
-      let v76 = add(lo, w);
-      let v85 = min_i(add(v76, w), n);
-      let v97 = min_i(add(lo, w), n);
-      let v100 = Rc::clone(&x);
-      let v103 = Rc::clone(&y);
-      let v106 = Rc::clone(&src);
-      let v119 = merge_1(v100, v103, v106, v67, v85, lo, v97, lo, dst);
-      pass(x, y, src, w, n, v54, v119, ())
+      let tmp_2 = add(lo, w);
+      let tmp_3 = min_i(add(tmp_2, w), n);
+      let tmp_4 = min_i(add(lo, w), n);
+      let tmp_5 = add(lo, w);
+      let tmp_6 = min_i(add(tmp_5, w), n);
+      let tmp_7 = min_i(add(lo, w), n);
+      let x_clone = Rc::clone(&x);
+      let y_clone = Rc::clone(&y);
+      let src_clone = Rc::clone(&src);
+      let tmp_8 = merge_1(x_clone, y_clone, src_clone, tmp_4, tmp_6, lo, tmp_7, lo, dst);
+      pass(x, y, src, w, n, tmp_3, tmp_8, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -905,17 +857,17 @@ pub fn sortl_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, n: u64, w: u64, src: Rc<Arr
 // Rocq: Convexhull.convexhull_implem.sortl (local: sortl)
 // Variant: uncurried, lifted
 pub fn sortl(x: Rc<Array<u64>>, y: Rc<Array<u64>>, n: u64, w: u64, src: Rc<Array<u64>>, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(w, n);
-  let v21 = add(w, w);
-  let v32 = andb(v14, ltb(w, v21));
-  match bdec(v32) {
+  let tmp = ltb(w, n);
+  let tmp_1 = add(w, w);
+  let tmp_2 = andb(tmp, ltb(w, tmp_1));
+  match bdec(tmp_2) {
     sumbool::left => {
-      let v41 = add(w, w);
-      let v47 = Rc::clone(&x);
-      let v50 = Rc::clone(&y);
-      let v53 = Rc::clone(&src);
-      let v62 = pass_1(v47, v50, v53, w, n, 0u64, dst);
-      sortl(x, y, n, v41, v62, src, ())
+      let tmp_3 = add(w, w);
+      let x_clone = Rc::clone(&x);
+      let y_clone = Rc::clone(&y);
+      let src_clone = Rc::clone(&src);
+      let tmp_4 = pass_1(x_clone, y_clone, src_clone, w, n, 0u64, dst);
+      sortl(x, y, n, tmp_3, tmp_4, src, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -935,12 +887,12 @@ pub fn initl_1(n: u64, i: u64, a: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Convexhull.convexhull_implem.initl (local: initl)
 // Variant: uncurried, lifted
 pub fn initl(n: u64, i: u64, a: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(i, 1u64);
-      let v29 = rocq_array::set::<u64>(a, i, i);
-      initl(n, v22, v29, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(a, i, i);
+      initl(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       a
@@ -951,10 +903,10 @@ pub fn initl(n: u64, i: u64, a: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 // Rocq: Convexhull.convexhull_implem.msort
 // Variant: uncurried
 pub fn msort(x: Rc<Array<u64>>, y: Rc<Array<u64>>, n: u64) -> Rc<Array<u64>> {
-  let v15 = rocq_array::make::<u64>(n, 0u64);
-  let v22 = initl_1(n, 0u64, v15);
-  let v29 = rocq_array::make::<u64>(n, 0u64);
-  sortl_1(x, y, n, 1u64, v22, v29)
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = initl_1(n, 0u64, tmp);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  sortl_1(x, y, n, 1u64, tmp_1, tmp_2)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -972,25 +924,19 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Convexhull.convexhull_implem.cross_m
 // Variant: uncurried
 pub fn cross_m(x: Rc<Array<u64>>, y: Rc<Array<u64>>, a: u64, b: u64, c: u64) -> u64 {
-  let v5 = &x;
-  let xa = rocq_array::get::<u64>(&v5, a);
-  let v9 = &y;
-  let ya = rocq_array::get::<u64>(&v9, a);
-  let v16 = &x;
-  let v20 = rocq_array::get::<u64>(&v16, b);
-  let v24 = sub(v20, xa);
-  let v26 = &y;
-  let v30 = rocq_array::get::<u64>(&v26, c);
-  let v39 = mul(v24, sub(v30, ya));
-  let v42 = &y;
-  let v45 = rocq_array::get::<u64>(&v42, b);
+  let xa = rocq_array::get::<u64>(&x, a);
+  let ya = rocq_array::get::<u64>(&y, a);
+  let tmp = rocq_array::get::<u64>(&x, b);
+  let tmp_1 = sub(tmp, xa);
+  let tmp_2 = rocq_array::get::<u64>(&y, c);
+  let tmp_3 = mul(tmp_1, sub(tmp_2, ya));
+  let tmp_4 = rocq_array::get::<u64>(&y, b);
   std::mem::drop(y);
-  let v50 = sub(v45, ya);
-  let v52 = &x;
-  let v55 = rocq_array::get::<u64>(&v52, c);
+  let tmp_5 = sub(tmp_4, ya);
+  let tmp_6 = rocq_array::get::<u64>(&x, c);
   std::mem::drop(x);
-  let v60 = sub(v55, xa);
-  sub(v39, mul(v50, v60))
+  let tmp_7 = sub(tmp_6, xa);
+  sub(tmp_3, mul(tmp_5, tmp_7))
 }
 
 // Rocq: Convexhull.convexhull_implem.pop
@@ -1002,17 +948,13 @@ pub fn pop_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, st: Rc<Array<u64>>, lim: u64,
 // Rocq: Convexhull.convexhull_implem.pop (local: pop)
 // Variant: uncurried, lifted
 pub fn pop(x: Rc<Array<u64>>, y: Rc<Array<u64>>, st: Rc<Array<u64>>, lim: u64, k: u64, q: u64, _H: ()) -> u64 {
-  let v14 = ltb(lim, k);
-  let v24 = sub(k, 2u64);
-  let v25 = &st;
-  let v28 = rocq_array::get::<u64>(&v25, v24);
-  let v36 = sub(k, 1u64);
-  let v37 = &st;
-  let v40 = rocq_array::get::<u64>(&v37, v36);
-  let v43 = Rc::clone(&x);
-  let v46 = Rc::clone(&y);
-  let v66 = andb(v14, lesb(cross_m(v43, v46, v28, v40, q), 0u64));
-  match bdec(v66) {
+  let tmp = ltb(lim, k);
+  let tmp_1 = rocq_array::get::<u64>(&st, sub(k, 2u64));
+  let tmp_2 = rocq_array::get::<u64>(&st, sub(k, 1u64));
+  let x_clone = Rc::clone(&x);
+  let y_clone = Rc::clone(&y);
+  let tmp_3 = andb(tmp, lesb(cross_m(x_clone, y_clone, tmp_1, tmp_2, q), 0u64));
+  match bdec(tmp_3) {
     sumbool::left => {
       pop(x, y, st, lim, sub(k, 1u64), q, ())
     },
@@ -1034,17 +976,16 @@ pub fn lower_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ord: Rc<Array<u64>>, st: Rc
 // Rocq: Convexhull.convexhull_implem.lower (local: lower)
 // Variant: uncurried, lifted
 pub fn lower(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ord: Rc<Array<u64>>, st: Rc<Array<u64>>, n: u64, k: u64, i: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &ord;
-      let q = rocq_array::get::<u64>(&v19, i);
-      let v28 = Rc::clone(&x);
-      let v31 = Rc::clone(&y);
-      let v34 = Rc::clone(&st);
-      let k_ = pop_1(v28, v31, v34, 1u64, k, q);
-      let v48 = rocq_array::set::<u64>(st, k_, q);
-      lower(x, y, ord, v48, n, add(k_, 1u64), add(i, 1u64), ())
+      let q = rocq_array::get::<u64>(&ord, i);
+      let x_clone = Rc::clone(&x);
+      let y_clone = Rc::clone(&y);
+      let st_clone = Rc::clone(&st);
+      let k_ = pop_1(x_clone, y_clone, st_clone, 1u64, k, q);
+      let tmp_1 = rocq_array::set::<u64>(st, k_, q);
+      lower(x, y, ord, tmp_1, n, add(k_, 1u64), add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -1064,18 +1005,16 @@ pub fn upper_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ord: Rc<Array<u64>>, st: Rc
 // Rocq: Convexhull.convexhull_implem.upper (local: upper)
 // Variant: uncurried, lifted
 pub fn upper(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ord: Rc<Array<u64>>, st: Rc<Array<u64>>, lim: u64, k: u64, j: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v17 = ltb(0u64, j);
-  match bdec(v17) {
+  let tmp = ltb(0u64, j);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = sub(j, 1u64);
-      let v29 = &ord;
-      let q = rocq_array::get::<u64>(&v29, v28);
-      let v36 = Rc::clone(&x);
-      let v39 = Rc::clone(&y);
-      let v42 = Rc::clone(&st);
-      let k_ = pop_1(v36, v39, v42, lim, k, q);
-      let v56 = rocq_array::set::<u64>(st, k_, q);
-      upper(x, y, ord, v56, lim, add(k_, 1u64), sub(j, 1u64), ())
+      let q = rocq_array::get::<u64>(&ord, sub(j, 1u64));
+      let x_clone = Rc::clone(&x);
+      let y_clone = Rc::clone(&y);
+      let st_clone = Rc::clone(&st);
+      let k_ = pop_1(x_clone, y_clone, st_clone, lim, k, q);
+      let tmp_1 = rocq_array::set::<u64>(st, k_, q);
+      upper(x, y, ord, tmp_1, lim, add(k_, 1u64), sub(j, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -1095,13 +1034,12 @@ pub fn copyl_1(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, h: u64, i: u64) -> Rc<A
 // Rocq: Convexhull.convexhull_implem.copyl (local: copyl)
 // Variant: uncurried, lifted
 pub fn copyl(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, h: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, h);
-  match bdec(v12) {
+  let tmp = ltb(i, h);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &src;
-      let v19 = rocq_array::get::<u64>(&v16, i);
-      let v26 = rocq_array::set::<u64>(dst, i, v19);
-      copyl(src, v26, h, add(i, 1u64), ())
+      let tmp_1 = rocq_array::get::<u64>(&src, i);
+      let tmp_2 = rocq_array::set::<u64>(dst, i, tmp_1);
+      copyl(src, tmp_2, h, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(src);
@@ -1113,71 +1051,47 @@ pub fn copyl(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, h: u64, i: u64, _H: ()) -
 // Rocq: Convexhull.convexhull_implem.hull
 // Variant: uncurried
 pub fn hull(x: Rc<Array<u64>>, y: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v2 = &x;
-  let n = rocq_array::length::<u64>(&v2);
-  let v7 = Rc::clone(&x);
-  let v10 = Rc::clone(&y);
-  let ord = msort(v7, v10, n);
-  let v15 = 0u64;
-  let v16 = &ord;
-  let a = rocq_array::get::<u64>(&v16, v15);
-  let v27 = sub(n, 1u64);
-  let v28 = &ord;
-  let b = rocq_array::get::<u64>(&v28, v27);
-  let v34 = &x;
-  let v37 = rocq_array::get::<u64>(&v34, a);
-  let v38 = &x;
-  let v41 = rocq_array::get::<u64>(&v38, b);
-  let v46 = eqb(v37, v41);
-  let v48 = &y;
-  let v51 = rocq_array::get::<u64>(&v48, a);
-  let v52 = &y;
-  let v55 = rocq_array::get::<u64>(&v52, b);
-  let v60 = eqb(v51, v55);
-  match andb(v46, v60) {
-    true => {
-      std::mem::drop(y);
-      std::mem::drop(x);
-      std::mem::drop(ord);
-      rocq_array::make::<u64>(1u64, a)
-    },
-    false => {
-      let v89 = rocq_array::make::<u64>(add(n, n), 0u64);
-      let v98 = rocq_array::set::<u64>(v89, 0u64, a);
-      let v105 = Rc::clone(&x);
-      let v108 = Rc::clone(&y);
-      let v111 = Rc::clone(&ord);
-      let v120 = lower_1(v105, v108, v111, v98, n, 1u64, 1u64);
-      match &v120 {
-        (l, st1) => {
-          let v135 = sub(n, 1u64);
-          let v143 = Rc::clone(l);
-          let v145 = Clone::clone(st1);
-          let v146 = Clone::clone(st1);
-          std::mem::drop(v120);
-          let v150 = upper_1(x, y, ord, v143, v145, v146, v135);
-          match v150 {
-            (v152, v154) => {
-              let v171 = rocq_array::make::<u64>(sub(v154, 1u64), 0u64);
-              copyl_1(v152, v171, sub(v154, 1u64), 0u64)
-            },
-          }
-        },
-      }
-    },
-  }
-}
-
-// Rocq: Convexhull.convexhull_implem.hull
-pub fn hull_curried(x: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> Rc<Array<u64>> {
-      let v9 = Rc::clone(&x);
-      hull(v9, y)
+  let n = rocq_array::length::<u64>(&x);
+  let x_clone = Rc::clone(&x);
+  let y_clone = Rc::clone(&y);
+  let ord = msort(x_clone, y_clone, n);
+  let a = rocq_array::get::<u64>(&ord, 0u64);
+  let b = rocq_array::get::<u64>(&ord, sub(n, 1u64));
+  let tmp = rocq_array::get::<u64>(&x, a);
+  let tmp_1 = rocq_array::get::<u64>(&x, b);
+  let tmp_2 = eqb(tmp, tmp_1);
+  let tmp_3 = rocq_array::get::<u64>(&y, a);
+  let tmp_4 = rocq_array::get::<u64>(&y, b);
+  let tmp_5 = eqb(tmp_3, tmp_4);
+  if andb(tmp_2, tmp_5) {
+    std::mem::drop(y);
+    std::mem::drop(x);
+    std::mem::drop(ord);
+    rocq_array::make::<u64>(1u64, a)
+  } else {
+    let tmp_6 = rocq_array::make::<u64>(add(n, n), 0u64);
+    let tmp_7 = rocq_array::set::<u64>(tmp_6, 0u64, a);
+    let x_clone_1 = Rc::clone(&x);
+    let y_clone_1 = Rc::clone(&y);
+    let ord_clone = Rc::clone(&ord);
+    let tmp_8 = lower_1(x_clone_1, y_clone_1, ord_clone, tmp_7, n, 1u64, 1u64);
+    match &tmp_8 {
+      (l, st1) => {
+        let tmp_9 = sub(n, 1u64);
+        let l_clone = Rc::clone(l);
+        let st1_clone = Clone::clone(st1);
+        let st1_clone_1 = Clone::clone(st1);
+        std::mem::drop(tmp_8);
+        let tmp_10 = upper_1(x, y, ord, l_clone, st1_clone, st1_clone_1, tmp_9);
+        match tmp_10 {
+          (v152, v154) => {
+            let tmp_11 = rocq_array::make::<u64>(sub(v154, 1u64), 0u64);
+            copyl_1(v152, tmp_11, sub(v154, 1u64), 0u64)
+          },
+        }
+      },
     }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v3);
-  v15
+  }
 }
 
 mod __rocq_reuse {
@@ -1329,12 +1243,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_867.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_867: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = convex_hull(); }
-std::thread_local! { static __rocq_global_870: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = convex_hull_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1415,7 +1323,7 @@ fn main() { submission_io::entry(|input| {
     loop { let n = t.uint(); if n == 0 { break; }
         let (mut xs, mut ys) = (Vec::new(), Vec::new());
         for _ in 0..n { xs.push(t.int()); ys.push(t.int()); }
-        let result = run()(submission_io::ints(xs.clone()), submission_io::ints(ys.clone()));
+        let result = hull(submission_io::ints(xs.clone()), submission_io::ints(ys.clone()));
         writeln!(out, "{}", result.length()).unwrap();
         for i in 0..result.length() { let j = *result.get(i) as usize;
             writeln!(out, "{} {}", submission_io::decoded(xs[j]), submission_io::decoded(ys[j])).unwrap();

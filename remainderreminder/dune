@@ -6,9 +6,11 @@
  (rocq.theory
   (name Remainderreminder.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Remainderreminder)
  (modules remainderreminder_implem)
- (theories Remainderreminder.spec Stdlib stdpp StdGalilei))
+  (theories Remainderreminder.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

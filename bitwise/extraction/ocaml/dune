@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules bitwise_extracted_marray)
- (theories Bitwise Bitwise.spec Stdlib stdpp StdGalilei))
+ (theories Bitwise Bitwise.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name bitwise_extraction)

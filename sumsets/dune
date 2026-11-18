@@ -6,9 +6,11 @@
  (rocq.theory
   (name Sumsets.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Sumsets)
  (modules sumsets_implem)
- (theories Sumsets.spec Stdlib stdpp StdGalilei))
+  (theories Sumsets.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

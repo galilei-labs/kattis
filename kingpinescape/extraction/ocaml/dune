@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules kingpinescape_extracted_marray)
- (theories Kingpinescape Kingpinescape.spec Stdlib stdpp StdGalilei))
+ (theories Kingpinescape Kingpinescape.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name kingpinescape_extraction)

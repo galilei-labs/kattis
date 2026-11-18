@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type sint = u64;
 
-// Rocq: Polymul1.polymul1_implem.polymul
-// Variant: uncurried
-pub fn polymul() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = polymul_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Polymul1.polymul1_implem.polymul
-pub fn polymul_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = polymul_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -698,13 +682,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Polymul1.polymul1_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -729,17 +710,15 @@ pub fn row_loop_1(y: Rc<Array<u64>>, ai: u64, i: u64, lb: u64, j: u64, r: Rc<Arr
 // Rocq: Polymul1.polymul1_implem.row_loop (local: row_loop)
 // Variant: uncurried, lifted
 pub fn row_loop(y: Rc<Array<u64>>, ai: u64, i: u64, lb: u64, j: u64, r: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(j, lb);
-  match bdec(v14) {
+  let tmp = ltb(j, lb);
+  match bdec(tmp) {
     sumbool::left => {
       let k = add(i, j);
-      let v31 = add(j, 1u64);
-      let v33 = &r;
-      let v36 = rocq_array::get::<u64>(&v33, k);
-      let v38 = &y;
-      let v41 = rocq_array::get::<u64>(&v38, j);
-      let v58 = rocq_array::set::<u64>(r, k, add(v36, mul(ai, v41)));
-      row_loop(y, ai, i, lb, v31, v58, ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&r, k);
+      let tmp_3 = rocq_array::get::<u64>(&y, j);
+      let tmp_4 = rocq_array::set::<u64>(r, k, add(tmp_2, mul(ai, tmp_3)));
+      row_loop(y, ai, i, lb, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(y);
@@ -757,15 +736,14 @@ pub fn rows_loop_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, la: u64, lb: u64, i: u6
 // Rocq: Polymul1.polymul1_implem.rows_loop (local: rows_loop)
 // Variant: uncurried, lifted
 pub fn rows_loop(x: Rc<Array<u64>>, y: Rc<Array<u64>>, la: u64, lb: u64, i: u64, r: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(i, la);
-  match bdec(v14) {
+  let tmp = ltb(i, la);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(i, 1u64);
-      let v27 = &x;
-      let v30 = rocq_array::get::<u64>(&v27, i);
-      let v35 = Rc::clone(&y);
-      let v46 = row_loop_1(v35, v30, i, lb, 0u64, r);
-      rows_loop(x, y, la, lb, v25, v46, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, i);
+      let y_clone = Rc::clone(&y);
+      let tmp_3 = row_loop_1(y_clone, tmp_2, i, lb, 0u64, r);
+      rows_loop(x, y, la, lb, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -784,42 +762,22 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Polymul1.polymul1_implem.polymul_impl
 // Variant: uncurried
 pub fn polymul_impl(x: Rc<Array<u64>>, y: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v2 = &x;
-  let la = rocq_array::length::<u64>(&v2);
-  let v4 = &y;
-  let lb = rocq_array::length::<u64>(&v4);
-  match eqb(la, 0u64) {
-    true => {
+  let la = rocq_array::length::<u64>(&x);
+  let lb = rocq_array::length::<u64>(&y);
+  if eqb(la, 0u64) {
+    std::mem::drop(x);
+    std::mem::drop(y);
+    rocq_array::make::<u64>(0u64, 0u64)
+  } else {
+    if eqb(lb, 0u64) {
       std::mem::drop(x);
       std::mem::drop(y);
       rocq_array::make::<u64>(0u64, 0u64)
-    },
-    false => {
-      match eqb(lb, 0u64) {
-        true => {
-          std::mem::drop(x);
-          std::mem::drop(y);
-          rocq_array::make::<u64>(0u64, 0u64)
-        },
-        false => {
-          let v69 = rocq_array::make::<u64>(sub(add(la, lb), 1u64), 0u64);
-          rows_loop_1(x, y, la, lb, 0u64, v69)
-        },
-      }
-    },
-  }
-}
-
-// Rocq: Polymul1.polymul1_implem.polymul_impl
-pub fn polymul_impl_curried(x: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> Rc<Array<u64>> {
-      let v9 = Rc::clone(&x);
-      polymul_impl(v9, y)
+    } else {
+      let tmp = rocq_array::make::<u64>(sub(add(la, lb), 1u64), 0u64);
+      rows_loop_1(x, y, la, lb, 0u64, tmp)
     }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v3);
-  v15
+  }
 }
 
 mod __rocq_reuse {
@@ -971,12 +929,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_244.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_244: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = polymul(); }
-std::thread_local! { static __rocq_global_247: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = polymul_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1057,7 +1009,7 @@ fn main() { submission_io::entry(|input| {
     for _ in 0..t.uint() {
         let n = t.uint(); let a = t.signed_ints(n + 1);
         let m = t.uint(); let b = t.signed_ints(m + 1);
-        let result = run()(a, b);
+        let result = polymul_impl(a, b);
         writeln!(out, "{}", n + m).unwrap();
         writeln!(out, "{}", submission_io::numbers((0..result.length()).map(|i|
             submission_io::decoded(*result.get(i))))).unwrap();

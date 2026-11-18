@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -668,21 +667,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Kingpinescape.kingpinescape_implem.kingpin_escape
-// Variant: uncurried
-pub fn kingpin_escape() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> {
-  let v0: fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>) = kingpin_impl;
-  let v1: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Kingpinescape.kingpinescape_implem.kingpin_escape
-pub fn kingpin_escape_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>> = kingpin_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>>> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
 // Variant: uncurried
@@ -710,13 +694,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Kingpinescape.kingpinescape_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -735,16 +716,14 @@ pub fn cnt_loop_1(col: Rc<Array<u64>>, m: u64, i: u64, deg: Rc<Array<u64>>) -> R
 // Rocq: Kingpinescape.kingpinescape_implem.cnt_loop (local: cnt_loop)
 // Variant: uncurried, lifted
 pub fn cnt_loop(col: Rc<Array<u64>>, m: u64, i: u64, deg: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, m);
-  match bdec(v12) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &col;
-      let v = rocq_array::get::<u64>(&v16, i);
-      let v27 = add(i, 1u64);
-      let v29 = &deg;
-      let v32 = rocq_array::get::<u64>(&v29, v);
-      let v46 = rocq_array::set::<u64>(deg, v, add(v32, 1u64));
-      cnt_loop(col, m, v27, v46, ())
+      let v = rocq_array::get::<u64>(&col, i);
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&deg, v);
+      let tmp_3 = rocq_array::set::<u64>(deg, v, add(tmp_2, 1u64));
+      cnt_loop(col, m, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(col);
@@ -762,15 +741,14 @@ pub fn pre_loop_1(deg: Rc<Array<u64>>, n: u64, i: u64, acc: u64, pos: Rc<Array<u
 // Rocq: Kingpinescape.kingpinescape_implem.pre_loop (local: pre_loop)
 // Variant: uncurried, lifted
 pub fn pre_loop(deg: Rc<Array<u64>>, n: u64, i: u64, acc: u64, pos: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v26 = &deg;
-      let v29 = rocq_array::get::<u64>(&v26, i);
-      let v34 = add(acc, v29);
-      let v41 = rocq_array::set::<u64>(pos, i, acc);
-      pre_loop(deg, n, v24, v34, v41, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&deg, i);
+      let tmp_3 = add(acc, tmp_2);
+      let tmp_4 = rocq_array::set::<u64>(pos, i, acc);
+      pre_loop(deg, n, tmp_1, tmp_3, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(deg);
@@ -788,17 +766,15 @@ pub fn fill_loop_1(col: Rc<Array<u64>>, base: u64, m: u64, i: u64, pos: Rc<Array
 // Rocq: Kingpinescape.kingpinescape_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(col: Rc<Array<u64>>, base: u64, m: u64, i: u64, pos: Rc<Array<u64>>, adj: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(i, m);
-  match bdec(v14) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &col;
-      let v = rocq_array::get::<u64>(&v18, i);
-      let v22 = &pos;
-      let p = rocq_array::get::<u64>(&v22, v);
-      let v33 = add(i, 1u64);
-      let v48 = rocq_array::set::<u64>(pos, v, add(p, 1u64));
-      let v61 = rocq_array::set::<u64>(adj, p, add(base, i));
-      fill_loop(col, base, m, v33, v48, v61, ())
+      let v = rocq_array::get::<u64>(&col, i);
+      let p = rocq_array::get::<u64>(&pos, v);
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(pos, v, add(p, 1u64));
+      let tmp_3 = rocq_array::set::<u64>(adj, p, add(base, i));
+      fill_loop(col, base, m, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(col);
@@ -822,19 +798,15 @@ pub fn root_loop_1(deg: Rc<Array<u64>>, n: u64, i: u64) -> u64 {
 // Rocq: Kingpinescape.kingpinescape_implem.root_loop (local: root_loop)
 // Variant: uncurried, lifted
 pub fn root_loop(deg: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> u64 {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &deg;
-      let v21 = rocq_array::get::<u64>(&v18, i);
-      match leb(2u64, v21) {
-        true => {
-          std::mem::drop(deg);
-          i
-        },
-        false => {
-          root_loop(deg, n, add(i, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&deg, i);
+      if leb(2u64, tmp_1) {
+        std::mem::drop(deg);
+        i
+      } else {
+        root_loop(deg, n, add(i, 1u64), ())
       }
     },
     sumbool::right => {
@@ -847,22 +819,16 @@ pub fn root_loop(deg: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> u64 {
 // Rocq: Kingpinescape.kingpinescape_implem.other
 // Variant: uncurried
 pub fn other(ea: Rc<Array<u64>>, eb: Rc<Array<u64>>, m: u64, hh: u64) -> u64 {
-  match ltb(hh, m) {
-    true => {
-      std::mem::drop(ea);
-      let v11 = &eb;
-      let v14 = rocq_array::get::<u64>(&v11, hh);
-      std::mem::drop(eb);
-      v14
-    },
-    false => {
-      std::mem::drop(eb);
-      let v22 = sub(hh, m);
-      let v23 = &ea;
-      let v26 = rocq_array::get::<u64>(&v23, v22);
-      std::mem::drop(ea);
-      v26
-    },
+  if ltb(hh, m) {
+    std::mem::drop(ea);
+    let tmp = rocq_array::get::<u64>(&eb, hh);
+    std::mem::drop(eb);
+    tmp
+  } else {
+    std::mem::drop(eb);
+    let tmp_1 = rocq_array::get::<u64>(&ea, sub(hh, m));
+    std::mem::drop(ea);
+    tmp_1
   }
 }
 
@@ -875,26 +841,21 @@ pub fn nb_loop_1(ea: Rc<Array<u64>>, eb: Rc<Array<u64>>, adj: Rc<Array<u64>>, m:
 // Rocq: Kingpinescape.kingpinescape_implem.nb_loop (local: nb_loop)
 // Variant: uncurried, lifted
 pub fn nb_loop(ea: Rc<Array<u64>>, eb: Rc<Array<u64>>, adj: Rc<Array<u64>>, m: u64, e: u64, s: u64, mark: Rc<Array<u64>>, stk: Rc<Array<u64>>, sp: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v17 = ltb(s, e);
-  match bdec(v17) {
+  let tmp = ltb(s, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = &adj;
-      let v25 = rocq_array::get::<u64>(&v22, s);
-      let v28 = Rc::clone(&ea);
-      let v31 = Rc::clone(&eb);
-      let w = other(v28, v31, m, v25);
-      let v38 = &mark;
-      let v41 = rocq_array::get::<u64>(&v38, w);
-      match eqb(v41, 0u64) {
-        true => {
-          let v57 = add(s, 1u64);
-          let v66 = rocq_array::set::<u64>(mark, w, 1u64);
-          let v73 = rocq_array::set::<u64>(stk, sp, w);
-          nb_loop(ea, eb, adj, m, e, v57, v66, v73, add(sp, 1u64), ())
-        },
-        false => {
-          nb_loop(ea, eb, adj, m, e, add(s, 1u64), mark, stk, sp, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&adj, s);
+      let ea_clone = Rc::clone(&ea);
+      let eb_clone = Rc::clone(&eb);
+      let w = other(ea_clone, eb_clone, m, tmp_1);
+      let tmp_2 = rocq_array::get::<u64>(&mark, w);
+      if eqb(tmp_2, 0u64) {
+        let tmp_3 = add(s, 1u64);
+        let tmp_4 = rocq_array::set::<u64>(mark, w, 1u64);
+        let tmp_5 = rocq_array::set::<u64>(stk, sp, w);
+        nb_loop(ea, eb, adj, m, e, tmp_3, tmp_4, tmp_5, add(sp, 1u64), ())
+      } else {
+        nb_loop(ea, eb, adj, m, e, add(s, 1u64), mark, stk, sp, ())
       }
     },
     sumbool::right => {
@@ -915,62 +876,49 @@ pub fn dfs_loop_1(ea: Rc<Array<u64>>, eb: Rc<Array<u64>>, adj: Rc<Array<u64>>, d
 // Rocq: Kingpinescape.kingpinescape_implem.dfs_loop (local: dfs_loop)
 // Variant: uncurried, lifted
 pub fn dfs_loop(ea: Rc<Array<u64>>, eb: Rc<Array<u64>>, adj: Rc<Array<u64>>, deg: Rc<Array<u64>>, pos: Rc<Array<u64>>, n: u64, m: u64, t: u64, mark: Rc<Array<u64>>, stk: Rc<Array<u64>>, sp: u64, lv: Rc<Array<u64>>, L: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v21 = ltb(t, n);
-  match bdec(v21) {
+  let tmp = ltb(t, n);
+  match bdec(tmp) {
     sumbool::left => {
-      match ltb(0u64, sp) {
-        true => {
-          let v41 = sub(sp, 1u64);
-          let v42 = &stk;
-          let v = rocq_array::get::<u64>(&v42, v41);
-          let v46 = &deg;
-          let dv = rocq_array::get::<u64>(&v46, v);
-          let v50 = &pos;
-          let e = rocq_array::get::<u64>(&v50, v);
-          let v56 = 1u64;
-          let lv_ = match eqb(dv, v56) {
-            true => {
-              rocq_array::set::<u64>(lv, L, v)
-            },
-            false => {
-              lv
-            },
-          };
-          let v77 = 1u64;
-          let L_ = match eqb(dv, v77) {
-            true => {
-              add(L, 1u64)
-            },
-            false => {
-              L
-            },
-          };
-          let v103 = sub(e, dv);
-          let v111 = sub(sp, 1u64);
-          let v114 = Rc::clone(&ea);
-          let v117 = Rc::clone(&eb);
-          let v120 = Rc::clone(&adj);
-          let v133 = nb_loop_1(v114, v117, v120, m, e, v103, mark, stk, v111);
-          match v133 {
-            (v135, v137) => {
-              match v135 {
-                (v140, v142) => {
-                  dfs_loop(ea, eb, adj, deg, pos, n, m, add(t, 1u64), v140, v142, v137, lv_, L_, ())
-                },
-              }
-            },
-          }
-        },
-        false => {
-          std::mem::drop(ea);
-          std::mem::drop(eb);
-          std::mem::drop(adj);
-          std::mem::drop(deg);
-          std::mem::drop(pos);
-          std::mem::drop(mark);
-          std::mem::drop(stk);
-          (lv, L)
-        },
+      if ltb(0u64, sp) {
+        let v = rocq_array::get::<u64>(&stk, sub(sp, 1u64));
+        let dv = rocq_array::get::<u64>(&deg, v);
+        let e = rocq_array::get::<u64>(&pos, v);
+        let tmp_1 = 1u64;
+        let lv_ = if eqb(dv, tmp_1) {
+          rocq_array::set::<u64>(lv, L, v)
+        } else {
+          lv
+        };
+        let tmp_2 = 1u64;
+        let L_ = if eqb(dv, tmp_2) {
+          add(L, 1u64)
+        } else {
+          L
+        };
+        let tmp_3 = sub(e, dv);
+        let tmp_4 = sub(sp, 1u64);
+        let ea_clone = Rc::clone(&ea);
+        let eb_clone = Rc::clone(&eb);
+        let adj_clone = Rc::clone(&adj);
+        let tmp_5 = nb_loop_1(ea_clone, eb_clone, adj_clone, m, e, tmp_3, mark, stk, tmp_4);
+        match tmp_5 {
+          (v135, v137) => {
+            match v135 {
+              (v140, v142) => {
+                dfs_loop(ea, eb, adj, deg, pos, n, m, add(t, 1u64), v140, v142, v137, lv_, L_, ())
+              },
+            }
+          },
+        }
+      } else {
+        std::mem::drop(ea);
+        std::mem::drop(eb);
+        std::mem::drop(adj);
+        std::mem::drop(deg);
+        std::mem::drop(pos);
+        std::mem::drop(mark);
+        std::mem::drop(stk);
+        (lv, L)
       }
     },
     sumbool::right => {
@@ -995,18 +943,15 @@ pub fn out_loop_1(lv: Rc<Array<u64>>, a: u64, c: u64, i: u64, xs: Rc<Array<u64>>
 // Rocq: Kingpinescape.kingpinescape_implem.out_loop (local: out_loop)
 // Variant: uncurried, lifted
 pub fn out_loop(lv: Rc<Array<u64>>, a: u64, c: u64, i: u64, xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(i, c);
-  match bdec(v14) {
+  let tmp = ltb(i, c);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(i, 1u64);
-      let v26 = &lv;
-      let v29 = rocq_array::get::<u64>(&v26, i);
-      let v36 = rocq_array::set::<u64>(xs, i, v29);
-      let v42 = add(i, a);
-      let v43 = &lv;
-      let v46 = rocq_array::get::<u64>(&v43, v42);
-      let v53 = rocq_array::set::<u64>(ys, i, v46);
-      out_loop(lv, a, c, v25, v36, v53, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&lv, i);
+      let tmp_3 = rocq_array::set::<u64>(xs, i, tmp_2);
+      let tmp_4 = rocq_array::get::<u64>(&lv, add(i, a));
+      let tmp_5 = rocq_array::set::<u64>(ys, i, tmp_4);
+      out_loop(lv, a, c, tmp_1, tmp_3, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(lv);
@@ -1019,82 +964,50 @@ pub fn out_loop(lv: Rc<Array<u64>>, a: u64, c: u64, i: u64, xs: Rc<Array<u64>>, 
 // Variant: uncurried
 pub fn kingpin_impl(n: u64, _h: u64, ea: Rc<Array<u64>>, eb: Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   let m = sub(n, 1u64);
-  let v21 = rocq_array::make::<u64>(n, 0u64);
-  let v24 = Rc::clone(&ea);
-  let deg0 = cnt_loop_1(v24, m, 0u64, v21);
-  let v37 = Rc::clone(&eb);
-  let deg = cnt_loop_1(v37, m, 0u64, deg0);
-  let v56 = rocq_array::make::<u64>(n, 0u64);
-  let v59 = Rc::clone(&deg);
-  let pos0 = pre_loop_1(v59, n, 0u64, 0u64, v56);
-  let v86 = rocq_array::make::<u64>(add(m, m), 0u64);
-  let v89 = Rc::clone(&ea);
-  let v100 = fill_loop_1(v89, 0u64, m, 0u64, pos0, v86);
-  match v100 {
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let ea_clone = Rc::clone(&ea);
+  let deg0 = cnt_loop_1(ea_clone, m, 0u64, tmp);
+  let eb_clone = Rc::clone(&eb);
+  let deg = cnt_loop_1(eb_clone, m, 0u64, deg0);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let deg_clone = Rc::clone(&deg);
+  let pos0 = pre_loop_1(deg_clone, n, 0u64, 0u64, tmp_1);
+  let tmp_2 = rocq_array::make::<u64>(add(m, m), 0u64);
+  let ea_clone_1 = Rc::clone(&ea);
+  let tmp_3 = fill_loop_1(ea_clone_1, 0u64, m, 0u64, pos0, tmp_2);
+  match tmp_3 {
     (v102, v104) => {
-      let v111 = Rc::clone(&eb);
-      let v122 = fill_loop_1(v111, m, m, 0u64, v102, v104);
-      match &v122 {
+      let eb_clone_1 = Rc::clone(&eb);
+      let tmp_4 = fill_loop_1(eb_clone_1, m, m, 0u64, v102, v104);
+      match &tmp_4 {
         (adj, pos) => {
-          let v134 = Rc::clone(&deg);
-          let r = root_loop_1(v134, n, 0u64);
-          let v146 = rocq_array::make::<u64>(n, 0u64);
-          let mark = rocq_array::set::<u64>(v146, r, 1u64);
-          let v162 = rocq_array::make::<u64>(n, 0u64);
-          let stk = rocq_array::set::<u64>(v162, 0u64, r);
-          let v174 = 0u64;
-          let v176 = 1u64;
-          let v183 = rocq_array::make::<u64>(n, 0u64);
-          let v185 = 0u64;
-          let v191 = Rc::clone(pos);
-          let v194 = Rc::clone(adj);
-          std::mem::drop(v122);
-          let v212 = dfs_loop_1(ea, eb, v191, deg, v194, n, m, v174, mark, stk, v176, v183, v185);
-          match v212 {
+          let deg_clone_1 = Rc::clone(&deg);
+          let r = root_loop_1(deg_clone_1, n, 0u64);
+          let tmp_5 = rocq_array::make::<u64>(n, 0u64);
+          let mark = rocq_array::set::<u64>(tmp_5, r, 1u64);
+          let tmp_6 = rocq_array::make::<u64>(n, 0u64);
+          let stk = rocq_array::set::<u64>(tmp_6, 0u64, r);
+          let tmp_7 = 0u64;
+          let tmp_8 = 1u64;
+          let tmp_9 = rocq_array::make::<u64>(n, 0u64);
+          let tmp_10 = 0u64;
+          let pos_clone = Rc::clone(pos);
+          let adj_clone = Rc::clone(adj);
+          std::mem::drop(tmp_4);
+          let tmp_11 = dfs_loop_1(ea, eb, pos_clone, deg, adj_clone, n, m, tmp_7, mark, stk, tmp_8, tmp_9, tmp_10);
+          match tmp_11 {
             (v214, v216) => {
               let a = lsr(v216, 1u64);
               let c = sub(v216, a);
-              let v241 = rocq_array::make::<u64>(c, 0u64);
-              let v248 = rocq_array::make::<u64>(c, 0u64);
-              out_loop_1(v214, a, c, 0u64, v241, v248)
+              let tmp_12 = rocq_array::make::<u64>(c, 0u64);
+              let tmp_13 = rocq_array::make::<u64>(c, 0u64);
+              out_loop_1(v214, a, c, 0u64, tmp_12, tmp_13)
             },
           }
         },
       }
     },
   }
-}
-
-// Rocq: Kingpinescape.kingpinescape_implem.kingpin_impl
-pub fn kingpin_impl_curried(n: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>> {
-  let v3 = {
-    move |h: u64| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |ea: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> {
-          let n = &v8;
-          let h = &h;
-          let v18 = Clone::clone(n);
-          let v20 = Clone::clone(h);
-          let v23 = {
-            move |eb: Rc<Array<u64>>| -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-              let v33 = Clone::clone(&v18);
-              let v35 = Clone::clone(&v20);
-              let v37 = Rc::clone(&ea);
-              kingpin_impl(v33, v35, v37, eb)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>> = Rc::new(v3);
-  v51
 }
 
 mod __rocq_reuse {
@@ -1246,12 +1159,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> {
-  let v0: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = __rocq_global_707.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_707: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = kingpin_escape(); }
-std::thread_local! { static __rocq_global_710: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>)>>>> = kingpin_escape_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1329,7 +1236,7 @@ use kattis_io::*;
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let h = t.uint(); let mut a = Vec::new(); let mut b = Vec::new();
     for _ in 0..n-1 { a.push(t.uint()); b.push(t.uint()); }
-    let result = run()(n, h, ints(a), ints(b)); let (xs, ys) = &result;
+    let result = kingpin_impl(n, h, ints(a), ints(b)); let (xs, ys) = &result;
     let mut out = format!("{}\n", xs.length());
     for (x, y) in values(xs).into_iter().zip(values(ys)) { out.push_str(&format!("{x} {y}\n")); }
     out

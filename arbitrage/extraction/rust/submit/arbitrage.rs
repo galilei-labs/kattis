@@ -1464,7 +1464,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 #[allow(unused_imports)] use rocq_bigint::BigInt;
@@ -1527,21 +1526,6 @@ pub fn cap() -> u64 {
   1048576u64
 }
 
-// Rocq: Arbitrage.arbitrage_implem.arbitrage
-// Variant: uncurried
-pub fn arbitrage() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool = arbitrage_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Arbitrage.arbitrage_implem.arbitrage
-pub fn arbitrage_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = arbitrage_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
 // Variant: uncurried
 pub fn mul(v0: u64, v1: u64) -> u64 {
@@ -1561,8 +1545,7 @@ pub fn f_one(_v0: ()) -> f64 {
 // Rocq: Corelib.BinNums.IntDef.Z.add
 // Variant: uncurried
 pub fn add(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::add(v0, v1);
-  v8
+  rocq_bigint::add(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -1579,13 +1562,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Arbitrage.arbitrage_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -1604,24 +1584,21 @@ pub fn wloop_1<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, 
 // Rocq: Arbitrage.arbitrage_implem.wloop (local: wloop)
 // Variant: uncurried, lifted
 pub fn wloop<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, f: Rc<dyn Fn(u64, St) -> St>, i: u64, s: St, _H: ()) -> St {
-  let v13 = ltb(i, hi);
-  match bdec(v13) {
+  let tmp = ltb(i, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17: &Rc<dyn Fn(u64, St) -> bool> = &cont;
-      let v21 = Clone::clone(&s);
-      let v23 = v17(i, v21);
-      match v23 {
-        true => {
-          let v32 = add_1(i, 1u64);
-          let v33: &Rc<dyn Fn(u64, St) -> St> = &f;
-          let v38 = v33(i, s);
-          wloop::<St>(hi, cont, f, v32, v38, ())
-        },
-        false => {
-          std::mem::drop(f);
-          std::mem::drop(cont);
-          s
-        },
+      let cont_ref: &Rc<dyn Fn(u64, St) -> bool> = &cont;
+      let s_clone = Clone::clone(&s);
+      let tmp_1 = cont_ref(i, s_clone);
+      if tmp_1 {
+        let tmp_2 = add_1(i, 1u64);
+        let f_ref: &Rc<dyn Fn(u64, St) -> St> = &f;
+        let tmp_3 = f_ref(i, s);
+        wloop::<St>(hi, cont, f, tmp_2, tmp_3, ())
+      } else {
+        std::mem::drop(f);
+        std::mem::drop(cont);
+        s
       }
     },
     sumbool::right => {
@@ -1683,52 +1660,40 @@ pub fn f_two(_v0: ()) -> f64 {
 pub fn ratecell(a: u64, b: u64) -> ((f64, u64), u64) {
   let ha = head0(a);
   let hb = head0(b);
-  let num = match ltb(ha, hb) {
-    true => {
-      lsl(b, sub(hb, ha))
-    },
-    false => {
-      b
-    },
+  let num = if ltb(ha, hb) {
+    lsl(b, sub(hb, ha))
+  } else {
+    b
   };
-  let den = match ltb(ha, hb) {
-    true => {
-      a
-    },
-    false => {
-      lsl(a, sub(ha, hb))
-    },
+  let den = if ltb(ha, hb) {
+    a
+  } else {
+    lsl(a, sub(ha, hb))
   };
   let r = div(of_uint63(num), of_uint63(den));
   let e = sub(add_1(__rocq_global_359, ha), hb);
-  let v91 = f_one(());
-  match ltb_1(r, v91) {
-    true => {
-      ((mul_1(r, f_two(())), sub(e, 1u64)), 2u64)
-    },
-    false => {
-      ((r, e), 2u64)
-    },
+  let tmp = f_one(());
+  if ltb_1(r, tmp) {
+    ((mul_1(r, f_two(())), sub(e, 1u64)), 2u64)
+  } else {
+    ((r, e), 2u64)
   }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tPR
 pub fn tPR(t: Rc<tabs>) -> Rc<Array<bool>> {
-  let v3 = Rc::clone((&(&**&t).tPR));
+  let t_tPR_clone = Rc::clone(&t.tPR);
   std::mem::drop(t);
-  v3
+  t_tPR_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -1751,87 +1716,66 @@ pub fn f_c0(_v0: ()) -> f64 {
 // Rocq: Arbitrage.arbitrage_implem.fcmp
 // Variant: uncurried
 pub fn fcmp(m1: f64, e1: u64, n1: u64, m2: f64, e2: u64, n2: u64) -> Rc<option<bool>> {
-  let v13 = ltb(__rocq_global_467, n1);
-  let v20 = ltb(__rocq_global_467, n2);
-  match orb(v13, v20) {
-    true => {
-      Rc::new(option::<bool>::None)
-    },
-    false => {
-      let v41 = add_1(e2, 2u64);
-      match leb(v41, e1) {
-        true => {
+  let tmp = ltb(__rocq_global_467, n1);
+  let tmp_1 = ltb(__rocq_global_467, n2);
+  if orb(tmp, tmp_1) {
+    Rc::new(option::<bool>::None)
+  } else {
+    let tmp_2 = add_1(e2, 2u64);
+    if leb(tmp_2, e1) {
+      Rc::new(option::<bool>::Some(true))
+    } else {
+      let tmp_3 = add_1(e1, 2u64);
+      if leb(tmp_3, e2) {
+        Rc::new(option::<bool>::Some(false))
+      } else {
+        let x = if ltb(e2, e1) {
+          mul_1(m1, f_two(()))
+        } else {
+          m1
+        };
+        let y = if ltb(e1, e2) {
+          mul_1(m2, f_two(()))
+        } else {
+          m2
+        };
+        let tmp_4 = mul_1(y, f_c1(()));
+        let tmp_5 = mul_1(x, f_c0(()));
+        if ltb_1(tmp_4, tmp_5) {
           Rc::new(option::<bool>::Some(true))
-        },
-        false => {
-          let v65 = add_1(e1, 2u64);
-          match leb(v65, e2) {
-            true => {
-              Rc::new(option::<bool>::Some(false))
-            },
-            false => {
-              let x = match ltb(e2, e1) {
-                true => {
-                  mul_1(m1, f_two(()))
-                },
-                false => {
-                  m1
-                },
-              };
-              let y = match ltb(e1, e2) {
-                true => {
-                  mul_1(m2, f_two(()))
-                },
-                false => {
-                  m2
-                },
-              };
-              let v140 = mul_1(y, f_c1(()));
-              let v152 = mul_1(x, f_c0(()));
-              match ltb_1(v140, v152) {
-                true => {
-                  Rc::new(option::<bool>::Some(true))
-                },
-                false => {
-                  let v180 = mul_1(x, f_c1(()));
-                  let v192 = mul_1(y, f_c0(()));
-                  match ltb_1(v180, v192) {
-                    true => {
-                      Rc::new(option::<bool>::Some(false))
-                    },
-                    false => {
-                      Rc::new(option::<bool>::None)
-                    },
-                  }
-                },
-              }
-            },
+        } else {
+          let tmp_6 = mul_1(x, f_c1(()));
+          let tmp_7 = mul_1(y, f_c0(()));
+          if ltb_1(tmp_6, tmp_7) {
+            Rc::new(option::<bool>::Some(false))
+          } else {
+            Rc::new(option::<bool>::None)
           }
-        },
+        }
       }
-    },
+    }
   }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tMA
 pub fn tMA(t: Rc<tabs>) -> Rc<Array<f64>> {
-  let v3 = Rc::clone((&(&**&t).tMA));
+  let t_tMA_clone = Rc::clone(&t.tMA);
   std::mem::drop(t);
-  v3
+  t_tMA_clone
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tEX
 pub fn tEX(t: Rc<tabs>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&t).tEX));
+  let t_tEX_clone = Rc::clone(&t.tEX);
   std::mem::drop(t);
-  v3
+  t_tEX_clone
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tCN
 pub fn tCN(t: Rc<tabs>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&t).tCN));
+  let t_tCN_clone = Rc::clone(&t.tCN);
   std::mem::drop(t);
-  v3
+  t_tCN_clone
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltsb
@@ -1843,15 +1787,13 @@ pub fn ltsb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.BinNums.IntDef.Z.mul
 // Variant: uncurried
 pub fn mul_2(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::mul(v0, v1);
-  v8
+  rocq_bigint::mul(v0, v1)
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.pow
 // Variant: uncurried
 pub fn pow(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::pow(v0, v1);
-  v8
+  rocq_bigint::pow(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -1868,79 +1810,69 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Arbitrage.arbitrage_implem.zofi_rec
 pub fn zofi_rec_1(i: u64) -> Rc<BigInt> {
-  let v9 = zofi_rec(i, ());
-  v9
+  zofi_rec(i, ())
 }
 
 // Rocq: Arbitrage.arbitrage_implem.zofi_rec (local: zofi_rec)
 // Variant: uncurried, lifted
 pub fn zofi_rec(i: u64, _H: ()) -> Rc<BigInt> {
-  let v11 = eqb(i, 0u64);
-  let v83 = match bdec(v11) {
+  let tmp = eqb(i, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = rocq_bigint::zero();
-      v16
+      rocq_bigint::zero()
     },
     sumbool::right => {
       let r = zofi_rec(div_1(i, 2u64), ());
-      let v42 = mod_(i, 2u64);
-      let v44 = 0u64;
-      let bit = match eqb(v42, v44) {
-        true => {
-          let v52 = rocq_bigint::zero();
-          v52
-        },
-        false => {
-          let v55 = rocq_bigint::one();
-          let v58 = rocq_bigint::identity(v55);
-          v58
-        },
+      let tmp_1 = mod_(i, 2u64);
+      let tmp_2 = 0u64;
+      let bit = if eqb(tmp_1, tmp_2) {
+        rocq_bigint::zero()
+      } else {
+        let tmp_3 = rocq_bigint::one();
+        rocq_bigint::identity(tmp_3)
       };
-      let v64 = rocq_bigint::one();
-      let v67 = rocq_bigint::twice(v64);
-      let v70 = rocq_bigint::identity(v67);
-      let v75 = mul_2(v70, r);
-      let v80 = add(v75, bit);
-      v80
+      let tmp_4 = rocq_bigint::one();
+      let tmp_5 = rocq_bigint::twice(tmp_4);
+      let tmp_6 = rocq_bigint::identity(tmp_5);
+      let tmp_7 = mul_2(tmp_6, r);
+      add(tmp_7, bit)
     },
-  };
-  v83
+  }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.zofi
 pub fn zofi(i: u64) -> Rc<BigInt> {
-  let v5 = zofi_rec_1(i);
-  v5
+  zofi_rec_1(i)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.primes
 pub fn primes(_v0: ()) -> Rc<Array<u64>> {
-  let v9 = rocq_array::make::<u64>(25u64, 0u64);
-  let v20 = rocq_array::set::<u64>(v9, 0u64, 2u64);
-  let v31 = rocq_array::set::<u64>(v20, 1u64, 3u64);
-  let v42 = rocq_array::set::<u64>(v31, 2u64, 5u64);
-  let v53 = rocq_array::set::<u64>(v42, 3u64, 7u64);
-  let v64 = rocq_array::set::<u64>(v53, 4u64, 11u64);
-  let v75 = rocq_array::set::<u64>(v64, 5u64, 13u64);
-  let v86 = rocq_array::set::<u64>(v75, 6u64, 17u64);
-  let v97 = rocq_array::set::<u64>(v86, 7u64, 19u64);
-  let v108 = rocq_array::set::<u64>(v97, 8u64, 23u64);
-  let v119 = rocq_array::set::<u64>(v108, 9u64, 29u64);
-  let v130 = rocq_array::set::<u64>(v119, 10u64, 31u64);
-  let v141 = rocq_array::set::<u64>(v130, 11u64, 37u64);
-  let v152 = rocq_array::set::<u64>(v141, 12u64, 41u64);
-  let v163 = rocq_array::set::<u64>(v152, 13u64, 43u64);
-  let v174 = rocq_array::set::<u64>(v163, 14u64, 47u64);
-  let v185 = rocq_array::set::<u64>(v174, 15u64, 53u64);
-  let v196 = rocq_array::set::<u64>(v185, 16u64, 59u64);
-  let v207 = rocq_array::set::<u64>(v196, 17u64, 61u64);
-  let v218 = rocq_array::set::<u64>(v207, 18u64, 67u64);
-  let v229 = rocq_array::set::<u64>(v218, 19u64, 71u64);
-  let v240 = rocq_array::set::<u64>(v229, 20u64, 73u64);
-  let v251 = rocq_array::set::<u64>(v240, 21u64, 79u64);
-  let v262 = rocq_array::set::<u64>(v251, 22u64, 83u64);
-  let v273 = rocq_array::set::<u64>(v262, 23u64, 89u64);
-  rocq_array::set::<u64>(v273, 24u64, 97u64)
+  let tmp = rocq_array::make::<u64>(25u64, 0u64);
+  let tmp_1 = rocq_array::set::<u64>(tmp, 0u64, 2u64);
+  let tmp_2 = rocq_array::set::<u64>(tmp_1, 1u64, 3u64);
+  let tmp_3 = rocq_array::set::<u64>(tmp_2, 2u64, 5u64);
+  let tmp_4 = rocq_array::set::<u64>(tmp_3, 3u64, 7u64);
+  let tmp_5 = rocq_array::set::<u64>(tmp_4, 4u64, 11u64);
+  let tmp_6 = rocq_array::set::<u64>(tmp_5, 5u64, 13u64);
+  let tmp_7 = rocq_array::set::<u64>(tmp_6, 6u64, 17u64);
+  let tmp_8 = rocq_array::set::<u64>(tmp_7, 7u64, 19u64);
+  let tmp_9 = rocq_array::set::<u64>(tmp_8, 8u64, 23u64);
+  let tmp_10 = rocq_array::set::<u64>(tmp_9, 9u64, 29u64);
+  let tmp_11 = rocq_array::set::<u64>(tmp_10, 10u64, 31u64);
+  let tmp_12 = rocq_array::set::<u64>(tmp_11, 11u64, 37u64);
+  let tmp_13 = rocq_array::set::<u64>(tmp_12, 12u64, 41u64);
+  let tmp_14 = rocq_array::set::<u64>(tmp_13, 13u64, 43u64);
+  let tmp_15 = rocq_array::set::<u64>(tmp_14, 14u64, 47u64);
+  let tmp_16 = rocq_array::set::<u64>(tmp_15, 15u64, 53u64);
+  let tmp_17 = rocq_array::set::<u64>(tmp_16, 16u64, 59u64);
+  let tmp_18 = rocq_array::set::<u64>(tmp_17, 17u64, 61u64);
+  let tmp_19 = rocq_array::set::<u64>(tmp_18, 18u64, 67u64);
+  let tmp_20 = rocq_array::set::<u64>(tmp_19, 19u64, 71u64);
+  let tmp_21 = rocq_array::set::<u64>(tmp_20, 20u64, 73u64);
+  let tmp_22 = rocq_array::set::<u64>(tmp_21, 21u64, 79u64);
+  let tmp_23 = rocq_array::set::<u64>(tmp_22, 22u64, 83u64);
+  let tmp_24 = rocq_array::set::<u64>(tmp_23, 23u64, 89u64);
+  rocq_array::set::<u64>(tmp_24, 24u64, 97u64)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.ex_step
@@ -1953,44 +1885,36 @@ pub fn ex_step(dv: &Rc<dyn Fn(u64) -> u64>, t: u64, s: ((bool, Rc<BigInt>), Rc<B
       match Q {
         (_P, nz) => {
           let d = dv(t_1);
-          match ltsb(0u64, d) {
-            true => {
-              let v39 = primes(());
-              let v40 = &v39;
-              let v43 = rocq_array::get::<u64>(&v40, t_1);
-              std::mem::drop(v39);
-              let v46 = zofi(v43);
-              let v50 = zofi(d);
-              let v55 = pow(v46, v50);
-              let v57 = Rc::clone(nz);
-              let v60 = mul_2(v57, v55);
-              let v68 = (true, v60);
-              let v69 = Rc::clone(p);
+          if ltsb(0u64, d) {
+            let tmp = primes(());
+            let tmp_1 = rocq_array::get::<u64>(&tmp, t_1);
+            std::mem::drop(tmp);
+            let tmp_2 = zofi(tmp_1);
+            let tmp_3 = zofi(d);
+            let tmp_4 = pow(tmp_2, tmp_3);
+            let nz_clone = Rc::clone(nz);
+            let tmp_5 = mul_2(nz_clone, tmp_4);
+            let tmp_6 = (true, tmp_5);
+            let p_clone = Rc::clone(p);
+            std::mem::drop(s_1);
+            (tmp_6, p_clone)
+          } else {
+            if ltsb(d, 0u64) {
+              let nz_clone_1 = Rc::clone(nz);
+              let tmp_7 = (true, nz_clone_1);
+              let tmp_8 = primes(());
+              let tmp_9 = rocq_array::get::<u64>(&tmp_8, t_1);
+              std::mem::drop(tmp_8);
+              let tmp_10 = zofi(tmp_9);
+              let tmp_11 = zofi(sub(0u64, d));
+              let tmp_12 = pow(tmp_10, tmp_11);
+              let p_clone_1 = Rc::clone(p);
               std::mem::drop(s_1);
-              (v68, v69)
-            },
-            false => {
-              match ltsb(d, 0u64) {
-                true => {
-                  let v89 = Rc::clone(nz);
-                  let v91 = (true, v89);
-                  let v100 = primes(());
-                  let v101 = &v100;
-                  let v104 = rocq_array::get::<u64>(&v101, t_1);
-                  std::mem::drop(v100);
-                  let v107 = zofi(v104);
-                  let v119 = zofi(sub(0u64, d));
-                  let v124 = pow(v107, v119);
-                  let v125 = Rc::clone(p);
-                  std::mem::drop(s_1);
-                  let v129 = mul_2(v125, v124);
-                  (v91, v129)
-                },
-                false => {
-                  s_1
-                },
-              }
-            },
+              let tmp_13 = mul_2(p_clone_1, tmp_12);
+              (tmp_7, tmp_13)
+            } else {
+              s_1
+            }
           }
         },
       }
@@ -2006,45 +1930,37 @@ pub fn ltb_2(v0: Rc<BigInt>, v1: Rc<BigInt>) -> bool {
 
 // Rocq: Arbitrage.arbitrage_implem.exact_gt
 pub fn exact_gt(dv: Rc<dyn Fn(u64) -> u64>) -> bool {
-  let v3 = 25u64;
-  let v4 = {
-    move |_v5: u64, v6: ((bool, Rc<BigInt>), Rc<BigInt>)| -> bool {
-      std::mem::drop(v6);
-      true
-    }
-  };
-  let v11: Rc<dyn Fn(u64, ((bool, Rc<BigInt>), Rc<BigInt>)) -> bool> = Rc::new(v4);
-  let v12: Rc<dyn Fn(u64, ((bool, Rc<BigInt>), Rc<BigInt>)) -> bool> = v11;
-  let v14: Rc<dyn Fn(u64) -> u64> = Rc::clone(&dv);
-  let v16 = {
+  let tmp = 25u64;
+  let callback: Rc<dyn Fn(u64, ((bool, Rc<BigInt>), Rc<BigInt>)) -> bool> = Rc::new(move |_v5: u64, v6: ((bool, Rc<BigInt>), Rc<BigInt>)| -> bool {
+    std::mem::drop(v6);
+    true
+  });
+  let dv_clone: Rc<dyn Fn(u64) -> u64> = Rc::clone(&dv);
+  let callback_1: Rc<dyn Fn(u64, ((bool, Rc<BigInt>), Rc<BigInt>)) -> ((bool, Rc<BigInt>), Rc<BigInt>)> = Rc::new({
     move |v19: u64, v20: ((bool, Rc<BigInt>), Rc<BigInt>)| -> ((bool, Rc<BigInt>), Rc<BigInt>) {
-      let dv = &v14;
-      let v27 = ex_step(dv, v19, v20);
-      v27
+      let dv = &dv_clone;
+      let tmp_1 = ex_step(dv, v19, v20);
+      tmp_1
     }
-  };
-  let v30: Rc<dyn Fn(u64, ((bool, Rc<BigInt>), Rc<BigInt>)) -> ((bool, Rc<BigInt>), Rc<BigInt>)> = Rc::new(v16);
-  let v37 = rocq_bigint::one();
-  let v39 = rocq_bigint::identity(v37);
-  let v44 = (false, v39);
-  let v47 = rocq_bigint::one();
-  let v49 = rocq_bigint::identity(v47);
-  let v66 = loop_::<((bool, Rc<BigInt>), Rc<BigInt>)>(v3, v12, v30, 0u64, (v44, v49));
-  match v66 {
+  });
+  let tmp_2 = rocq_bigint::one();
+  let tmp_3 = rocq_bigint::identity(tmp_2);
+  let tmp_4 = (false, tmp_3);
+  let tmp_5 = rocq_bigint::one();
+  let tmp_6 = rocq_bigint::identity(tmp_5);
+  let tmp_7 = loop_::<((bool, Rc<BigInt>), Rc<BigInt>)>(tmp, callback, callback_1, 0u64, (tmp_4, tmp_6));
+  match tmp_7 {
     (v68, v70) => {
       match v68 {
         (v73, v75) => {
-          match v73 {
-            true => {
-              std::mem::drop(dv);
-              ltb_2(v70, v75)
-            },
-            false => {
-              std::mem::drop(dv);
-              std::mem::drop(v75);
-              std::mem::drop(v70);
-              false
-            },
+          if v73 {
+            std::mem::drop(dv);
+            ltb_2(v70, v75)
+          } else {
+            std::mem::drop(dv);
+            std::mem::drop(v75);
+            std::mem::drop(v70);
+            false
           }
         },
       }
@@ -2055,14 +1971,11 @@ pub fn exact_gt(dv: Rc<dyn Fn(u64) -> u64>) -> bool {
 // Rocq: Arbitrage.arbitrage_implem.dvd1
 // Variant: uncurried
 pub fn dvd1(n: u64, x: u64) -> u64 {
-  let v8 = mod_(n, x);
-  match eqb(v8, 0u64) {
-    true => {
-      1u64
-    },
-    false => {
-      0u64
-    },
+  let tmp = mod_(n, x);
+  if eqb(tmp, 0u64) {
+    1u64
+  } else {
+    0u64
   }
 }
 
@@ -2074,193 +1987,167 @@ pub fn mlt(n: u64, p: u64) -> u64 {
   let p4 = mul(p3, p);
   let p5 = mul(p4, p);
   let p6 = mul(p5, p);
-  let v53 = add_1(dvd1(n, p), dvd1(n, p2));
-  let v64 = add_1(v53, dvd1(n, p3));
-  let v75 = add_1(v64, dvd1(n, p4));
-  let v86 = add_1(v75, dvd1(n, p5));
-  add_1(v86, dvd1(n, p6))
+  let tmp = add_1(dvd1(n, p), dvd1(n, p2));
+  let tmp_1 = add_1(tmp, dvd1(n, p3));
+  let tmp_2 = add_1(tmp_1, dvd1(n, p4));
+  let tmp_3 = add_1(tmp_2, dvd1(n, p5));
+  add_1(tmp_3, dvd1(n, p6))
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tVT
 pub fn tVT_owned(t: Rc<tabs>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&t).tVT));
+  let t_tVT_clone = Rc::clone(&t.tVT);
   std::mem::drop(t);
-  v3
+  t_tVT_clone
 }
 
 // Rocq: Arbitrage.arbitrage_implem.tVT
 // Variant: borrowed
 pub fn tVT(t: &Rc<tabs>) -> Rc<Array<u64>> {
-  let v1 = t;
-  Rc::clone((&(&**v1).tVT))
+  let tmp = t;
+  Rc::clone(&tmp.tVT)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.wr_head
 // Variant: uncurried
 pub fn wr_head(T: Rc<tabs>, q: u64, m: f64, e: u64, n: u64, V: Rc<Array<u64>>) -> Rc<tabs> {
-  let v9 = Rc::clone(&T);
-  let v10 = tPR(v9);
-  let v19 = rocq_array::set::<bool>(v10, q, true);
-  let v23 = Rc::clone(&T);
-  let v25 = tMA(v23);
-  let v31 = rocq_array::set::<f64>(v25, q, m);
-  let v35 = Rc::clone(&T);
-  let v37 = tEX(v35);
-  let v43 = rocq_array::set::<u64>(v37, q, e);
-  let v48 = tCN(T);
-  let v54 = rocq_array::set::<u64>(v48, q, n);
-  Rc::new(tabs { tPR: v19, tMA: v31, tEX: v43, tCN: v54, tVT: V })
+  let T_clone = Rc::clone(&T);
+  let tmp = tPR(T_clone);
+  let tmp_1 = rocq_array::set::<bool>(tmp, q, true);
+  let T_clone_1 = Rc::clone(&T);
+  let tmp_2 = tMA(T_clone_1);
+  let tmp_3 = rocq_array::set::<f64>(tmp_2, q, m);
+  let T_clone_2 = Rc::clone(&T);
+  let tmp_4 = tEX(T_clone_2);
+  let tmp_5 = rocq_array::set::<u64>(tmp_4, q, e);
+  let tmp_6 = tCN(T);
+  let tmp_7 = rocq_array::set::<u64>(tmp_6, q, n);
+  Rc::new(tabs { tPR: tmp_1, tMA: tmp_3, tEX: tmp_5, tCN: tmp_7, tVT: V })
 }
 
 // Rocq: Arbitrage.arbitrage_implem.vset
 // Variant: uncurried
 pub fn vset(bd: u64, a: u64, b: u64, V: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v6 = 25u64;
-  let v7 = {
-    move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
-      std::mem::drop(v9);
-      true
-    }
-  };
-  let v14: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v7);
-  let v15: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = v14;
-  let v22 = {
+  let tmp = 25u64;
+  let callback: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
+    std::mem::drop(v9);
+    true
+  });
+  let callback_1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
     move |t: u64, W: Rc<Array<u64>>| -> Rc<Array<u64>> {
       let bd = &bd;
       let b = &b;
       let a = &a;
-      let v36 = add_1(Clone::clone(bd), t);
-      let v44 = primes(());
-      let v45 = &v44;
-      let v48 = rocq_array::get::<u64>(&v45, t);
-      std::mem::drop(v44);
-      let v53 = mlt(Clone::clone(b), v48);
-      let v60 = primes(());
-      let v61 = &v60;
-      let v64 = rocq_array::get::<u64>(&v61, t);
-      std::mem::drop(v60);
-      let v66 = Clone::clone(a);
-      rocq_array::set::<u64>(W, v36, sub(v53, mlt(v66, v64)))
+      let tmp_1 = add_1(Clone::clone(bd), t);
+      let tmp_2 = primes(());
+      let tmp_3 = rocq_array::get::<u64>(&tmp_2, t);
+      std::mem::drop(tmp_2);
+      let tmp_4 = mlt(Clone::clone(b), tmp_3);
+      let tmp_5 = primes(());
+      let tmp_6 = rocq_array::get::<u64>(&tmp_5, t);
+      std::mem::drop(tmp_5);
+      let a_clone = Clone::clone(a);
+      rocq_array::set::<u64>(W, tmp_1, sub(tmp_4, mlt(a_clone, tmp_6)))
     }
-  };
-  let v84: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v22);
-  loop_::<Rc<Array<u64>>>(v6, v15, v84, 0u64, V)
+  });
+  loop_::<Rc<Array<u64>>>(tmp, callback, callback_1, 0u64, V)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.init_step
 // Variant: uncurried
 pub fn init_step(c: u64, xs: Rc<Array<u64>>, xd: Rc<Array<u64>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, r: u64, T: Rc<tabs>) -> Rc<tabs> {
-  let v7 = &xs;
-  let u = rocq_array::get::<u64>(&v7, r);
-  let v11 = &xd;
-  let v = rocq_array::get::<u64>(&v11, r);
-  let v15 = &xa;
-  let a = rocq_array::get::<u64>(&v15, r);
-  let v19 = &xb;
-  let b = rocq_array::get::<u64>(&v19, r);
+  let u = rocq_array::get::<u64>(&xs, r);
+  let v = rocq_array::get::<u64>(&xd, r);
+  let a = rocq_array::get::<u64>(&xa, r);
+  let b = rocq_array::get::<u64>(&xb, r);
   let q = add_1(mul(u, c), v);
-  let v40 = ratecell(a, b);
-  match v40 {
+  let tmp = ratecell(a, b);
+  match tmp {
     (v42, v44) => {
       let p = &v44;
       match v42 {
         (v48, v50) => {
           let e = &v48;
           let m = &v50;
-          let v57 = Rc::clone(&T);
-          let v58 = tPR(v57);
-          let v59 = &v58;
-          let v62 = rocq_array::get::<bool>(&v59, q);
-          let better = match v62 {
-            true => {
-              let v68 = Rc::clone(&T);
-              let v69 = tMA(v68);
-              let v70 = &v69;
-              let v73 = rocq_array::get::<f64>(&v70, q);
-              let v77 = Rc::clone(&T);
-              let v78 = tEX(v77);
-              let v79 = &v78;
-              let v82 = rocq_array::get::<u64>(&v79, q);
-              let v86 = Rc::clone(&T);
-              let v87 = tCN(v86);
-              let v88 = &v87;
-              let v91 = rocq_array::get::<u64>(&v88, q);
-              let v104 = fcmp(v48, v50, v44, v73, v82, v91);
-              let (v105, v106) = __rocq_reuse::reset(v104, |__payload| Clone::clone(__payload));
-              std::mem::drop(v106);
-              match v105 {
-                option::Some(v111) => {
-                  std::mem::drop(v87);
-                  std::mem::drop(v78);
-                  std::mem::drop(v69);
-                  v111
-                },
-                option::None => {
-                  std::mem::drop(v87);
-                  std::mem::drop(v78);
-                  std::mem::drop(v69);
-                  let v122 = Rc::clone(&T);
-                  let v125 = {
-                    let __anf_capture_126 = b;
-                    let __anf_capture_128 = a;
-                    let __anf_capture_132 = q;
-                    move |t: u64| -> u64 {
-                      let b = &__anf_capture_126;
-                      let a = &__anf_capture_128;
-                      let T = &v122;
-                      let q = &__anf_capture_132;
-                      let v143 = primes(());
-                      let v144 = &v143;
-                      let v147 = rocq_array::get::<u64>(&v144, t);
-                      std::mem::drop(v143);
-                      let v152 = mlt(Clone::clone(b), v147);
-                      let v159 = primes(());
-                      let v160 = &v159;
-                      let v163 = rocq_array::get::<u64>(&v160, t);
-                      std::mem::drop(v159);
-                      let v173 = sub(v152, mlt(Clone::clone(a), v163));
-                      let v176 = tVT(T);
-                      let v184 = Clone::clone(q);
-                      let v190 = add_1(mul(25u64, v184), t);
-                      let v191 = &v176;
-                      let v194 = rocq_array::get::<u64>(&v191, v190);
-                      std::mem::drop(v176);
-                      sub(v173, v194)
-                    }
-                  };
-                  let v202: Rc<dyn Fn(u64) -> u64> = Rc::new(v125);
-                  exact_gt(v202)
-                },
-              }
-            },
-            false => {
-              true
-            },
+          let T_clone = Rc::clone(&T);
+          let tmp_1 = tPR(T_clone);
+          let tmp_2 = rocq_array::get::<bool>(&tmp_1, q);
+          let better = if tmp_2 {
+            let T_clone_1 = Rc::clone(&T);
+            let tmp_3 = tMA(T_clone_1);
+            let tmp_4 = rocq_array::get::<f64>(&tmp_3, q);
+            let T_clone_2 = Rc::clone(&T);
+            let tmp_5 = tEX(T_clone_2);
+            let tmp_6 = rocq_array::get::<u64>(&tmp_5, q);
+            let T_clone_3 = Rc::clone(&T);
+            let tmp_7 = tCN(T_clone_3);
+            let tmp_8 = rocq_array::get::<u64>(&tmp_7, q);
+            let tmp_9 = fcmp(v48, v50, v44, tmp_4, tmp_6, tmp_8);
+            let (v105, v106) = __rocq_reuse::reset(tmp_9, |__payload| Clone::clone(__payload));
+            std::mem::drop(v106);
+            match v105 {
+              option::Some(v111) => {
+                std::mem::drop(tmp_7);
+                std::mem::drop(tmp_5);
+                std::mem::drop(tmp_3);
+                v111
+              },
+              option::None => {
+                std::mem::drop(tmp_7);
+                std::mem::drop(tmp_5);
+                std::mem::drop(tmp_3);
+                let T_clone_4 = Rc::clone(&T);
+                let callback: Rc<dyn Fn(u64) -> u64> = Rc::new({
+                  let __anf_capture_126 = b;
+                  let __anf_capture_128 = a;
+                  let __anf_capture_132 = q;
+                  move |t: u64| -> u64 {
+                    let b = &__anf_capture_126;
+                    let a = &__anf_capture_128;
+                    let T = &T_clone_4;
+                    let q = &__anf_capture_132;
+                    let tmp_10 = primes(());
+                    let tmp_11 = rocq_array::get::<u64>(&tmp_10, t);
+                    std::mem::drop(tmp_10);
+                    let tmp_12 = mlt(Clone::clone(b), tmp_11);
+                    let tmp_13 = primes(());
+                    let tmp_14 = rocq_array::get::<u64>(&tmp_13, t);
+                    std::mem::drop(tmp_13);
+                    let tmp_15 = sub(tmp_12, mlt(Clone::clone(a), tmp_14));
+                    let tmp_16 = tVT(T);
+                    let q_clone = Clone::clone(q);
+                    let tmp_17 = rocq_array::get::<u64>(&tmp_16, add_1(mul(25u64, q_clone), t));
+                    std::mem::drop(tmp_16);
+                    sub(tmp_15, tmp_17)
+                  }
+                });
+                exact_gt(callback)
+              },
+            }
+          } else {
+            true
           };
-          match better {
-            true => {
-              std::mem::drop(xs);
-              std::mem::drop(xd);
-              std::mem::drop(xa);
-              std::mem::drop(v58);
-              std::mem::drop(xb);
-              let v227 = mul(25u64, q);
-              let v231 = Rc::clone(&T);
-              let v232 = tVT_owned(v231);
-              let v241 = vset(v227, a, b, v232);
-              let v247 = Clone::clone(e);
-              let v249 = Clone::clone(m);
-              let v251 = Clone::clone(p);
-              wr_head(T, q, v247, v249, v251, v241)
-            },
-            false => {
-              std::mem::drop(xs);
-              std::mem::drop(xd);
-              std::mem::drop(xa);
-              std::mem::drop(v58);
-              std::mem::drop(xb);
-              T
-            },
+          if better {
+            std::mem::drop(xs);
+            std::mem::drop(xd);
+            std::mem::drop(xa);
+            std::mem::drop(tmp_1);
+            std::mem::drop(xb);
+            let tmp_18 = mul(25u64, q);
+            let T_clone_5 = Rc::clone(&T);
+            let tmp_19 = tVT_owned(T_clone_5);
+            let tmp_20 = vset(tmp_18, a, b, tmp_19);
+            let e_clone = Clone::clone(e);
+            let m_clone = Clone::clone(m);
+            let p_clone = Clone::clone(p);
+            wr_head(T, q, e_clone, m_clone, p_clone, tmp_20)
+          } else {
+            std::mem::drop(xs);
+            std::mem::drop(xd);
+            std::mem::drop(xa);
+            std::mem::drop(tmp_1);
+            std::mem::drop(xb);
+            T
           }
         },
       }
@@ -2270,28 +2157,25 @@ pub fn init_step(c: u64, xs: Rc<Array<u64>>, xd: Rc<Array<u64>>, xa: Rc<Array<u6
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Floats.PrimFloat.leb
@@ -2304,454 +2188,324 @@ pub fn leb_1(v0: f64, v1: f64) -> bool {
 // Variant: uncurried
 pub fn mulcell(m1: f64, e1: u64, n1: u64, m2: f64, e2: u64, n2: u64) -> ((f64, u64), u64) {
   let p = mul_1(m1, m2);
-  let v18 = add_1(n1, n2);
-  let n = add_1(v18, 2u64);
-  let v28 = __rocq_global_467;
-  let n_ = match ltb(v28, n) {
-    true => {
-      add_1(__rocq_global_467, 1u64)
-    },
-    false => {
-      n
-    },
+  let tmp = add_1(n1, n2);
+  let n = add_1(tmp, 2u64);
+  let tmp_1 = __rocq_global_467;
+  let n_ = if ltb(tmp_1, n) {
+    add_1(__rocq_global_467, 1u64)
+  } else {
+    n
   };
-  let v55 = f_two(());
-  match leb_1(v55, p) {
-    true => {
-      let v72 = div(p, f_two(()));
-      let v80 = add_1(e1, e2);
-      ((v72, add_1(sub(v80, __rocq_global_359), 1u64)), n_)
-    },
-    false => {
-      ((p, sub(add_1(e1, e2), __rocq_global_359)), n_)
-    },
+  let tmp_2 = f_two(());
+  if leb_1(tmp_2, p) {
+    let tmp_3 = div(p, f_two(()));
+    let tmp_4 = add_1(e1, e2);
+    ((tmp_3, add_1(sub(tmp_4, __rocq_global_359), 1u64)), n_)
+  } else {
+    ((p, sub(add_1(e1, e2), __rocq_global_359)), n_)
   }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.vadd
 // Variant: uncurried
 pub fn vadd(bd: u64, b1: u64, b2: u64, V: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v6 = 25u64;
-  let v7 = {
-    move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
-      std::mem::drop(v9);
-      true
-    }
-  };
-  let v14: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v7);
-  let v15: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = v14;
-  let v22 = {
+  let tmp = 25u64;
+  let callback: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
+    std::mem::drop(v9);
+    true
+  });
+  let callback_1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
     move |t: u64, W: Rc<Array<u64>>| -> Rc<Array<u64>> {
       let bd = &bd;
       let b1 = &b1;
       let b2 = &b2;
-      let v36 = add_1(Clone::clone(bd), t);
-      let v43 = add_1(Clone::clone(b1), t);
-      let v44 = &W;
-      let v47 = rocq_array::get::<u64>(&v44, v43);
-      let v50 = Clone::clone(b2);
-      let v53 = add_1(v50, t);
-      let v54 = &W;
-      let v57 = rocq_array::get::<u64>(&v54, v53);
-      rocq_array::set::<u64>(W, v36, add_1(v47, v57))
+      let tmp_1 = add_1(Clone::clone(bd), t);
+      let tmp_2 = rocq_array::get::<u64>(&W, add_1(Clone::clone(b1), t));
+      let b2_clone = Clone::clone(b2);
+      let tmp_3 = rocq_array::get::<u64>(&W, add_1(b2_clone, t));
+      rocq_array::set::<u64>(W, tmp_1, add_1(tmp_2, tmp_3))
     }
-  };
-  let v72: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v22);
-  loop_::<Rc<Array<u64>>>(v6, v15, v72, 0u64, V)
+  });
+  loop_::<Rc<Array<u64>>>(tmp, callback, callback_1, 0u64, V)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.fw_j
 // Variant: uncurried
 pub fn fw_j(c: u64, k: u64, i: u64, j: u64, s: (Rc<tabs>, bool)) -> (Rc<tabs>, bool) {
-  let v7 = Clone::clone(&s);
-  let T = fst::<Rc<tabs>, bool>(v7);
-  match eqb(j, k) {
-    true => {
-      std::mem::drop(T);
-      s
-    },
-    false => {
-      let qkj = add_1(mul(k, c), j);
-      let v34 = Rc::clone(&T);
-      let v35 = tPR(v34);
-      let v36 = &v35;
-      let v39 = rocq_array::get::<bool>(&v36, qkj);
-      match v39 {
-        true => {
-          let qik = add_1(mul(i, c), k);
-          let qij = add_1(mul(i, c), j);
-          let v69 = Rc::clone(&T);
-          let v70 = tMA(v69);
-          let v71 = &v70;
-          let v74 = rocq_array::get::<f64>(&v71, qik);
-          let v78 = Rc::clone(&T);
-          let v79 = tEX(v78);
-          let v80 = &v79;
-          let v83 = rocq_array::get::<u64>(&v80, qik);
-          let v87 = Rc::clone(&T);
-          let v88 = tCN(v87);
-          let v89 = &v88;
-          let v92 = rocq_array::get::<u64>(&v89, qik);
-          let v96 = Rc::clone(&T);
-          let v97 = tMA(v96);
-          let v98 = &v97;
-          let v101 = rocq_array::get::<f64>(&v98, qkj);
-          let v105 = Rc::clone(&T);
-          let v106 = tEX(v105);
-          let v107 = &v106;
-          let v110 = rocq_array::get::<u64>(&v107, qkj);
-          let v114 = Rc::clone(&T);
-          let v115 = tCN(v114);
-          let v116 = &v115;
-          let v119 = rocq_array::get::<u64>(&v116, qkj);
-          let v132 = mulcell(v74, v83, v92, v101, v110, v119);
-          match v132 {
-            (v134, v136) => {
-              let p = &v136;
-              match v134 {
-                (v140, v142) => {
-                  let e = &v140;
-                  let m = &v142;
-                  let bik = mul(25u64, qik);
-                  let bkj = mul(25u64, qkj);
-                  let bij = mul(25u64, qij);
-                  let ex = match eqb(i, j) {
-                    true => {
-                      let v199 = fcmp(v140, v142, v136, f_one(()), __rocq_global_359, 0u64);
-                      let (v200, v201) = __rocq_reuse::reset(v199, |__payload| Clone::clone(__payload));
-                      std::mem::drop(v201);
-                      match v200 {
-                        option::Some(v206) => {
-                          v206
-                        },
-                        option::None => {
-                          let v215 = Rc::clone(&T);
-                          let v218 = {
-                            let __anf_capture_219 = bik;
-                            let __anf_capture_223 = bkj;
-                            move |t: u64| -> u64 {
-                              let bik = &__anf_capture_219;
-                              let T = &v215;
-                              let bkj = &__anf_capture_223;
-                              let v229 = tVT(T);
-                              let v235 = add_1(Clone::clone(bik), t);
-                              let v236 = &v229;
-                              let v239 = rocq_array::get::<u64>(&v236, v235);
-                              std::mem::drop(v229);
-                              let v242 = tVT(T);
-                              let v245 = Clone::clone(bkj);
-                              let v248 = add_1(v245, t);
-                              let v249 = &v242;
-                              let v252 = rocq_array::get::<u64>(&v249, v248);
-                              std::mem::drop(v242);
-                              add_1(v239, v252)
-                            }
-                          };
-                          let v260: Rc<dyn Fn(u64) -> u64> = Rc::new(v218);
-                          exact_gt(v260)
-                        },
+  let s_clone = Clone::clone(&s);
+  let T = fst::<Rc<tabs>, bool>(s_clone);
+  if eqb(j, k) {
+    std::mem::drop(T);
+    s
+  } else {
+    let qkj = add_1(mul(k, c), j);
+    let T_clone = Rc::clone(&T);
+    let tmp = tPR(T_clone);
+    let tmp_1 = rocq_array::get::<bool>(&tmp, qkj);
+    if tmp_1 {
+      let qik = add_1(mul(i, c), k);
+      let qij = add_1(mul(i, c), j);
+      let T_clone_1 = Rc::clone(&T);
+      let tmp_2 = tMA(T_clone_1);
+      let tmp_3 = rocq_array::get::<f64>(&tmp_2, qik);
+      let T_clone_2 = Rc::clone(&T);
+      let tmp_4 = tEX(T_clone_2);
+      let tmp_5 = rocq_array::get::<u64>(&tmp_4, qik);
+      let T_clone_3 = Rc::clone(&T);
+      let tmp_6 = tCN(T_clone_3);
+      let tmp_7 = rocq_array::get::<u64>(&tmp_6, qik);
+      let T_clone_4 = Rc::clone(&T);
+      let tmp_8 = tMA(T_clone_4);
+      let tmp_9 = rocq_array::get::<f64>(&tmp_8, qkj);
+      let T_clone_5 = Rc::clone(&T);
+      let tmp_10 = tEX(T_clone_5);
+      let tmp_11 = rocq_array::get::<u64>(&tmp_10, qkj);
+      let T_clone_6 = Rc::clone(&T);
+      let tmp_12 = tCN(T_clone_6);
+      let tmp_13 = rocq_array::get::<u64>(&tmp_12, qkj);
+      let tmp_14 = mulcell(tmp_3, tmp_5, tmp_7, tmp_9, tmp_11, tmp_13);
+      match tmp_14 {
+        (v134, v136) => {
+          let p = &v136;
+          match v134 {
+            (v140, v142) => {
+              let e = &v140;
+              let m = &v142;
+              let bik = mul(25u64, qik);
+              let bkj = mul(25u64, qkj);
+              let bij = mul(25u64, qij);
+              let ex = if eqb(i, j) {
+                let tmp_15 = fcmp(v140, v142, v136, f_one(()), __rocq_global_359, 0u64);
+                let (v200, v201) = __rocq_reuse::reset(tmp_15, |__payload| Clone::clone(__payload));
+                std::mem::drop(v201);
+                match v200 {
+                  option::Some(v206) => {
+                    v206
+                  },
+                  option::None => {
+                    let T_clone_7 = Rc::clone(&T);
+                    let callback: Rc<dyn Fn(u64) -> u64> = Rc::new({
+                      let __anf_capture_219 = bik;
+                      let __anf_capture_223 = bkj;
+                      move |t: u64| -> u64 {
+                        let bik = &__anf_capture_219;
+                        let T = &T_clone_7;
+                        let bkj = &__anf_capture_223;
+                        let tmp_16 = tVT(T);
+                        let tmp_17 = rocq_array::get::<u64>(&tmp_16, add_1(Clone::clone(bik), t));
+                        std::mem::drop(tmp_16);
+                        let tmp_18 = tVT(T);
+                        let bkj_clone = Clone::clone(bkj);
+                        let tmp_19 = rocq_array::get::<u64>(&tmp_18, add_1(bkj_clone, t));
+                        std::mem::drop(tmp_18);
+                        add_1(tmp_17, tmp_19)
                       }
+                    });
+                    exact_gt(callback)
+                  },
+                }
+              } else {
+                false
+              };
+              if ex {
+                std::mem::drop(tmp_12);
+                std::mem::drop(tmp_10);
+                std::mem::drop(tmp_8);
+                std::mem::drop(tmp_4);
+                std::mem::drop(tmp_2);
+                std::mem::drop(s);
+                std::mem::drop(tmp_6);
+                std::mem::drop(tmp);
+                (T, true)
+              } else {
+                let T_clone_8 = Rc::clone(&T);
+                let tmp_20 = tPR(T_clone_8);
+                let tmp_21 = rocq_array::get::<bool>(&tmp_20, qij);
+                let better = if tmp_21 {
+                  let T_clone_9 = Rc::clone(&T);
+                  let tmp_22 = tMA(T_clone_9);
+                  let tmp_23 = rocq_array::get::<f64>(&tmp_22, qij);
+                  let T_clone_10 = Rc::clone(&T);
+                  let tmp_24 = tEX(T_clone_10);
+                  let tmp_25 = rocq_array::get::<u64>(&tmp_24, qij);
+                  let T_clone_11 = Rc::clone(&T);
+                  let tmp_26 = tCN(T_clone_11);
+                  let tmp_27 = rocq_array::get::<u64>(&tmp_26, qij);
+                  let tmp_28 = fcmp(Clone::clone(e), Clone::clone(m), Clone::clone(p), tmp_23, tmp_25, tmp_27);
+                  let (v337, v338) = __rocq_reuse::reset(tmp_28, |__payload| Clone::clone(__payload));
+                  std::mem::drop(v338);
+                  match v337 {
+                    option::Some(v343) => {
+                      std::mem::drop(tmp_26);
+                      std::mem::drop(tmp_24);
+                      std::mem::drop(tmp_22);
+                      v343
                     },
-                    false => {
-                      false
-                    },
-                  };
-                  match ex {
-                    true => {
-                      std::mem::drop(v115);
-                      std::mem::drop(v106);
-                      std::mem::drop(v97);
-                      std::mem::drop(v79);
-                      std::mem::drop(v70);
-                      std::mem::drop(s);
-                      std::mem::drop(v88);
-                      std::mem::drop(v35);
-                      (T, true)
-                    },
-                    false => {
-                      let v289 = Rc::clone(&T);
-                      let v290 = tPR(v289);
-                      let v291 = &v290;
-                      let v294 = rocq_array::get::<bool>(&v291, qij);
-                      let better = match v294 {
-                        true => {
-                          let v300 = Rc::clone(&T);
-                          let v301 = tMA(v300);
-                          let v302 = &v301;
-                          let v305 = rocq_array::get::<f64>(&v302, qij);
-                          let v309 = Rc::clone(&T);
-                          let v310 = tEX(v309);
-                          let v311 = &v310;
-                          let v314 = rocq_array::get::<u64>(&v311, qij);
-                          let v318 = Rc::clone(&T);
-                          let v319 = tCN(v318);
-                          let v320 = &v319;
-                          let v323 = rocq_array::get::<u64>(&v320, qij);
-                          let v336 = fcmp(Clone::clone(e), Clone::clone(m), Clone::clone(p), v305, v314, v323);
-                          let (v337, v338) = __rocq_reuse::reset(v336, |__payload| Clone::clone(__payload));
-                          std::mem::drop(v338);
-                          match v337 {
-                            option::Some(v343) => {
-                              std::mem::drop(v319);
-                              std::mem::drop(v310);
-                              std::mem::drop(v301);
-                              v343
-                            },
-                            option::None => {
-                              std::mem::drop(v319);
-                              std::mem::drop(v310);
-                              std::mem::drop(v301);
-                              let v354 = Rc::clone(&T);
-                              let v357 = {
-                                let __anf_capture_358 = bik;
-                                let __anf_capture_360 = bkj;
-                                let __anf_capture_364 = bij;
-                                move |t: u64| -> u64 {
-                                  let bik = &__anf_capture_358;
-                                  let bkj = &__anf_capture_360;
-                                  let T = &v354;
-                                  let bij = &__anf_capture_364;
-                                  let v371 = tVT(T);
-                                  let v377 = add_1(Clone::clone(bik), t);
-                                  let v378 = &v371;
-                                  let v381 = rocq_array::get::<u64>(&v378, v377);
-                                  std::mem::drop(v371);
-                                  let v384 = tVT(T);
-                                  let v390 = add_1(Clone::clone(bkj), t);
-                                  let v391 = &v384;
-                                  let v394 = rocq_array::get::<u64>(&v391, v390);
-                                  std::mem::drop(v384);
-                                  let v399 = add_1(v381, v394);
-                                  let v402 = tVT(T);
-                                  let v405 = Clone::clone(bij);
-                                  let v408 = add_1(v405, t);
-                                  let v409 = &v402;
-                                  let v412 = rocq_array::get::<u64>(&v409, v408);
-                                  std::mem::drop(v402);
-                                  sub(v399, v412)
-                                }
-                              };
-                              let v420: Rc<dyn Fn(u64) -> u64> = Rc::new(v357);
-                              exact_gt(v420)
-                            },
-                          }
-                        },
-                        false => {
-                          true
-                        },
-                      };
-                      match better {
-                        true => {
-                          std::mem::drop(v290);
-                          std::mem::drop(v115);
-                          std::mem::drop(v106);
-                          std::mem::drop(v97);
-                          std::mem::drop(v79);
-                          std::mem::drop(v70);
-                          std::mem::drop(s);
-                          std::mem::drop(v88);
-                          std::mem::drop(v35);
-                          let v441 = Rc::clone(&T);
-                          let v442 = tVT_owned(v441);
-                          let v451 = vadd(bij, bik, bkj, v442);
-                          let v457 = Clone::clone(e);
-                          let v459 = Clone::clone(m);
-                          let v461 = Clone::clone(p);
-                          (wr_head(T, qij, v457, v459, v461, v451), false)
-                        },
-                        false => {
-                          std::mem::drop(v290);
-                          std::mem::drop(v115);
-                          std::mem::drop(v106);
-                          std::mem::drop(v97);
-                          std::mem::drop(v79);
-                          std::mem::drop(v70);
-                          std::mem::drop(v88);
-                          std::mem::drop(T);
-                          std::mem::drop(v35);
-                          s
-                        },
-                      }
+                    option::None => {
+                      std::mem::drop(tmp_26);
+                      std::mem::drop(tmp_24);
+                      std::mem::drop(tmp_22);
+                      let T_clone_12 = Rc::clone(&T);
+                      let callback_1: Rc<dyn Fn(u64) -> u64> = Rc::new({
+                        let __anf_capture_358 = bik;
+                        let __anf_capture_360 = bkj;
+                        let __anf_capture_364 = bij;
+                        move |t: u64| -> u64 {
+                          let bik = &__anf_capture_358;
+                          let bkj = &__anf_capture_360;
+                          let T = &T_clone_12;
+                          let bij = &__anf_capture_364;
+                          let tmp_29 = tVT(T);
+                          let tmp_30 = rocq_array::get::<u64>(&tmp_29, add_1(Clone::clone(bik), t));
+                          std::mem::drop(tmp_29);
+                          let tmp_31 = tVT(T);
+                          let tmp_32 = rocq_array::get::<u64>(&tmp_31, add_1(Clone::clone(bkj), t));
+                          std::mem::drop(tmp_31);
+                          let tmp_33 = add_1(tmp_30, tmp_32);
+                          let tmp_34 = tVT(T);
+                          let bij_clone = Clone::clone(bij);
+                          let tmp_35 = rocq_array::get::<u64>(&tmp_34, add_1(bij_clone, t));
+                          std::mem::drop(tmp_34);
+                          sub(tmp_33, tmp_35)
+                        }
+                      });
+                      exact_gt(callback_1)
                     },
                   }
-                },
+                } else {
+                  true
+                };
+                if better {
+                  std::mem::drop(tmp_20);
+                  std::mem::drop(tmp_12);
+                  std::mem::drop(tmp_10);
+                  std::mem::drop(tmp_8);
+                  std::mem::drop(tmp_4);
+                  std::mem::drop(tmp_2);
+                  std::mem::drop(s);
+                  std::mem::drop(tmp_6);
+                  std::mem::drop(tmp);
+                  let T_clone_13 = Rc::clone(&T);
+                  let tmp_36 = tVT_owned(T_clone_13);
+                  let tmp_37 = vadd(bij, bik, bkj, tmp_36);
+                  let e_clone = Clone::clone(e);
+                  let m_clone = Clone::clone(m);
+                  let p_clone = Clone::clone(p);
+                  (wr_head(T, qij, e_clone, m_clone, p_clone, tmp_37), false)
+                } else {
+                  std::mem::drop(tmp_20);
+                  std::mem::drop(tmp_12);
+                  std::mem::drop(tmp_10);
+                  std::mem::drop(tmp_8);
+                  std::mem::drop(tmp_4);
+                  std::mem::drop(tmp_2);
+                  std::mem::drop(tmp_6);
+                  std::mem::drop(T);
+                  std::mem::drop(tmp);
+                  s
+                }
               }
             },
           }
         },
-        false => {
-          std::mem::drop(T);
-          std::mem::drop(v35);
-          s
-        },
       }
-    },
+    } else {
+      std::mem::drop(T);
+      std::mem::drop(tmp);
+      s
+    }
   }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.fw_i
 // Variant: uncurried
 pub fn fw_i(c: u64, k: u64, i: u64, s: (Rc<tabs>, bool)) -> (Rc<tabs>, bool) {
-  match eqb(i, k) {
-    true => {
+  if eqb(i, k) {
+    s
+  } else {
+    let s_clone = Clone::clone(&s);
+    let tmp = tPR(fst::<Rc<tabs>, bool>(s_clone));
+    let tmp_1 = rocq_array::get::<bool>(&tmp, add_1(mul(i, c), k));
+    if tmp_1 {
+      std::mem::drop(tmp);
+      let callback: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(move |_v41: u64, s: (Rc<tabs>, bool)| -> bool {
+        negb(snd::<Rc<tabs>, bool>(s))
+      });
+      let callback_1: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new({
+        let __anf_capture_62 = c;
+        let __anf_capture_64 = k;
+        let __anf_capture_66 = i;
+        move |v68: u64, v69: (Rc<tabs>, bool)| -> (Rc<tabs>, bool) {
+          let tmp_2 = Clone::clone(&__anf_capture_62);
+          let tmp_3 = Clone::clone(&__anf_capture_64);
+          let tmp_4 = Clone::clone(&__anf_capture_66);
+          fw_j(tmp_2, tmp_3, tmp_4, v68, v69)
+        }
+      });
+      loop_::<(Rc<tabs>, bool)>(c, callback, callback_1, 0u64, s)
+    } else {
+      std::mem::drop(tmp);
       s
-    },
-    false => {
-      let v16 = Clone::clone(&s);
-      let v21 = tPR(fst::<Rc<tabs>, bool>(v16));
-      let v33 = add_1(mul(i, c), k);
-      let v34 = &v21;
-      let v37 = rocq_array::get::<bool>(&v34, v33);
-      match v37 {
-        true => {
-          std::mem::drop(v21);
-          let v40 = {
-            move |_v41: u64, s: (Rc<tabs>, bool)| -> bool {
-              negb(snd::<Rc<tabs>, bool>(s))
-            }
-          };
-          let v53: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(v40);
-          let v54: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = v53;
-          let v61 = {
-            let __anf_capture_62 = c;
-            let __anf_capture_64 = k;
-            let __anf_capture_66 = i;
-            move |v68: u64, v69: (Rc<tabs>, bool)| -> (Rc<tabs>, bool) {
-              let v72 = Clone::clone(&__anf_capture_62);
-              let v74 = Clone::clone(&__anf_capture_64);
-              let v76 = Clone::clone(&__anf_capture_66);
-              fw_j(v72, v74, v76, v68, v69)
-            }
-          };
-          let v84: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new(v61);
-          loop_::<(Rc<tabs>, bool)>(c, v54, v84, 0u64, s)
-        },
-        false => {
-          std::mem::drop(v21);
-          s
-        },
-      }
-    },
+    }
   }
 }
 
 // Rocq: Arbitrage.arbitrage_implem.fw_k
 // Variant: uncurried
 pub fn fw_k(c: u64, k: u64, s: (Rc<tabs>, bool)) -> (Rc<tabs>, bool) {
-  let v4 = {
-    move |_v5: u64, s: (Rc<tabs>, bool)| -> bool {
-      negb(snd::<Rc<tabs>, bool>(s))
-    }
-  };
-  let v17: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(v4);
-  let v18: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = v17;
-  let v23 = {
+  let callback: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(move |_v5: u64, s: (Rc<tabs>, bool)| -> bool {
+    negb(snd::<Rc<tabs>, bool>(s))
+  });
+  let callback_1: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new({
     let __anf_capture_24 = c;
     move |v28: u64, v29: (Rc<tabs>, bool)| -> (Rc<tabs>, bool) {
-      let v32 = Clone::clone(&__anf_capture_24);
-      let v34 = Clone::clone(&k);
-      fw_i(v32, v34, v28, v29)
+      let tmp = Clone::clone(&__anf_capture_24);
+      let k_clone = Clone::clone(&k);
+      fw_i(tmp, k_clone, v28, v29)
     }
-  };
-  let v42: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new(v23);
-  loop_::<(Rc<tabs>, bool)>(c, v18, v42, 0u64, s)
+  });
+  loop_::<(Rc<tabs>, bool)>(c, callback, callback_1, 0u64, s)
 }
 
 // Rocq: Arbitrage.arbitrage_implem.arbitrage_impl
 // Variant: uncurried
 pub fn arbitrage_impl(c: u64, xs: Rc<Array<u64>>, xd: Rc<Array<u64>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>) -> bool {
   let cc = mul(c, c);
-  let v17 = rocq_array::make::<bool>(cc, false);
-  let v28 = rocq_array::make::<f64>(cc, f_one(()));
-  let v35 = rocq_array::make::<u64>(cc, 0u64);
-  let v42 = rocq_array::make::<u64>(cc, 0u64);
-  let v57 = rocq_array::make::<u64>(mul(25u64, cc), 0u64);
-  let T0 = Rc::new(tabs { tPR: v17, tMA: v28, tEX: v35, tCN: v42, tVT: v57 });
-  let v72 = &xs;
-  let v73 = rocq_array::length::<u64>(&v72);
-  let v74 = {
-    move |_v75: u64, v76: Rc<tabs>| -> bool {
-      std::mem::drop(v76);
-      true
-    }
-  };
-  let v81: Rc<dyn Fn(u64, Rc<tabs>) -> bool> = Rc::new(v74);
-  let v82: Rc<dyn Fn(u64, Rc<tabs>) -> bool> = v81;
-  let v93 = {
+  let tmp = rocq_array::make::<bool>(cc, false);
+  let tmp_1 = rocq_array::make::<f64>(cc, f_one(()));
+  let tmp_2 = rocq_array::make::<u64>(cc, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(cc, 0u64);
+  let tmp_4 = rocq_array::make::<u64>(mul(25u64, cc), 0u64);
+  let T0 = Rc::new(tabs { tPR: tmp, tMA: tmp_1, tEX: tmp_2, tCN: tmp_3, tVT: tmp_4 });
+  let tmp_5 = rocq_array::length::<u64>(&xs);
+  let callback: Rc<dyn Fn(u64, Rc<tabs>) -> bool> = Rc::new(move |_v75: u64, v76: Rc<tabs>| -> bool {
+    std::mem::drop(v76);
+    true
+  });
+  let callback_1: Rc<dyn Fn(u64, Rc<tabs>) -> Rc<tabs>> = Rc::new({
     let __anf_capture_94 = c;
     let __anf_capture_96 = xs;
     move |v104: u64, v105: Rc<tabs>| -> Rc<tabs> {
-      let v108 = Clone::clone(&__anf_capture_94);
-      let v110 = Rc::clone(&__anf_capture_96);
-      let v112 = Rc::clone(&xd);
-      let v114 = Rc::clone(&xa);
-      let v116 = Rc::clone(&xb);
-      init_step(v108, v110, v112, v114, v116, v104, v105)
+      let tmp_6 = Clone::clone(&__anf_capture_94);
+      let tmp_7 = Rc::clone(&__anf_capture_96);
+      let xd_clone = Rc::clone(&xd);
+      let xa_clone = Rc::clone(&xa);
+      let xb_clone = Rc::clone(&xb);
+      init_step(tmp_6, tmp_7, xd_clone, xa_clone, xb_clone, v104, v105)
     }
-  };
-  let v124: Rc<dyn Fn(u64, Rc<tabs>) -> Rc<tabs>> = Rc::new(v93);
-  let T1 = loop_::<Rc<tabs>>(v73, v82, v124, 0u64, T0);
-  let v141 = {
-    move |_v142: u64, s: (Rc<tabs>, bool)| -> bool {
-      negb(snd::<Rc<tabs>, bool>(s))
-    }
-  };
-  let v154: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(v141);
-  let v155: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = v154;
-  let v158 = {
+  });
+  let T1 = loop_::<Rc<tabs>>(tmp_5, callback, callback_1, 0u64, T0);
+  let callback_2: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> bool> = Rc::new(move |_v142: u64, s: (Rc<tabs>, bool)| -> bool {
+    negb(snd::<Rc<tabs>, bool>(s))
+  });
+  let callback_3: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new({
     let __anf_capture_159 = c;
     move |v161: u64, v162: (Rc<tabs>, bool)| -> (Rc<tabs>, bool) {
-      let v165 = Clone::clone(&__anf_capture_159);
-      fw_k(v165, v161, v162)
+      let tmp_8 = Clone::clone(&__anf_capture_159);
+      fw_k(tmp_8, v161, v162)
     }
-  };
-  let v173: Rc<dyn Fn(u64, (Rc<tabs>, bool)) -> (Rc<tabs>, bool)> = Rc::new(v158);
-  snd::<Rc<tabs>, bool>(loop_::<(Rc<tabs>, bool)>(c, v155, v173, 0u64, (T1, false)))
-}
-
-// Rocq: Arbitrage.arbitrage_implem.arbitrage_impl
-pub fn arbitrage_impl_curried(c: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> {
-  let v3 = {
-    move |xs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> {
-      let c = &c;
-      let v8 = Clone::clone(c);
-      let v11 = {
-        move |xd: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> {
-          let c = &v8;
-          let xs = &xs;
-          let v18 = Clone::clone(c);
-          let v20 = Rc::clone(xs);
-          let v23 = {
-            move |xa: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-              let c = &v18;
-              let xs = &v20;
-              let xd = &xd;
-              let v32 = Clone::clone(c);
-              let v34 = Rc::clone(xs);
-              let v36 = Rc::clone(xd);
-              let v39 = {
-                move |xb: Rc<Array<u64>>| -> bool {
-                  let v51 = Clone::clone(&v32);
-                  let v53 = Rc::clone(&v34);
-                  let v55 = Rc::clone(&v36);
-                  let v57 = Rc::clone(&xa);
-                  arbitrage_impl(v51, v53, v55, v57, xb)
-                }
-              };
-              let v63: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = Rc::new(v39);
-              v63
-            }
-          };
-          let v67: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> = Rc::new(v23);
-          v67
-        }
-      };
-      let v71: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> = Rc::new(v11);
-      v71
-    }
-  };
-  let v75: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = Rc::new(v3);
-  v75
+  });
+  snd::<Rc<tabs>, bool>(loop_::<(Rc<tabs>, bool)>(c, callback_2, callback_3, 0u64, (T1, false)))
 }
 
 mod __rocq_reuse {
@@ -2902,15 +2656,8 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = __rocq_global_1555.with(Clone::clone);
-  v0
-}
 const __rocq_global_359: u64 = 1073741824u64;
 const __rocq_global_467: u64 = 1048576u64;
-std::thread_local! { static __rocq_global_1555: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = arbitrage(); }
-std::thread_local! { static __rocq_global_1558: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>>> = arbitrage_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -2993,7 +2740,7 @@ fn solve(input: &str) -> String {
         for i in 0..c { index.insert(t.next(), i); }
         let r = t.uint(); let mut src = Vec::new(); let mut dst = Vec::new(); let mut a = Vec::new(); let mut b = Vec::new();
         for _ in 0..r { src.push(index[t.next()]); dst.push(index[t.next()]); a.push(t.uint()); b.push(t.uint()); }
-        out.push_str(if run()(c, ints(src), ints(dst), ints(a), ints(b)) { "Arbitrage\n" } else { "Ok\n" });
+        out.push_str(if arbitrage_impl(c, ints(src), ints(dst), ints(a), ints(b)) { "Arbitrage\n" } else { "Ok\n" });
     }
     out
 }

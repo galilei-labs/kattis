@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -698,21 +697,6 @@ pub fn KE() -> u64 {
   131072u64
 }
 
-// Rocq: Gcpc.gcpc_implem.gcpc
-// Variant: uncurried
-pub fn gcpc() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = gcpc_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Gcpc.gcpc_implem.gcpc
-pub fn gcpc_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = gcpc_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
@@ -727,21 +711,18 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Gcpc.gcpc_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Gcpc.gcpc_implem.size
 // Variant: borrowed
 pub fn size(t: &Rc<tree>) -> u64 {
-  let v1 = t;
-  match &**v1 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
@@ -770,8 +751,8 @@ pub fn height_owned(t: Rc<tree>) -> u64 {
 // Rocq: Gcpc.gcpc_implem.height
 // Variant: borrowed
 pub fn height(t: &Rc<tree>) -> u64 {
-  let v1 = t;
-  match &**v1 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
@@ -784,21 +765,18 @@ pub fn height(t: &Rc<tree>) -> u64 {
 // Rocq: Gcpc.gcpc_implem.mk
 // Variant: uncurried
 pub fn mk(l: Rc<tree>, k: u64, r: Rc<tree>) -> Rc<tree> {
-  let v17 = add(size(&l), size(&r));
-  let v24 = add(v17, 1u64);
-  let v29 = height(&l);
-  let v33 = height(&r);
-  let v39 = match ltb(v29, v33) {
-    true => {
-      let v44 = Rc::clone(&r);
-      add(height_owned(v44), 1u64)
-    },
-    false => {
-      let v59 = Rc::clone(&l);
-      add(height_owned(v59), 1u64)
-    },
+  let tmp = add(size(&l), size(&r));
+  let tmp_1 = add(tmp, 1u64);
+  let tmp_2 = height(&l);
+  let tmp_3 = height(&r);
+  let tmp_4 = if ltb(tmp_2, tmp_3) {
+    let r_clone = Rc::clone(&r);
+    add(height_owned(r_clone), 1u64)
+  } else {
+    let l_clone = Rc::clone(&l);
+    add(height_owned(l_clone), 1u64)
   };
-  Rc::new(tree::Node(l, k, r, v24, v39))
+  Rc::new(tree::Node(l, k, r, tmp_1, tmp_4))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -812,84 +790,72 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 pub fn bal(l: Rc<tree>, k: u64, r: Rc<tree>) -> Rc<tree> {
   let hl = height(&l);
   let hr = height(&r);
-  let v20 = add(hr, 2u64);
-  match ltb(v20, hl) {
-    true => {
-      match &*l {
-        tree::Leaf => {
-          mk(l, k, r)
-        },
-        tree::Node(i0, i, lr, _lk, _ll) => {
-          let v51 = height(lr);
-          let v54 = height(i0);
-          match leb(v51, v54) {
-            true => {
-              let v69 = mk(Rc::clone(lr), k, r);
-              let v71 = Rc::clone(i0);
-              let v72 = Clone::clone(i);
-              std::mem::drop(l);
-              mk(v71, v72, v69)
-            },
-            false => {
-              match &**lr {
-                tree::Leaf => {
-                  mk(l, k, r)
-                },
-                tree::Node(i0_1, i_1, lrr, _lrk, _lrl) => {
-                  let v108 = mk(Rc::clone(i0), Clone::clone(i), Rc::clone(i0_1));
-                  let v116 = mk(Rc::clone(lrr), k, r);
-                  let v119 = Clone::clone(i_1);
-                  std::mem::drop(l);
-                  mk(v108, v119, v116)
-                },
-              }
-            },
-          }
-        },
-      }
-    },
-    false => {
-      let v144 = add(hl, 2u64);
-      match ltb(v144, hr) {
-        true => {
-          match &*r {
+  let tmp = add(hr, 2u64);
+  if ltb(tmp, hl) {
+    match &*l {
+      tree::Leaf => {
+        mk(l, k, r)
+      },
+      tree::Node(i0, i, lr, _lk, _ll) => {
+        let tmp_1 = height(lr);
+        let tmp_2 = height(i0);
+        if leb(tmp_1, tmp_2) {
+          let tmp_3 = mk(Rc::clone(lr), k, r);
+          let i0_clone = Rc::clone(i0);
+          let i_clone = Clone::clone(i);
+          std::mem::drop(l);
+          mk(i0_clone, i_clone, tmp_3)
+        } else {
+          match &**lr {
             tree::Leaf => {
               mk(l, k, r)
             },
-            tree::Node(i0, i, rr, _rk, _rl) => {
-              let v175 = height(i0);
-              let v178 = height(rr);
-              match leb(v175, v178) {
-                true => {
-                  let v194 = mk(l, k, Rc::clone(i0));
-                  let v197 = Clone::clone(i);
-                  let v198 = Rc::clone(rr);
-                  std::mem::drop(r);
-                  mk(v194, v197, v198)
-                },
-                false => {
-                  match &**i0 {
-                    tree::Leaf => {
-                      mk(l, k, r)
-                    },
-                    tree::Node(i0_1, i_1, rlr, _rlk, _rll) => {
-                      let v232 = mk(l, k, Rc::clone(i0_1));
-                      let v240 = mk(Rc::clone(rlr), Clone::clone(i), Rc::clone(rr));
-                      let v243 = Clone::clone(i_1);
-                      std::mem::drop(r);
-                      mk(v232, v243, v240)
-                    },
-                  }
-                },
-              }
+            tree::Node(i0_1, i_1, lrr, _lrk, _lrl) => {
+              let tmp_4 = mk(Rc::clone(i0), Clone::clone(i), Rc::clone(i0_1));
+              let tmp_5 = mk(Rc::clone(lrr), k, r);
+              let i_clone_1 = Clone::clone(i_1);
+              std::mem::drop(l);
+              mk(tmp_4, i_clone_1, tmp_5)
             },
           }
-        },
-        false => {
+        }
+      },
+    }
+  } else {
+    let tmp_6 = add(hl, 2u64);
+    if ltb(tmp_6, hr) {
+      match &*r {
+        tree::Leaf => {
           mk(l, k, r)
         },
+        tree::Node(i0, i, rr, _rk, _rl) => {
+          let tmp_7 = height(i0);
+          let tmp_8 = height(rr);
+          if leb(tmp_7, tmp_8) {
+            let tmp_9 = mk(l, k, Rc::clone(i0));
+            let i_clone_2 = Clone::clone(i);
+            let rr_clone = Rc::clone(rr);
+            std::mem::drop(r);
+            mk(tmp_9, i_clone_2, rr_clone)
+          } else {
+            match &**i0 {
+              tree::Leaf => {
+                mk(l, k, r)
+              },
+              tree::Node(i0_1, i_1, rlr, _rlk, _rll) => {
+                let tmp_10 = mk(l, k, Rc::clone(i0_1));
+                let tmp_11 = mk(Rc::clone(rlr), Clone::clone(i), Rc::clone(rr));
+                let i_clone_3 = Clone::clone(i_1);
+                std::mem::drop(r);
+                mk(tmp_10, i_clone_3, tmp_11)
+              },
+            }
+          }
+        },
       }
-    },
+    } else {
+      mk(l, k, r)
+    }
   }
 }
 
@@ -908,30 +874,24 @@ pub fn insert(x: u64, t: Rc<tree>) -> Rc<tree> {
       mk(Rc::new(tree::Leaf), x, Rc::new(tree::Leaf))
     },
     tree::Node(i0, i, r, _k, _l) => {
-      let v34 = Clone::clone(i);
-      match ltb(x, v34) {
-        true => {
-          let v44 = insert(x, Rc::clone(i0));
-          let v47 = Clone::clone(i);
-          let v48 = Rc::clone(r);
+      let i_clone = Clone::clone(i);
+      if ltb(x, i_clone) {
+        let tmp = insert(x, Rc::clone(i0));
+        let i_clone_1 = Clone::clone(i);
+        let r_clone = Rc::clone(r);
+        std::mem::drop(t);
+        bal(tmp, i_clone_1, r_clone)
+      } else {
+        let i_clone_2 = Clone::clone(i);
+        if ltb(i_clone_2, x) {
+          let tmp_1 = insert(x, Rc::clone(r));
+          let i0_clone = Rc::clone(i0);
+          let i_clone_3 = Clone::clone(i);
           std::mem::drop(t);
-          bal(v44, v47, v48)
-        },
-        false => {
-          let v55 = Clone::clone(i);
-          match ltb(v55, x) {
-            true => {
-              let v66 = insert(x, Rc::clone(r));
-              let v68 = Rc::clone(i0);
-              let v69 = Clone::clone(i);
-              std::mem::drop(t);
-              bal(v68, v69, v66)
-            },
-            false => {
-              t
-            },
-          }
-        },
+          bal(i0_clone, i_clone_3, tmp_1)
+        } else {
+          t
+        }
       }
     },
   }
@@ -946,13 +906,13 @@ pub fn init_loop_1(n1: u64, k: u64, keys: Rc<Array<u64>>, T: Rc<tree>) -> (Rc<Ar
 // Rocq: Gcpc.gcpc_implem.init_loop (local: init_loop)
 // Variant: uncurried, lifted
 pub fn init_loop(n1: u64, k: u64, keys: Rc<Array<u64>>, T: Rc<tree>, _H: ()) -> (Rc<Array<u64>>, Rc<tree>) {
-  let v12 = ltb(k, n1);
-  match bdec(v12) {
+  let tmp = ltb(k, n1);
+  match bdec(tmp) {
     sumbool::left => {
       let key = add(__rocq_global_36, k);
-      let v30 = add(k, 1u64);
-      let v37 = rocq_array::set::<u64>(keys, k, key);
-      init_loop(n1, v30, v37, insert_1(key, T), ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(keys, k, key);
+      init_loop(n1, tmp_1, tmp_2, insert_1(key, T), ())
     },
     sumbool::right => {
       (keys, T)
@@ -987,12 +947,12 @@ pub fn remove_min(l: Rc<tree>, k: u64, r: Rc<tree>) -> (u64, Rc<tree>) {
       (k, r)
     },
     tree::Node(i0, i, lr, _lk, _ll) => {
-      let v25 = Rc::clone(i0);
-      let v27 = Clone::clone(i);
-      let v28 = Rc::clone(lr);
+      let i0_clone = Rc::clone(i0);
+      let i_clone = Clone::clone(i);
+      let lr_clone = Rc::clone(lr);
       std::mem::drop(l);
-      let v30 = remove_min(v25, v27, v28);
-      match v30 {
+      let tmp = remove_min(i0_clone, i_clone, lr_clone);
+      match tmp {
         (v32, v34) => {
           (v32, bal(v34, k, r))
         },
@@ -1016,12 +976,12 @@ pub fn merge(l: Rc<tree>, r: Rc<tree>) -> Rc<tree> {
           l
         },
         tree::Node(i3, i2, rr, _rk, _rl) => {
-          let v32 = Rc::clone(i3);
-          let v34 = Clone::clone(i2);
-          let v35 = Rc::clone(rr);
+          let i3_clone = Rc::clone(i3);
+          let i2_clone = Clone::clone(i2);
+          let rr_clone = Rc::clone(rr);
           std::mem::drop(r);
-          let v37 = remove_min_1(v32, v34, v35);
-          match v37 {
+          let tmp = remove_min_1(i3_clone, i2_clone, rr_clone);
+          match tmp {
             (v39, v41) => {
               bal(l, v39, v41)
             },
@@ -1048,20 +1008,14 @@ pub fn delete(x: u64, t: Rc<tree>) -> Rc<tree> {
     },
     tree::Node(v17, v19, v21, _v23, _v25) => {
       std::mem::drop(v3);
-      match ltb(x, v19) {
-        true => {
-          bal(delete(x, v17), v19, v21)
-        },
-        false => {
-          match ltb(v19, x) {
-            true => {
-              bal(v17, v19, delete(x, v21))
-            },
-            false => {
-              merge(v17, v21)
-            },
-          }
-        },
+      if ltb(x, v19) {
+        bal(delete(x, v17), v19, v21)
+      } else {
+        if ltb(v19, x) {
+          bal(v17, v19, delete(x, v21))
+        } else {
+          merge(v17, v21)
+        }
       }
     },
   }
@@ -1078,22 +1032,19 @@ pub fn count_lt_1(q: u64, t: &Rc<tree>) -> u64 {
 // Variant: borrowed, uncurried, lifted
 pub fn count_lt(q: u64, t: &Rc<tree>) -> u64 {
   let q_1 = q;
-  let v3 = t;
-  match &**v3 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
     tree::Node(i0, i, r, _k, _l) => {
-      let v21 = Clone::clone(i);
-      match ltb(v21, q_1) {
-        true => {
-          let v37 = add(size(i0), 1u64);
-          let v42 = count_lt(q_1, r);
-          add(v37, v42)
-        },
-        false => {
-          count_lt(q_1, i0)
-        },
+      let i_clone = Clone::clone(i);
+      if ltb(i_clone, q_1) {
+        let tmp_1 = add(size(i0), 1u64);
+        let tmp_2 = count_lt(q_1, r);
+        add(tmp_1, tmp_2)
+      } else {
+        count_lt(q_1, i0)
       }
     },
   }
@@ -1108,27 +1059,22 @@ pub fn ev_loop_1(xt: Rc<Array<u64>>, xp: Rc<Array<u64>>, m: u64, j: u64, keys: R
 // Rocq: Gcpc.gcpc_implem.ev_loop (local: ev_loop)
 // Variant: uncurried, lifted
 pub fn ev_loop(xt: Rc<Array<u64>>, xp: Rc<Array<u64>>, m: u64, j: u64, keys: Rc<Array<u64>>, T: Rc<tree>, out: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(j, m);
-  match bdec(v15) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &xt;
-      let a = rocq_array::get::<u64>(&v19, j);
-      let v23 = &keys;
-      let old = rocq_array::get::<u64>(&v23, a);
-      let v34 = sub(old, __rocq_global_317);
-      let v36 = &xp;
-      let v39 = rocq_array::get::<u64>(&v36, j);
-      let new = add(v34, mul(v39, __rocq_global_334));
+      let a = rocq_array::get::<u64>(&xt, j);
+      let old = rocq_array::get::<u64>(&keys, a);
+      let tmp_1 = sub(old, __rocq_global_317);
+      let tmp_2 = rocq_array::get::<u64>(&xp, j);
+      let new = add(tmp_1, mul(tmp_2, __rocq_global_334));
       let keys_ = rocq_array::set::<u64>(keys, a, new);
       let T_ = insert_1(new, delete_1(old, T));
-      let v73 = 1u64;
-      let v74 = &keys_;
-      let v77 = rocq_array::get::<u64>(&v74, v73);
-      let v90 = count_lt_1(sub(v77, 1u64), &T_);
-      let ans = add(v90, 1u64);
-      let v105 = add(j, 1u64);
-      let v112 = rocq_array::set::<u64>(out, j, ans);
-      ev_loop(xt, xp, m, v105, keys_, T_, v112, ())
+      let tmp_3 = rocq_array::get::<u64>(&keys_, 1u64);
+      let tmp_4 = count_lt_1(sub(tmp_3, 1u64), &T_);
+      let ans = add(tmp_4, 1u64);
+      let tmp_5 = add(j, 1u64);
+      let tmp_6 = rocq_array::set::<u64>(out, j, ans);
+      ev_loop(xt, xp, m, tmp_5, keys_, T_, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(xt);
@@ -1143,38 +1089,16 @@ pub fn ev_loop(xt: Rc<Array<u64>>, xp: Rc<Array<u64>>, m: u64, j: u64, keys: Rc<
 // Rocq: Gcpc.gcpc_implem.gcpc_impl
 // Variant: uncurried
 pub fn gcpc_impl(n: u64, xt: Rc<Array<u64>>, xp: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v3 = &xt;
-  let m = rocq_array::length::<u64>(&v3);
+  let m = rocq_array::length::<u64>(&xt);
   let n1 = add(n, 1u64);
-  let v22 = rocq_array::make::<u64>(n1, 0u64);
-  let v34 = init_loop_1(n1, 1u64, v22, Rc::new(tree::Leaf));
-  match v34 {
+  let tmp = rocq_array::make::<u64>(n1, 0u64);
+  let tmp_1 = init_loop_1(n1, 1u64, tmp, Rc::new(tree::Leaf));
+  match tmp_1 {
     (v36, v38) => {
-      let v49 = rocq_array::make::<u64>(m, 0u64);
-      ev_loop_1(xt, xp, m, 0u64, v36, v38, v49)
+      let tmp_2 = rocq_array::make::<u64>(m, 0u64);
+      ev_loop_1(xt, xp, m, 0u64, v36, v38, tmp_2)
     },
   }
-}
-
-// Rocq: Gcpc.gcpc_implem.gcpc_impl
-pub fn gcpc_impl_curried(n: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v3 = {
-    move |xt: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |xp: Rc<Array<u64>>| -> Rc<Array<u64>> {
-          let v19 = Clone::clone(&v8);
-          let v21 = Rc::clone(&xt);
-          gcpc_impl(v19, v21, xp)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1325,16 +1249,9 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_618.with(Clone::clone);
-  v0
-}
 const __rocq_global_36: u64 = 2305825417027649536u64;
 const __rocq_global_317: u64 = 17592186044416u64;
 const __rocq_global_334: u64 = 131072u64;
-std::thread_local! { static __rocq_global_618: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = gcpc(); }
-std::thread_local! { static __rocq_global_621: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = gcpc_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1413,6 +1330,6 @@ fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let m = t.uint();
     let mut teams = Vec::new(); let mut penalties = Vec::new();
     for _ in 0..m { teams.push(t.uint()); penalties.push(t.uint()); }
-    lines(values(&run()(n, ints(teams), ints(penalties))))
+    lines(values(&gcpc_impl(n, ints(teams), ints(penalties))))
 }
 fn main() { entry(solve); }

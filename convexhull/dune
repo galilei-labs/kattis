@@ -6,9 +6,11 @@
  (rocq.theory
   (name Convexhull.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Convexhull)
  (modules convexhull_implem)
- (theories Convexhull.spec Stdlib stdpp StdGalilei))
+  (theories Convexhull.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

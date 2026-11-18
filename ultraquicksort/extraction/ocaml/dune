@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules ultraquicksort_extracted_marray)
- (theories Ultraquicksort Ultraquicksort.spec Stdlib stdpp StdGalilei))
+ (theories Ultraquicksort Ultraquicksort.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name ultraquicksort_extraction)

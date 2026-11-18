@@ -2,10 +2,11 @@
 
 (** ** Description *)
 
-(** Form the three largest distinct values of x * (a - 2x) * (b - 2x) over
-    positive integers x with 2x < a and 2x < b. Find the unique integer in a
-    specified interval having the given remainders modulo those three
-    values.
+(** Fold open boxes from a rectangular sheet of width $a$ and length $b$
+    by cutting a square of integer side $x$ from each corner. The box volume
+    is $x(a-2x)(b-2x)$, with $x > 0$, $2x < a$, and $2x < b$. Use the three
+    largest distinct possible volumes as moduli. Find the unique integer in
+    the given interval with the specified remainders modulo those volumes.
 
     [@kattis remainderreminder]
     - Difficulty: 5.1
@@ -14,8 +15,8 @@
 
     **Kattis Bounds**
     - Sheet dimensions: $7 \le a \le b \le 100$.
-    - Each remainder is in $[1, 10^{9}]$.
-    - Search interval endpoints satisfy $1 \le \text{lower} < \text{upper} \le 10^9$;
+    - Each remainder satisfies $1 \le r \le 10^{9}$.
+    - Search interval endpoints satisfy $1 \le \text{lower} < \text{upper} \le 10^{9}$;
       exactly one answer exists. *)
 
 (** ** Examples *)
@@ -44,21 +45,25 @@ Output:
                     by cutting equal integer squares at the four corners.
                     The input guarantees that exactly one such number of
                     books exists.
+                    It runs in at most c1 * (a + log2 b + 1) + c2 steps of
+                    the cost model on a valid input, a and b the sheet
+                    dimensions (one pass over the corner cuts, then the
+                    extended Euclidean algorithm on the volumes), for two
+                    constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. A book is a 1-inch cube, so a box holds as
+(* A book is a 1-inch cube, so a box holds as
    many books as its volume in cubic inches. *)
 
 (** ** Definitions *)
 
-(** Cutting cut-by-cut squares at the corners of a
-    [sheet_width]-by-[sheet_length] sheet folds a box of
-    integer dimensions cut, [sheet_width] - 2 cut,
-    [sheet_length] - 2 cut, all at least 1. *)
+(** Removing squares of side [cut] from each corner leaves a box whose three integer
+    dimensions are positive. *)
 Definition cut_ok (sheet_width sheet_length cut : N) : Prop
   :=
   1 <= cut /\ 2 * cut < sheet_width /\ 2 * cut <
@@ -72,8 +77,8 @@ Definition box_size (sheet_width sheet_length volume : N) :
     volume = cut * (sheet_width - 2 * cut) *
       (sheet_length - 2 * cut).
 
-(** largest_volume > second_volume > third_volume are the
-    three largest distinct box sizes. *)
+(** [largest_volume], [second_volume], and [third_volume] are the three largest
+    distinct box volumes, in decreasing order. *)
 Definition three_largest (sheet_width sheet_length : N)
     (largest_volume second_volume third_volume : N) : Prop
       :=
@@ -85,11 +90,8 @@ Definition three_largest (sheet_width sheet_length : N)
     volume = largest_volume \/ volume = second_volume \/
     volume = third_volume \/ volume < third_volume.
 
-(** [books] books fit everything Bill remembers: books
-    lies in [min_books, max_books] and leaves
-    [left_largest], [left_second], [left_third] books
-    over with the largest, second and third largest box
-    size. *)
+(** [books] lies between [min_books] and [max_books], inclusive, and has the
+    specified remainders modulo the three largest distinct box volumes. *)
 Definition consistent (sheet_width sheet_length : N)
     (left_largest left_second left_third min_books max_books
       books : N)
@@ -141,11 +143,17 @@ Definition remainderreminder_spec
         max_books books <->
     books = output.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(W+\log(L+2))$ steps, where $W$ and $L$ are the sheet width and length. *)
+Definition remainderreminder_time_spec (c1 c2 n_sheet_width n_sheet_length steps : nat) : Prop :=
+  (steps <= c1 * (n_sheet_width + Nat.log2 (n_sheet_length) + 1) + c2)%nat.
+
 (** ** Interface *)
 
-(** Form the three largest distinct values of x * (a - 2x) * (b - 2x) over positive integers
-    x with 2x < a and 2x < b. Find the unique integer in a specified interval having the
-    given remainders modulo those three values.
+(** Find the three largest distinct volumes of boxes foldable from the sheet
+    by removing equal integer-sized corner squares. Return the unique integer
+    within the supplied bounds having the given remainder modulo each volume.
     - Input [sheet_width]: Shorter side of the rectangular sheet.
     - Input [sheet_length]: Longer side of the rectangular sheet.
     - Input [left_largest]: Remainder modulo the largest available box volume.
@@ -157,6 +165,18 @@ Definition remainderreminder_spec
 Program remainderreminder :
   uint -> uint -> uint -> uint -> uint -> uint -> uint ->
     uint.
+
+(** [@example remainderreminder]
+    - Sample: 1
+    - Input [sheet_width]: 16
+    - Input [sheet_length]: 21
+    - Input [left_largest]: 407
+    - Input [left_second]: 409
+    - Input [left_third]: 17
+    - Input [min_books]: 20000
+    - Input [max_books]: 30000
+    - Output [output]: 22457
+*)
 
 (** ** Bridge *)
 
@@ -189,6 +209,34 @@ Specification remainderreminder_correct :
     remainderreminder_spec sheet_width sheet_length
       left_largest left_second left_third min_books
         max_books output.
+
+(** ** Complexity *)
+
+(** [@hide] [remainderreminder_cost] is the cost translation of [remainderreminder] (the judge
+    recomputes it and compares) ... *)
+Complexity remainderreminder_cost for remainderreminder.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (a + log2 b + 1) + c2 steps of the cost model on a valid input, a and b the sheet dimensions (one pass over the corner cuts, then the extended Euclidean algorithm on the volumes), for two constants
+    quantified before the inputs, on every valid input. [@requirement remainderreminder_time_spec] *)
+Specification remainderreminder_time : exists c1 c2 : nat,
+  forall (sheet_width sheet_length : N)
+  (left_largest left_second left_third min_books
+  max_books : N)
+  (sheet_width_int sheet_length_int : uint)
+  (left_largest_int left_second_int left_third_int :
+  uint)
+  (min_books_int max_books_int : uint),
+  valid_input sheet_width sheet_length
+  left_largest left_second left_third min_books max_books
+  ->
+  repr sheet_width_int sheet_width -> repr sheet_length_int
+  sheet_length ->
+  repr left_largest_int left_largest -> repr left_second_int
+  left_second ->
+  repr left_third_int left_third ->
+  repr min_books_int min_books -> repr max_books_int
+  max_books ->
+  remainderreminder_time_spec c1 c2 (size sheet_width_int) (size sheet_length_int) (cost7 remainderreminder_cost sheet_width_int sheet_length_int left_largest_int left_second_int left_third_int min_books_int max_books_int).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

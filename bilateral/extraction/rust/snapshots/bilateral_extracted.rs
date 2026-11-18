@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -57,21 +56,6 @@ pub fn NM() -> u64 {
   2000u64
 }
 
-// Rocq: Bilateral.bilateral_implem.bilateral
-// Variant: uncurried
-pub fn bilateral() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>> = bilateral_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Bilateral.bilateral_implem.bilateral
-pub fn bilateral_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = bilateral_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -86,13 +70,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Bilateral.bilateral_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -117,24 +98,19 @@ pub fn deg_loop_1(x: Rc<Array<u64>>, ex: u64, m: u64, k: u64, d: Rc<Array<u64>>)
 // Rocq: Bilateral.bilateral_implem.deg_loop (local: deg_loop)
 // Variant: uncurried, lifted
 pub fn deg_loop(x: Rc<Array<u64>>, ex: u64, m: u64, k: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(k, m);
-  match bdec(v13) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &x;
-      let a = rocq_array::get::<u64>(&v17, k);
-      let v28 = add(k, 1u64);
-      let v35 = match eqb(a, ex) {
-        true => {
-          d
-        },
-        false => {
-          let u = sub(a, 1000u64);
-          let v47 = &d;
-          let v50 = rocq_array::get::<u64>(&v47, u);
-          rocq_array::set::<u64>(d, u, add(v50, 1u64))
-        },
+      let a = rocq_array::get::<u64>(&x, k);
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = if eqb(a, ex) {
+        d
+      } else {
+        let u = sub(a, 1000u64);
+        let tmp_3 = rocq_array::get::<u64>(&d, u);
+        rocq_array::set::<u64>(d, u, add(tmp_3, 1u64))
       };
-      deg_loop(x, ex, m, v28, v35, ())
+      deg_loop(x, ex, m, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -152,17 +128,15 @@ pub fn off_loop_1(d: Rc<Array<u64>>, u: u64, o: Rc<Array<u64>>) -> Rc<Array<u64>
 // Rocq: Bilateral.bilateral_implem.off_loop (local: off_loop)
 // Variant: uncurried, lifted
 pub fn off_loop(d: Rc<Array<u64>>, u: u64, o: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(u, __rocq_global_132);
-  match bdec(v12) {
+  let tmp = ltb(u, __rocq_global_132);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(u, 1u64);
-      let v31 = add(u, 1u64);
-      let v33 = &o;
-      let v36 = rocq_array::get::<u64>(&v33, u);
-      let v37 = &d;
-      let v40 = rocq_array::get::<u64>(&v37, u);
-      let v52 = rocq_array::set::<u64>(o, v31, add(v36, v40));
-      off_loop(d, v23, v52, ())
+      let tmp_1 = add(u, 1u64);
+      let tmp_2 = add(u, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&o, u);
+      let tmp_4 = rocq_array::get::<u64>(&d, u);
+      let tmp_5 = rocq_array::set::<u64>(o, tmp_2, add(tmp_3, tmp_4));
+      off_loop(d, tmp_1, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(d);
@@ -180,26 +154,20 @@ pub fn fill_loop_1(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ex: u64, m: u64, k: u64
 // Rocq: Bilateral.bilateral_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ex: u64, m: u64, k: u64, pos: Rc<Array<u64>>, tg: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(k, m);
-  match bdec(v15) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &x;
-      let a = rocq_array::get::<u64>(&v19, k);
-      match eqb(a, ex) {
-        true => {
-          fill_loop(x, y, ex, m, add(k, 1u64), pos, tg, ())
-        },
-        false => {
-          let u = sub(a, 1000u64);
-          let v68 = &pos;
-          let p = rocq_array::get::<u64>(&v68, u);
-          let v79 = add(k, 1u64);
-          let v94 = rocq_array::set::<u64>(pos, u, add(p, 1u64));
-          let v96 = &y;
-          let v99 = rocq_array::get::<u64>(&v96, k);
-          let v113 = rocq_array::set::<u64>(tg, p, sub(v99, 2000u64));
-          fill_loop(x, y, ex, m, v79, v94, v113, ())
-        },
+      let a = rocq_array::get::<u64>(&x, k);
+      if eqb(a, ex) {
+        fill_loop(x, y, ex, m, add(k, 1u64), pos, tg, ())
+      } else {
+        let u = sub(a, 1000u64);
+        let p = rocq_array::get::<u64>(&pos, u);
+        let tmp_1 = add(k, 1u64);
+        let tmp_2 = rocq_array::set::<u64>(pos, u, add(p, 1u64));
+        let tmp_3 = rocq_array::get::<u64>(&y, k);
+        let tmp_4 = rocq_array::set::<u64>(tg, p, sub(tmp_3, 2000u64));
+        fill_loop(x, y, ex, m, tmp_1, tmp_2, tmp_4, ())
       }
     },
     sumbool::right => {
@@ -220,21 +188,17 @@ pub fn root_loop_1(mL: Rc<Array<u64>>, u: u64, Q: Rc<Array<u64>>, qp: Rc<Array<u
 // Rocq: Bilateral.bilateral_implem.root_loop (local: root_loop)
 // Variant: uncurried, lifted
 pub fn root_loop(mL: Rc<Array<u64>>, u: u64, Q: Rc<Array<u64>>, qp: Rc<Array<u64>>, t: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v14 = ltb(u, __rocq_global_132);
-  match bdec(v14) {
+  let tmp = ltb(u, __rocq_global_132);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &mL;
-      let v22 = rocq_array::get::<u64>(&v19, u);
-      match ltb(v22, __rocq_global_132) {
-        true => {
-          root_loop(mL, add(u, 1u64), Q, qp, t, ())
-        },
-        false => {
-          let v63 = add(u, 1u64);
-          let v70 = rocq_array::set::<u64>(Q, t, u);
-          let v85 = rocq_array::set::<u64>(qp, u, add(t, 1u64));
-          root_loop(mL, v63, v70, v85, add(t, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&mL, u);
+      if ltb(tmp_1, __rocq_global_132) {
+        root_loop(mL, add(u, 1u64), Q, qp, t, ())
+      } else {
+        let tmp_2 = add(u, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(Q, t, u);
+        let tmp_4 = rocq_array::set::<u64>(qp, u, add(t, 1u64));
+        root_loop(mL, tmp_2, tmp_3, tmp_4, add(t, 1u64), ())
       }
     },
     sumbool::right => {
@@ -253,45 +217,32 @@ pub fn scan_1(tg: Rc<Array<u64>>, mR: Rc<Array<u64>>, u: u64, pe: u64, p: u64, Q
 // Rocq: Bilateral.bilateral_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(tg: Rc<Array<u64>>, mR: Rc<Array<u64>>, u: u64, pe: u64, p: u64, Q: Rc<Array<u64>>, qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, t: u64, _H: ()) -> Rc<sres> {
-  let v17 = ltb(p, pe);
-  match bdec(v17) {
+  let tmp = ltb(p, pe);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &tg;
-      let v = rocq_array::get::<u64>(&v21, p);
-      let v26 = &pr;
-      let v29 = rocq_array::get::<u64>(&v26, v);
-      match eqb(v29, 0u64) {
-        true => {
-          let pr_1 = rocq_array::set::<u64>(pr, v, add(u, 1u64));
-          let v53 = &mR;
-          let w = rocq_array::get::<u64>(&v53, v);
-          match ltb(w, __rocq_global_132) {
-            true => {
-              let v66 = &qp;
-              let v69 = rocq_array::get::<u64>(&v66, w);
-              match eqb(v69, 0u64) {
-                true => {
-                  let v85 = add(p, 1u64);
-                  let v92 = rocq_array::set::<u64>(Q, t, w);
-                  let v107 = rocq_array::set::<u64>(qp, w, add(t, 1u64));
-                  scan(tg, mR, u, pe, v85, v92, v107, pr_1, add(t, 1u64), ())
-                },
-                false => {
-                  scan(tg, mR, u, pe, add(p, 1u64), Q, qp, pr_1, t, ())
-                },
-              }
-            },
-            false => {
-              std::mem::drop(tg);
-              std::mem::drop(mR);
-              std::mem::drop(Q);
-              Rc::new(sres::SFound { v, qp, pr: pr_1 })
-            },
+      let v = rocq_array::get::<u64>(&tg, p);
+      let tmp_1 = rocq_array::get::<u64>(&pr, v);
+      if eqb(tmp_1, 0u64) {
+        let pr_1 = rocq_array::set::<u64>(pr, v, add(u, 1u64));
+        let w = rocq_array::get::<u64>(&mR, v);
+        if ltb(w, __rocq_global_132) {
+          let tmp_2 = rocq_array::get::<u64>(&qp, w);
+          if eqb(tmp_2, 0u64) {
+            let tmp_3 = add(p, 1u64);
+            let tmp_4 = rocq_array::set::<u64>(Q, t, w);
+            let tmp_5 = rocq_array::set::<u64>(qp, w, add(t, 1u64));
+            scan(tg, mR, u, pe, tmp_3, tmp_4, tmp_5, pr_1, add(t, 1u64), ())
+          } else {
+            scan(tg, mR, u, pe, add(p, 1u64), Q, qp, pr_1, t, ())
           }
-        },
-        false => {
-          scan(tg, mR, u, pe, add(p, 1u64), Q, qp, pr, t, ())
-        },
+        } else {
+          std::mem::drop(tg);
+          std::mem::drop(mR);
+          std::mem::drop(Q);
+          Rc::new(sres::SFound { v, qp, pr: pr_1 })
+        }
+      } else {
+        scan(tg, mR, u, pe, add(p, 1u64), Q, qp, pr, t, ())
       }
     },
     sumbool::right => {
@@ -311,42 +262,35 @@ pub fn bfs_1(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, mR: Rc<Array<u64>>, h: u64
 // Rocq: Bilateral.bilateral_implem.bfs (local: bfs)
 // Variant: uncurried, lifted
 pub fn bfs(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, mR: Rc<Array<u64>>, h: u64, t: u64, Q: Rc<Array<u64>>, qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, _H: ()) -> Rc<bres> {
-  let v17 = ltb(h, __rocq_global_132);
-  match bdec(v17) {
+  let tmp = ltb(h, __rocq_global_132);
+  match bdec(tmp) {
     sumbool::left => {
-      match ltb(h, t) {
-        true => {
-          let v28 = &Q;
-          let u = rocq_array::get::<u64>(&v28, h);
-          let v40 = add(u, 1u64);
-          let v41 = &off;
-          let v44 = rocq_array::get::<u64>(&v41, v40);
-          let v45 = &off;
-          let v48 = rocq_array::get::<u64>(&v45, u);
-          let v51 = Rc::clone(&tg);
-          let v54 = Rc::clone(&mR);
-          let v69 = scan_1(v51, v54, u, v44, v48, Q, qp, pr, t);
-          let (v70, v71) = __rocq_reuse::reset(v69, |__payload| Clone::clone(__payload));
-          std::mem::drop(v71);
-          match v70 {
-            sres::SFound { v: v82, qp: v84, pr: v86 } => {
-              std::mem::drop(tg);
-              std::mem::drop(mR);
-              std::mem::drop(off);
-              Rc::new(bres::BFound { v: v82, qp: v84, pr: v86 })
-            },
-            sres::SCont { Q: v99, qp: v101, pr: v103, t: v105 } => {
-              bfs(off, tg, mR, add(h, 1u64), v105, v99, v101, v103, ())
-            },
-          }
-        },
-        false => {
-          std::mem::drop(off);
-          std::mem::drop(tg);
-          std::mem::drop(mR);
-          std::mem::drop(Q);
-          Rc::new(bres::BFail { qp, pr })
-        },
+      if ltb(h, t) {
+        let u = rocq_array::get::<u64>(&Q, h);
+        let tmp_1 = rocq_array::get::<u64>(&off, add(u, 1u64));
+        let tmp_2 = rocq_array::get::<u64>(&off, u);
+        let tg_clone = Rc::clone(&tg);
+        let mR_clone = Rc::clone(&mR);
+        let tmp_3 = scan_1(tg_clone, mR_clone, u, tmp_1, tmp_2, Q, qp, pr, t);
+        let (v70, v71) = __rocq_reuse::reset(tmp_3, |__payload| Clone::clone(__payload));
+        std::mem::drop(v71);
+        match v70 {
+          sres::SFound { v: v82, qp: v84, pr: v86 } => {
+            std::mem::drop(tg);
+            std::mem::drop(mR);
+            std::mem::drop(off);
+            Rc::new(bres::BFound { v: v82, qp: v84, pr: v86 })
+          },
+          sres::SCont { Q: v99, qp: v101, pr: v103, t: v105 } => {
+            bfs(off, tg, mR, add(h, 1u64), v105, v99, v101, v103, ())
+          },
+        }
+      } else {
+        std::mem::drop(off);
+        std::mem::drop(tg);
+        std::mem::drop(mR);
+        std::mem::drop(Q);
+        Rc::new(bres::BFail { qp, pr })
       }
     },
     sumbool::right => {
@@ -368,42 +312,31 @@ pub fn walk_1(qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, v: u64, mL: Rc<Array<u64>>
 // Rocq: Bilateral.bilateral_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, v: u64, mL: Rc<Array<u64>>, mR: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v7 = &pr;
-  let v10 = rocq_array::get::<u64>(&v7, v);
-  let u = sub(v10, 1u64);
-  let v18 = &mL;
-  let old = rocq_array::get::<u64>(&v18, u);
+  let tmp = rocq_array::get::<u64>(&pr, v);
+  let u = sub(tmp, 1u64);
+  let old = rocq_array::get::<u64>(&mL, u);
   let mL_ = rocq_array::set::<u64>(mL, u, v);
   let mR_ = rocq_array::set::<u64>(mR, v, u);
-  match ltb(old, __rocq_global_132) {
-    true => {
-      let v47 = &pr;
-      let v50 = rocq_array::get::<u64>(&v47, old);
-      let v57 = sub(v50, 1u64);
-      let v58 = &qp;
-      let v61 = rocq_array::get::<u64>(&v58, v57);
-      let v63 = &pr;
-      let v66 = rocq_array::get::<u64>(&v63, v);
-      let v73 = sub(v66, 1u64);
-      let v74 = &qp;
-      let v77 = rocq_array::get::<u64>(&v74, v73);
-      let v83 = ltb(v61, v77);
-      match bdec(v83) {
-        sumbool::left => {
-          walk(qp, pr, old, mL_, mR_, ())
-        },
-        sumbool::right => {
-          std::mem::drop(qp);
-          std::mem::drop(pr);
-          (mL_, mR_)
-        },
-      }
-    },
-    false => {
-      std::mem::drop(qp);
-      std::mem::drop(pr);
-      (mL_, mR_)
-    },
+  if ltb(old, __rocq_global_132) {
+    let tmp_1 = rocq_array::get::<u64>(&pr, old);
+    let tmp_2 = rocq_array::get::<u64>(&qp, sub(tmp_1, 1u64));
+    let tmp_3 = rocq_array::get::<u64>(&pr, v);
+    let tmp_4 = rocq_array::get::<u64>(&qp, sub(tmp_3, 1u64));
+    let tmp_5 = ltb(tmp_2, tmp_4);
+    match bdec(tmp_5) {
+      sumbool::left => {
+        walk(qp, pr, old, mL_, mR_, ())
+      },
+      sumbool::right => {
+        std::mem::drop(qp);
+        std::mem::drop(pr);
+        (mL_, mR_)
+      },
+    }
+  } else {
+    std::mem::drop(qp);
+    std::mem::drop(pr);
+    (mL_, mR_)
   }
 }
 
@@ -416,32 +349,32 @@ pub fn phases_1(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, it: u64, mL: Rc<Array<u
 // Rocq: Bilateral.bilateral_implem.phases (local: phases)
 // Variant: uncurried, lifted
 pub fn phases(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, it: u64, mL: Rc<Array<u64>>, mR: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(it, __rocq_global_182);
-  match bdec(v14) {
+  let tmp = ltb(it, __rocq_global_182);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-      let v36 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-      let v41 = Rc::clone(&mL);
-      let v50 = root_loop_1(v41, 0u64, v28, v36, 0u64);
-      match &v50 {
+      let tmp_1 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+      let tmp_2 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+      let mL_clone = Rc::clone(&mL);
+      let tmp_3 = root_loop_1(mL_clone, 0u64, tmp_1, tmp_2, 0u64);
+      match &tmp_3 {
         (t, p) => {
           match t {
             (qp, Q) => {
-              let v72 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-              let v75 = Rc::clone(&off);
-              let v78 = Rc::clone(&tg);
-              let v81 = Rc::clone(&mR);
-              let v85 = Clone::clone(p);
-              let v87 = Rc::clone(qp);
-              let v89 = Rc::clone(Q);
-              let v92 = bfs_1(v75, v78, v81, 0u64, v85, v87, v89, v72);
-              let (v93, v94) = __rocq_reuse::reset(v92, |__payload| Clone::clone(__payload));
+              let tmp_4 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+              let off_clone = Rc::clone(&off);
+              let tg_clone = Rc::clone(&tg);
+              let mR_clone = Rc::clone(&mR);
+              let p_clone = Clone::clone(p);
+              let qp_clone = Rc::clone(qp);
+              let Q_clone = Rc::clone(Q);
+              let tmp_5 = bfs_1(off_clone, tg_clone, mR_clone, 0u64, p_clone, qp_clone, Q_clone, tmp_4);
+              let (v93, v94) = __rocq_reuse::reset(tmp_5, |__payload| Clone::clone(__payload));
               std::mem::drop(v94);
               match v93 {
                 bres::BFound { v: v103, qp: v105, pr: v107 } => {
-                  std::mem::drop(v50);
-                  let v120 = walk_1(v105, v107, v103, mL, mR);
-                  match v120 {
+                  std::mem::drop(tmp_3);
+                  let tmp_6 = walk_1(v105, v107, v103, mL, mR);
+                  match tmp_6 {
                     (v122, v124) => {
                       phases(off, tg, add(it, 1u64), v122, v124, ())
                     },
@@ -452,7 +385,7 @@ pub fn phases(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, it: u64, mL: Rc<Array<u64
                   std::mem::drop(tg);
                   std::mem::drop(mL);
                   std::mem::drop(mR);
-                  std::mem::drop(v50);
+                  std::mem::drop(tmp_3);
                   (v155, v157)
                 },
               }
@@ -466,9 +399,9 @@ pub fn phases(off: Rc<Array<u64>>, tg: Rc<Array<u64>>, it: u64, mL: Rc<Array<u64
       std::mem::drop(tg);
       std::mem::drop(mL);
       std::mem::drop(mR);
-      let v183 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-      let v191 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-      (v183, v191)
+      let tmp_7 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+      let tmp_8 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+      (tmp_7, tmp_8)
     },
   }
 }
@@ -482,39 +415,27 @@ pub fn mark_loop_1(qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, i: u64, mk: Rc<Array<
 // Rocq: Bilateral.bilateral_implem.mark_loop (local: mark_loop)
 // Variant: uncurried, lifted
 pub fn mark_loop(qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, i: u64, mk: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, __rocq_global_707);
-  match bdec(v13) {
+  let tmp = ltb(i, __rocq_global_707);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v26 = __rocq_global_132;
-      let v32 = match ltb(i, v26) {
-        true => {
-          let v34 = &qp;
-          let v37 = rocq_array::get::<u64>(&v34, i);
-          match eqb(v37, 0u64) {
-            true => {
-              rocq_array::set::<u64>(mk, i, 1u64)
-            },
-            false => {
-              mk
-            },
-          }
-        },
-        false => {
-          let v69 = sub(i, __rocq_global_132);
-          let v70 = &pr;
-          let v73 = rocq_array::get::<u64>(&v70, v69);
-          match eqb(v73, 0u64) {
-            true => {
-              mk
-            },
-            false => {
-              rocq_array::set::<u64>(mk, i, 1u64)
-            },
-          }
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = __rocq_global_132;
+      let tmp_3 = if ltb(i, tmp_2) {
+        let tmp_4 = rocq_array::get::<u64>(&qp, i);
+        if eqb(tmp_4, 0u64) {
+          rocq_array::set::<u64>(mk, i, 1u64)
+        } else {
+          mk
+        }
+      } else {
+        let tmp_5 = rocq_array::get::<u64>(&pr, sub(i, __rocq_global_132));
+        if eqb(tmp_5, 0u64) {
+          mk
+        } else {
+          rocq_array::set::<u64>(mk, i, 1u64)
+        }
       };
-      mark_loop(qp, pr, v24, v32, ())
+      mark_loop(qp, pr, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(qp);
@@ -527,25 +448,24 @@ pub fn mark_loop(qp: Rc<Array<u64>>, pr: Rc<Array<u64>>, i: u64, mk: Rc<Array<u6
 // Rocq: Bilateral.bilateral_implem.engine
 // Variant: uncurried
 pub fn engine(x: Rc<Array<u64>>, y: Rc<Array<u64>>, ex: u64) -> Rc<Array<u64>> {
-  let v3 = &x;
-  let m = rocq_array::length::<u64>(&v3);
-  let v15 = rocq_array::make::<u64>(__rocq_global_132, 0u64);
-  let v18 = Rc::clone(&x);
-  let d = deg_loop_1(v18, ex, m, 0u64, v15);
-  let v38 = rocq_array::make::<u64>(__rocq_global_182, 0u64);
-  let v41 = Rc::clone(&d);
-  let off = off_loop_1(v41, 0u64, v38);
-  let v57 = rocq_array::make::<u64>(__rocq_global_182, 0u64);
-  let pos = off_loop_1(d, 0u64, v57);
-  let v74 = rocq_array::make::<u64>(m, 0u64);
-  let tg = fill_loop_1(x, y, ex, m, 0u64, pos, v74);
-  let v99 = rocq_array::make::<u64>(__rocq_global_132, __rocq_global_132);
-  let v106 = rocq_array::make::<u64>(__rocq_global_132, __rocq_global_132);
-  let v117 = phases_1(off, tg, 0u64, v99, v106);
-  match v117 {
+  let m = rocq_array::length::<u64>(&x);
+  let tmp = rocq_array::make::<u64>(__rocq_global_132, 0u64);
+  let x_clone = Rc::clone(&x);
+  let d = deg_loop_1(x_clone, ex, m, 0u64, tmp);
+  let tmp_1 = rocq_array::make::<u64>(__rocq_global_182, 0u64);
+  let d_clone = Rc::clone(&d);
+  let off = off_loop_1(d_clone, 0u64, tmp_1);
+  let tmp_2 = rocq_array::make::<u64>(__rocq_global_182, 0u64);
+  let pos = off_loop_1(d, 0u64, tmp_2);
+  let tmp_3 = rocq_array::make::<u64>(m, 0u64);
+  let tg = fill_loop_1(x, y, ex, m, 0u64, pos, tmp_3);
+  let tmp_4 = rocq_array::make::<u64>(__rocq_global_132, __rocq_global_132);
+  let tmp_5 = rocq_array::make::<u64>(__rocq_global_132, __rocq_global_132);
+  let tmp_6 = phases_1(off, tg, 0u64, tmp_4, tmp_5);
+  match tmp_6 {
     (v119, v121) => {
-      let v133 = rocq_array::make::<u64>(__rocq_global_707, 0u64);
-      mark_loop_1(v119, v121, 0u64, v133)
+      let tmp_7 = rocq_array::make::<u64>(__rocq_global_707, 0u64);
+      mark_loop_1(v119, v121, 0u64, tmp_7)
     },
   }
 }
@@ -559,21 +479,17 @@ pub fn out_loop_1(mk: Rc<Array<u64>>, i: u64, p: u64, out: Rc<Array<u64>>) -> Rc
 // Rocq: Bilateral.bilateral_implem.out_loop (local: out_loop)
 // Variant: uncurried, lifted
 pub fn out_loop(mk: Rc<Array<u64>>, i: u64, p: u64, out: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, __rocq_global_707);
-  match bdec(v13) {
+  let tmp = ltb(i, __rocq_global_707);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &mk;
-      let v21 = rocq_array::get::<u64>(&v18, i);
-      match eqb(v21, 0u64) {
-        true => {
-          out_loop(mk, add(i, 1u64), p, out, ())
-        },
-        false => {
-          let v61 = add(i, 1u64);
-          let v69 = add(p, 1u64);
-          let v84 = rocq_array::set::<u64>(out, p, add(1000u64, i));
-          out_loop(mk, v61, v69, v84, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&mk, i);
+      if eqb(tmp_1, 0u64) {
+        out_loop(mk, add(i, 1u64), p, out, ())
+      } else {
+        let tmp_2 = add(i, 1u64);
+        let tmp_3 = add(p, 1u64);
+        let tmp_4 = rocq_array::set::<u64>(out, p, add(1000u64, i));
+        out_loop(mk, tmp_2, tmp_3, tmp_4, ())
       }
     },
     sumbool::right => {
@@ -592,22 +508,18 @@ pub fn cnt_loop_1(mk: Rc<Array<u64>>, i: u64, c: u64) -> u64 {
 // Rocq: Bilateral.bilateral_implem.cnt_loop (local: cnt_loop)
 // Variant: uncurried, lifted
 pub fn cnt_loop(mk: Rc<Array<u64>>, i: u64, c: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, __rocq_global_707);
-  match bdec(v12) {
+  let tmp = ltb(i, __rocq_global_707);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v25 = &mk;
-      let v28 = rocq_array::get::<u64>(&v25, i);
-      let v30 = 0u64;
-      let v36 = match eqb(v28, v30) {
-        true => {
-          c
-        },
-        false => {
-          add(c, 1u64)
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&mk, i);
+      let tmp_3 = 0u64;
+      let tmp_4 = if eqb(tmp_2, tmp_3) {
+        c
+      } else {
+        add(c, 1u64)
       };
-      cnt_loop(mk, v23, v36, ())
+      cnt_loop(mk, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(mk);
@@ -623,9 +535,9 @@ pub fn count_marks(mk: Rc<Array<u64>>) -> u64 {
 
 // Rocq: Bilateral.bilateral_implem.build
 pub fn build(mk: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v9 = Rc::clone(&mk);
-  let v17 = rocq_array::make::<u64>(count_marks(v9), 0u64);
-  out_loop_1(mk, 0u64, 0u64, v17)
+  let mk_clone = Rc::clone(&mk);
+  let tmp = rocq_array::make::<u64>(count_marks(mk_clone), 0u64);
+  out_loop_1(mk, 0u64, 0u64, tmp)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -637,37 +549,22 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Bilateral.bilateral_implem.bilateral_impl
 // Variant: uncurried
 pub fn bilateral_impl(x: Rc<Array<u64>>, y: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v7 = Rc::clone(&x);
-  let v10 = Rc::clone(&y);
-  let mk1 = engine(v7, v10, 1009u64);
+  let x_clone = Rc::clone(&x);
+  let y_clone = Rc::clone(&y);
+  let mk1 = engine(x_clone, y_clone, 1009u64);
   let mk0 = engine(x, y, 0u64);
-  let v30 = Rc::clone(&mk1);
-  let v38 = add(count_marks(v30), 1u64);
-  let v42 = Rc::clone(&mk0);
-  let v43 = count_marks(v42);
-  let v66 = match leb(v38, v43) {
-    true => {
-      std::mem::drop(mk0);
-      rocq_array::set::<u64>(mk1, 9u64, 1u64)
-    },
-    false => {
-      std::mem::drop(mk1);
-      mk0
-    },
+  let mk1_clone = Rc::clone(&mk1);
+  let tmp = add(count_marks(mk1_clone), 1u64);
+  let mk0_clone = Rc::clone(&mk0);
+  let tmp_1 = count_marks(mk0_clone);
+  let tmp_2 = if leb(tmp, tmp_1) {
+    std::mem::drop(mk0);
+    rocq_array::set::<u64>(mk1, 9u64, 1u64)
+  } else {
+    std::mem::drop(mk1);
+    mk0
   };
-  build(v66)
-}
-
-// Rocq: Bilateral.bilateral_implem.bilateral_impl
-pub fn bilateral_impl_curried(x: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> Rc<Array<u64>> {
-      let v9 = Rc::clone(&x);
-      bilateral_impl(v9, y)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v3);
-  v15
+  build(tmp_2)
 }
 
 mod __rocq_reuse {
@@ -818,13 +715,6 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_999.with(Clone::clone);
-  v0
-}
 const __rocq_global_132: u64 = 1000u64;
 const __rocq_global_182: u64 = 1001u64;
 const __rocq_global_707: u64 = 2000u64;
-std::thread_local! { static __rocq_global_999: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = bilateral(); }
-std::thread_local! { static __rocq_global_1002: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = bilateral_curried(); }

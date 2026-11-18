@@ -783,7 +783,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -806,21 +805,6 @@ pub fn zero() -> f64 {
   f64::from_bits(0u64)
 }
 
-// Rocq: Communicationssatellite.communicationssatellite_implem.communicationssatellite
-// Variant: uncurried
-pub fn communicationssatellite() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64 = comsat;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Communicationssatellite.communicationssatellite_implem.communicationssatellite
-pub fn communicationssatellite_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>> = comsat_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -835,13 +819,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Communicationssatellite.communicationssatellite_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -860,13 +841,13 @@ pub fn wloop_1<St: Clone + 'static>(hi: u64, f: Rc<dyn Fn(u64, St) -> St>, i: u6
 // Rocq: Communicationssatellite.communicationssatellite_implem.wloop (local: wloop)
 // Variant: uncurried, lifted
 pub fn wloop<St: Clone + 'static>(hi: u64, f: Rc<dyn Fn(u64, St) -> St>, i: u64, s: St, _H: ()) -> St {
-  let v12 = ltb(i, hi);
-  match bdec(v12) {
+  let tmp = ltb(i, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v24: &Rc<dyn Fn(u64, St) -> St> = &f;
-      let v29 = v24(i, s);
-      wloop::<St>(hi, f, v23, v29, ())
+      let tmp_1 = add(i, 1u64);
+      let f_ref: &Rc<dyn Fn(u64, St) -> St> = &f;
+      let tmp_2 = f_ref(i, s);
+      wloop::<St>(hi, f, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       std::mem::drop(f);
@@ -912,38 +893,32 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Communicationssatellite.communicationssatellite_implem.dsq
 // Variant: uncurried
 pub fn dsq(x: Rc<Array<u64>>, y: Rc<Array<u64>>, i: u64, j: u64) -> u64 {
-  let v5 = &x;
-  let v8 = rocq_array::get::<u64>(&v5, i);
-  let v9 = &x;
-  let v12 = rocq_array::get::<u64>(&v9, j);
+  let tmp = rocq_array::get::<u64>(&x, i);
+  let tmp_1 = rocq_array::get::<u64>(&x, j);
   std::mem::drop(x);
-  let dx = sub_1(v8, v12);
-  let v19 = &y;
-  let v22 = rocq_array::get::<u64>(&v19, i);
-  let v23 = &y;
-  let v26 = rocq_array::get::<u64>(&v23, j);
+  let dx = sub_1(tmp, tmp_1);
+  let tmp_2 = rocq_array::get::<u64>(&y, i);
+  let tmp_3 = rocq_array::get::<u64>(&y, j);
   std::mem::drop(y);
-  let dy = sub_1(v22, v26);
+  let dy = sub_1(tmp_2, tmp_3);
   add(mul(dx, dx), mul(dy, dy))
 }
 
 // Rocq: Communicationssatellite.communicationssatellite_implem.wt
 // Variant: uncurried
 pub fn wt(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>, i: u64, j: u64) -> f64 {
-  let v23 = sqrt(of_uint63(dsq(x, y, i, j)));
-  let v26 = &r;
-  let v29 = rocq_array::get::<u64>(&v26, i);
-  let v30 = &r;
-  let v33 = rocq_array::get::<u64>(&v30, j);
+  let tmp = sqrt(of_uint63(dsq(x, y, i, j)));
+  let tmp_1 = rocq_array::get::<u64>(&r, i);
+  let tmp_2 = rocq_array::get::<u64>(&r, j);
   std::mem::drop(r);
-  sub(v23, of_uint63(add(v29, v33)))
+  sub(tmp, of_uint63(add(tmp_1, tmp_2)))
 }
 
 // Rocq: Communicationssatellite.communicationssatellite_implem.init_step
 // Variant: uncurried
 pub fn init_step(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>, v: u64, key: Rc<Array<f64>>) -> Rc<Array<f64>> {
-  let v18 = wt(x, y, r, 0u64, v);
-  rocq_array::set::<f64>(key, v, v18)
+  let tmp = wt(x, y, r, 0u64, v);
+  rocq_array::set::<f64>(key, v, tmp)
 }
 
 // Rocq: Corelib.Floats.PrimFloat.ltb
@@ -960,38 +935,25 @@ pub fn amin_step(n: u64, inT: &Rc<Array<bool>>, key: &Rc<Array<f64>>, v: u64, st
   let st_1 = st;
   match &st_1 {
     (bv, b) => {
-      let v14 = inT;
-      match rocq_array::get::<bool>(&v14, v_1) {
-        true => {
-          st_1
-        },
-        false => {
-          let v23 = Clone::clone(bv);
-          match eqb(v23, n_1) {
-            true => {
-              std::mem::drop(st_1);
-              let v28 = key;
-              let v31 = rocq_array::get::<f64>(&v28, v_1);
-              (v_1, v31)
-            },
-            false => {
-              let v41 = key;
-              let v45 = rocq_array::get::<f64>(&v41, v_1);
-              let v48 = Clone::clone(b);
-              match ltb_1(v45, v48) {
-                true => {
-                  std::mem::drop(st_1);
-                  let v51 = key;
-                  let v54 = rocq_array::get::<f64>(&v51, v_1);
-                  (v_1, v54)
-                },
-                false => {
-                  st_1
-                },
-              }
-            },
+      if rocq_array::get::<bool>(inT, v_1) {
+        st_1
+      } else {
+        let bv_clone = Clone::clone(bv);
+        if eqb(bv_clone, n_1) {
+          std::mem::drop(st_1);
+          let tmp = rocq_array::get::<f64>(key, v_1);
+          (v_1, tmp)
+        } else {
+          let tmp_1 = rocq_array::get::<f64>(key, v_1);
+          let b_clone = Clone::clone(b);
+          if ltb_1(tmp_1, b_clone) {
+            std::mem::drop(st_1);
+            let tmp_2 = rocq_array::get::<f64>(key, v_1);
+            (v_1, tmp_2)
+          } else {
+            st_1
           }
-        },
+        }
       }
     },
   }
@@ -1006,31 +968,23 @@ pub fn add_1(v0: f64, v1: f64) -> f64 {
 // Rocq: Communicationssatellite.communicationssatellite_implem.upd_step
 // Variant: uncurried
 pub fn upd_step(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>, inT: Rc<Array<bool>>, b: u64, v: u64, key: Rc<Array<f64>>) -> Rc<Array<f64>> {
-  let v7 = &inT;
-  let v10 = rocq_array::get::<bool>(&v7, v);
-  match v10 {
-    true => {
-      std::mem::drop(x);
-      std::mem::drop(y);
-      std::mem::drop(r);
+  let tmp = rocq_array::get::<bool>(&inT, v);
+  if tmp {
+    std::mem::drop(x);
+    std::mem::drop(y);
+    std::mem::drop(r);
+    std::mem::drop(inT);
+    key
+  } else {
+    let wv = wt(x, y, r, b, v);
+    let tmp_1 = rocq_array::get::<f64>(&key, v);
+    if ltb_1(wv, tmp_1) {
+      std::mem::drop(inT);
+      rocq_array::set::<f64>(key, v, wv)
+    } else {
       std::mem::drop(inT);
       key
-    },
-    false => {
-      let wv = wt(x, y, r, b, v);
-      let v27 = &key;
-      let v30 = rocq_array::get::<f64>(&v27, v);
-      match ltb_1(wv, v30) {
-        true => {
-          std::mem::drop(inT);
-          rocq_array::set::<f64>(key, v, wv)
-        },
-        false => {
-          std::mem::drop(inT);
-          key
-        },
-      }
-    },
+    }
   }
 }
 
@@ -1045,43 +999,41 @@ pub fn prim_step(x: &Rc<Array<u64>>, y: &Rc<Array<u64>>, r: &Rc<Array<u64>>, n: 
         (v14, v16) => {
           let key = &v14;
           let inT = &v16;
-          let v24 = Rc::clone(key);
-          let v26 = Rc::clone(inT);
-          let v27 = {
+          let key_clone = Rc::clone(key);
+          let inT_clone = Rc::clone(inT);
+          let callback: Rc<dyn Fn(u64, (u64, f64)) -> (u64, f64)> = Rc::new({
             let __anf_capture_28 = n_1;
             move |v34: u64, v35: (u64, f64)| -> (u64, f64) {
               let n = &__anf_capture_28;
-              let key = &v24;
-              let inT = &v26;
-              let v45 = amin_step(Clone::clone(n), key, inT, v34, v35);
-              v45
+              let key = &key_clone;
+              let inT = &inT_clone;
+              let tmp = amin_step(Clone::clone(n), key, inT, v34, v35);
+              tmp
             }
-          };
-          let v48: Rc<dyn Fn(u64, (u64, f64)) -> (u64, f64)> = Rc::new(v27);
-          let v57 = (n_1, __rocq_global_353);
-          let v67 = loop_::<(u64, f64)>(n_1, v48, 0u64, v57);
-          match v67 {
+          });
+          let tmp_1 = (n_1, __rocq_global_353);
+          let tmp_2 = loop_::<(u64, f64)>(n_1, callback, 0u64, tmp_1);
+          match tmp_2 {
             (v69, _v71) => {
-              let v76 = rocq_array::get::<f64>(&inT, v69);
-              let tot = add_1(v11, v76);
+              let tmp_3 = rocq_array::get::<f64>(inT, v69);
+              let tot = add_1(v11, tmp_3);
               let inT_1 = rocq_array::set::<bool>(v14, v69, true);
-              let v94 = Rc::clone(x);
-              let v97 = Rc::clone(y);
-              let v100 = Rc::clone(r);
-              let v103 = Rc::clone(&inT_1);
-              let v106 = {
+              let x_clone = Rc::clone(x);
+              let y_clone = Rc::clone(y);
+              let r_clone = Rc::clone(r);
+              let inT_clone_1 = Rc::clone(&inT_1);
+              let callback_1: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new({
                 let __anf_capture_115 = v69;
                 move |v117: u64, v118: Rc<Array<f64>>| -> Rc<Array<f64>> {
-                  let v121 = Rc::clone(&v94);
-                  let v123 = Rc::clone(&v97);
-                  let v125 = Rc::clone(&v100);
-                  let v127 = Rc::clone(&v103);
-                  let v129 = Clone::clone(&__anf_capture_115);
-                  upd_step(v121, v123, v125, v127, v129, v117, v118)
+                  let tmp_4 = Rc::clone(&x_clone);
+                  let tmp_5 = Rc::clone(&y_clone);
+                  let tmp_6 = Rc::clone(&r_clone);
+                  let tmp_7 = Rc::clone(&inT_clone_1);
+                  let tmp_8 = Clone::clone(&__anf_capture_115);
+                  upd_step(tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, v117, v118)
                 }
-              };
-              let v137: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new(v106);
-              let key_1 = loop_::<Rc<Array<f64>>>(n_1, v137, 0u64, v16);
+              });
+              let key_1 = loop_::<Rc<Array<f64>>>(n_1, callback_1, 0u64, v16);
               ((inT_1, key_1), tot)
             },
           }
@@ -1094,25 +1046,23 @@ pub fn prim_step(x: &Rc<Array<u64>>, y: &Rc<Array<u64>>, r: &Rc<Array<u64>>, n: 
 // Rocq: Communicationssatellite.communicationssatellite_implem.comsat
 // Variant: uncurried
 pub fn comsat(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>) -> f64 {
-  let v3 = &x;
-  let n = rocq_array::length::<u64>(&v3);
-  let v11 = rocq_array::make::<bool>(n, false);
-  let inT = rocq_array::set::<bool>(v11, 0u64, true);
-  let v26 = Rc::clone(&x);
-  let v29 = Rc::clone(&y);
-  let v32 = Rc::clone(&r);
-  let v33 = {
+  let n = rocq_array::length::<u64>(&x);
+  let tmp = rocq_array::make::<bool>(n, false);
+  let inT = rocq_array::set::<bool>(tmp, 0u64, true);
+  let x_clone = Rc::clone(&x);
+  let y_clone = Rc::clone(&y);
+  let r_clone = Rc::clone(&r);
+  let callback: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new({
     move |v40: u64, v41: Rc<Array<f64>>| -> Rc<Array<f64>> {
-      let v44 = Rc::clone(&v26);
-      let v46 = Rc::clone(&v29);
-      let v48 = Rc::clone(&v32);
-      init_step(v44, v46, v48, v40, v41)
+      let tmp_1 = Rc::clone(&x_clone);
+      let tmp_2 = Rc::clone(&y_clone);
+      let tmp_3 = Rc::clone(&r_clone);
+      init_step(tmp_1, tmp_2, tmp_3, v40, v41)
     }
-  };
-  let v56: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new(v33);
-  let v65 = rocq_array::make::<f64>(n, __rocq_global_353);
-  let key = loop_::<Rc<Array<f64>>>(n, v56, 0u64, v65);
-  let v84 = {
+  });
+  let tmp_4 = rocq_array::make::<f64>(n, __rocq_global_353);
+  let key = loop_::<Rc<Array<f64>>>(n, callback, 0u64, tmp_4);
+  let callback_1: Rc<dyn Fn(u64, ((Rc<Array<bool>>, Rc<Array<f64>>), f64)) -> ((Rc<Array<bool>>, Rc<Array<f64>>), f64)> = Rc::new({
     let __anf_capture_85 = x;
     let __anf_capture_87 = y;
     let __anf_capture_89 = r;
@@ -1121,13 +1071,12 @@ pub fn comsat(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>) -> f64 {
       let x = &__anf_capture_85;
       let y = &__anf_capture_87;
       let r = &__anf_capture_89;
-      let v105 = prim_step(x, y, r, Clone::clone(&__anf_capture_91), v93, v94);
-      v105
+      let tmp_5 = prim_step(x, y, r, Clone::clone(&__anf_capture_91), v93, v94);
+      tmp_5
     }
-  };
-  let v108: Rc<dyn Fn(u64, ((Rc<Array<bool>>, Rc<Array<f64>>), f64)) -> ((Rc<Array<bool>>, Rc<Array<f64>>), f64)> = Rc::new(v84);
-  let v133 = loop_::<((Rc<Array<bool>>, Rc<Array<f64>>), f64)>(n, v108, 1u64, ((inT, key), __rocq_global_353));
-  match v133 {
+  });
+  let tmp_6 = loop_::<((Rc<Array<bool>>, Rc<Array<f64>>), f64)>(n, callback_1, 1u64, ((inT, key), __rocq_global_353));
+  match tmp_6 {
     (v135, v137) => {
       match v135 {
         (v140, v142) => {
@@ -1138,27 +1087,6 @@ pub fn comsat(x: Rc<Array<u64>>, y: Rc<Array<u64>>, r: Rc<Array<u64>>) -> f64 {
       }
     },
   }
-}
-
-// Rocq: Communicationssatellite.communicationssatellite_implem.comsat
-pub fn comsat_curried(x: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> f64> {
-      let x = &x;
-      let v8 = Rc::clone(x);
-      let v11 = {
-        move |r: Rc<Array<u64>>| -> f64 {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&y);
-          comsat(v19, v21, r)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> f64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1309,14 +1237,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64> = __rocq_global_551.with(Clone::clone);
-  v0
-}
 const __rocq_global_353: f64 = f64::from_bits(0u64);
-std::thread_local! { static __rocq_global_551: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> f64> = communicationssatellite(); }
-std::thread_local! { static __rocq_global_554: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> f64>>> = communicationssatellite_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1393,6 +1314,6 @@ use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let [x,y,r] = columns(&mut t, n, true);
-    format!("{:.10}\n", run()(x,y,r))
+    format!("{:.10}\n", comsat(x,y,r))
 }
 fn main() { entry(solve); }

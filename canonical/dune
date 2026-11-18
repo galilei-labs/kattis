@@ -6,9 +6,11 @@
  (rocq.theory
   (name Canonical.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Canonical)
  (modules canonical_implem)
- (theories Canonical.spec Stdlib stdpp StdGalilei))
+  (theories Canonical.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

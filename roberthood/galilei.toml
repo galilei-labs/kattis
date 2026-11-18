@@ -21,4 +21,4 @@ archive = "roberthood_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/roberthood.ml"
-Rust = "extraction/rust/submit/roberthood.rs"
+Rust = "extraction/rust/snapshots/roberthood_extracted.rs.interface.json"

@@ -11,9 +11,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Point count: $2 \le n \le 100{,}000$.
+    - Point count: $2 \le n \le 10^{5}$.
     - Coordinates have at most two decimal places and absolute value at most
-      $100{,}000$. *)
+      $10^{5}$. *)
 
 (** ** Examples *)
 
@@ -52,11 +52,17 @@ Output:
                     such pair, in either order. The harness prints
                     x_coordinates_i y_coordinates_i x_coordinates_j
                     y_coordinates_j.
+                    It runs in at most c1 * (n + 1) * (log2 n + 1) + c2
+                    steps of the cost model on a valid input, n the number
+                    of points (the presort, then the divide and conquer with
+                    a linear merge and strip per level), for two constants
+                    c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith QArith Qabs List
   Uint63 Sint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Q_scope.
 
@@ -68,36 +74,33 @@ Open Scope Q_scope.
     machine coordinate is a [sint] word counting
     hundredths, and it represents the rational number of
     that many hundredths. [Q] rather than [Z] hundredths
-    on the math side so that the contract speaks of the
+    in the specification so that the contract speaks of the
     statement's coordinates themselves, in the
     statement's unit. *)
 Instance repr_hundredths : Repr sint Q :=
   fun coordinate_int coordinate =>
     coordinate == (Sint63.to_Z coordinate_int # 100).
 
-(* Math side.  The points are two parallel lists, one per
+(* The points are two parallel lists, one per
   column of the
    input lines "x y". *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th coordinate, for k < len l (0 outside, never
-    relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_Q (l : list Q) (k : N) : Q :=
   nth (N.to_nat k) l 0.
 
-(** i and j are two distinct points of the input:
-    distinct indices; two indices may hold the same
-    point, at distance 0 (third sample case). *)
+(** [i] and [j] are distinct valid input indices. Their coordinates may coincide,
+    giving distance zero. *)
 Definition point_pair (x_coordinates : list Q)
   (i j : N) : Prop :=
   (i < len x_coordinates)%N /\ (j < len x_coordinates)%N
     /\ i <> j.
 
-(** The squared Euclidean distance between points i and
-    j. *)
+(** The squared Euclidean distance between the points at indices [i] and [j]. *)
 Definition dist2 (x_coordinates y_coordinates : list Q)
   (i j : N) : Q :=
   let delta_x :=
@@ -108,15 +111,14 @@ Definition dist2 (x_coordinates y_coordinates : list Q)
     in
   delta_x * delta_x + delta_y * delta_y.
 
-(** coordinate has at most two decimals: it is a whole
-    number of hundredths. *)
+(** [coordinate] is an integer multiple of one hundredth. *)
 Definition two_decimals (coordinate : Q) : Prop :=
   exists hundredths : Z, coordinate == hundredths # 100.
 
 (** [@inside closestpair_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list Q) : Prop := {
-  (* 2 <= n <= 100 000 *)
+  (* 2 <= n <= 10^5 *)
   vi_n : (2 <= len x_coordinates <= 100000)%N;
   (* n points, one per line, each of the form x y *)
   vi_ys : len y_coordinates = len x_coordinates;
@@ -124,7 +126,7 @@ Record valid_input
     decimals *)
   vi_x_dec : Forall two_decimals x_coordinates;
   vi_y_dec : Forall two_decimals y_coordinates;
-  (* ... and absolute value bounded by 100 000 *)
+  (* ... and absolute value bounded by 10^5 *)
   vi_x : Forall
     (fun coordinate => Qabs coordinate <= 100000)
     x_coordinates;
@@ -149,6 +151,12 @@ Definition closestpair_spec
         <= dist2 x_coordinates y_coordinates i j
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n \log(n+1))$ steps, where $n$ is the number of points. *)
+Definition closestpair_time_spec (c1 c2 n_x_coordinates steps : nat) : Prop :=
+  (steps <= c1 * ((n_x_coordinates + 1) * (Nat.log2 (n_x_coordinates) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Find two distinct points with minimum Euclidean distance, using exact decimal
@@ -158,6 +166,30 @@ Definition closestpair_spec
     - Output [output]: The output identifies two distinct input positions attaining the minimum Euclidean distance between the exact decimal coordinates. *)
 Program closestpair : array sint -> array sint
   -> uint * uint.
+
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 1
+    - Input [x_coordinates]: [1.12; 0]%Q
+    - Input [y_coordinates]: [0; 0.51]%Q
+    - Output [output]: (1, 0)
+*)
+
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 2
+    - Input [x_coordinates]: [158; 123; 1859]%Q
+    - Input [y_coordinates]: [12; 15; -1489]%Q
+    - Output [output]: (1, 0)
+*)
+
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 3
+    - Input [x_coordinates]: [21.12; 18.18; 21.12]%Q
+    - Input [y_coordinates]: [-884.2; 43.34; -884.2]%Q
+    - Output [output]: (0, 2)
+*)
 
 (** ** Bridge *)
 
@@ -175,6 +207,22 @@ Specification closestpair_correct :
       repr (closestpair x_coordinates_arr y_coordinates_arr)
         output /\
       closestpair_spec x_coordinates y_coordinates output.
+
+(** ** Complexity *)
+
+(** [@hide] [closestpair_cost] is the cost translation of [closestpair] (the judge
+    recomputes it and compares) ... *)
+Complexity closestpair_cost for closestpair.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) * (log2 n + 1) + c2 steps of the cost model on a valid input, n the number of points (the presort, then the divide and conquer with a linear merge and strip per level), for two constants
+    quantified before the inputs, on every valid input. [@requirement closestpair_time_spec] *)
+Specification closestpair_time : exists c1 c2 : nat,
+  forall (x_coordinates y_coordinates : list Q)
+  (x_coordinates_arr y_coordinates_arr : array sint),
+  valid_input x_coordinates y_coordinates ->
+  repr x_coordinates_arr x_coordinates ->
+  repr y_coordinates_arr y_coordinates ->
+  closestpair_time_spec c1 c2 (size x_coordinates_arr) (cost2 closestpair_cost x_coordinates_arr y_coordinates_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

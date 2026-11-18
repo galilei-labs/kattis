@@ -933,7 +933,7 @@ let rec divout p m =
 (** val outer : Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t **)
 
 let rec outer p m res =
-  if bdec ((&&) (leb (mul p p) m) (ltb p m))
+  if bdec ((&&) (leb p (div m p)) (ltb p m))
   then if eqb (mod0 m p) (Uint63.of_int (0))
        then let m' = divout p m in
             outer (add p (Uint63.of_int (1))) m'

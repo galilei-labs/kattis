@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -675,26 +674,11 @@ pub type char63 = u64;
 
 pub type sint = u64;
 
-// Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.kth_occurrences
-// Variant: uncurried
-pub fn kth_occurrences() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>> = kth_occurrences_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.kth_occurrences
-pub fn kth_occurrences_curried() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = kth_occurrences_impl_curried;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -705,21 +689,18 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -737,13 +718,10 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -762,8 +740,8 @@ pub fn div(v0: u64, v1: u64) -> u64 {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.midp
 // Variant: uncurried
 pub fn midp(lo: u64, hi: u64) -> u64 {
-  let v9 = sub(hi, lo);
-  add(lo, div(v9, 2u64))
+  let tmp = sub(hi, lo);
+  add(lo, div(tmp, 2u64))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.copy
@@ -775,13 +753,12 @@ pub fn copy_1(a: Rc<Array<u64>>, b: Rc<Array<u64>>, hi: u64, k: u64) -> Rc<Array
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.copy (local: copy)
 // Variant: uncurried, lifted
 pub fn copy(a: Rc<Array<u64>>, b: Rc<Array<u64>>, hi: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, hi);
-  match bdec(v12) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &a;
-      let v19 = rocq_array::get::<u64>(&v16, k);
-      let v26 = rocq_array::set::<u64>(b, k, v19);
-      copy(a, v26, hi, add(k, 1u64), ())
+      let tmp_1 = rocq_array::get::<u64>(&a, k);
+      let tmp_2 = rocq_array::set::<u64>(b, k, tmp_1);
+      copy(a, tmp_2, hi, add(k, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(a);
@@ -793,13 +770,10 @@ pub fn copy(a: Rc<Array<u64>>, b: Rc<Array<u64>>, hi: u64, k: u64, _H: ()) -> Rc
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -818,31 +792,24 @@ pub fn merge_1(le: Rc<dyn Fn(u64, u64) -> bool>, src: Rc<Array<u64>>, dst: Rc<Ar
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.merge (local: merge)
 // Variant: uncurried, lifted
 pub fn merge(le: Rc<dyn Fn(u64, u64) -> bool>, src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(k, hi);
-  match bdec(v16) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = ltb(i, mid);
-      let v33 = leb(hi, j);
-      let v34 = &src;
-      let v37 = rocq_array::get::<u64>(&v34, i);
-      let v38 = &src;
-      let v41 = rocq_array::get::<u64>(&v38, j);
-      let v42: &Rc<dyn Fn(u64, u64) -> bool> = &le;
-      let v47 = v42(v37, v41);
-      let v52 = orb(v33, v47);
-      match andb(v26, v52) {
-        true => {
-          let v59 = &src;
-          let v62 = rocq_array::get::<u64>(&v59, i);
-          let v69 = rocq_array::set::<u64>(dst, k, v62);
-          merge(le, src, v69, mid, hi, add(i, 1u64), j, add(k, 1u64), ())
-        },
-        false => {
-          let v110 = &src;
-          let v113 = rocq_array::get::<u64>(&v110, j);
-          let v120 = rocq_array::set::<u64>(dst, k, v113);
-          merge(le, src, v120, mid, hi, i, add(j, 1u64), add(k, 1u64), ())
-        },
+      let tmp_1 = ltb(i, mid);
+      let tmp_2 = leb(hi, j);
+      let tmp_3 = rocq_array::get::<u64>(&src, i);
+      let tmp_4 = rocq_array::get::<u64>(&src, j);
+      let le_ref: &Rc<dyn Fn(u64, u64) -> bool> = &le;
+      let tmp_5 = le_ref(tmp_3, tmp_4);
+      let tmp_6 = orb(tmp_2, tmp_5);
+      if andb(tmp_1, tmp_6) {
+        let tmp_7 = rocq_array::get::<u64>(&src, i);
+        let tmp_8 = rocq_array::set::<u64>(dst, k, tmp_7);
+        merge(le, src, tmp_8, mid, hi, add(i, 1u64), j, add(k, 1u64), ())
+      } else {
+        let tmp_9 = rocq_array::get::<u64>(&src, j);
+        let tmp_10 = rocq_array::set::<u64>(dst, k, tmp_9);
+        merge(le, src, tmp_10, mid, hi, i, add(j, 1u64), add(k, 1u64), ())
       }
     },
     sumbool::right => {
@@ -862,28 +829,28 @@ pub fn msort_1(le: Rc<dyn Fn(u64, u64) -> bool>, a: Rc<Array<u64>>, b: Rc<Array<
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.msort (local: msort)
 // Variant: uncurried, lifted
 pub fn msort(le: Rc<dyn Fn(u64, u64) -> bool>, a: Rc<Array<u64>>, b: Rc<Array<u64>>, lo: u64, hi: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v33 = andb(ltb(lo, hi), ltb(1u64, sub(hi, lo)));
-  match bdec(v33) {
+  let tmp = andb(ltb(lo, hi), ltb(1u64, sub(hi, lo)));
+  match bdec(tmp) {
     sumbool::left => {
       let mid = midp(lo, hi);
-      let v47: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
-      let v59 = msort(v47, a, b, lo, mid, ());
-      match &v59 {
+      let le_clone: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
+      let tmp_1 = msort(le_clone, a, b, lo, mid, ());
+      match &tmp_1 {
         (b1, a1) => {
-          let v67 = ();
-          let v70: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
-          let v73 = Rc::clone(b1);
-          let v74 = Rc::clone(a1);
-          std::mem::drop(v59);
-          let v82 = msort(v70, v73, v74, mid, hi, v67);
-          match v82 {
+          let tmp_2 = ();
+          let le_clone_1: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
+          let b1_clone = Rc::clone(b1);
+          let a1_clone = Rc::clone(a1);
+          std::mem::drop(tmp_1);
+          let tmp_3 = msort(le_clone_1, b1_clone, a1_clone, mid, hi, tmp_2);
+          match tmp_3 {
             (v84, v86) => {
               let b2 = &v84;
-              let v91 = Rc::clone(b2);
-              let b3 = copy_1(v91, v86, hi, lo);
-              let v104 = Rc::clone(&b3);
-              let v118 = merge_1(le, v104, v84, mid, hi, lo, mid, lo);
-              (v118, b3)
+              let b2_clone = Rc::clone(b2);
+              let b3 = copy_1(b2_clone, v86, hi, lo);
+              let b3_clone = Rc::clone(&b3);
+              let tmp_4 = merge_1(le, b3_clone, v84, mid, hi, lo, mid, lo);
+              (tmp_4, b3)
             },
           }
         },
@@ -902,16 +869,12 @@ pub fn r2(rk: &Rc<Array<u64>>, h: u64, n: u64, p: u64) -> u64 {
   let h_1 = h;
   let n_1 = n;
   let p_1 = p;
-  let v14 = add(p_1, h_1);
-  match ltb(v14, n_1) {
-    true => {
-      let v26 = add(p_1, h_1);
-      let v27 = rk;
-      add(rocq_array::get::<u64>(&v27, v26), 1u64)
-    },
-    false => {
-      0u64
-    },
+  let tmp = add(p_1, h_1);
+  if ltb(tmp, n_1) {
+    let tmp_1 = add(p_1, h_1);
+    add(rocq_array::get::<u64>(rk, tmp_1), 1u64)
+  } else {
+    0u64
   }
 }
 
@@ -922,14 +885,7 @@ pub fn keyle(rk: &Rc<Array<u64>>, h: u64, n: u64, p: u64, q: u64) -> bool {
   let n_1 = n;
   let p_1 = p;
   let q_1 = q;
-  let v11 = rk;
-  let v14 = rocq_array::get::<u64>(&v11, p_1);
-  let v15 = rk;
-  let v23 = ltb(v14, rocq_array::get::<u64>(&v15, q_1));
-  let v26 = rk;
-  let v29 = rocq_array::get::<u64>(&v26, p_1);
-  let v30 = rk;
-  orb(v23, andb(eqb(v29, rocq_array::get::<u64>(&v30, q_1)), leb(r2(rk, h_1, n_1, p_1), r2(rk, h_1, n_1, q_1))))
+  orb(ltb(rocq_array::get::<u64>(rk, p_1), rocq_array::get::<u64>(rk, q_1)), andb(eqb(rocq_array::get::<u64>(rk, p_1), rocq_array::get::<u64>(rk, q_1)), leb(r2(rk, h_1, n_1, p_1), r2(rk, h_1, n_1, q_1))))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.iota_loop
@@ -941,11 +897,11 @@ pub fn iota_loop_1(a: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Array<u64>> {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.iota_loop (local: iota_loop)
 // Variant: uncurried, lifted
 pub fn iota_loop(a: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = rocq_array::set::<u64>(a, i, i);
-      iota_loop(v21, n, add(i, 1u64), ())
+      let tmp_1 = rocq_array::set::<u64>(a, i, i);
+      iota_loop(tmp_1, n, add(i, 1u64), ())
     },
     sumbool::right => {
       a
@@ -956,20 +912,19 @@ pub fn iota_loop(a: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.sort_round
 // Variant: uncurried
 pub fn sort_round(rk: Rc<Array<u64>>, h: u64, n: u64) -> Rc<Array<u64>> {
-  let v11 = {
+  let callback: Rc<dyn Fn(u64, u64) -> bool> = Rc::new({
     let __anf_capture_16 = n;
     move |v18: u64, v19: u64| -> bool {
       let rk = &rk;
-      let v21 = Clone::clone(&h);
-      let v23 = Clone::clone(&__anf_capture_16);
-      keyle(rk, v21, v23, v18, v19)
+      let h_clone = Clone::clone(&h);
+      let tmp = Clone::clone(&__anf_capture_16);
+      keyle(rk, h_clone, tmp, v18, v19)
     }
-  };
-  let v33: Rc<dyn Fn(u64, u64) -> bool> = Rc::new(v11);
-  let v42 = rocq_array::make::<u64>(n, 0u64);
-  let v51 = iota_loop_1(v42, n, 0u64);
-  let v58 = rocq_array::make::<u64>(n, 0u64);
-  fst::<Rc<Array<u64>>, Rc<Array<u64>>>(msort_1(v33, v51, v58, 0u64, n))
+  });
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = iota_loop_1(tmp_1, n, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  fst::<Rc<Array<u64>>, Rc<Array<u64>>>(msort_1(callback, tmp_2, tmp_3, 0u64, n))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rank_loop
@@ -981,28 +936,21 @@ pub fn rank_loop_1(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rank_loop (local: rank_loop)
 // Variant: uncurried, lifted
 pub fn rank_loop(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &sa;
-      let p = rocq_array::get::<u64>(&v17, i);
-      let v28 = sub(i, 1u64);
-      let v29 = &sa;
-      let q = rocq_array::get::<u64>(&v29, v28);
-      let v34 = &nr;
-      let v37 = rocq_array::get::<u64>(&v34, q);
-      let v38: &Rc<dyn Fn(u64, u64) -> bool> = &le;
-      let v43 = v38(p, q);
-      let v44 = match v43 {
-        true => {
-          0u64
-        },
-        false => {
-          1u64
-        },
+      let p = rocq_array::get::<u64>(&sa, i);
+      let q = rocq_array::get::<u64>(&sa, sub(i, 1u64));
+      let tmp_1 = rocq_array::get::<u64>(&nr, q);
+      let le_ref: &Rc<dyn Fn(u64, u64) -> bool> = &le;
+      let tmp_2 = le_ref(p, q);
+      let tmp_3 = if tmp_2 {
+        0u64
+      } else {
+        1u64
       };
-      let v65 = rocq_array::set::<u64>(nr, p, add(v37, v44));
-      rank_loop(le, sa, v65, n, add(i, 1u64), ())
+      let tmp_4 = rocq_array::set::<u64>(nr, p, add(tmp_1, tmp_3));
+      rank_loop(le, sa, tmp_4, n, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(le);
@@ -1014,13 +962,10 @@ pub fn rank_loop(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<Ar
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -1033,34 +978,30 @@ pub fn rounds_1(n: u64, rk: Rc<Array<u64>>, h: u64) -> Rc<Array<u64>> {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rounds (local: rounds)
 // Variant: uncurried, lifted
 pub fn rounds(n: u64, rk: Rc<Array<u64>>, h: u64, _H: ()) -> Rc<Array<u64>> {
-  let v7 = Rc::clone(&rk);
-  let sa = sort_round(v7, h, n);
-  let v16 = Rc::clone(&rk);
-  let v21 = {
+  let rk_clone = Rc::clone(&rk);
+  let sa = sort_round(rk_clone, h, n);
+  let rk_clone_1 = Rc::clone(&rk);
+  let callback: Rc<dyn Fn(u64, u64) -> bool> = Rc::new({
     let __anf_capture_24 = h;
     let __anf_capture_26 = n;
     move |v28: u64, v29: u64| -> bool {
-      let rk = &v16;
-      let v31 = Clone::clone(&__anf_capture_24);
-      let v33 = Clone::clone(&__anf_capture_26);
-      keyle(rk, v31, v33, v28, v29)
+      let rk = &rk_clone_1;
+      let tmp = Clone::clone(&__anf_capture_24);
+      let tmp_1 = Clone::clone(&__anf_capture_26);
+      keyle(rk, tmp, tmp_1, v28, v29)
     }
-  };
-  let v43: Rc<dyn Fn(u64, u64) -> bool> = Rc::new(v21);
-  let v51 = rocq_array::make::<u64>(n, 0u64);
-  let v58 = Rc::clone(&sa);
-  let nr = rank_loop_1(v43, v58, v51, n, 1u64);
-  let v87 = andb(ltb(0u64, h), ltb(h, n));
-  let v95 = sub(n, h);
-  let v100 = ltb(h, v95);
-  let v110 = sub(n, 1u64);
-  let v111 = &sa;
-  let v114 = rocq_array::get::<u64>(&v111, v110);
-  let v115 = &nr;
-  let v118 = rocq_array::get::<u64>(&v115, v114);
-  let v139 = andb(v100, negb(eqb(v118, sub(n, 1u64))));
-  let v145 = andb(v87, v139);
-  match bdec(v145) {
+  });
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let sa_clone = Rc::clone(&sa);
+  let nr = rank_loop_1(callback, sa_clone, tmp_2, n, 1u64);
+  let tmp_3 = andb(ltb(0u64, h), ltb(h, n));
+  let tmp_4 = sub(n, h);
+  let tmp_5 = ltb(h, tmp_4);
+  let tmp_6 = rocq_array::get::<u64>(&sa, sub(n, 1u64));
+  let tmp_7 = rocq_array::get::<u64>(&nr, tmp_6);
+  let tmp_8 = andb(tmp_5, negb(eqb(tmp_7, sub(n, 1u64))));
+  let tmp_9 = andb(tmp_3, tmp_8);
+  match bdec(tmp_9) {
     sumbool::left => {
       std::mem::drop(rk);
       std::mem::drop(sa);
@@ -1077,9 +1018,9 @@ pub fn rounds(n: u64, rk: Rc<Array<u64>>, h: u64, _H: ()) -> Rc<Array<u64>> {
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get_owned(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Corelib.Strings.PrimString.get
@@ -1097,13 +1038,13 @@ pub fn init_rk_1(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.init_rk (local: init_rk)
 // Variant: uncurried, lifted
 pub fn init_rk(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = Rc::clone(&x);
-      let v22 = get_owned(v19, i);
-      let v29 = rocq_array::set::<u64>(rk, i, v22);
-      init_rk(x, v29, n, add(i, 1u64), ())
+      let x_clone = Rc::clone(&x);
+      let tmp_1 = get_owned(x_clone, i);
+      let tmp_2 = rocq_array::set::<u64>(rk, i, tmp_1);
+      init_rk(x, tmp_2, n, add(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -1115,9 +1056,9 @@ pub fn init_rk(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: u6
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.build_sa
 // Variant: uncurried
 pub fn build_sa(x: Rc<rocq_string::RocqString>, n: u64) -> Rc<Array<u64>> {
-  let v10 = rocq_array::make::<u64>(n, 0u64);
-  let v21 = init_rk_1(x, v10, n, 0u64);
-  rounds_1(n, v21, 1u64)
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = init_rk_1(x, tmp, n, 0u64);
+  rounds_1(n, tmp_1, 1u64)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl
@@ -1135,17 +1076,14 @@ pub fn depth_loop_1(n: u64, d: u64) -> u64 {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.depth_loop (local: depth_loop)
 // Variant: uncurried, lifted
 pub fn depth_loop(n: u64, d: u64, _H: ()) -> u64 {
-  let v12 = ltb(d, 20u64);
-  match bdec(v12) {
+  let tmp = ltb(d, 20u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = lsl(1u64, d);
-      match ltb(v25, n) {
-        true => {
-          depth_loop(n, add(d, 1u64), ())
-        },
-        false => {
-          d
-        },
+      let tmp_1 = lsl(1u64, d);
+      if ltb(tmp_1, n) {
+        depth_loop(n, add(d, 1u64), ())
+      } else {
+        d
       }
     },
     sumbool::right => {
@@ -1169,65 +1107,58 @@ pub fn ins_1(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, nx: u64, x
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.ins (local: ins)
 // Variant: uncurried, lifted
 pub fn ins(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, nx: u64, x: u64, d: u64, v: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v17 = ltb(0u64, d);
-  match bdec(v17) {
+  let tmp = ltb(0u64, d);
+  match bdec(tmp) {
     sumbool::left => {
       let half = lsl(1u64, sub(d, 1u64));
       let y = add(nx, d);
-      let v48 = ltb(v, half);
-      match &v48 {
-        true => {
-          let v51 = &L;
-          let v54 = rocq_array::get::<u64>(&v51, x);
-          let v82 = ins(L, R, C, nx, v54, sub(d, 1u64), v, ());
-          match v82 {
-            (v84, v86) => {
-              let p = &v86;
-              match v84 {
-                (v90, v92) => {
-                  let Lq = &v92;
-                  let v115 = rocq_array::set::<u64>(v90, y, add(nx, sub(d, 1u64)));
-                  let v118 = rocq_array::get::<u64>(&Lq, x);
-                  let v125 = rocq_array::set::<u64>(v92, y, v118);
-                  let v131 = (v115, v125);
-                  let v135 = rocq_array::get::<u64>(&p, x);
-                  let v149 = rocq_array::set::<u64>(v86, y, add(v135, 1u64));
-                  (v131, v149)
-                },
-              }
-            },
-          }
-        },
-        false => {
-          let v164 = &R;
-          let v167 = rocq_array::get::<u64>(&v164, x);
-          let v201 = ins(L, R, C, nx, v167, sub(d, 1u64), sub(v, half), ());
-          match v201 {
-            (v203, v205) => {
-              let p = &v205;
-              match v203 {
-                (v209, v211) => {
-                  let Rq = &v209;
-                  let v216 = rocq_array::get::<u64>(&Rq, x);
-                  let v223 = rocq_array::set::<u64>(v209, y, v216);
-                  let v244 = rocq_array::set::<u64>(v211, y, add(nx, sub(d, 1u64)));
-                  let v250 = (v223, v244);
-                  let v254 = rocq_array::get::<u64>(&p, x);
-                  let v268 = rocq_array::set::<u64>(v205, y, add(v254, 1u64));
-                  (v250, v268)
-                },
-              }
-            },
-          }
-        },
+      if ltb(v, half) {
+        let tmp_1 = rocq_array::get::<u64>(&L, x);
+        let tmp_2 = ins(L, R, C, nx, tmp_1, sub(d, 1u64), v, ());
+        match tmp_2 {
+          (v84, v86) => {
+            let p = &v86;
+            match v84 {
+              (v90, v92) => {
+                let Lq = &v92;
+                let tmp_3 = rocq_array::set::<u64>(v90, y, add(nx, sub(d, 1u64)));
+                let tmp_4 = rocq_array::get::<u64>(Lq, x);
+                let tmp_5 = rocq_array::set::<u64>(v92, y, tmp_4);
+                let tmp_6 = (tmp_3, tmp_5);
+                let tmp_7 = rocq_array::get::<u64>(p, x);
+                let tmp_8 = rocq_array::set::<u64>(v86, y, add(tmp_7, 1u64));
+                (tmp_6, tmp_8)
+              },
+            }
+          },
+        }
+      } else {
+        let tmp_9 = rocq_array::get::<u64>(&R, x);
+        let tmp_10 = ins(L, R, C, nx, tmp_9, sub(d, 1u64), sub(v, half), ());
+        match tmp_10 {
+          (v203, v205) => {
+            let p = &v205;
+            match v203 {
+              (v209, v211) => {
+                let Rq = &v209;
+                let tmp_11 = rocq_array::get::<u64>(Rq, x);
+                let tmp_12 = rocq_array::set::<u64>(v209, y, tmp_11);
+                let tmp_13 = rocq_array::set::<u64>(v211, y, add(nx, sub(d, 1u64)));
+                let tmp_14 = (tmp_12, tmp_13);
+                let tmp_15 = rocq_array::get::<u64>(p, x);
+                let tmp_16 = rocq_array::set::<u64>(v205, y, add(tmp_15, 1u64));
+                (tmp_14, tmp_16)
+              },
+            }
+          },
+        }
       }
     },
     sumbool::right => {
-      let v291 = (L, R);
-      let v293 = &C;
-      let v296 = rocq_array::get::<u64>(&v293, x);
-      let v310 = rocq_array::set::<u64>(C, nx, add(v296, 1u64));
-      (v291, v310)
+      let tmp_17 = (L, R);
+      let tmp_18 = rocq_array::get::<u64>(&C, x);
+      let tmp_19 = rocq_array::set::<u64>(C, nx, add(tmp_18, 1u64));
+      (tmp_17, tmp_19)
     },
   }
 }
@@ -1241,22 +1172,20 @@ pub fn build_1(sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<A
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, n: u64, D: u64, i: u64, nx: u64, _H: ()) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v17 = ltb(i, n);
-  match bdec(v17) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = &roots;
-      let v25 = rocq_array::get::<u64>(&v22, i);
-      let v26 = &sa;
-      let v29 = rocq_array::get::<u64>(&v26, i);
-      let v44 = ins_1(L, R, C, nx, v25, D, v29);
-      match v44 {
+      let tmp_1 = rocq_array::get::<u64>(&roots, i);
+      let tmp_2 = rocq_array::get::<u64>(&sa, i);
+      let tmp_3 = ins_1(L, R, C, nx, tmp_1, D, tmp_2);
+      match tmp_3 {
         (v46, v48) => {
           match v46 {
             (v51, v53) => {
-              let v75 = rocq_array::set::<u64>(roots, add(i, 1u64), add(nx, D));
-              let v83 = add(i, 1u64);
-              let v90 = add(nx, D);
-              build(sa, v51, v53, v48, v75, n, D, v83, add(v90, 1u64), ())
+              let tmp_4 = rocq_array::set::<u64>(roots, add(i, 1u64), add(nx, D));
+              let tmp_5 = add(i, 1u64);
+              let tmp_6 = add(nx, D);
+              build(sa, v51, v53, v48, tmp_4, n, D, tmp_5, add(tmp_6, 1u64), ())
             },
           }
         },
@@ -1278,20 +1207,17 @@ pub fn bs_1(P: Rc<dyn Fn(u64) -> bool>, lo: u64, hi: u64) -> u64 {
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.bs (local: bs)
 // Variant: uncurried, lifted
 pub fn bs(P: Rc<dyn Fn(u64) -> bool>, lo: u64, hi: u64, _H: ()) -> u64 {
-  let v11 = ltb(lo, hi);
-  match bdec(v11) {
+  let tmp = ltb(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = midp(lo, hi);
-      let v21: &Rc<dyn Fn(u64) -> bool> = &P;
-      let v24 = v21(v20);
-      match v24 {
-        true => {
-          let v31 = midp(lo, hi);
-          bs(P, lo, v31, ())
-        },
-        false => {
-          bs(P, add(midp(lo, hi), 1u64), hi, ())
-        },
+      let tmp_1 = midp(lo, hi);
+      let P_ref: &Rc<dyn Fn(u64) -> bool> = &P;
+      let tmp_2 = P_ref(tmp_1);
+      if tmp_2 {
+        let tmp_3 = midp(lo, hi);
+        bs(P, lo, tmp_3, ())
+      } else {
+        bs(P, add(midp(lo, hi), 1u64), hi, ())
       }
     },
     sumbool::right => {
@@ -1318,33 +1244,24 @@ pub fn cmpt(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, n:
   let m_1 = m;
   let p_1 = p;
   let k_1 = k;
-  let v18 = ltb(k_1, m_1);
-  match bdec(v18) {
+  let tmp = ltb(k_1, m_1);
+  match bdec(tmp) {
     sumbool::left => {
-      let v29 = add(p_1, k_1);
-      match ltb(v29, n_1) {
-        true => {
-          let a = get(t, k_1);
-          let b = get(x, add(p_1, k_1));
-          match ltb(a, b) {
-            true => {
-              std::cmp::Ordering::Less
-            },
-            false => {
-              match ltb(b, a) {
-                true => {
-                  std::cmp::Ordering::Greater
-                },
-                false => {
-                  cmpt(x, t, n_1, m_1, p_1, add(k_1, 1u64), ())
-                },
-              }
-            },
+      let tmp_1 = add(p_1, k_1);
+      if ltb(tmp_1, n_1) {
+        let a = get(t, k_1);
+        let b = get(x, add(p_1, k_1));
+        if ltb(a, b) {
+          std::cmp::Ordering::Less
+        } else {
+          if ltb(b, a) {
+            std::cmp::Ordering::Greater
+          } else {
+            cmpt(x, t, n_1, m_1, p_1, add(k_1, 1u64), ())
           }
-        },
-        false => {
-          std::cmp::Ordering::Greater
-        },
+        }
+      } else {
+        std::cmp::Ordering::Greater
       }
     },
     sumbool::right => {
@@ -1359,8 +1276,7 @@ pub fn cmp_at(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, 
   let n_1 = n;
   let m_1 = m;
   let i_1 = i;
-  let v9 = sa;
-  cmpt_1(x, t, n_1, m_1, rocq_array::get::<u64>(&v9, i_1), 0u64)
+  cmpt_1(x, t, n_1, m_1, rocq_array::get::<u64>(sa, i_1), 0u64)
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qry
@@ -1372,34 +1288,23 @@ pub fn qry_1(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, a: u64, b:
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qry (local: qry)
 // Variant: uncurried, lifted
 pub fn qry(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, a: u64, b: u64, d: u64, k: u64, _H: ()) -> u64 {
-  let v17 = ltb(0u64, d);
-  match bdec(v17) {
+  let tmp = ltb(0u64, d);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = &L;
-      let v25 = rocq_array::get::<u64>(&v22, b);
-      let v26 = &C;
-      let v29 = rocq_array::get::<u64>(&v26, v25);
-      let v30 = &L;
-      let v33 = rocq_array::get::<u64>(&v30, a);
-      let v34 = &C;
-      let v37 = rocq_array::get::<u64>(&v34, v33);
-      let cl = sub(v29, v37);
-      match leb(k, cl) {
-        true => {
-          let v50 = &L;
-          let v53 = rocq_array::get::<u64>(&v50, a);
-          let v54 = &L;
-          let v57 = rocq_array::get::<u64>(&v54, b);
-          qry(L, R, C, v53, v57, sub(d, 1u64), k, ())
-        },
-        false => {
-          let v104 = lsl(1u64, sub(d, 1u64));
-          let v105 = &R;
-          let v108 = rocq_array::get::<u64>(&v105, a);
-          let v109 = &R;
-          let v112 = rocq_array::get::<u64>(&v109, b);
-          add(v104, qry(L, R, C, v108, v112, sub(d, 1u64), sub(k, cl), ()))
-        },
+      let tmp_1 = rocq_array::get::<u64>(&L, b);
+      let tmp_2 = rocq_array::get::<u64>(&C, tmp_1);
+      let tmp_3 = rocq_array::get::<u64>(&L, a);
+      let tmp_4 = rocq_array::get::<u64>(&C, tmp_3);
+      let cl = sub(tmp_2, tmp_4);
+      if leb(k, cl) {
+        let tmp_5 = rocq_array::get::<u64>(&L, a);
+        let tmp_6 = rocq_array::get::<u64>(&L, b);
+        qry(L, R, C, tmp_5, tmp_6, sub(d, 1u64), k, ())
+      } else {
+        let tmp_7 = lsl(1u64, sub(d, 1u64));
+        let tmp_8 = rocq_array::get::<u64>(&R, a);
+        let tmp_9 = rocq_array::get::<u64>(&R, b);
+        add(tmp_7, qry(L, R, C, tmp_8, tmp_9, sub(d, 1u64), sub(k, cl), ()))
       }
     },
     sumbool::right => {
@@ -1414,23 +1319,23 @@ pub fn qry(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, a: u64, b: u
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.answer1
 // Variant: uncurried
 pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, D: u64, t: Rc<rocq_string::RocqString>, k: u64) -> u64 {
-  let v13 = Rc::clone(&t);
-  let m = length(v13);
-  let v18 = Rc::clone(&x);
-  let v21 = Rc::clone(&t);
-  let v28 = Rc::clone(&sa);
-  let v29 = {
+  let t_clone = Rc::clone(&t);
+  let m = length(t_clone);
+  let x_clone = Rc::clone(&x);
+  let t_clone_1 = Rc::clone(&t);
+  let sa_clone = Rc::clone(&sa);
+  let callback: Rc<dyn Fn(u64) -> bool> = Rc::new({
     let __anf_capture_34 = n;
     let __anf_capture_36 = m;
     move |i: u64| -> bool {
-      let x = &v18;
-      let t = &v21;
+      let x = &x_clone;
+      let t = &t_clone_1;
       let n = &__anf_capture_34;
       let m = &__anf_capture_36;
-      let sa = &v28;
-      let v42 = Clone::clone(n);
-      let v44 = Clone::clone(m);
-      match cmp_at(x, t, v42, v44, sa, i) {
+      let sa = &sa_clone;
+      let n_clone = Clone::clone(n);
+      let m_clone = Clone::clone(m);
+      match cmp_at(x, t, n_clone, m_clone, sa, i) {
         std::cmp::Ordering::Equal => {
           true
         },
@@ -1442,24 +1347,23 @@ pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
         },
       }
     }
-  };
-  let v68: Rc<dyn Fn(u64) -> bool> = Rc::new(v29);
-  let lo = bs_1(v68, 0u64, n);
-  let v82 = Rc::clone(&x);
-  let v85 = Rc::clone(&t);
-  let v92 = Rc::clone(&sa);
-  let v93 = {
+  });
+  let lo = bs_1(callback, 0u64, n);
+  let x_clone_1 = Rc::clone(&x);
+  let t_clone_2 = Rc::clone(&t);
+  let sa_clone_1 = Rc::clone(&sa);
+  let callback_1: Rc<dyn Fn(u64) -> bool> = Rc::new({
     let __anf_capture_98 = n;
     let __anf_capture_100 = m;
     move |i: u64| -> bool {
-      let x = &v82;
-      let t = &v85;
+      let x = &x_clone_1;
+      let t = &t_clone_2;
       let n = &__anf_capture_98;
       let m = &__anf_capture_100;
-      let sa = &v92;
-      let v106 = Clone::clone(n);
-      let v108 = Clone::clone(m);
-      match cmp_at(x, t, v106, v108, sa, i) {
+      let sa = &sa_clone_1;
+      let n_clone_1 = Clone::clone(n);
+      let m_clone_1 = Clone::clone(m);
+      match cmp_at(x, t, n_clone_1, m_clone_1, sa, i) {
         std::cmp::Ordering::Equal => {
           false
         },
@@ -1471,32 +1375,26 @@ pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
         },
       }
     }
-  };
-  let v132: Rc<dyn Fn(u64) -> bool> = Rc::new(v93);
-  let hi = bs_1(v132, 0u64, n);
-  let v149 = sub(hi, lo);
-  match leb(k, v149) {
-    true => {
-      std::mem::drop(x);
-      std::mem::drop(sa);
-      std::mem::drop(t);
-      let v158 = &roots;
-      let v161 = rocq_array::get::<u64>(&v158, lo);
-      let v162 = &roots;
-      let v165 = rocq_array::get::<u64>(&v162, hi);
-      std::mem::drop(roots);
-      add(qry_1(L, R, C, v161, v165, D, k), 1u64)
-    },
-    false => {
-      std::mem::drop(x);
-      std::mem::drop(sa);
-      std::mem::drop(L);
-      std::mem::drop(R);
-      std::mem::drop(C);
-      std::mem::drop(roots);
-      std::mem::drop(t);
-      sub(0u64, 1u64)
-    },
+  });
+  let hi = bs_1(callback_1, 0u64, n);
+  let tmp = sub(hi, lo);
+  if leb(k, tmp) {
+    std::mem::drop(x);
+    std::mem::drop(sa);
+    std::mem::drop(t);
+    let tmp_1 = rocq_array::get::<u64>(&roots, lo);
+    let tmp_2 = rocq_array::get::<u64>(&roots, hi);
+    std::mem::drop(roots);
+    add(qry_1(L, R, C, tmp_1, tmp_2, D, k), 1u64)
+  } else {
+    std::mem::drop(x);
+    std::mem::drop(sa);
+    std::mem::drop(L);
+    std::mem::drop(R);
+    std::mem::drop(C);
+    std::mem::drop(roots);
+    std::mem::drop(t);
+    sub(0u64, 1u64)
   }
 }
 
@@ -1509,21 +1407,19 @@ pub fn qloop_1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qloop (local: qloop)
 // Variant: uncurried, lifted
 pub fn qloop(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, D: u64, ts: Rc<Array<Rc<rocq_string::RocqString>>>, ks: Rc<Array<u64>>, out: Rc<Array<u64>>, q: u64, Q: u64, _H: ()) -> Rc<Array<u64>> {
-  let v21 = ltb(q, Q);
-  match bdec(v21) {
+  let tmp = ltb(q, Q);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = &ts;
-      let v29 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v26, q);
-      let v30 = &ks;
-      let v33 = rocq_array::get::<u64>(&v30, q);
-      let v36 = Rc::clone(&x);
-      let v41 = Rc::clone(&sa);
-      let v44 = Rc::clone(&L);
-      let v47 = Rc::clone(&R);
-      let v50 = Rc::clone(&C);
-      let v53 = Rc::clone(&roots);
-      let v67 = rocq_array::set::<u64>(out, q, answer1(v36, n, v41, v44, v47, v50, v53, D, v29, v33));
-      qloop(x, n, sa, L, R, C, roots, D, ts, ks, v67, add(q, 1u64), Q, ())
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&ts, q);
+      let tmp_2 = rocq_array::get::<u64>(&ks, q);
+      let x_clone = Rc::clone(&x);
+      let sa_clone = Rc::clone(&sa);
+      let L_clone = Rc::clone(&L);
+      let R_clone = Rc::clone(&R);
+      let C_clone = Rc::clone(&C);
+      let roots_clone = Rc::clone(&roots);
+      let tmp_3 = rocq_array::set::<u64>(out, q, answer1(x_clone, n, sa_clone, L_clone, R_clone, C_clone, roots_clone, D, tmp_1, tmp_2));
+      qloop(x, n, sa, L, R, C, roots, D, ts, ks, tmp_3, add(q, 1u64), Q, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -1542,56 +1438,34 @@ pub fn qloop(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<A
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.kth_occurrences_impl
 // Variant: uncurried
 pub fn kth_occurrences_impl(x: Rc<rocq_string::RocqString>, ts: Rc<Array<Rc<rocq_string::RocqString>>>, ks: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v6 = Rc::clone(&x);
-  let n = length(v6);
-  let v11 = Rc::clone(&x);
-  let sa = build_sa(v11, n);
+  let x_clone = Rc::clone(&x);
+  let n = length(x_clone);
+  let x_clone_1 = Rc::clone(&x);
+  let sa = build_sa(x_clone_1, n);
   let D = depth_loop_1(n, 0u64);
-  let v32 = add(D, 1u64);
-  let M = add(mul(n, v32), 1u64);
-  let v52 = rocq_array::make::<u64>(M, 0u64);
-  let v59 = rocq_array::make::<u64>(M, 0u64);
-  let v66 = rocq_array::make::<u64>(M, 0u64);
-  let v81 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let v88 = Rc::clone(&sa);
-  let v105 = build_1(v88, v52, v59, v66, v81, n, D, 0u64, 1u64);
-  match v105 {
+  let tmp = add(D, 1u64);
+  let M = add(mul(n, tmp), 1u64);
+  let tmp_1 = rocq_array::make::<u64>(M, 0u64);
+  let tmp_2 = rocq_array::make::<u64>(M, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(M, 0u64);
+  let tmp_4 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  let sa_clone = Rc::clone(&sa);
+  let tmp_5 = build_1(sa_clone, tmp_1, tmp_2, tmp_3, tmp_4, n, D, 0u64, 1u64);
+  match tmp_5 {
     (v107, v109) => {
       match v107 {
         (v112, v114) => {
           match v112 {
             (v117, v119) => {
-              let v121 = &ts;
-              let Q = rocq_array::length::<Rc<rocq_string::RocqString>>(&v121);
-              let v130 = rocq_array::make::<u64>(Q, 0u64);
-              qloop_1(x, n, sa, v117, v119, v114, v109, D, ts, ks, v130, 0u64, Q)
+              let Q = rocq_array::length::<Rc<rocq_string::RocqString>>(&ts);
+              let tmp_6 = rocq_array::make::<u64>(Q, 0u64);
+              qloop_1(x, n, sa, v117, v119, v114, v109, D, ts, ks, tmp_6, 0u64, Q)
             },
           }
         },
       }
     },
   }
-}
-
-// Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.kth_occurrences_impl
-pub fn kth_occurrences_impl_curried(x: Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v3 = {
-    move |ts: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-      let x = &x;
-      let v8 = Rc::clone(x);
-      let v11 = {
-        move |ks: Rc<Array<u64>>| -> Rc<Array<u64>> {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&ts);
-          kth_occurrences_impl(v19, v21, ks)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1743,12 +1617,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_2117.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_2117: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>) -> Rc<Array<u64>>> = kth_occurrences(); }
-std::thread_local! { static __rocq_global_2120: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>>> = kth_occurrences_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1827,6 +1695,6 @@ fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let s = string(t.next()); let q = t.uint();
     let mut ts = Vec::new(); let mut ks = Vec::new();
     for _ in 0..q { ts.push(string(t.next())); ks.push(t.uint()); }
-    lines(values(&run()(s, array(ts, string("")), ints(ks))).into_iter().map(decoded))
+    lines(values(&kth_occurrences_impl(s, array(ts, string("")), ints(ks))).into_iter().map(decoded))
 }
 fn main() { entry(solve); }

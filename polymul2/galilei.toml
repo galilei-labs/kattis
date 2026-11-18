@@ -21,4 +21,4 @@ archive = "polymul2_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/polymul2.ml"
-Rust = "extraction/rust/submit/polymul2.rs"
+Rust = "extraction/rust/snapshots/polymul2_extracted.rs.interface.json"

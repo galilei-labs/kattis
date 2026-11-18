@@ -21,4 +21,4 @@ archive = "nonnegpartsums_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/nonnegpartsums.ml"
-Rust = "extraction/rust/submit/nonnegpartsums.rs"
+Rust = "extraction/rust/snapshots/nonnegpartsums_extracted.rs.interface.json"

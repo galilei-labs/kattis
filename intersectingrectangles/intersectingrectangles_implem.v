@@ -31,6 +31,7 @@ From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Reals Sorted.
 From Stdlib Require Sint63.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -52,6 +53,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -70,14 +73,21 @@ Qed.
 Inductive tree : Set :=
 | Leaf : tree
 | Node : tree -> int -> int -> tree -> int -> tree.
+Elpi complexity tree.
 
 Definition height (t : tree) : int :=
   match t with Leaf => 0 | Node _ _ _ _ h => h end.
+Elpi complexity height.
+Arguments height_cost : simpl never.
 
 Definition hmax (a b : int) : int := if a <? b then b else a.
+Elpi complexity hmax.
+Arguments hmax_cost : simpl never.
 
 Definition node (l : tree) (k v : int) (r : tree) : tree :=
   Node l k v r (hmax (height l) (height r) + 1).
+Elpi complexity node.
+Arguments node_cost : simpl never.
 
 Definition bal (l : tree) (k v : int) (r : tree) : tree :=
   let hl := height l in
@@ -105,6 +115,8 @@ Definition bal (l : tree) (k v : int) (r : tree) : tree :=
              end
     end
   else node l k v r.
+Elpi complexity bal.
+Arguments bal_cost : simpl never.
 
 Fixpoint insert (k v : int) (t : tree) : tree :=
   match t with
@@ -114,6 +126,8 @@ Fixpoint insert (k v : int) (t : tree) : tree :=
       else if Sint63.ltb k' k then bal l k' v' (insert k v r)
       else Node l k v r h
   end.
+Elpi complexity insert.
+Arguments insert_cost : simpl never.
 
 Fixpoint remove_min (l : tree) (k v : int) (r : tree) : int * int * tree :=
   match l with
@@ -121,6 +135,8 @@ Fixpoint remove_min (l : tree) (k v : int) (r : tree) : int * int * tree :=
   | Node ll lk lv lr _ =>
       let '(mk, mv, l') := remove_min ll lk lv lr in (mk, mv, bal l' k v r)
   end.
+Elpi complexity remove_min.
+Arguments remove_min_cost : simpl never.
 
 Definition merge (l r : tree) : tree :=
   match l with
@@ -132,6 +148,8 @@ Definition merge (l r : tree) : tree :=
           let '(mk, mv, r') := remove_min rl rk rv rr in bal l mk mv r'
       end
   end.
+Elpi complexity merge.
+Arguments merge_cost : simpl never.
 
 Fixpoint remove (k : int) (t : tree) : tree :=
   match t with
@@ -141,6 +159,8 @@ Fixpoint remove (k : int) (t : tree) : tree :=
       else if Sint63.ltb k' k then bal l k' v' (remove k r)
       else merge l r
   end.
+Elpi complexity remove.
+Arguments remove_cost : simpl never.
 
 (* Is there a key strictly between lo and hi? *)
 Fixpoint between (lo hi : int) (t : tree) : bool :=
@@ -151,6 +171,8 @@ Fixpoint between (lo hi : int) (t : tree) : bool :=
       else if Sint63.leb hi k then between lo hi l
       else true
   end.
+Elpi complexity between.
+Arguments between_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* The sweep                                                           *)
@@ -165,6 +187,8 @@ Fixpoint build (x1 x2 : array sint) (n i : int) (t : tree)
         (Acc_inv H (dec_step n i Hi))
   | right _ => t
   end.
+Elpi complexity build.
+Arguments build_cost : simpl never.
 
 Lemma build_eq : forall x1 x2 n i t H,
   build x1 x2 n i t H =
@@ -190,6 +214,8 @@ Definition step (n : int) (y1 y2 : array sint) (v : int) (s : tree)
     let hi := y2.[i] in
     let s' := remove hi (remove lo s) in
     if between lo hi s' then None else Some s'.
+Elpi complexity step.
+Arguments step_cost : simpl never.
 
 (* In-order traversal of the event tree, threading the status. *)
 Fixpoint sweep (n : int) (y1 y2 : array sint) (t s : tree) : option tree :=
@@ -205,6 +231,8 @@ Fixpoint sweep (n : int) (y1 y2 : array sint) (t s : tree) : option tree :=
           end
       end
   end.
+Elpi complexity sweep.
+Arguments sweep_cost : simpl never.
 
 Definition intersecting_rectangles_impl (x1 y1 x2 y2 : array sint) : bool :=
   let n := PArray.length x1 in
@@ -213,6 +241,8 @@ Definition intersecting_rectangles_impl (x1 y1 x2 y2 : array sint) : bool :=
   | None => true
   | Some _ => false
   end.
+Elpi complexity intersecting_rectangles_impl.
+Arguments intersecting_rectangles_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: the trees                                                *)
@@ -1032,7 +1062,6 @@ Proof.
   exists (intersecting_rectangles_impl ax1 ay1 ax2 ay2).
   split; [reflexivity|].
   unfold intersecting_rectangles_spec, intersecting_rectangles_impl.
-  apply bool_match_of_iff.
   fold n.
   unshelve refine (iff_trans (impl_iff n ax1 ay1 ax2 ay2 _ _ _ _ _ _ _) _).
   - lia.
@@ -1088,6 +1117,7 @@ Qed.
 Definition intersecting_rectangles :
   array sint -> array sint -> array sint -> array sint -> bool :=
   intersecting_rectangles_impl.
+Elpi complexity intersecting_rectangles.
 
 Definition intersecting_rectangles_correct :
   forall (x1 y1 x2 y2 : list Z) (ax1 ay1 ax2 ay2 : array sint),
@@ -1097,3 +1127,683 @@ Definition intersecting_rectangles_correct :
     repr (intersecting_rectangles ax1 ay1 ax2 ay2) b /\
     intersecting_rectangles_spec x1 y1 x2 y2 b
   := intersecting_rectangles_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Complexity                                                          *)
+(* ------------------------------------------------------------------ *)
+
+(* The cost bound intersecting_rectangles_time.  Each tree operation is
+   bounded by the structural depth of its tree ([depth]): insert
+   300 d + 300, remove 400 d + 1500 (merge, remove_min 300 d + ...),
+   between 100 d + 100, bal and node constant.  The trees met are AVL
+   ([avl]: stored heights exact, children's depths within 2, a proof-only
+   invariant, preserved by bal, insert, remove_min, merge and remove), so
+   2 ^ (depth / 3) <= size + 1 and depth <= Dm M = 3 log2 (M + 1) + 2 for
+   a tree of at most M nodes.  build: n iterations of two inserts into a
+   tree of at most 2n nodes; sweep: an in-order walk of the 2n events,
+   each step on a status of at most 4n nodes (two inserts per event at
+   most).  The cost twins of the recursive functions with leading
+   parameters are restated as their fix ([insF], [remF], [betF], [swF],
+   [bF]) so that cost_simpl keeps the recursive calls folded. *)
+
+Unset Nia Cache.
+(* ---- T1.v ---- *)
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. unfold bdec_cost. destruct w; cost_simpl; lia. Qed.
+
+Lemma height_time t (tC : tree_cost stepsCM t) : (cost (height_cost stepsCM t tC) <= 2)%nat.
+Proof. unfold height_cost. destruct tC; cost_simpl; lia. Qed.
+
+Lemma hmax_time a aC b bC : (cost (extract (hmax_cost stepsCM a aC) b bC) <= 5)%nat.
+Proof. unfold hmax_cost. cost_simpl. cost_destruct (a <? b); cost_simpl. all: lia. Qed.
+Lemma hmax_time1 a aC : cost (hmax_cost stepsCM a aC) = 0%nat.
+Proof. reflexivity. Qed.
+
+Lemma node_time l lC k kC v vC r rC :
+  (cost (extract (extract (extract (node_cost stepsCM l lC) k kC) v vC) r rC) <= 20)%nat.
+Proof. unfold node_cost. cost_simpl.
+  pose proof (height_time l lC). pose proof (height_time r rC).
+  match goal with |- context [extract (hmax_cost stepsCM ?a ?aC) ?b ?bC] => pose proof (hmax_time a aC b bC) end.
+  pose proof (hmax_time1 (height l) (extract (height_cost stepsCM l lC))). lia. Qed.
+
+Ltac gen_cost T m H := revert H; generalize (@cost T m); intros ? H.
+Ltac bnd1 := match goal with
+ | |- context [@cost ?T (height_cost stepsCM ?t ?tC)] =>
+     let H := fresh "B" in pose proof (height_time t tC) as H; cost_align H; gen_cost T (height_cost stepsCM t tC) H
+ | |- context [@cost ?T (extract (hmax_cost stepsCM ?a ?aC) ?b ?bC)] =>
+     let H := fresh "B" in pose proof (hmax_time a aC b bC) as H; cost_align H; gen_cost T (extract (hmax_cost stepsCM a aC) b bC) H
+ | |- context [@cost ?T (extract (extract (extract (node_cost stepsCM ?l ?lC) ?k ?kC) ?v ?vC) ?r ?rC)] =>
+     let H := fresh "B" in pose proof (node_time l lC k kC v vC r rC) as H; cost_align H;
+     gen_cost T (extract (extract (extract (node_cost stepsCM l lC) k kC) v vC) r rC) H
+ | |- context [@cost ?T ?m] => change (@cost T m) with 0%nat
+ end.
+Ltac bnd2 := fail.
+Ltac bnd_extra := fail.
+Ltac bnd := repeat (bnd2 || bnd_extra || bnd1).
+
+Ltac split1 :=
+  first [ match goal with |- context [if ?b then _ else _] => cost_destruct b end
+        | match goal with |- context [match ?t with Leaf => _ | Node _ _ _ _ _ => _ end] =>
+            is_var t; match goal with tC : tree_cost _ t |- _ => destruct tC end end ].
+Ltac split_all := bnd; repeat (split1; cost_simpl; bnd); try lia.
+
+Lemma bal_time l lC k kC v vC r rC :
+  (cost (extract (extract (extract (bal_cost stepsCM l lC) k kC) v vC) r rC) <= 200)%nat.
+Proof. unfold bal_cost. cost_simpl. split_all. Qed.
+
+Ltac bnd2 ::= match goal with
+ | |- context [@cost ?T (extract (extract (extract (bal_cost stepsCM ?l ?lC) ?k ?kC) ?v ?vC) ?r ?rC)] =>
+     let H := fresh "B" in pose proof (bal_time l lC k kC v vC r rC) as H; cost_align H;
+     gen_cost T (extract (extract (extract (bal_cost stepsCM l lC) k kC) v vC) r rC) H
+ end.
+
+Fixpoint depth (t : tree) : nat :=
+  match t with Leaf => 0 | Node l _ _ r _ => S (Nat.max (depth l) (depth r)) end.
+
+Definition insF (CM : costMonoid) := ltac:(
+  let b := eval unfold insert_cost in (insert_cost CM) in
+  match b with context [?F] => is_fix F; exact F end).
+
+Lemma insert_cost_eq k kC v vC t tC :
+  extract (extract (insert_cost stepsCM k kC) v vC) t tC = insF stepsCM k kC v vC t tC.
+Proof. reflexivity. Qed.
+
+Lemma insF_time k kC v vC t tC :
+  (cost (insF stepsCM k kC v vC t tC) <= depth t * 300 + 300)%nat.
+Proof.
+  revert k kC v vC. induction tC; intros; cost_simpl. bnd. lia.
+  Ltac bnd_extra ::= match goal with
+   | IH : forall k kC v vC, (cost (insF stepsCM k kC v vC ?t ?tC) <= _)%nat |- context [@cost ?T (insF stepsCM ?k ?kC ?v ?vC ?t ?tC)] =>
+     let H := fresh "B" in pose proof (IH k kC v vC) as H; cost_align H; gen_cost T (insF stepsCM k kC v vC t tC) H
+   end.
+  split_all.
+Qed.
+
+Ltac rhs := match goal with |- (_ <= ?R)%nat => remember R as RR eqn:ER end.
+Arguments remove_min_cost : simpl nomatch.
+Lemma remove_min_time l lC k kC v vC r rC :
+  (cost (remove_min_cost stepsCM l lC) + cost (extract (remove_min_cost stepsCM l lC) k kC)
+   + cost (extract (extract (remove_min_cost stepsCM l lC) k kC) v vC)
+   + cost (extract (extract (extract (remove_min_cost stepsCM l lC) k kC) v vC) r rC) <= depth l * 300 + 300)%nat.
+Proof.
+  revert k kC v vC r rC. induction lC; intros; rhs; cost_simpl. bnd. lia.
+  Ltac bnd_extra ::= match goal with
+   | IH : forall k kC v vC r rC, (cost (remove_min_cost stepsCM ?t ?tC) + _ + _ + _ <= _)%nat |- context [@cost ?T (remove_min_cost stepsCM ?t ?tC)] =>
+     match goal with |- context [extract (extract (extract (remove_min_cost stepsCM t tC) ?k ?kC) ?v ?vC) ?r ?rC] =>
+     let H := fresh "B" in pose proof (IH k kC v vC r rC) as H; cost_align H; revert H;
+     generalize (@cost T (remove_min_cost stepsCM t tC)), (cost (extract (remove_min_cost stepsCM t tC) k kC)),
+       (cost (extract (extract (remove_min_cost stepsCM t tC) k kC) v vC)),
+       (cost (extract (extract (extract (remove_min_cost stepsCM t tC) k kC) v vC) r rC)); intros ? ? ? ? H end
+   end.
+  bnd.
+  cost_destruct_witness (remove_min t i i0 t0) as [p pC l' l'C] eqn:E. cost_simpl.
+  destruct pC as [mk mkC mv mvC]. cost_simpl. bnd. cbn [depth] in ER. lia.
+Qed.
+
+Ltac rm_rule := match goal with
+   | |- context [@cost ?T (remove_min_cost stepsCM ?t ?tC)] =>
+     match goal with |- context [extract (extract (extract (remove_min_cost stepsCM t tC) ?k ?kC) ?v ?vC) ?r ?rC] =>
+     let H := fresh "B" in pose proof (remove_min_time t tC k kC v vC r rC) as H; cost_align H; revert H;
+     generalize (@cost T (remove_min_cost stepsCM t tC)), (cost (extract (remove_min_cost stepsCM t tC) k kC)),
+       (cost (extract (extract (remove_min_cost stepsCM t tC) k kC) v vC)),
+       (cost (extract (extract (extract (remove_min_cost stepsCM t tC) k kC) v vC) r rC)); intros ? ? ? ? H end
+   end.
+Ltac bnd_extra ::= rm_rule.
+
+Lemma merge_time l lC r rC :
+  (cost (extract (merge_cost stepsCM l lC) r rC) <= depth r * 300 + 1000)%nat.
+Proof.
+  unfold merge_cost. rhs. cost_simpl. destruct lC; cost_simpl; [lia|].
+  destruct rC; cost_simpl; [lia|]. bnd.
+  cost_destruct_witness (remove_min t1 i2 i3 t2) as [p pC r' r'C] eqn:E. cost_simpl.
+  destruct pC as [mk mkC mv mvC]. cost_simpl. bnd. cbn [depth] in ER. lia.
+Qed.
+
+
+(* ---- T2.v ---- *)
+Ltac merge_rule := match goal with
+   | |- context [@cost ?T (extract (merge_cost stepsCM ?l ?lC) ?r ?rC)] =>
+     let H := fresh "B" in pose proof (merge_time l lC r rC) as H; cost_align H; gen_cost T (extract (merge_cost stepsCM l lC) r rC) H
+   end.
+
+Definition remF (CM : costMonoid) := ltac:(
+  let b := eval unfold remove_cost in (remove_cost CM) in
+  match b with context [?F] => is_fix F; exact F end).
+
+Lemma remove_cost_eq k kC t tC :
+  extract (remove_cost stepsCM k kC) t tC = remF stepsCM k kC t tC.
+Proof. reflexivity. Qed.
+
+Lemma remF_time k kC t tC :
+  (cost (remF stepsCM k kC t tC) <= depth t * 400 + 1500)%nat.
+Proof.
+  revert k kC. induction tC; intros; rhs; cost_simpl. bnd. lia.
+  Ltac bnd_extra ::= first [ merge_rule | match goal with
+   | IH : forall k kC, (cost (remF stepsCM k kC ?t ?tC) <= _)%nat |- context [@cost ?T (remF stepsCM ?k ?kC ?t ?tC)] =>
+     let H := fresh "B" in pose proof (IH k kC) as H; cost_align H; gen_cost T (remF stepsCM k kC t tC) H
+   end ].
+  split_all. all: cbn [depth] in ER; lia.
+Qed.
+
+Definition betF (CM : costMonoid) := ltac:(
+  let b := eval unfold between_cost in (between_cost CM) in
+  match b with context [?F] => is_fix F; exact F end).
+
+Lemma between_cost_eq lo loC hi hiC t tC :
+  extract (extract (between_cost stepsCM lo loC) hi hiC) t tC = betF stepsCM lo loC hi hiC t tC.
+Proof. reflexivity. Qed.
+
+Lemma betF_time lo loC hi hiC t tC :
+  (cost (betF stepsCM lo loC hi hiC t tC) <= depth t * 100 + 100)%nat.
+Proof.
+  revert lo loC hi hiC. induction tC; intros; rhs; cost_simpl. bnd. lia.
+  Ltac bnd_extra ::= match goal with
+   | IH : forall lo loC hi hiC, (cost (betF stepsCM lo loC hi hiC ?t ?tC) <= _)%nat |- context [@cost ?T (betF stepsCM ?lo ?loC ?hi ?hiC ?t ?tC)] =>
+     let H := fresh "B" in pose proof (IH lo loC hi hiC) as H; cost_align H; gen_cost T (betF stepsCM lo loC hi hiC t tC) H
+   end.
+  split_all. all: cbn [depth] in ER; lia.
+Qed.
+
+
+(* ---- T3.v ---- *)
+Fixpoint tsize (t : tree) : nat :=
+  match t with Leaf => 0 | Node l _ _ r _ => S (tsize l + tsize r) end.
+
+Fixpoint avl (t : tree) : Prop :=
+  match t with
+  | Leaf => True
+  | Node l _ _ r h => avl l /\ avl r /\
+      φ h = Z.of_nat (S (Nat.max (depth l) (depth r))) /\
+      (depth l <= depth r + 2)%nat /\ (depth r <= depth l + 2)%nat
+  end.
+
+Abbreviation HBnd := (2 ^ 60)%Z.
+
+Lemma height_avl t : avl t -> φ (height t) = Z.of_nat (depth t).
+Proof. destruct t as [|l k v r h]; simpl; [reflexivity | tauto]. Qed.
+
+Lemma hmax_spec a b : φ (hmax a b) = Z.max (φ a) (φ b).
+Proof.
+  unfold hmax. destruct (a <? b) eqn:E.
+  - apply ltb_spec in E. lia.
+  - assert (~ (φ a < φ b)%Z) by (rewrite <- ltb_spec; congruence). lia.
+Qed.
+
+Lemma node_avl l k v r :
+  avl l -> avl r -> (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (Z.of_nat (depth l) < HBnd)%Z -> (Z.of_nat (depth r) < HBnd)%Z ->
+  avl (node l k v r) /\ depth (node l k v r) = S (Nat.max (depth l) (depth r)).
+Proof.
+  intros Al Ar B1 B2 Hl Hr. unfold node. simpl. split; [|reflexivity].
+  repeat split; auto.
+  rewrite add_spec, hmax_spec, !height_avl by assumption.
+  rewrite Z.mod_small; [lia|]. change (φ 1) with 1%Z. rewrite wB_val. lia.
+Qed.
+
+Lemma depth_node l k v r : depth (node l k v r) = S (Nat.max (depth l) (depth r)).
+Proof. reflexivity. Qed.
+
+Ltac hfacts := repeat match goal with
+  | H : avl ?t |- _ => lazymatch goal with
+      | _ : φ (height t) = _ |- _ => fail
+      | _ => pose proof (height_avl t H) end
+  end.
+
+Lemma bal_avl l k v r :
+  avl l -> avl r -> (depth l <= depth r + 3)%nat -> (depth r <= depth l + 3)%nat ->
+  (Z.of_nat (depth l) < HBnd)%Z -> (Z.of_nat (depth r) < HBnd)%Z ->
+  avl (bal l k v r) /\
+  (Nat.max (depth l) (depth r) <= depth (bal l k v r) <= S (Nat.max (depth l) (depth r)))%nat /\
+  ((depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+     depth (bal l k v r) = S (Nat.max (depth l) (depth r))).
+Proof.
+  intros Al Ar B1 B2 Hl Hr. unfold bal.
+  pose proof (height_avl l Al) as El. pose proof (height_avl r Ar) as Er.
+
+  destruct (height r + 2 <? height l) eqn:C1.
+  { apply ltb_spec in C1. rewrite add_spec, El, Er in C1. change (φ 2) with 2%Z in C1.
+    rewrite Z.mod_small in C1 by (rewrite wB_val; lia).
+    destruct l as [|ll lk lv lr lh]; [simpl in *; lia|].
+    simpl in Al. destruct Al as (All & Alr & Eh & Bl1 & Bl2).
+    simpl depth in *.
+    destruct (height lr <=? height ll) eqn:C2.
+    - apply leb_spec in C2. rewrite !height_avl in C2 by assumption.
+      destruct (node_avl lr k v r) as [A1 D1]; try solve [assumption | lia].
+      destruct (node_avl ll lk lv (node lr k v r)) as [A2 D2]; try solve [assumption | lia].
+      cbv beta iota; split; [assumption|]. rewrite ?D2, ?D1. lia.
+    - assert (C2' : ~ (φ (height lr) <= φ (height ll))%Z) by (rewrite <- leb_spec; congruence).
+      rewrite !height_avl in C2' by assumption.
+      destruct lr as [|lrl lrk lrv lrr lrh]; [simpl in *; lia|].
+      simpl in Alr. destruct Alr as (Alrl & Alrr & Eh' & Blr1 & Blr2). simpl depth in *.
+      destruct (node_avl ll lk lv lrl) as [A1 D1]; try solve [assumption | lia].
+      destruct (node_avl lrr k v r) as [A2 D2]; try solve [assumption | lia].
+      destruct (node_avl (node ll lk lv lrl) lrk lrv (node lrr k v r)) as [A3 D3]; try solve [assumption | lia].
+      cbv beta iota; split; [assumption|]. rewrite ?D3, ?D1, ?D2. lia. }
+  assert (C1' : ~ (φ (height r + 2) < φ (height l))%Z) by (rewrite <- ltb_spec; congruence).
+  rewrite add_spec, El, Er in C1'. change (φ 2) with 2%Z in C1'.
+  rewrite Z.mod_small in C1' by (rewrite wB_val; lia).
+  destruct (height l + 2 <? height r) eqn:C3.
+  { apply ltb_spec in C3. rewrite add_spec, El, Er in C3. change (φ 2) with 2%Z in C3.
+    rewrite Z.mod_small in C3 by (rewrite wB_val; lia).
+    destruct r as [|rl rk rv rr rh]; [simpl in *; lia|].
+    simpl in Ar. destruct Ar as (Arl & Arr & Eh & Br1 & Br2).
+    simpl depth in *.
+    destruct (height rl <=? height rr) eqn:C2.
+    - apply leb_spec in C2. rewrite !height_avl in C2 by assumption.
+      destruct (node_avl l k v rl) as [A1 D1]; try solve [assumption | lia].
+      destruct (node_avl (node l k v rl) rk rv rr) as [A2 D2]; try solve [assumption | lia].
+      cbv beta iota; split; [assumption|]. rewrite ?D2, ?D1. lia.
+    - assert (C2' : ~ (φ (height rl) <= φ (height rr))%Z) by (rewrite <- leb_spec; congruence).
+      rewrite !height_avl in C2' by assumption.
+      destruct rl as [|rll rlk rlv rlr rlh]; [simpl in *; lia|].
+      simpl in Arl. destruct Arl as (Arll & Arlr & Eh' & Brl1 & Brl2). simpl depth in *.
+      destruct (node_avl l k v rll) as [A1 D1]; try solve [assumption | lia].
+      destruct (node_avl rlr rk rv rr) as [A2 D2]; try solve [assumption | lia].
+      destruct (node_avl (node l k v rll) rlk rlv (node rlr rk rv rr)) as [A3 D3]; try solve [assumption | lia].
+      cbv beta iota; split; [assumption|]. rewrite ?D3, ?D1, ?D2. lia. }
+  assert (C3' : ~ (φ (height l + 2) < φ (height r))%Z) by (rewrite <- ltb_spec; congruence).
+  rewrite add_spec, El, Er in C3'. change (φ 2) with 2%Z in C3'.
+  rewrite Z.mod_small in C3' by (rewrite wB_val; lia).
+  destruct (node_avl l k v r) as [A1 D1]; try solve [assumption | lia].
+  cbv beta iota; split; [assumption|]. rewrite ?D1. lia.
+Qed.
+
+Lemma insert_avl k v t : avl t -> (Z.of_nat (depth t) < HBnd - 1)%Z ->
+  avl (insert k v t) /\ (depth t <= depth (insert k v t) <= S (depth t))%nat.
+Proof.
+  induction t as [|l IHl k' v' r IHr h]; intros At Ht.
+  - simpl. repeat split; reflexivity || lia.
+  - pose proof At as At0. simpl in At0. destruct At0 as (Al & Ar & Eh & B1 & B2). simpl depth in Ht.
+    simpl insert. destruct (Sint63.ltb k k').
+    + destruct (IHl Al ltac:(lia)) as [Al' Dl'].
+      destruct (bal_avl (insert k v l) k' v' r) as (A & D & D'); auto; try lia.
+      split; [exact A|]. change (depth (Node l k' v' r h)) with (S (Nat.max (depth l) (depth r))).
+      destruct (Nat.le_gt_cases (depth (insert k v l)) (depth r + 2));
+        destruct (Nat.le_gt_cases (depth r) (depth (insert k v l) + 2)).
+      * specialize (D' ltac:(lia) ltac:(lia)). lia.
+      * lia.
+      * lia.
+      * lia.
+    + destruct (Sint63.ltb k' k).
+      * destruct (IHr Ar ltac:(lia)) as [Ar' Dr'].
+        destruct (bal_avl l k' v' (insert k v r)) as (A & D & D'); auto; try lia.
+        split; [exact A|]. change (depth (Node l k' v' r h)) with (S (Nat.max (depth l) (depth r))).
+        destruct (Nat.le_gt_cases (depth l) (depth (insert k v r) + 2));
+          destruct (Nat.le_gt_cases (depth (insert k v r)) (depth l + 2)).
+        -- specialize (D' ltac:(lia) ltac:(lia)). lia.
+        -- lia.
+        -- lia.
+        -- lia.
+      * split; [exact At|]. simpl; lia.
+Qed.
+
+Lemma remove_min_avl l k v r : avl l -> avl r ->
+  (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (Z.of_nat (depth l) < HBnd)%Z -> (Z.of_nat (depth r) < HBnd)%Z ->
+  forall p t', remove_min l k v r = (p, t') ->
+  avl t' /\ (Nat.max (depth l) (depth r) <= depth t' <= S (Nat.max (depth l) (depth r)))%nat.
+Proof.
+  revert k v r. induction l as [|ll IHl lk lv lr _ lh]; intros k v r Al Ar B1 B2 Hl Hr p t' E.
+  - simpl in E. injection E as <- <-. split; [exact Ar|]. simpl in *. lia.
+  - simpl in E. destruct (remove_min ll lk lv lr) as [p0 l'] eqn:E0.
+    destruct p0 as [mk mv]. injection E as <- <-.
+    simpl in Al. destruct Al as (All & Alr & Eh & Bl1 & Bl2). simpl depth in *.
+    destruct (IHl lk lv lr All Alr Bl1 Bl2 ltac:(lia) ltac:(lia) _ _ E0) as [Al' Dl'].
+    destruct (bal_avl l' k v r) as (A & D & D'); auto; try lia.
+    split; [exact A|].
+    destruct (Nat.le_gt_cases (depth l') (depth r + 2)); destruct (Nat.le_gt_cases (depth r) (depth l' + 2)).
+    + specialize (D' ltac:(lia) ltac:(lia)). lia.
+    + lia.
+    + lia.
+    + lia.
+Qed.
+
+Lemma merge_avl l r : avl l -> avl r ->
+  (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (Z.of_nat (depth l) < HBnd)%Z -> (Z.of_nat (depth r) < HBnd)%Z ->
+  avl (merge l r) /\ (Nat.max (depth l) (depth r) <= depth (merge l r) <= S (Nat.max (depth l) (depth r)))%nat.
+Proof.
+  intros Al Ar B1 B2 Hl Hr. unfold merge.
+  destruct l as [|ll lk lv lr lh]; [split; [exact Ar | simpl in *; lia]|].
+  destruct r as [|rl rk rv rr rh]; [split; [exact Al | simpl in *; lia]|].
+  destruct (remove_min rl rk rv rr) as [[mk mv] r'] eqn:E.
+  pose proof Ar as Ar0. simpl in Ar0. destruct Ar0 as (Arl & Arr & Eh & Br1 & Br2).
+  simpl depth in *.
+  destruct (remove_min_avl rl rk rv rr Arl Arr Br1 Br2 ltac:(lia) ltac:(lia) _ _ E) as [Ar' Dr'].
+  destruct (bal_avl (Node ll lk lv lr lh) mk mv r') as (A & D & D'); auto; try (simpl depth; lia).
+  split; [exact A|]. simpl depth in *.
+  destruct (Nat.le_gt_cases (S (Nat.max (depth ll) (depth lr))) (depth r' + 2));
+    destruct (Nat.le_gt_cases (depth r') (S (Nat.max (depth ll) (depth lr)) + 2)).
+  + specialize (D' ltac:(lia) ltac:(lia)). lia.
+  + lia.
+  + lia.
+  + lia.
+Qed.
+
+Lemma remove_avl k t : avl t -> (Z.of_nat (depth t) < HBnd)%Z ->
+  avl (remove k t) /\ (depth (remove k t) <= depth t <= S (depth (remove k t)))%nat.
+Proof.
+  induction t as [|l IHl k' v' r IHr h]; intros At Ht.
+  - simpl. repeat split; reflexivity || lia.
+  - pose proof At as At0. simpl in At0. destruct At0 as (Al & Ar & Eh & B1 & B2). simpl depth in Ht.
+    simpl remove. destruct (Sint63.ltb k k').
+    + destruct (IHl Al ltac:(lia)) as [Al' Dl'].
+      destruct (bal_avl (remove k l) k' v' r) as (A & D & D'); auto; try lia.
+      split; [exact A|]. change (depth (Node l k' v' r h)) with (S (Nat.max (depth l) (depth r))).
+      destruct (Nat.le_gt_cases (depth (remove k l)) (depth r + 2));
+        destruct (Nat.le_gt_cases (depth r) (depth (remove k l) + 2)).
+      * specialize (D' ltac:(lia) ltac:(lia)). lia.
+      * lia.
+      * lia.
+      * lia.
+    + destruct (Sint63.ltb k' k).
+      * destruct (IHr Ar ltac:(lia)) as [Ar' Dr'].
+        destruct (bal_avl l k' v' (remove k r)) as (A & D & D'); auto; try lia.
+        split; [exact A|]. change (depth (Node l k' v' r h)) with (S (Nat.max (depth l) (depth r))).
+        destruct (Nat.le_gt_cases (depth l) (depth (remove k r) + 2));
+          destruct (Nat.le_gt_cases (depth (remove k r)) (depth l + 2)).
+        -- specialize (D' ltac:(lia) ltac:(lia)). lia.
+        -- lia.
+        -- lia.
+        -- lia.
+      * destruct (merge_avl l r Al Ar B1 B2 ltac:(lia) ltac:(lia)) as [A D].
+        split; [exact A|]. change (depth (Node l k' v' r h)) with (S (Nat.max (depth l) (depth r))). lia.
+Qed.
+
+Open Scope nat_scope.
+Lemma tsize_elems t : tsize t = List.length (elems t).
+Proof. induction t; simpl; [reflexivity|]. rewrite List.length_app. simpl. lia. Qed.
+
+Lemma tsize_bal l k v r : tsize (bal l k v r) = S (tsize l + tsize r).
+Proof. rewrite !tsize_elems, bal_elems, List.length_app. simpl. lia. Qed.
+
+Lemma tsize_insert k v t : (tsize (insert k v t) <= S (tsize t))%nat.
+Proof.
+  induction t as [|l IHl k' v' r IHr h]; simpl; [lia|].
+  destruct (Sint63.ltb k k'); [rewrite tsize_bal; lia|].
+  destruct (Sint63.ltb k' k); [rewrite tsize_bal; lia|]. simpl; lia.
+Qed.
+
+Lemma tsize_merge l r : tsize (merge l r) = (tsize l + tsize r)%nat.
+Proof. rewrite !tsize_elems, merge_elems, List.length_app. reflexivity. Qed.
+
+Lemma tsize_remove k t : (tsize (remove k t) <= tsize t)%nat.
+Proof.
+  induction t as [|l IHl k' v' r IHr h]; simpl; [lia|].
+  destruct (Sint63.ltb k k'); [rewrite tsize_bal; lia|].
+  destruct (Sint63.ltb k' k); [rewrite tsize_bal; lia|]. rewrite tsize_merge; lia.
+Qed.
+
+Lemma depth_tsize t : (depth t <= tsize t)%nat.
+Proof. induction t; simpl; lia. Qed.
+
+Lemma avl_pow t : avl t -> (2 ^ (depth t / 3) <= S (tsize t))%nat.
+Proof.
+  induction t as [|l IHl k v r IHr h]; intros At; [simpl; lia|].
+  simpl in At. destruct At as (Al & Ar & _ & B1 & B2).
+  specialize (IHl Al). specialize (IHr Ar).
+  change (depth (Node l k v r h)) with (S (Nat.max (depth l) (depth r))).
+  change (tsize (Node l k v r h)) with (S (tsize l + tsize r)).
+  set (d := S (Nat.max (depth l) (depth r))).
+  destruct (Nat.lt_ge_cases d 3) as [Hd|Hd].
+  - rewrite Nat.div_small by exact Hd. simpl. lia.
+  - assert (E : d / 3 = S ((d - 3) / 3)).
+    { replace d with ((d - 3) + 1 * 3) at 1 by lia. rewrite Nat.div_add by lia. lia. }
+    rewrite E, Nat.pow_succ_r'.
+    assert (Pl : (2 ^ ((d - 3) / 3) <= 2 ^ (depth l / 3))%nat)
+      by (apply Nat.pow_le_mono_r; [lia | apply Nat.Div0.div_le_mono; lia]).
+    assert (Pr : (2 ^ ((d - 3) / 3) <= 2 ^ (depth r / 3))%nat)
+      by (apply Nat.pow_le_mono_r; [lia | apply Nat.Div0.div_le_mono; lia]).
+    lia.
+Qed.
+
+Lemma avl_depth_log t : avl t -> (depth t <= 3 * Nat.log2 (S (tsize t)) + 2)%nat.
+Proof.
+  intros At. pose proof (avl_pow t At) as P.
+  apply Nat.log2_le_pow2 in P; [|lia].
+  pose proof (Nat.div_mod (depth t) 3 ltac:(lia)).
+  pose proof (Nat.mod_upper_bound (depth t) 3 ltac:(lia)). lia.
+Qed.
+
+Open Scope uint63_scope.
+
+
+(* ---- T4.v ---- *)
+Ltac ins_rule := match goal with
+  | |- context [@cost ?T (extract (extract (insert_cost stepsCM ?k ?kC) ?v ?vC) ?t ?tC)] =>
+     let H := fresh "B" in pose proof (insF_time k kC v vC t tC) as H; rewrite <- insert_cost_eq in H; cost_align H;
+     gen_cost T (extract (extract (insert_cost stepsCM k kC) v vC) t tC) H
+  end.
+Ltac rem_rule := match goal with
+  | |- context [@cost ?T (extract (remove_cost stepsCM ?k ?kC) ?t ?tC)] =>
+     let H := fresh "B" in pose proof (remF_time k kC t tC) as H; rewrite <- remove_cost_eq in H; cost_align H;
+     gen_cost T (extract (remove_cost stepsCM k kC) t tC) H
+  end.
+Ltac bet_rule := match goal with
+  | |- context [@cost ?T (extract (extract (between_cost stepsCM ?lo ?loC) ?hi ?hiC) ?t ?tC)] =>
+     let H := fresh "B" in pose proof (betF_time lo loC hi hiC t tC) as H; rewrite <- between_cost_eq in H; cost_align H;
+     gen_cost T (extract (extract (between_cost stepsCM lo loC) hi hiC) t tC) H
+  end.
+Ltac bnd_extra ::= first [ins_rule | rem_rule | bet_rule].
+
+Definition Dm (M : nat) : nat := (3 * Nat.log2 (S M) + 2)%nat.
+
+Lemma depth_Dm t M : avl t -> (tsize t <= M)%nat -> (depth t <= Dm M)%nat.
+Proof.
+  intros A H. pose proof (avl_depth_log t A). unfold Dm.
+  pose proof (Nat.log2_le_mono (S (tsize t)) (S M) ltac:(lia)). lia.
+Qed.
+
+Lemma good_insert k v t M : avl t -> (S (tsize t) <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  avl (insert k v t) /\ (tsize (insert k v t) <= S (tsize t))%nat.
+Proof.
+  intros A H HM. pose proof (depth_tsize t).
+  destruct (insert_avl k v t A ltac:(lia)) as [A' _]. split; [exact A'|]. apply tsize_insert.
+Qed.
+
+Lemma good_remove k t M : avl t -> (tsize t <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  avl (remove k t) /\ (tsize (remove k t) <= tsize t)%nat.
+Proof.
+  intros A H HM. pose proof (depth_tsize t).
+  destruct (remove_avl k t A ltac:(lia)) as [A' _]. split; [exact A'|]. apply tsize_remove.
+Qed.
+
+Lemma step_time n nC y1 y1C y2 y2C v vC s sC M :
+  avl s -> (tsize s + 2 <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  (cost (extract (extract (extract (extract (step_cost stepsCM n nC) y1 y1C) y2 y2C) v vC) s sC)
+    <= Dm M * 1000 + 5000)%nat.
+Proof.
+  intros A HS HM.
+  assert (D0 : (depth s <= Dm M)%nat) by (apply depth_Dm; [exact A | lia]).
+  assert (D1 : forall a, (depth (insert a 0 s) <= Dm M)%nat).
+  { intros a. destruct (good_insert a 0 s M A ltac:(lia) HM) as [A1 S1]. apply depth_Dm; [exact A1 | lia]. }
+  assert (D2 : forall a, (depth (remove a s) <= Dm M)%nat).
+  { intros a. destruct (good_remove a s M A ltac:(lia) HM) as [A1 S1]. apply depth_Dm; [exact A1 | lia]. }
+  assert (D3 : forall a b, (depth (remove a (remove b s)) <= Dm M)%nat).
+  { intros a b. destruct (good_remove b s M A ltac:(lia) HM) as [A1 S1].
+    destruct (good_remove a (remove b s) M A1 ltac:(lia) HM) as [A2 S2]. apply depth_Dm; [exact A2 | lia]. }
+  set (D := Dm M) in *. clearbody D.
+  unfold step_cost. rhs. cost_simpl. bnd.
+  pose proof (D1 y1.[v]). pose proof (D2 y1.[v - n]). pose proof (D3 y2.[v - n] y1.[v - n]).
+  split_all. all: lia.
+Qed.
+
+Lemma step_good n y1 y2 v s s' M :
+  avl s -> (tsize s + 2 <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  step n y1 y2 v s = Some s' -> avl s' /\ (tsize s' <= tsize s + 2)%nat.
+Proof.
+  intros A HS HM E. unfold step in E.
+  destruct (v <? n).
+  - destruct (between _ _ s); [discriminate|]. injection E as <-.
+    destruct (good_insert y1.[v] 0 s M A ltac:(lia) HM) as [A1 S1].
+    destruct (good_insert y2.[v] 0 _ M A1 ltac:(lia) HM) as [A2 S2]. split; [exact A2 | lia].
+  - destruct (between _ _ _); [discriminate|]. injection E as <-.
+    destruct (good_remove y1.[v - n] s M A ltac:(lia) HM) as [A1 S1].
+    destruct (good_remove y2.[v - n] _ M A1 ltac:(lia) HM) as [A2 S2]. split; [exact A2 | lia].
+Qed.
+
+Lemma sweep_good n y1 y2 t : forall s s' M,
+  avl s -> (tsize s + 2 * tsize t <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  sweep n y1 y2 t s = Some s' -> avl s' /\ (tsize s' <= tsize s + 2 * tsize t)%nat.
+Proof.
+  induction t as [|l IHl k v r IHr h]; intros s s' M A HS HM E; simpl in E.
+  - injection E as <-. split; [exact A | lia].
+  - simpl tsize in HS.
+    destruct (sweep n y1 y2 l s) as [s1|] eqn:E1; [|discriminate].
+    destruct (IHl s s1 M A ltac:(lia) HM E1) as [A1 S1].
+    destruct (step n y1 y2 v s1) as [s2|] eqn:E2; [|discriminate].
+    destruct (step_good n y1 y2 v s1 s2 M A1 ltac:(lia) HM E2) as [A2 S2].
+    destruct (IHr s2 s' M A2 ltac:(lia) HM E) as [A3 S3].
+    split; [exact A3|]. simpl tsize. lia.
+Qed.
+
+Definition swF (CM : costMonoid) := ltac:(
+  let b := eval unfold sweep_cost in (sweep_cost CM) in
+  match b with context [?F] => is_fix F; exact F end).
+
+Lemma sweep_cost_eq n nC y1 y1C y2 y2C t tC :
+  extract (extract (extract (sweep_cost stepsCM n nC) y1 y1C) y2 y2C) t tC = swF stepsCM n nC y1 y1C y2 y2C t tC.
+Proof. reflexivity. Qed.
+
+Lemma swF_time n nC y1 y1C y2 y2C M t tC : forall s sC,
+  avl s -> (tsize s + 2 * tsize t <= M)%nat -> (Z.of_nat M < 2 ^ 50)%Z ->
+  (cost (swF stepsCM n nC y1 y1C y2 y2C t tC) + cost (extract (swF stepsCM n nC y1 y1C y2 y2C t tC) s sC)
+    <= tsize t * ((Dm M + 6) * 1000) + 10)%nat.
+Proof.
+  induction tC as [|l lC IHl k kC v vC r rC IHr h hC]; intros s sC A HS HM; rhs; cost_simpl.
+  - lia.
+  - simpl tsize in HS, ER.
+    pose proof (IHl s sC A ltac:(lia) HM) as Hl. cost_align Hl. revert Hl.
+    generalize (cost (swF stepsCM n nC y1 y1C y2 y2C l lC)), (cost (extract (swF stepsCM n nC y1 y1C y2 y2C l lC) s sC)).
+    intros c1 c2 Hl.
+    cost_destruct_witness (sweep n y1 y2 l s) as [s1 s1C|] eqn:E1; cost_simpl; [|lia].
+    destruct (sweep_good n y1 y2 l s s1 M A ltac:(lia) HM E1) as [A1 S1].
+    bnd.
+    match goal with |- context [@cost ?T (extract (extract (extract (extract (step_cost stepsCM n nC) y1 y1C) y2 y2C) v vC) s1 ?w)] =>
+      pose proof (step_time n nC y1 y1C y2 y2C v vC s1 w M A1 ltac:(lia) HM) as Hs; cost_align Hs;
+      gen_cost T (extract (extract (extract (extract (step_cost stepsCM n nC) y1 y1C) y2 y2C) v vC) s1 w) Hs end.
+    cost_destruct_witness (step n y1 y2 v s1) as [s2 s2C|] eqn:E2; cost_simpl; [|nia].
+    destruct (step_good n y1 y2 v s1 s2 M A1 ltac:(lia) HM E2) as [A2 S2].
+    pose proof (IHr s2 s2C A2 ltac:(lia) HM) as Hr. cost_align Hr. revert Hr.
+    generalize (cost (swF stepsCM n nC y1 y1C y2 y2C r rC)), (cost (extract (swF stepsCM n nC y1 y1C y2 y2C r rC) s2 s2C)).
+    intros c3 c4 Hr. subst RR.
+    assert (n0 + 100 <= (Dm M + 6) * 1000)%nat by lia.
+    set (K := ((Dm M + 6) * 1000)%nat) in *. clearbody K. nia.
+Qed.
+
+
+(* ---- T5.v ---- *)
+Lemma build_good x1 x2 n k : forall i t H,
+  (Z.to_nat (gap n i) <= k)%nat -> avl t -> (tsize t <= 2 * Z.to_nat (φ i))%nat ->
+  (φ i <= φ n)%Z -> (φ n <= 100000)%Z ->
+  avl (build x1 x2 n i t H) /\ (tsize (build x1 x2 n i t H) <= 2 * Z.to_nat (φ n))%nat.
+Proof.
+  induction k as [|k IH]; intros i t H Hk A Ht Hi Hn; rewrite build_eq;
+    destruct (bdec (i <? n)) as [Hlt|Hge].
+  - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) Hlt) as Hlt'. unfold gap in Hk. lia.
+  - assert (~ (φ i < φ n)%Z) by (rewrite <- Uint63.ltb_spec; congruence).
+    split; [exact A|]. lia.
+  - pose proof (proj1 (Uint63.ltb_spec _ _) Hlt) as Hlt'.
+    assert (Ei : φ (i + 1) = (φ i + 1)%Z) by (rewrite add_spec; change (φ 1) with 1%Z; rewrite Z.mod_small; [lia|]; rewrite wB_val; lia).
+    destruct (good_insert x1.[i] i t (2 * Z.to_nat (φ n)) A ltac:(lia) ltac:(lia)) as [A1 S1].
+    destruct (good_insert x2.[i] (n + i) _ (2 * Z.to_nat (φ n)) A1 ltac:(lia) ltac:(lia)) as [A2 S2].
+    apply IH; auto; unfold gap in *; lia.
+  - assert (~ (φ i < φ n)%Z) by (rewrite <- Uint63.ltb_spec; congruence).
+    split; [exact A|]. lia.
+Qed.
+
+Definition bF (CM : costMonoid) := ltac:(
+  let b := eval unfold build_cost in (build_cost CM) in
+  match b with context [?F] => is_fix F; exact F end).
+
+Lemma build_cost_eq x1 x1C x2 x2C n nC i iC t tC H HC :
+  extract (extract (extract (extract (extract (build_cost stepsCM x1 x1C) x2 x2C) n nC) i iC) t tC) H HC
+  = bF stepsCM x1 x1C x2 x2C n nC i iC t tC H HC.
+Proof. reflexivity. Qed.
+
+Lemma bF_time x1 x1C x2 x2C n nC k : forall i iC t tC H HC,
+  (Z.to_nat (gap n i) <= k)%nat -> avl t -> (tsize t <= 2 * Z.to_nat (φ i))%nat ->
+  (φ i <= φ n)%Z -> (φ n <= 100000)%Z ->
+  (cost (bF stepsCM x1 x1C x2 x2C n nC i iC t tC H HC) <= k * ((Dm (2 * Z.to_nat (φ n)) + 2) * 1000) + 10)%nat.
+Proof.
+  induction k as [|k IH]; intros i iC t tC [g] HC Hk A Ht Hi Hn; rhs; cost_simpl;
+    pose proof (bdec_time (i <? n) (bool_w (i <? n))) as HBd; cost_align HBd;
+    cost_destruct (bdec (i <? n)); cost_simpl.
+  - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+  - lia.
+  - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt'.
+    assert (Ei : φ (i + 1) = (φ i + 1)%Z) by (rewrite add_spec; change (φ 1) with 1%Z; rewrite Z.mod_small; [lia|]; rewrite wB_val; lia).
+    set (M := (2 * Z.to_nat (φ n))%nat) in *.
+    destruct (good_insert x1.[i] i t M A ltac:(lia) ltac:(lia)) as [A1 S1].
+    destruct (good_insert x2.[i] (n + i) _ M A1 ltac:(lia) ltac:(lia)) as [A2 S2].
+    assert (D0 : (depth t <= Dm M)%nat) by (apply depth_Dm; [exact A | lia]).
+    assert (D1 : (depth (insert x1.[i] i t) <= Dm M)%nat) by (apply depth_Dm; [exact A1 | lia]).
+    bnd.
+    match goal with |- context [@cost ?T (bF stepsCM x1 x1C x2 x2C n nC (i + 1) ?w ?t' ?wt ?h ?e)] =>
+      pose proof (IH (i + 1) w t' wt h e ltac:(unfold gap in *; lia) A2 ltac:(lia) ltac:(lia) Hn) as HI; cost_align HI;
+      gen_cost T (bF stepsCM x1 x1C x2 x2C n nC (i + 1) w t' wt h e) HI end.
+    subst RR. set (D := Dm M) in *. clearbody D. nia.
+  - lia.
+Qed.
+
+
+(* ---- T6.v ---- *)
+Ltac gen_hyp H := match type of H with (@cost ?T ?m <= _)%nat => gen_cost T m H end.
+
+Lemma impl_time x1 x1C y1 y1C x2 x2C y2 y2C :
+  (1 <= φ (PArray.length x1) <= 100000)%Z ->
+  (cost (intersecting_rectangles_impl_cost stepsCM x1 x1C) +
+   cost (extract (intersecting_rectangles_impl_cost stepsCM x1 x1C) y1 y1C) +
+   cost (extract (extract (intersecting_rectangles_impl_cost stepsCM x1 x1C) y1 y1C) x2 x2C) +
+   cost (extract (extract (extract (intersecting_rectangles_impl_cost stepsCM x1 x1C) y1 y1C) x2 x2C) y2 y2C)
+   <= (Z.to_nat (φ (PArray.length x1)) + 1) * (Nat.log2 (Z.to_nat (φ (PArray.length x1))) + 1) * (60 * 1000) + 100)%nat.
+Proof.
+  intros Hn. unfold intersecting_rectangles_impl_cost. rhs. cost_simpl. bnd.
+  set (n := PArray.length x1) in *.
+  set (N := Z.to_nat (φ n)) in *.
+  pose proof (bF_time x1 x1C x2 x2C n (int_val stepsCM n) N 0 (int_val stepsCM 0) Leaf (Leaf_cost stepsCM)
+     (Zwf_well_founded 0 (gap n 0)) erased_I ltac:(unfold gap, N; change (φ 0) with 0%Z; lia) I
+     ltac:(simpl; lia) ltac:(change (φ 0) with 0%Z; lia) ltac:(lia)) as HBb.
+  rewrite <- build_cost_eq in HBb. cost_align HBb.
+  gen_hyp HBb.
+  set (ev := build x1 x2 n 0 Leaf (Zwf_well_founded 0 (gap n 0))) in *.
+  destruct (build_good x1 x2 n N 0 Leaf (Zwf_well_founded 0 (gap n 0)) ltac:(unfold gap, N; change (φ 0) with 0%Z; lia) I
+     ltac:(simpl; lia) ltac:(change (φ 0) with 0%Z; lia) ltac:(lia)) as [Aev Sev].
+  fold ev in Aev, Sev.
+  match goal with |- context [extract (extract (extract (sweep_cost stepsCM n (int_val stepsCM n)) y1 y1C) y2 y2C) ev ?W] =>
+    pose proof (swF_time n (int_val stepsCM n) y1 y1C y2 y2C (4 * N) ev W Leaf (Leaf_cost stepsCM) I ltac:(simpl; lia) ltac:(lia)) as HS;
+    rewrite <- sweep_cost_eq in HS; cost_align HS; revert HS;
+    generalize (cost (extract (extract (extract (sweep_cost stepsCM n (int_val stepsCM n)) y1 y1C) y2 y2C) ev W)),
+      (cost (extract (extract (extract (extract (sweep_cost stepsCM n (int_val stepsCM n)) y1 y1C) y2 y2C) ev W) Leaf (Leaf_cost stepsCM)));
+    intros c1 c2 HS end.
+  cost_destruct_witness (sweep n y1 y2 ev Leaf) as [t tC|] eqn:E; cost_simpl.
+  all: assert (L4 : (Dm (4 * N) <= 3 * Nat.log2 N + 11)%nat) by (
+         unfold Dm; pose proof (Nat.log2_le_mono (S (4 * N)) (N * 2 ^ 3) ltac:(simpl; lia));
+         rewrite Nat.log2_mul_pow2 in H by lia; lia).
+  all: assert (L2 : (Dm (2 * N) <= Dm (4 * N))%nat) by (
+         unfold Dm; pose proof (Nat.log2_le_mono (S (2 * N)) (S (4 * N)) ltac:(lia)); lia).
+  all: fold N in HBb; subst RR; clear E; clearbody ev;
+       set (l := Nat.log2 N) in *; set (d2 := Dm (2 * N)) in *; set (d4 := Dm (4 * N)) in *;
+       clearbody l d2 d4; nia.
+Qed.
+
+Theorem intersecting_rectangles_time : exists c1 c2 : nat,
+  forall (lefts bottoms rights tops : list Z)
+  (lefts_arr bottoms_arr rights_arr tops_arr : array
+  sint),
+  valid_input lefts bottoms rights tops ->
+  repr lefts_arr lefts -> repr bottoms_arr bottoms ->
+  repr rights_arr rights -> repr tops_arr tops ->
+  (cost4 intersecting_rectangles_cost lefts_arr bottoms_arr rights_arr tops_arr <= c1 * ((size lefts_arr + 1) * (Nat.log2 (size lefts_arr) + 1)) + c2)%nat.
+Proof.
+  exists (60 * 1000)%nat, 100%nat.
+  intros lefts bottoms rights tops x1 y1 x2 y2 V R1 R2 R3 R4.
+  assert (Hn : (1 <= φ (PArray.length x1) <= 100000)%Z).
+  { rewrite (repr_length x1 lefts R1). pose proof (vi_n _ _ _ _ V) as Hv. unfold len in Hv. lia. }
+  assert (Es : size x1 = Z.to_nat (φ (PArray.length x1))) by reflexivity.
+  rewrite Es. rhs. unfold cost4, intersecting_rectangles_cost. cost_simpl.
+  pose proof (impl_time x1 (witness x1) y1 (witness y1) x2 (witness x2) y2 (witness y2) Hn) as H.
+  repeat (match goal with |- context [@cost ?T ?m] => change (@cost T m) with 0%nat end).
+  repeat (match type of H with context [@cost ?T ?m] => change (@cost T m) with 0%nat in H end).
+  cost_align H. subst RR. set (N := to_nat (length x1)) in *. set (l := Nat.log2 N) in *. clearbody N l. nia.
+Qed.

@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules selfbalancingbst_extracted_marray)
- (theories Selfbalancingbst Selfbalancingbst.spec Stdlib stdpp StdGalilei))
+ (theories Selfbalancingbst Selfbalancingbst.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name selfbalancingbst_extraction)

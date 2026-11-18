@@ -6,9 +6,11 @@
  (rocq.theory
   (name Unionfind.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Unionfind)
  (modules unionfind_implem)
- (theories Unionfind.spec Stdlib stdpp StdGalilei))
+  (theories Unionfind.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

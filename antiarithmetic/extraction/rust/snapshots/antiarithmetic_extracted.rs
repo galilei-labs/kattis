@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -13,13 +12,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Antiarithmetic.antiarithmetic_implem.antiarithmetic
-pub fn antiarithmetic() -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-  let v0: fn(Rc<Array<u64>>) -> bool = antiarithmetic_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
@@ -59,13 +51,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Antiarithmetic.antiarithmetic_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -107,13 +96,10 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -126,37 +112,28 @@ pub fn inner_1(S: Rc<Array<u64>>, R: Rc<Array<u64>>, rS: u64, lS: u64, rR: u64, 
 // Rocq: Antiarithmetic.antiarithmetic_implem.inner (local: inner)
 // Variant: uncurried, lifted
 pub fn inner(S: Rc<Array<u64>>, R: Rc<Array<u64>>, rS: u64, lS: u64, rR: u64, lR: u64, aS: u64, aR: u64, rem: u64, _H: ()) -> bool {
-  let v13 = &S;
-  let v17 = rocq_array::get::<u64>(&v13, aS);
-  let v21 = lsr(v17, rS);
-  let v30 = add(aS, 1u64);
-  let v31 = &S;
-  let v35 = rocq_array::get::<u64>(&v31, v30);
-  let v44 = lor(v21, lsl(v35, lS));
-  let v47 = &R;
-  let v51 = rocq_array::get::<u64>(&v47, aR);
-  let v55 = lsr(v51, rR);
-  let v64 = add(aR, 1u64);
-  let v65 = &R;
-  let v69 = rocq_array::get::<u64>(&v65, v64);
-  let w = lxor(v44, lor(v55, lsl(v69, lR)));
-  let v93 = leb(rem, 63u64);
-  match bdec(v93) {
+  let tmp = rocq_array::get::<u64>(&S, aS);
+  let tmp_1 = lsr(tmp, rS);
+  let tmp_2 = rocq_array::get::<u64>(&S, add(aS, 1u64));
+  let tmp_3 = lor(tmp_1, lsl(tmp_2, lS));
+  let tmp_4 = rocq_array::get::<u64>(&R, aR);
+  let tmp_5 = lsr(tmp_4, rR);
+  let tmp_6 = rocq_array::get::<u64>(&R, add(aR, 1u64));
+  let w = lxor(tmp_3, lor(tmp_5, lsl(tmp_6, lR)));
+  let tmp_7 = leb(rem, 63u64);
+  match bdec(tmp_7) {
     sumbool::left => {
       std::mem::drop(R);
       std::mem::drop(S);
       negb(eqb(land(w, sub(lsl(1u64, rem), 1u64)), 0u64))
     },
     sumbool::right => {
-      match eqb(w, 0u64) {
-        true => {
-          inner(S, R, rS, lS, rR, lR, add(aS, 1u64), add(aR, 1u64), sub(rem, 63u64), ())
-        },
-        false => {
-          std::mem::drop(R);
-          std::mem::drop(S);
-          true
-        },
+      if eqb(w, 0u64) {
+        inner(S, R, rS, lS, rR, lR, add(aS, 1u64), add(aR, 1u64), sub(rem, 63u64), ())
+      } else {
+        std::mem::drop(R);
+        std::mem::drop(S);
+        true
       }
     },
   }
@@ -166,9 +143,8 @@ pub fn inner(S: Rc<Array<u64>>, R: Rc<Array<u64>>, rS: u64, lS: u64, rR: u64, lR
 // Variant: uncurried
 pub fn setbit(t: Rc<Array<u64>>, v: u64) -> Rc<Array<u64>> {
   let a = div(v, 63u64);
-  let v11 = &t;
-  let v14 = rocq_array::get::<u64>(&v11, a);
-  rocq_array::set::<u64>(t, a, lor(v14, lsl(1u64, mod_(v, 63u64))))
+  let tmp = rocq_array::get::<u64>(&t, a);
+  rocq_array::set::<u64>(t, a, lor(tmp, lsl(1u64, mod_(v, 63u64))))
 }
 
 // Rocq: Antiarithmetic.antiarithmetic_implem.scan
@@ -180,43 +156,36 @@ pub fn scan_1(x: Rc<Array<u64>>, n: u64, S: Rc<Array<u64>>, R: Rc<Array<u64>>, p
 // Rocq: Antiarithmetic.antiarithmetic_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(x: Rc<Array<u64>>, n: u64, S: Rc<Array<u64>>, R: Rc<Array<u64>>, pos: u64, _H: ()) -> bool {
-  let v13 = ltb(pos, n);
-  match bdec(v13) {
+  let tmp = ltb(pos, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &x;
-      let m = rocq_array::get::<u64>(&v17, pos);
-      let v30 = sub(n, 1u64);
-      let c = sub(v30, m);
-      let L = match ltb(m, c) {
-        true => {
-          m
-        },
-        false => {
-          c
-        },
+      let m = rocq_array::get::<u64>(&x, pos);
+      let tmp_1 = sub(n, 1u64);
+      let c = sub(tmp_1, m);
+      let L = if ltb(m, c) {
+        m
+      } else {
+        c
       };
       let oS = add(m, 1u64);
       let oR = sub(n, m);
       let rS = mod_(oS, 63u64);
       let rR = mod_(oR, 63u64);
-      let v85 = sub(63u64, rS);
-      let v93 = sub(63u64, rR);
-      let v101 = div(oS, 63u64);
-      let v109 = div(oR, 63u64);
-      let v112 = Rc::clone(&S);
-      let v115 = Rc::clone(&R);
-      match inner_1(v112, v115, rS, v85, rR, v93, v101, v109, L) {
-        true => {
-          std::mem::drop(x);
-          std::mem::drop(S);
-          std::mem::drop(R);
-          false
-        },
-        false => {
-          let v141 = setbit(S, m);
-          let v147 = setbit(R, c);
-          scan(x, n, v141, v147, add(pos, 1u64), ())
-        },
+      let tmp_2 = sub(63u64, rS);
+      let tmp_3 = sub(63u64, rR);
+      let tmp_4 = div(oS, 63u64);
+      let tmp_5 = div(oR, 63u64);
+      let S_clone = Rc::clone(&S);
+      let R_clone = Rc::clone(&R);
+      if inner_1(S_clone, R_clone, rS, tmp_2, rR, tmp_3, tmp_4, tmp_5, L) {
+        std::mem::drop(x);
+        std::mem::drop(S);
+        std::mem::drop(R);
+        false
+      } else {
+        let tmp_6 = setbit(S, m);
+        let tmp_7 = setbit(R, c);
+        scan(x, n, tmp_6, tmp_7, add(pos, 1u64), ())
       }
     },
     sumbool::right => {
@@ -230,12 +199,11 @@ pub fn scan(x: Rc<Array<u64>>, n: u64, S: Rc<Array<u64>>, R: Rc<Array<u64>>, pos
 
 // Rocq: Antiarithmetic.antiarithmetic_implem.antiarithmetic_impl
 pub fn antiarithmetic_impl(x: Rc<Array<u64>>) -> bool {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
+  let n = rocq_array::length::<u64>(&x);
   let k = add(div(n, 63u64), 1u64);
-  let v26 = rocq_array::make::<u64>(k, 0u64);
-  let v33 = rocq_array::make::<u64>(k, 0u64);
-  scan_1(x, n, v26, v33, 0u64)
+  let tmp = rocq_array::make::<u64>(k, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(k, 0u64);
+  scan_1(x, n, tmp, tmp_1, 0u64)
 }
 
 mod __rocq_reuse {
@@ -386,9 +354,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = __rocq_global_439.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_439: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = antiarithmetic(); }

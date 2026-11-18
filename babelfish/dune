@@ -6,9 +6,11 @@
  (rocq.theory
   (name Babelfish.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Babelfish)
  (modules babelfish_implem)
- (theories Babelfish.spec Stdlib stdpp StdGalilei))
+  (theories Babelfish.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

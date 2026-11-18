@@ -6,9 +6,11 @@
  (rocq.theory
   (name Polymul2.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei KattisLib Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name Polymul2)
  (modules polymul2_implem)
- (theories Polymul2.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Polymul2.spec Stdlib stdpp StdGalilei KattisLib Flocq)
+  (generate_project_file))

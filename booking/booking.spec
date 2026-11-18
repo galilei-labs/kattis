@@ -2,9 +2,11 @@
 
 (** ** Description *)
 
-(** Find the minimum number of resources needed to accommodate time
-    intervals, allowing a fixed cleanup period after each interval before
-    its resource can be reused.
+(** A hotel must assign a room to every reservation, given its arrival and
+    departure times. A room cannot host overlapping reservations and must be
+    cleaned after each departure. It becomes available again when the given
+    cleaning time has elapsed; a new guest may arrive at that exact time.
+    Find the minimum number of rooms needed to honor all reservations.
 
     [@kattis booking]
     - Difficulty: 4.5
@@ -12,8 +14,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Interval count: $1 \le n \le 5{,}000$; cleanup time in $[0, 360]$ minutes.
-    - Valid dates from $2013$ through $2016$; each interval ends no earlier than
+    - Interval count: $1 \le n \le 5 \times 10^{3}$; cleanup time: $0 \le C \le 360$ minutes.
+    - Valid dates with year $2013 \le y \le 2016$; each interval ends no earlier than
       it starts. *)
 
 (** ** Examples *)
@@ -65,12 +67,13 @@ Open Scope bool_scope.
 
 (** ** Definitions *)
 
-(** One "YYYY-MM-DD HH:MM" of the input, as its five
-    numbers: datetime uint on the machine side, datetime
-    N on the math side. The reservation codes do not
-    influence the answer and are not passed. *)
+(** A date and time as year, month, day, hour, and minute. Fields use [uint]
+    on the machine side and [N] on the mathematical side. Reservation codes do
+    not affect the result and are omitted from the interface. *)
 Record datetime (A : Type) :=
   { year : A; month : A; day : A; hour : A; minute : A }.
+
+(** [@hide] Projection argument declarations. *)
 Arguments year {A}. Arguments month {A}. Arguments day {A}.
 Arguments hour {A}. Arguments minute {A}.
 
@@ -85,13 +88,11 @@ Instance repr_datetime : Repr (datetime uint)
       (hour time) /\
     repr (minute time_int) (minute time).
 
-(* Math side. *)
-
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** Gregorian leap years. *)
+(** [calendar_year] is a Gregorian leap year. *)
 Definition leap (calendar_year : N) : bool :=
   (calendar_year mod 4 =? 0) && negb
     (calendar_year mod 100 =? 0)
@@ -111,8 +112,7 @@ Definition days_in_month
             (month_number =? 11) then 30
   else 31.
 
-(** summand 0 + summand 1 + ... + summand (term_count -
-    1). *)
+(** The sum of [summand] over zero-based indices below [term_count]. *)
 Fixpoint sum_below (summand : N -> N)
   (term_count : nat) : N :=
   match term_count with
@@ -121,8 +121,8 @@ Fixpoint sum_below (summand : N -> N)
     (N.of_nat previous)
   end.
 
-(** Minutes elapsed from 0000-01-01 00:00 (proleptic
-    Gregorian) to time. *)
+(** Minutes elapsed from 0000-01-01 00:00 to [time], using the proleptic Gregorian
+    calendar. *)
 Definition minutes (time : datetime N) : N :=
   let days := sum_below days_in_year (N.to_nat (year time))
             + sum_below (fun month_index =>
@@ -132,24 +132,22 @@ Definition minutes (time : datetime N) : N :=
             + (day time - 1) in
   (days * 24 + hour time) * 60 + minute time.
 
-(** A correct and valid date of the years 2013 to 2016. *)
+(** [time] is a valid calendar date and time in the years 2013 through 2016. *)
 Definition valid_datetime (time : datetime N) : Prop :=
   2013 <= year time <= 2016 /\ 1 <= month time <= 12 /\
   1 <= day time <= days_in_month (year time) (month time) /\
   hour time <= 23 /\ minute time <= 59.
 
-(** Two bookings (arrival, departure) may share a room:
-    one of them, cleaning included, is over when the
-    other arrives. *)
+(** The bookings can share a room: one departure, followed by the required cleaning
+    time, is no later than the other arrival. *)
 Definition compatible (cleaning_time : N)
   (arrival departure arrival' departure' : datetime N) :
     Prop :=
   minutes departure + cleaning_time <= minutes arrival' \/
   minutes departure' + cleaning_time <= minutes arrival.
 
-(** Some assignment of the bookings to rooms 0 ..
-    room_count-1 puts only compatible bookings in the
-    same room. *)
+(** The bookings can be assigned to [room_count] rooms so that every pair sharing a
+    room satisfies [compatible]. *)
 Definition rooms_suffice (cleaning_time : N)
   (arrivals departures : list (datetime N))
     (room_count : N) : Prop :=
@@ -169,7 +167,7 @@ Definition rooms_suffice (cleaning_time : N)
 Record valid_input (cleaning_time : N)
   (arrivals departures : list (datetime N))
   : Prop := {
-  (* 1 <= B <= 5 000, the number of bookings *)
+  (* 1 <= B <= 5 * 10^3, the number of bookings *)
   vi_b : 1 <= len arrivals <= 5000;
   (* each booking has a date of arrival and a date of
     departure *)
@@ -192,8 +190,8 @@ Record valid_input (cleaning_time : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the minimum number of resources needed to accommodate all intervals,
-    including the cleanup period after each interval. *)
+    The output is the minimum number of hotel rooms needed for all reservations,
+    allowing the required cleaning time after each departure before room reuse. *)
 Definition min_rooms_spec (cleaning_time : N)
   (arrivals departures : list (datetime N))
     (output : N) : Prop :=
@@ -205,14 +203,50 @@ Definition min_rooms_spec (cleaning_time : N)
 
 (** ** Interface *)
 
-(** Find the minimum number of resources needed to accommodate time intervals, allowing a
-    fixed cleanup period after each interval before its resource can be reused.
-    - Input [cleaning_time]: Delay after departure before a resource can be reused, in minutes.
-    - Input [arrivals]: Start timestamp of each booking.
-    - Input [departures]: End timestamp of each booking.
-    - Output [output]: The output is the minimum number of resources needed to accommodate all intervals, including the cleanup period after each interval. *)
+(** Find the fewest hotel rooms that can accommodate all reservations,
+    allowing the required cleaning time between guests sharing a room.
+    - Input [cleaning_time]: Minutes required to clean a room after departure.
+    - Input [arrivals]: Arrival date and time of each reservation.
+    - Input [departures]: Departure date and time of each corresponding reservation.
+    - Output [output]: Minimum number of rooms needed, including time reserved for cleaning. *)
 Program min_rooms : uint -> array (datetime uint) -> array
   (datetime uint) -> uint.
+
+(** [@example min_rooms]
+    - Sample: 1
+    - Case: 1
+    - Input [cleaning_time]: 120
+    - Input [arrivals]: [{| year := 2013; month := 7; day := 1; hour := 15; minute := 59 |}; {| year := 2013; month := 7; day := 8; hour := 17; minute := 30 |}]
+    - Input [departures]: [{| year := 2013; month := 7; day := 8; hour := 16; minute := 30 |}; {| year := 2013; month := 7; day := 15; hour := 12; minute := 0 |}]
+    - Output [output]: 2
+*)
+
+(** [@example min_rooms]
+    - Sample: 1
+    - Case: 2
+    - Input [cleaning_time]: 60
+    - Input [arrivals]: [{| year := 2013; month := 7; day := 8; hour := 14; minute := 30 |}; {| year := 2013; month := 7; day := 1; hour := 16; minute := 0 |}; {| year := 2013; month := 7; day := 1; hour := 16; minute := 0 |}]
+    - Input [departures]: [{| year := 2013; month := 7; day := 8; hour := 16; minute := 0 |}; {| year := 2013; month := 7; day := 15; hour := 12; minute := 0 |}; {| year := 2013; month := 7; day := 8; hour := 15; minute := 0 |}]
+    - Output [output]: 3
+*)
+
+(** [@example min_rooms]
+    - Sample: 1
+    - Case: 3
+    - Input [cleaning_time]: 360
+    - Input [arrivals]: [{| year := 2016; month := 2; day := 21; hour := 14; minute := 0 |}; {| year := 2016; month := 3; day := 1; hour := 1; minute := 0 |}]
+    - Input [departures]: [{| year := 2016; month := 2; day := 28; hour := 21; minute := 0 |}; {| year := 2016; month := 3; day := 2; hour := 12; minute := 57 |}]
+    - Output [output]: 1
+*)
+
+(** [@example min_rooms]
+    - Sample: 1
+    - Case: 4
+    - Input [cleaning_time]: 60
+    - Input [arrivals]: [{| year := 2016; month := 2; day := 21; hour := 14; minute := 0 |}; {| year := 2016; month := 2; day := 28; hour := 12; minute := 0 |}]
+    - Input [departures]: [{| year := 2016; month := 2; day := 28; hour := 11; minute := 0 |}; {| year := 2016; month := 3; day := 11; hour := 21; minute := 0 |}]
+    - Output [output]: 1
+*)
 
 (** ** Bridge *)
 

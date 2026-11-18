@@ -6,9 +6,11 @@
  (rocq.theory
   (name Xormax.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Xormax)
  (modules xormax_implem)
- (theories Xormax.spec Stdlib stdpp StdGalilei))
+  (theories Xormax.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }1{,}000{,}000$ elements and $0\text{ to }1{,}000{,}000$ operations.
-    - Element indices from $0$ to $N-1$. *)
+    - Element count: $1 \le N \le 10^{6}$; operation count: $0 \le Q \le 10^{6}$.
+    - Element indices: $0 \le i < N$. *)
 
 (** ** Examples *)
 
@@ -36,47 +36,48 @@ yes
                     -> array bool
    @math_signature  N -> list bool -> list N -> list N -> list bool
    @summary         [run_ops element_count is_union first_elements
-                    second_elements] returns one boolean per operation k on
-                    the elements 0 .. element_count - 1, initially each in
-                    its own set : when is_union[k] is true the sets of
-                    first_elements[k] and second_elements[k] are joined and
-                    the boolean is unspecified, when it is false the boolean
-                    says whether first_elements[k] and second_elements[k]
-                    are in the same set at that point
+                     second_elements] processes operations on the elements
+                     0 .. element_count - 1, initially each in its own set.
+                     When is_union[k] is true the sets of first_elements[k]
+                     and second_elements[k] are joined, producing no answer.
+                     When it is false, append a boolean saying whether those
+                     elements are in the same set at that point. Returns one
+                     boolean per query, in query order.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. Operation k is is_union[k] (true : union,
+(* Operation k is is_union[k] (true : union,
    false : query) on the elements first_elements[k] and
    second_elements[k]. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th element of l, for k < [len] l (0, or false,
-    outside : never relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_N (l : list N ) (k : N) : N := nth
   (N.to_nat k) l 0.
-(** Get list bool. *)
+(** The Boolean at zero-based index [k] in [l], or [false] beyond the end. *)
 Definition get_list_bool (l : list bool) (k : N) : bool :=
   nth (N.to_nat k) l false.
 
-(** Operation k is a union. *)
+(** The operation at zero-based index [k] is a union. *)
 Definition union_op (is_union : list bool) (k : N) : Prop :=
   get_list_bool is_union k = true.
 
-(** Operation k is a query. *)
+(** The operation at zero-based index [k] is a query. *)
 Definition query_op (is_union : list bool) (k : N) : Prop :=
   get_list_bool is_union k = false.
 
-(** Two elements are in the same set after the unions
-    among the first k operations. *)
+(** [connected is_union first_elements second_elements k element other] means
+    that [element] and [other] are in the same set after the unions among the first
+    [k] operations. The three parallel lists give the operation kinds and their
+    two element arguments. *)
 Inductive connected (is_union : list bool)
   (first_elements second_elements : list N) (k : N) : N -> N
     -> Prop :=
@@ -124,13 +125,22 @@ Record valid_input (element_count : N)
     get_list_N second_elements k < element_count;
 }.
 
-(** At query k, the answer is true exactly when the
+(** Number of query operations in [ops]; [false] denotes a query. *)
+Definition query_count (ops : list bool) : N :=
+  len (filter negb ops).
+
+(** Output position of a query at operation index [k]: the number of preceding
+    queries. *)
+Definition query_index (is_union : list bool) (k : N) : N :=
+  query_count (firstn (N.to_nat k) is_union).
+
+(** At operation index [k], the corresponding query answer is true exactly when
     earlier unions connect its two elements. *)
 Definition answers_query (is_union : list bool)
   (first_elements second_elements : list N)
     (answers : list bool) (k : N)
   : Prop :=
-  get_list_bool answers k = true
+  get_list_bool answers (query_index is_union k) = true
   <-> connected is_union first_elements second_elements k
         (get_list_N first_elements k)
           (get_list_N second_elements k).
@@ -138,15 +148,15 @@ Definition answers_query (is_union : list bool)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output has one entry per operation; entries corresponding to queries indicate
-    whether the queried elements are connected after the preceding unions. *)
+    The output contains one Boolean per query, in query order. Each answer is true
+    exactly when preceding unions connect the queried elements. *)
 Definition run_ops_spec
   (element_count : N)
   (is_union : list bool)
   (first_elements second_elements : list N)
   (output : list bool)
   : Prop :=
-  len output = len is_union /\
+  len output = query_count is_union /\
   forall k, k < len is_union -> query_op is_union k ->
     answers_query is_union first_elements second_elements
       output k.
@@ -154,15 +164,24 @@ Definition run_ops_spec
 (** ** Interface *)
 
 (** Maintain disjoint sets under union operations and answer whether two elements belong to
-    the same set.
+    the same set. Return answers only for connectivity queries, in query order.
     - Input [element_count]: Number of elements, initially in separate sets.
     - Input [is_union]: Whether each operation joins sets rather than querying connectivity.
     - Input [first_elements]: First element of each operation.
     - Input [second_elements]: Second element of each operation.
-    - Output [output]: The output has one entry per operation; entries corresponding to queries indicate whether the queried elements are connected after the preceding unions. *)
+    - Output [output]: One Boolean per connectivity query, in query order, reporting whether preceding unions connect its two elements. Union operations produce no output entry. *)
 Program run_ops : uint -> array bool -> array uint -> array
   uint ->
                     array bool.
+
+(** [@example run_ops]
+    - Sample: 1
+    - Input [element_count]: 10
+    - Input [is_union]: [false; true; true; false]
+    - Input [first_elements]: [1; 1; 3; 1]
+    - Input [second_elements]: [3; 8; 8; 3]
+    - Output [output]: [false; true]
+*)
 
 (** ** Bridge *)
 

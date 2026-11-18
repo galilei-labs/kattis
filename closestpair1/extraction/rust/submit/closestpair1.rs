@@ -783,7 +783,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -876,14 +875,14 @@ pub fn compare_cont_owned(r: std::cmp::Ordering, x: Rc<positive>, y: Rc<positive
       std::mem::drop(v8);
       match v7 {
         positive::xI(v14) => {
-          let v19 = Rc::clone(p);
+          let p_clone = Rc::clone(p);
           std::mem::drop(x);
-          compare_cont_owned(r, v19, v14)
+          compare_cont_owned(r, p_clone, v14)
         },
         positive::xO(v26) => {
-          let v33 = Rc::clone(p);
+          let p_clone_1 = Rc::clone(p);
           std::mem::drop(x);
-          compare_cont_owned(std::cmp::Ordering::Greater, v33, v26)
+          compare_cont_owned(std::cmp::Ordering::Greater, p_clone_1, v26)
         },
         positive::xH => {
           std::mem::drop(x);
@@ -896,14 +895,14 @@ pub fn compare_cont_owned(r: std::cmp::Ordering, x: Rc<positive>, y: Rc<positive
       std::mem::drop(v50);
       match v49 {
         positive::xI(v56) => {
-          let v63 = Rc::clone(p);
+          let p_clone_2 = Rc::clone(p);
           std::mem::drop(x);
-          compare_cont_owned(std::cmp::Ordering::Less, v63, v56)
+          compare_cont_owned(std::cmp::Ordering::Less, p_clone_2, v56)
         },
         positive::xO(v70) => {
-          let v75 = Rc::clone(p);
+          let p_clone_3 = Rc::clone(p);
           std::mem::drop(x);
-          compare_cont_owned(r, v75, v70)
+          compare_cont_owned(r, p_clone_3, v70)
         },
         positive::xH => {
           std::mem::drop(x);
@@ -945,11 +944,11 @@ pub fn compare_cont_1(r: std::cmp::Ordering, x: &Rc<positive>, y: &Rc<positive>)
 // Variant: borrowed, uncurried, lifted
 pub fn compare_cont(r: std::cmp::Ordering, x: &Rc<positive>, y: &Rc<positive>) -> std::cmp::Ordering {
   let r_1 = r;
-  let v4 = x;
-  match &**v4 {
+  let tmp = x;
+  match &**tmp {
     positive::xI(p) => {
-      let v8 = y;
-      match &**v8 {
+      let tmp_1 = y;
+      match &**tmp_1 {
         positive::xI(q) => {
           compare_cont(r_1, p, q)
         },
@@ -962,8 +961,8 @@ pub fn compare_cont(r: std::cmp::Ordering, x: &Rc<positive>, y: &Rc<positive>) -
       }
     },
     positive::xO(p) => {
-      let v41 = y;
-      match &**v41 {
+      let tmp_2 = y;
+      match &**tmp_2 {
         positive::xI(q) => {
           compare_cont(std::cmp::Ordering::Less, p, q)
         },
@@ -976,8 +975,8 @@ pub fn compare_cont(r: std::cmp::Ordering, x: &Rc<positive>, y: &Rc<positive>) -
       }
     },
     positive::xH => {
-      let v72 = y;
-      match &**v72 {
+      let tmp_3 = y;
+      match &**tmp_3 {
         positive::xI(_q) => {
           std::cmp::Ordering::Less
         },
@@ -1072,11 +1071,11 @@ pub fn compare_owned(x: Rc<Z>, y: Rc<Z>) -> std::cmp::Ordering {
 // Rocq: Corelib.BinNums.IntDef.Z.compare
 // Variant: borrowed, uncurried
 pub fn compare(x: &Rc<Z>, y: &Rc<Z>) -> std::cmp::Ordering {
-  let v2 = x;
-  match &**v2 {
+  let tmp = x;
+  match &**tmp {
     Z::Z0 => {
-      let v4 = y;
-      match &**v4 {
+      let tmp_1 = y;
+      match &**tmp_1 {
         Z::Z0 => {
           std::cmp::Ordering::Equal
         },
@@ -1089,8 +1088,8 @@ pub fn compare(x: &Rc<Z>, y: &Rc<Z>) -> std::cmp::Ordering {
       }
     },
     Z::Zpos(x_) => {
-      let v27 = y;
-      match &**v27 {
+      let tmp_2 = y;
+      match &**tmp_2 {
         Z::Z0 => {
           std::cmp::Ordering::Greater
         },
@@ -1103,8 +1102,8 @@ pub fn compare(x: &Rc<Z>, y: &Rc<Z>) -> std::cmp::Ordering {
       }
     },
     Z::Zneg(x_) => {
-      let v56 = y;
-      match &**v56 {
+      let tmp_3 = y;
+      match &**tmp_3 {
         Z::Z0 => {
           std::cmp::Ordering::Less
         },
@@ -1112,8 +1111,8 @@ pub fn compare(x: &Rc<Z>, y: &Rc<Z>) -> std::cmp::Ordering {
           std::cmp::Ordering::Less
         },
         Z::Zneg(y_) => {
-          let v79 = compare_cont_1(std::cmp::Ordering::Equal, x_, y_);
-          CompOpp(v79)
+          let tmp_4 = compare_cont_1(std::cmp::Ordering::Equal, x_, y_);
+          CompOpp(tmp_4)
         },
       }
     },
@@ -1156,19 +1155,19 @@ pub fn add(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
       let (v6, v7) = __rocq_reuse::reset(y, |__payload| Clone::clone(__payload));
       match v6 {
         positive::xI(v13) => {
-          let v16 = Rc::clone(p);
+          let p_clone = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xO(add_carry(v16, v13)))
+          __rocq_reuse::rebuild(v7, positive::xO(add_carry(p_clone, v13)))
         },
         positive::xO(v28) => {
-          let v31 = Rc::clone(p);
+          let p_clone_1 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xI(add(v31, v28)))
+          __rocq_reuse::rebuild(v7, positive::xI(add(p_clone_1, v28)))
         },
         positive::xH => {
-          let v44 = Rc::clone(p);
+          let p_clone_2 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xO(succ_1(v44)))
+          __rocq_reuse::rebuild(v7, positive::xO(succ_1(p_clone_2)))
         },
       }
     },
@@ -1176,19 +1175,19 @@ pub fn add(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
       let (v59, v60) = __rocq_reuse::reset(y, |__payload| Clone::clone(__payload));
       match v59 {
         positive::xI(v66) => {
-          let v69 = Rc::clone(p);
+          let p_clone_3 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xI(add(v69, v66)))
+          __rocq_reuse::rebuild(v60, positive::xI(add(p_clone_3, v66)))
         },
         positive::xO(v81) => {
-          let v84 = Rc::clone(p);
+          let p_clone_4 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xO(add(v84, v81)))
+          __rocq_reuse::rebuild(v60, positive::xO(add(p_clone_4, v81)))
         },
         positive::xH => {
-          let v96 = Rc::clone(p);
+          let p_clone_5 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xI(v96))
+          __rocq_reuse::rebuild(v60, positive::xI(p_clone_5))
         },
       }
     },
@@ -1220,19 +1219,19 @@ pub fn add_carry(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
       let (v6, v7) = __rocq_reuse::reset(y, |__payload| Clone::clone(__payload));
       match v6 {
         positive::xI(v13) => {
-          let v16 = Rc::clone(p);
+          let p_clone = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xI(add_carry(v16, v13)))
+          __rocq_reuse::rebuild(v7, positive::xI(add_carry(p_clone, v13)))
         },
         positive::xO(v28) => {
-          let v31 = Rc::clone(p);
+          let p_clone_1 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xO(add_carry(v31, v28)))
+          __rocq_reuse::rebuild(v7, positive::xO(add_carry(p_clone_1, v28)))
         },
         positive::xH => {
-          let v44 = Rc::clone(p);
+          let p_clone_2 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v7, positive::xI(succ_1(v44)))
+          __rocq_reuse::rebuild(v7, positive::xI(succ_1(p_clone_2)))
         },
       }
     },
@@ -1240,19 +1239,19 @@ pub fn add_carry(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
       let (v59, v60) = __rocq_reuse::reset(y, |__payload| Clone::clone(__payload));
       match v59 {
         positive::xI(v66) => {
-          let v69 = Rc::clone(p);
+          let p_clone_3 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xO(add_carry(v69, v66)))
+          __rocq_reuse::rebuild(v60, positive::xO(add_carry(p_clone_3, v66)))
         },
         positive::xO(v81) => {
-          let v84 = Rc::clone(p);
+          let p_clone_4 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xI(add(v84, v81)))
+          __rocq_reuse::rebuild(v60, positive::xI(add(p_clone_4, v81)))
         },
         positive::xH => {
-          let v97 = Rc::clone(p);
+          let p_clone_5 = Rc::clone(p);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v60, positive::xO(succ_1(v97)))
+          __rocq_reuse::rebuild(v60, positive::xO(succ_1(p_clone_5)))
         },
       }
     },
@@ -1361,20 +1360,20 @@ pub fn pos_sub(x: Rc<positive>, y: Rc<positive>) -> Rc<Z> {
       match v6 {
         positive::xI(v13) => {
           std::mem::drop(v7);
-          let v17 = Rc::clone(p);
+          let p_clone = Rc::clone(p);
           std::mem::drop(x);
-          double(pos_sub(v17, v13))
+          double(pos_sub(p_clone, v13))
         },
         positive::xO(v27) => {
           std::mem::drop(v7);
-          let v31 = Rc::clone(p);
+          let p_clone_1 = Rc::clone(p);
           std::mem::drop(x);
-          succ_double(pos_sub(v31, v27))
+          succ_double(pos_sub(p_clone_1, v27))
         },
         positive::xH => {
-          let v41 = Rc::clone(p);
+          let p_clone_2 = Rc::clone(p);
           std::mem::drop(x);
-          Rc::new(Z::Zpos(__rocq_reuse::rebuild(v7, positive::xO(v41))))
+          Rc::new(Z::Zpos(__rocq_reuse::rebuild(v7, positive::xO(p_clone_2))))
         },
       }
     },
@@ -1383,19 +1382,19 @@ pub fn pos_sub(x: Rc<positive>, y: Rc<positive>) -> Rc<Z> {
       std::mem::drop(v59);
       match v58 {
         positive::xI(v65) => {
-          let v69 = Rc::clone(p);
+          let p_clone_3 = Rc::clone(p);
           std::mem::drop(x);
-          pred_double_2(pos_sub(v69, v65))
+          pred_double_2(pos_sub(p_clone_3, v65))
         },
         positive::xO(v79) => {
-          let v83 = Rc::clone(p);
+          let p_clone_4 = Rc::clone(p);
           std::mem::drop(x);
-          double(pos_sub(v83, v79))
+          double(pos_sub(p_clone_4, v79))
         },
         positive::xH => {
-          let v94 = Rc::clone(p);
+          let p_clone_5 = Rc::clone(p);
           std::mem::drop(x);
-          Rc::new(Z::Zpos(pred_double_1(v94)))
+          Rc::new(Z::Zpos(pred_double_1(p_clone_5)))
         },
       }
     },
@@ -1437,15 +1436,15 @@ pub fn add_2(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
           x
         },
         Z::Zpos(v17) => {
-          let v20 = Rc::clone(x_);
+          let x__clone = Rc::clone(x_);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v9, Z::Zpos(add_1(v20, v17)))
+          __rocq_reuse::rebuild(v9, Z::Zpos(add_1(x__clone, v17)))
         },
         Z::Zneg(v32) => {
           std::mem::drop(v9);
-          let v35 = Rc::clone(x_);
+          let x__clone_1 = Rc::clone(x_);
           std::mem::drop(x);
-          pos_sub_1(v35, v32)
+          pos_sub_1(x__clone_1, v32)
         },
       }
     },
@@ -1458,14 +1457,14 @@ pub fn add_2(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
         },
         Z::Zpos(v56) => {
           std::mem::drop(v48);
-          let v61 = Rc::clone(x_);
+          let x__clone_2 = Rc::clone(x_);
           std::mem::drop(x);
-          pos_sub_1(v56, v61)
+          pos_sub_1(v56, x__clone_2)
         },
         Z::Zneg(v66) => {
-          let v69 = Rc::clone(x_);
+          let x__clone_3 = Rc::clone(x_);
           std::mem::drop(x);
-          __rocq_reuse::rebuild(v48, Z::Zneg(add_1(v69, v66)))
+          __rocq_reuse::rebuild(v48, Z::Zneg(add_1(x__clone_3, v66)))
         },
       }
     },
@@ -1508,13 +1507,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Closestpair1.closestpair1_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -1533,24 +1529,21 @@ pub fn wloop_1<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, 
 // Rocq: Closestpair1.closestpair1_implem.wloop (local: wloop)
 // Variant: uncurried, lifted
 pub fn wloop<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, f: Rc<dyn Fn(u64, St) -> St>, i: u64, s: St, _H: ()) -> St {
-  let v13 = ltb(i, hi);
-  match bdec(v13) {
+  let tmp = ltb(i, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17: &Rc<dyn Fn(u64, St) -> bool> = &cont;
-      let v21 = Clone::clone(&s);
-      let v23 = v17(i, v21);
-      match v23 {
-        true => {
-          let v32 = add_3(i, 1u64);
-          let v33: &Rc<dyn Fn(u64, St) -> St> = &f;
-          let v38 = v33(i, s);
-          wloop::<St>(hi, cont, f, v32, v38, ())
-        },
-        false => {
-          std::mem::drop(f);
-          std::mem::drop(cont);
-          s
-        },
+      let cont_ref: &Rc<dyn Fn(u64, St) -> bool> = &cont;
+      let s_clone = Clone::clone(&s);
+      let tmp_1 = cont_ref(i, s_clone);
+      if tmp_1 {
+        let tmp_2 = add_3(i, 1u64);
+        let f_ref: &Rc<dyn Fn(u64, St) -> St> = &f;
+        let tmp_3 = f_ref(i, s);
+        wloop::<St>(hi, cont, f, tmp_2, tmp_3, ())
+      } else {
+        std::mem::drop(f);
+        std::mem::drop(cont);
+        s
       }
     },
     sumbool::right => {
@@ -1596,9 +1589,9 @@ pub fn normfr_mantissa(v0: f64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Floats.PrimFloat.frshiftexp$rust_exponent$uncurry$0
@@ -1619,36 +1612,30 @@ pub fn frshiftexp(x: f64) -> (f64, u64) {
 // Rocq: Closestpair1.closestpair1_implem.key
 // Variant: uncurried
 pub fn key(s: f64, n1: u64, f: f64) -> u64 {
-  let v17 = add_4(f, c1e5(()));
-  let u = add_4(mul_1(v17, s), c52(()));
+  let tmp = add_4(f, c1e5(()));
+  let u = add_4(mul_1(tmp, s), c52(()));
   let k = sub(normfr_mantissa(fst::<f64, u64>(frshiftexp(u))), 4503599627370496u64);
-  match ltb(k, n1) {
-    true => {
-      k
-    },
-    false => {
-      n1
-    },
+  if ltb(k, n1) {
+    k
+  } else {
+    n1
   }
 }
 
 // Rocq: Closestpair1.closestpair1_implem.key_step
 // Variant: uncurried
 pub fn key_step(x: Rc<Array<f64>>, s: f64, n1: u64, i: u64, K: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v6 = &x;
-  let v9 = rocq_array::get::<f64>(&v6, i);
+  let tmp = rocq_array::get::<f64>(&x, i);
   std::mem::drop(x);
-  rocq_array::set::<u64>(K, i, key(s, n1, v9))
+  rocq_array::set::<u64>(K, i, key(s, n1, tmp))
 }
 
 // Rocq: Closestpair1.closestpair1_implem.count_step
 // Variant: uncurried
 pub fn count_step(K: Rc<Array<u64>>, i: u64, C: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v3 = &K;
-  let b = rocq_array::get::<u64>(&v3, i);
+  let b = rocq_array::get::<u64>(&K, i);
   std::mem::drop(K);
-  let v7 = &C;
-  let v = rocq_array::get::<u64>(&v7, b);
+  let v = rocq_array::get::<u64>(&C, b);
   rocq_array::set::<u64>(C, b, add_3(v, 1u64))
 }
 
@@ -1658,9 +1645,9 @@ pub fn prefix_step(b: u64, st: (Rc<Array<u64>>, u64)) -> (Rc<Array<u64>>, u64) {
   match st {
     (v3, v5) => {
       let acc = &v3;
-      let v = rocq_array::get::<u64>(&acc, b);
-      let v17 = rocq_array::set::<u64>(v3, b, v5);
-      (v17, add_3(v5, v))
+      let v = rocq_array::get::<u64>(acc, b);
+      let tmp = rocq_array::set::<u64>(v3, b, v5);
+      (tmp, add_3(v5, v))
     },
   }
 }
@@ -1673,12 +1660,11 @@ pub fn place_step(K: &Rc<Array<u64>>, i: u64, st: (Rc<Array<u64>>, Rc<Array<u64>
   match st_1 {
     (v6, v8) => {
       let P = &v8;
-      let v11 = K;
-      let b = rocq_array::get::<u64>(&v11, i_1);
-      let v = rocq_array::get::<u64>(&P, b);
-      let v24 = rocq_array::set::<u64>(v6, v, i_1);
-      let v39 = rocq_array::set::<u64>(v8, b, add_3(v, 1u64));
-      (v24, v39)
+      let b = rocq_array::get::<u64>(K, i_1);
+      let v = rocq_array::get::<u64>(P, b);
+      let tmp = rocq_array::set::<u64>(v6, v, i_1);
+      let tmp_1 = rocq_array::set::<u64>(v8, b, add_3(v, 1u64));
+      (tmp, tmp_1)
     },
   }
 }
@@ -1692,35 +1678,26 @@ pub fn ltb_1(v0: f64, v1: f64) -> bool {
 // Rocq: Closestpair1.closestpair1_implem.min_step
 // Variant: uncurried
 pub fn min_step(x: Rc<Array<f64>>, K: Rc<Array<u64>>, i: u64, M: Rc<Array<f64>>) -> Rc<Array<f64>> {
-  let v4 = &K;
-  let b = rocq_array::get::<u64>(&v4, i);
-  let v8 = &x;
-  let xi = rocq_array::get::<f64>(&v8, i);
-  let v13 = &M;
-  let v16 = rocq_array::get::<f64>(&v13, b);
-  match ltb_1(xi, v16) {
-    true => {
-      std::mem::drop(K);
-      std::mem::drop(x);
-      rocq_array::set::<f64>(M, b, xi)
-    },
-    false => {
-      std::mem::drop(K);
-      std::mem::drop(x);
-      M
-    },
+  let b = rocq_array::get::<u64>(&K, i);
+  let xi = rocq_array::get::<f64>(&x, i);
+  let tmp = rocq_array::get::<f64>(&M, b);
+  if ltb_1(xi, tmp) {
+    std::mem::drop(K);
+    std::mem::drop(x);
+    rocq_array::set::<f64>(M, b, xi)
+  } else {
+    std::mem::drop(K);
+    std::mem::drop(x);
+    M
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -1753,21 +1730,12 @@ pub fn cand_cont(x: &Rc<Array<f64>>, K: &Rc<Array<u64>>, M: &Rc<Array<f64>>, P: 
     (v13, _v15) => {
       match v13 {
         (v18, _v20) => {
-          let v22 = P;
-          let v25 = rocq_array::get::<u64>(&v22, c_1);
-          let v26 = K;
-          let kq = rocq_array::get::<u64>(&v26, v25);
-          match ltb(kp_1, kq) {
-            true => {
-              let v50 = add_4(v18, tol(()));
-              let v52 = M;
-              let v55 = rocq_array::get::<f64>(&v52, kq);
-              let v56 = x;
-              negb(ltb_1(v50, gx(v55, rocq_array::get::<f64>(&v56, p_1))))
-            },
-            false => {
-              true
-            },
+          let tmp = rocq_array::get::<u64>(P, c_1);
+          let kq = rocq_array::get::<u64>(K, tmp);
+          if ltb(kp_1, kq) {
+            negb(ltb_1(add_4(v18, tol(())), gx(rocq_array::get::<f64>(M, kq), rocq_array::get::<f64>(x, p_1))))
+          } else {
+            true
           }
         },
       }
@@ -1778,18 +1746,14 @@ pub fn cand_cont(x: &Rc<Array<f64>>, K: &Rc<Array<u64>>, M: &Rc<Array<f64>>, P: 
 // Rocq: Closestpair1.closestpair1_implem.fd
 // Variant: uncurried
 pub fn fd_owned(x: Rc<Array<f64>>, y: Rc<Array<f64>>, a: u64, b: u64) -> f64 {
-  let v5 = &x;
-  let v8 = rocq_array::get::<f64>(&v5, a);
-  let v9 = &x;
-  let v12 = rocq_array::get::<f64>(&v9, b);
+  let tmp = rocq_array::get::<f64>(&x, a);
+  let tmp_1 = rocq_array::get::<f64>(&x, b);
   std::mem::drop(x);
-  let dx = sub_2(v8, v12);
-  let v19 = &y;
-  let v22 = rocq_array::get::<f64>(&v19, a);
-  let v23 = &y;
-  let v26 = rocq_array::get::<f64>(&v23, b);
+  let dx = sub_2(tmp, tmp_1);
+  let tmp_2 = rocq_array::get::<f64>(&y, a);
+  let tmp_3 = rocq_array::get::<f64>(&y, b);
   std::mem::drop(y);
-  let dy = sub_2(v22, v26);
+  let dy = sub_2(tmp_2, tmp_3);
   add_4(mul_1(dx, dx), mul_1(dy, dy))
 }
 
@@ -1798,14 +1762,8 @@ pub fn fd_owned(x: Rc<Array<f64>>, y: Rc<Array<f64>>, a: u64, b: u64) -> f64 {
 pub fn fd(x: &Rc<Array<f64>>, y: &Rc<Array<f64>>, a: u64, b: u64) -> f64 {
   let a_1 = a;
   let b_1 = b;
-  let v7 = x;
-  let v10 = rocq_array::get::<f64>(&v7, a_1);
-  let v11 = x;
-  let dx = sub_2(v10, rocq_array::get::<f64>(&v11, b_1));
-  let v21 = y;
-  let v24 = rocq_array::get::<f64>(&v21, a_1);
-  let v25 = y;
-  let dy = sub_2(v24, rocq_array::get::<f64>(&v25, b_1));
+  let dx = sub_2(rocq_array::get::<f64>(x, a_1), rocq_array::get::<f64>(x, b_1));
+  let dy = sub_2(rocq_array::get::<f64>(y, a_1), rocq_array::get::<f64>(y, b_1));
   add_4(mul_1(dx, dx), mul_1(dy, dy))
 }
 
@@ -1830,9 +1788,9 @@ pub fn min(n: Rc<Z>, m: Rc<Z>) -> Rc<Z> {
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.ltb
@@ -1865,30 +1823,30 @@ pub fn iter_fix<A: Clone + 'static>(f: Rc<dyn Fn(A) -> A>, x: A, n: Rc<positive>
   match v3 {
     positive::xI(v10) => {
       let n_ = &v10;
-      let v15: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
-      let v18 = x;
-      let v20 = Rc::clone(n_);
-      let v21 = iter_fix::<A>(v15, v18, v20);
-      let v24: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
-      let v30 = iter_fix::<A>(v24, v21, v10);
-      let v31: &Rc<dyn Fn(A) -> A> = &f;
-      let v34 = v31(v30);
+      let f_clone: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
+      let tmp = x;
+      let n__clone = Rc::clone(n_);
+      let tmp_1 = iter_fix::<A>(f_clone, tmp, n__clone);
+      let f_clone_1: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
+      let tmp_2 = iter_fix::<A>(f_clone_1, tmp_1, v10);
+      let f_ref: &Rc<dyn Fn(A) -> A> = &f;
+      let tmp_3 = f_ref(tmp_2);
       std::mem::drop(f);
-      v34
+      tmp_3
     },
     positive::xO(v37) => {
       let n_ = &v37;
-      let v42: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
-      let v45 = x;
-      let v47 = Rc::clone(n_);
-      let v48 = iter_fix::<A>(v42, v45, v47);
-      iter_fix::<A>(f, v48, v37)
+      let f_clone_2: Rc<dyn Fn(A) -> A> = Rc::clone(&f);
+      let tmp_4 = x;
+      let n__clone_1 = Rc::clone(n_);
+      let tmp_5 = iter_fix::<A>(f_clone_2, tmp_4, n__clone_1);
+      iter_fix::<A>(f, tmp_5, v37)
     },
     positive::xH => {
-      let v59: &Rc<dyn Fn(A) -> A> = &f;
-      let v62 = v59(x);
+      let f_ref_1: &Rc<dyn Fn(A) -> A> = &f;
+      let tmp_6 = f_ref_1(x);
       std::mem::drop(f);
-      v62
+      tmp_6
     },
   }
 }
@@ -1905,8 +1863,8 @@ pub fn mul(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
   let (v2, v3) = __rocq_reuse::reset(x, |__payload| Clone::clone(__payload));
   match v2 {
     positive::xI(v9) => {
-      let v17 = Rc::clone(&y);
-      add_1(y, __rocq_reuse::rebuild(v3, positive::xO(mul(v9, v17))))
+      let y_clone = Rc::clone(&y);
+      add_1(y, __rocq_reuse::rebuild(v3, positive::xO(mul(v9, y_clone))))
     },
     positive::xO(v31) => {
       __rocq_reuse::rebuild(v3, positive::xO(mul(v31, y)))
@@ -2036,22 +1994,21 @@ pub fn shiftl(a: Rc<Z>, n: Rc<Z>) -> Rc<Z> {
       a
     },
     Z::Zpos(v11) => {
-      let v16 = Rc::new(positive::xH);
-      let v26 = __rocq_reuse::rebuild(v3, Z::Zpos(Rc::new(positive::xO(v16))));
-      let v29 = {
+      let tmp = Rc::new(positive::xH);
+      let tmp_1 = __rocq_reuse::rebuild(v3, Z::Zpos(Rc::new(positive::xO(tmp))));
+      let callback: Rc<dyn Fn(Rc<Z>) -> Rc<Z>> = Rc::new({
         move |v32: Rc<Z>| -> Rc<Z> {
-          let v35 = Rc::clone(&v26);
-          mul_3(v35, v32)
+          let tmp_2 = Rc::clone(&tmp_1);
+          mul_3(tmp_2, v32)
         }
-      };
-      let v41: Rc<dyn Fn(Rc<Z>) -> Rc<Z>> = Rc::new(v29);
-      iter::<Rc<Z>>(v41, a, v11)
+      });
+      iter::<Rc<Z>>(callback, a, v11)
     },
     Z::Zneg(v52) => {
       std::mem::drop(v3);
-      let v55: fn(Rc<Z>) -> Rc<Z> = div2_1;
-      let v56: Rc<dyn Fn(Rc<Z>) -> Rc<Z>> = Rc::new(v55);
-      iter::<Rc<Z>>(v56, a, v52)
+      let tmp_3: fn(Rc<Z>) -> Rc<Z> = div2_1;
+      let tmp_4: Rc<dyn Fn(Rc<Z>) -> Rc<Z>> = Rc::new(tmp_3);
+      iter::<Rc<Z>>(tmp_4, a, v52)
     },
   }
 }
@@ -2059,35 +2016,35 @@ pub fn shiftl(a: Rc<Z>, n: Rc<Z>) -> Rc<Z> {
 // Rocq: Closestpair1.closestpair1_implem.dal
 // Variant: uncurried
 pub fn dal(d: (Rc<Z>, Rc<Z>), e: Rc<Z>) -> Rc<Z> {
-  let v5 = Clone::clone(&d);
-  shiftl(fst::<Rc<Z>, Rc<Z>>(v5), sub_1(snd::<Rc<Z>, Rc<Z>>(d), e))
+  let d_clone = Clone::clone(&d);
+  shiftl(fst::<Rc<Z>, Rc<Z>>(d_clone), sub_1(snd::<Rc<Z>, Rc<Z>>(d), e))
 }
 
 // Rocq: Closestpair1.closestpair1_implem.dlt
 // Variant: uncurried
 pub fn dlt(a: (Rc<Z>, Rc<Z>), b: (Rc<Z>, Rc<Z>)) -> bool {
-  let v5 = Clone::clone(&a);
-  let v7 = snd::<Rc<Z>, Rc<Z>>(v5);
-  let v10 = Clone::clone(&b);
-  let e = min(v7, snd::<Rc<Z>, Rc<Z>>(v10));
-  let v21 = a;
-  let v24 = Rc::clone(&e);
-  ltb_2(dal(v21, v24), dal(b, e))
+  let a_clone = Clone::clone(&a);
+  let tmp = snd::<Rc<Z>, Rc<Z>>(a_clone);
+  let b_clone = Clone::clone(&b);
+  let e = min(tmp, snd::<Rc<Z>, Rc<Z>>(b_clone));
+  let tmp_1 = a;
+  let e_clone = Rc::clone(&e);
+  ltb_2(dal(tmp_1, e_clone), dal(b, e))
 }
 
 // Rocq: Closestpair1.closestpair1_implem.dsub
 // Variant: uncurried
 pub fn dsub(a: (Rc<Z>, Rc<Z>), b: (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>) {
-  let v5 = Clone::clone(&a);
-  let v7 = snd::<Rc<Z>, Rc<Z>>(v5);
-  let v10 = Clone::clone(&b);
-  let e = min(v7, snd::<Rc<Z>, Rc<Z>>(v10));
-  let v21 = a;
-  let v24 = Rc::clone(&e);
-  let v25 = dal(v21, v24);
-  let v28 = b;
-  let v31 = Rc::clone(&e);
-  (sub_1(v25, dal(v28, v31)), e)
+  let a_clone = Clone::clone(&a);
+  let tmp = snd::<Rc<Z>, Rc<Z>>(a_clone);
+  let b_clone = Clone::clone(&b);
+  let e = min(tmp, snd::<Rc<Z>, Rc<Z>>(b_clone));
+  let tmp_1 = a;
+  let e_clone = Rc::clone(&e);
+  let tmp_2 = dal(tmp_1, e_clone);
+  let tmp_3 = b;
+  let e_clone_1 = Rc::clone(&e);
+  (sub_1(tmp_2, dal(tmp_3, e_clone_1)), e)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -2110,27 +2067,24 @@ pub fn zofi_rec_1(i: u64) -> Rc<Z> {
 // Rocq: Closestpair1.closestpair1_implem.zofi_rec (local: zofi_rec)
 // Variant: uncurried, lifted
 pub fn zofi_rec(i: u64, _H: ()) -> Rc<Z> {
-  let v11 = eqb(i, 0u64);
-  match bdec(v11) {
+  let tmp = eqb(i, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       Rc::new(Z::Z0)
     },
     sumbool::right => {
       let r = zofi_rec(div_1(i, 2u64), ());
-      let v44 = mod_(i, 2u64);
-      let v46 = 0u64;
-      let bit = match eqb(v44, v46) {
-        true => {
-          Rc::new(Z::Z0)
-        },
-        false => {
-          let v60 = Rc::new(positive::xH);
-          Rc::new(Z::Zpos(v60))
-        },
+      let tmp_1 = mod_(i, 2u64);
+      let tmp_2 = 0u64;
+      let bit = if eqb(tmp_1, tmp_2) {
+        Rc::new(Z::Z0)
+      } else {
+        let tmp_3 = Rc::new(positive::xH);
+        Rc::new(Z::Zpos(tmp_3))
       };
-      let v73 = Rc::new(positive::xH);
-      let v78 = Rc::new(positive::xO(v73));
-      add_2(mul_3(Rc::new(Z::Zpos(v78)), r), bit)
+      let tmp_4 = Rc::new(positive::xH);
+      let tmp_5 = Rc::new(positive::xO(tmp_4));
+      add_2(mul_3(Rc::new(Z::Zpos(tmp_5)), r), bit)
     },
   }
 }
@@ -2142,35 +2096,32 @@ pub fn zofi(i: u64) -> Rc<Z> {
 
 // Rocq: Closestpair1.closestpair1_implem.fex
 pub fn fex(f: f64) -> (Rc<Z>, Rc<Z>) {
-  let v4 = frshiftexp(f);
-  match v4 {
+  let tmp = frshiftexp(f);
+  match tmp {
     (v6, v8) => {
       let z = &v8;
       let m = zofi(normfr_mantissa(v6));
-      let v21 = f64::from_bits(0u64);
-      let v27 = match ltb_1(f, v21) {
-        true => {
-          opp(m)
-        },
-        false => {
-          m
-        },
+      let tmp_1 = f64::from_bits(0u64);
+      let tmp_2 = if ltb_1(f, tmp_1) {
+        opp(m)
+      } else {
+        m
       };
-      let v40 = Clone::clone(z);
-      let v41 = zofi(v40);
-      let v44 = Rc::new(positive::xH);
-      let v49 = Rc::new(positive::xO(v44));
-      let v54 = Rc::new(positive::xO(v49));
-      let v59 = Rc::new(positive::xO(v54));
-      let v64 = Rc::new(positive::xO(v59));
-      let v69 = Rc::new(positive::xI(v64));
-      let v74 = Rc::new(positive::xI(v69));
-      let v79 = Rc::new(positive::xO(v74));
-      let v84 = Rc::new(positive::xI(v79));
-      let v89 = Rc::new(positive::xO(v84));
-      let v94 = Rc::new(positive::xI(v89));
-      let v99 = Rc::new(positive::xO(v94));
-      (v27, sub_1(v41, Rc::new(Z::Zpos(v99))))
+      let z_clone = Clone::clone(z);
+      let tmp_3 = zofi(z_clone);
+      let tmp_4 = Rc::new(positive::xH);
+      let tmp_5 = Rc::new(positive::xO(tmp_4));
+      let tmp_6 = Rc::new(positive::xO(tmp_5));
+      let tmp_7 = Rc::new(positive::xO(tmp_6));
+      let tmp_8 = Rc::new(positive::xO(tmp_7));
+      let tmp_9 = Rc::new(positive::xI(tmp_8));
+      let tmp_10 = Rc::new(positive::xI(tmp_9));
+      let tmp_11 = Rc::new(positive::xO(tmp_10));
+      let tmp_12 = Rc::new(positive::xI(tmp_11));
+      let tmp_13 = Rc::new(positive::xO(tmp_12));
+      let tmp_14 = Rc::new(positive::xI(tmp_13));
+      let tmp_15 = Rc::new(positive::xO(tmp_14));
+      (tmp_2, sub_1(tmp_3, Rc::new(Z::Zpos(tmp_15))))
     },
   }
 }
@@ -2178,25 +2129,25 @@ pub fn fex(f: f64) -> (Rc<Z>, Rc<Z>) {
 // Rocq: Closestpair1.closestpair1_implem.dadd
 // Variant: uncurried
 pub fn dadd(a: (Rc<Z>, Rc<Z>), b: (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>) {
-  let v5 = Clone::clone(&a);
-  let v7 = snd::<Rc<Z>, Rc<Z>>(v5);
-  let v10 = Clone::clone(&b);
-  let e = min(v7, snd::<Rc<Z>, Rc<Z>>(v10));
-  let v21 = a;
-  let v24 = Rc::clone(&e);
-  let v25 = dal(v21, v24);
-  let v28 = b;
-  let v31 = Rc::clone(&e);
-  (add_2(v25, dal(v28, v31)), e)
+  let a_clone = Clone::clone(&a);
+  let tmp = snd::<Rc<Z>, Rc<Z>>(a_clone);
+  let b_clone = Clone::clone(&b);
+  let e = min(tmp, snd::<Rc<Z>, Rc<Z>>(b_clone));
+  let tmp_1 = a;
+  let e_clone = Rc::clone(&e);
+  let tmp_2 = dal(tmp_1, e_clone);
+  let tmp_3 = b;
+  let e_clone_1 = Rc::clone(&e);
+  (add_2(tmp_2, dal(tmp_3, e_clone_1)), e)
 }
 
 // Rocq: Closestpair1.closestpair1_implem.dmul
 // Variant: uncurried
 pub fn dmul(a: (Rc<Z>, Rc<Z>), b: (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>) {
-  let v5 = Clone::clone(&a);
-  let v7 = fst::<Rc<Z>, Rc<Z>>(v5);
-  let v10 = Clone::clone(&b);
-  (mul_3(v7, fst::<Rc<Z>, Rc<Z>>(v10)), add_2(snd::<Rc<Z>, Rc<Z>>(a), snd::<Rc<Z>, Rc<Z>>(b)))
+  let a_clone = Clone::clone(&a);
+  let tmp = fst::<Rc<Z>, Rc<Z>>(a_clone);
+  let b_clone = Clone::clone(&b);
+  (mul_3(tmp, fst::<Rc<Z>, Rc<Z>>(b_clone)), add_2(snd::<Rc<Z>, Rc<Z>>(a), snd::<Rc<Z>, Rc<Z>>(b)))
 }
 
 // Rocq: Closestpair1.closestpair1_implem.dex
@@ -2204,18 +2155,12 @@ pub fn dmul(a: (Rc<Z>, Rc<Z>), b: (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>) {
 pub fn dex(x: &Rc<Array<f64>>, y: &Rc<Array<f64>>, a: u64, b: u64) -> (Rc<Z>, Rc<Z>) {
   let a_1 = a;
   let b_1 = b;
-  let v8 = x;
-  let v14 = fex(rocq_array::get::<f64>(&v8, a_1));
-  let v16 = x;
-  let dx = dsub(v14, fex(rocq_array::get::<f64>(&v16, b_1)));
-  let v30 = y;
-  let v36 = fex(rocq_array::get::<f64>(&v30, a_1));
-  let v38 = y;
-  let dy = dsub(v36, fex(rocq_array::get::<f64>(&v38, b_1)));
-  let v53 = Clone::clone(&dx);
-  let v57 = dmul(v53, dx);
-  let v60 = Clone::clone(&dy);
-  dadd(v57, dmul(v60, dy))
+  let dx = dsub(fex(rocq_array::get::<f64>(x, a_1)), fex(rocq_array::get::<f64>(x, b_1)));
+  let dy = dsub(fex(rocq_array::get::<f64>(y, a_1)), fex(rocq_array::get::<f64>(y, b_1)));
+  let dx_clone = Clone::clone(&dx);
+  let tmp = dmul(dx_clone, dx);
+  let dy_clone = Clone::clone(&dy);
+  dadd(tmp, dmul(dy_clone, dy))
 }
 
 // Rocq: Closestpair1.closestpair1_implem.cand_step
@@ -2228,32 +2173,25 @@ pub fn cand_step(x: &Rc<Array<f64>>, y: &Rc<Array<f64>>, P: &Rc<Array<u64>>, p: 
     (bj, p0) => {
       match bj {
         (bi, bf) => {
-          let v20 = P;
-          let q = rocq_array::get::<u64>(&v20, c_1);
+          let q = rocq_array::get::<u64>(P, c_1);
           let f = fd(x, y, p_1, q);
-          let v41 = tol(());
-          let v47 = add_4(Clone::clone(bi), v41);
-          match ltb_1(v47, f) {
-            true => {
+          let tmp = tol(());
+          let tmp_1 = add_4(Clone::clone(bi), tmp);
+          if ltb_1(tmp_1, f) {
+            st_1
+          } else {
+            let tmp_2 = dex(x, y, p_1, q);
+            let tmp_3 = x;
+            let tmp_4 = y;
+            let bf_clone = Clone::clone(bf);
+            let p0_clone = Clone::clone(p0);
+            let tmp_5 = dex(tmp_3, tmp_4, bf_clone, p0_clone);
+            if dlt(tmp_2, tmp_5) {
+              std::mem::drop(st_1);
+              ((f, p_1), q)
+            } else {
               st_1
-            },
-            false => {
-              let v65 = dex(x, y, p_1, q);
-              let v66 = x;
-              let v67 = y;
-              let v69 = Clone::clone(bf);
-              let v71 = Clone::clone(p0);
-              let v75 = dex(v66, v67, v69, v71);
-              match dlt(v65, v75) {
-                true => {
-                  std::mem::drop(st_1);
-                  ((f, p_1), q)
-                },
-                false => {
-                  st_1
-                },
-              }
-            },
+            }
           }
         },
       }
@@ -2267,191 +2205,154 @@ pub fn sweep_step(x: &Rc<Array<f64>>, y: &Rc<Array<f64>>, K: &Rc<Array<u64>>, M:
   let n_1 = n;
   let a_1 = a;
   let st_1 = st;
-  let v11 = P;
-  let p = rocq_array::get::<u64>(&v11, a_1);
-  let v16 = K;
-  let v19 = rocq_array::get::<u64>(&v16, p);
-  let v22 = Rc::clone(x);
-  let v25 = Rc::clone(K);
-  let v28 = Rc::clone(M);
-  let v31 = Rc::clone(P);
-  let v36 = {
+  let p = rocq_array::get::<u64>(P, a_1);
+  let tmp = rocq_array::get::<u64>(K, p);
+  let x_clone = Rc::clone(x);
+  let K_clone = Rc::clone(K);
+  let M_clone = Rc::clone(M);
+  let P_clone = Rc::clone(P);
+  let callback: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = Rc::new({
     let __anf_capture_45 = p;
     move |v49: u64, v50: ((f64, u64), u64)| -> bool {
-      let x = &v22;
-      let K = &v25;
-      let M = &v28;
-      let P = &v31;
-      let v52 = Clone::clone(&__anf_capture_45);
-      let v54 = Clone::clone(&v19);
-      cand_cont(x, K, M, P, v52, v54, v49, v50)
+      let x = &x_clone;
+      let K = &K_clone;
+      let M = &M_clone;
+      let P = &P_clone;
+      let tmp_1 = Clone::clone(&__anf_capture_45);
+      let tmp_2 = Clone::clone(&tmp);
+      cand_cont(x, K, M, P, tmp_1, tmp_2, v49, v50)
     }
-  };
-  let v67: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = Rc::new(v36);
-  let v68: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = v67;
-  let v71 = Rc::clone(x);
-  let v74 = Rc::clone(y);
-  let v77 = Rc::clone(P);
-  let v80 = {
+  });
+  let x_clone_1 = Rc::clone(x);
+  let y_clone = Rc::clone(y);
+  let P_clone_1 = Rc::clone(P);
+  let callback_1: Rc<dyn Fn(u64, ((f64, u64), u64)) -> ((f64, u64), u64)> = Rc::new({
     let __anf_capture_87 = p;
     move |v89: u64, v90: ((f64, u64), u64)| -> ((f64, u64), u64) {
-      let x = &v71;
-      let y = &v74;
-      let P = &v77;
-      let v101 = cand_step(x, y, P, Clone::clone(&__anf_capture_87), v89, v90);
-      v101
+      let x = &x_clone_1;
+      let y = &y_clone;
+      let P = &P_clone_1;
+      let tmp_3 = cand_step(x, y, P, Clone::clone(&__anf_capture_87), v89, v90);
+      tmp_3
     }
-  };
-  let v104: Rc<dyn Fn(u64, ((f64, u64), u64)) -> ((f64, u64), u64)> = Rc::new(v80);
-  loop_::<((f64, u64), u64)>(n_1, v68, v104, add_3(a_1, 1u64), st_1)
+  });
+  loop_::<((f64, u64), u64)>(n_1, callback, callback_1, add_3(a_1, 1u64), st_1)
 }
 
 // Rocq: Closestpair1.closestpair1_implem.closestpair
 // Variant: uncurried
 pub fn closestpair(x: Rc<Array<f64>>, y: Rc<Array<f64>>) -> (u64, u64) {
-  let v2 = &x;
-  let n = rocq_array::length::<f64>(&v2);
-  match leb(2u64, n) {
-    true => {
-      let s = div(of_uint63(n), cinit(()));
-      let n1 = sub(n, 1u64);
-      let v38 = {
-        move |_v39: u64, v40: Rc<Array<u64>>| -> bool {
-          std::mem::drop(v40);
-          true
-        }
-      };
-      let v45: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v38);
-      let v46: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = v45;
-      let v49 = Rc::clone(&x);
-      let v54 = {
-        move |v61: u64, v62: Rc<Array<u64>>| -> Rc<Array<u64>> {
-          let v65 = Rc::clone(&v49);
-          let v67 = Clone::clone(&s);
-          let v69 = Clone::clone(&n1);
-          key_step(v65, v67, v69, v61, v62)
-        }
-      };
-      let v77: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v54);
-      let v87 = rocq_array::make::<u64>(n, 0u64);
-      let K = loop_::<Rc<Array<u64>>>(n, v46, v77, 0u64, v87);
-      let v100 = {
-        move |_v101: u64, v102: Rc<Array<u64>>| -> bool {
-          std::mem::drop(v102);
-          true
-        }
-      };
-      let v107: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v100);
-      let v108: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = v107;
-      let v111 = Rc::clone(&K);
-      let v112 = {
-        move |v115: u64, v116: Rc<Array<u64>>| -> Rc<Array<u64>> {
-          let v119 = Rc::clone(&v111);
-          count_step(v119, v115, v116)
-        }
-      };
-      let v127: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v112);
-      let v137 = rocq_array::make::<u64>(n, 0u64);
-      let C = loop_::<Rc<Array<u64>>>(n, v108, v127, 0u64, v137);
-      let v150 = {
-        move |_v151: u64, v152: (Rc<Array<u64>>, u64)| -> bool {
-          std::mem::drop(v152);
-          true
-        }
-      };
-      let v157: Rc<dyn Fn(u64, (Rc<Array<u64>>, u64)) -> bool> = Rc::new(v150);
-      let v159: fn(u64, (Rc<Array<u64>>, u64)) -> (Rc<Array<u64>>, u64) = prefix_step;
-      let v160: Rc<dyn Fn(u64, (Rc<Array<u64>>, u64)) -> (Rc<Array<u64>>, u64)> = Rc::new(v159);
-      let v182 = loop_::<(Rc<Array<u64>>, u64)>(n, v157, v160, 0u64, (C, 0u64));
-      match v182 {
-        (v184, _v186) => {
-          let v189 = {
-            move |_v190: u64, v191: (Rc<Array<u64>>, Rc<Array<u64>>)| -> bool {
-              std::mem::drop(v191);
-              true
-            }
-          };
-          let v196: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> bool> = Rc::new(v189);
-          let v197: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> bool> = v196;
-          let v200 = Rc::clone(&K);
-          let v201 = {
-            move |v204: u64, v205: (Rc<Array<u64>>, Rc<Array<u64>>)| -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-              let K = &v200;
-              let v212 = place_step(K, v204, v205);
-              v212
-            }
-          };
-          let v215: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new(v201);
-          let v226 = rocq_array::make::<u64>(n, 0u64);
-          let v242 = loop_::<(Rc<Array<u64>>, Rc<Array<u64>>)>(n, v197, v215, 0u64, (v226, v184));
-          match &v242 {
-            (a, _P) => {
-              let v250 = {
-                move |_v251: u64, v252: Rc<Array<f64>>| -> bool {
-                  std::mem::drop(v252);
-                  true
-                }
-              };
-              let v257: Rc<dyn Fn(u64, Rc<Array<f64>>) -> bool> = Rc::new(v250);
-              let v258: Rc<dyn Fn(u64, Rc<Array<f64>>) -> bool> = v257;
-              let v261 = Rc::clone(&x);
-              let v264 = Rc::clone(&K);
-              let v265 = {
-                move |v270: u64, v271: Rc<Array<f64>>| -> Rc<Array<f64>> {
-                  let v274 = Rc::clone(&v261);
-                  let v276 = Rc::clone(&v264);
-                  min_step(v274, v276, v270, v271)
-                }
-              };
-              let v284: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new(v265);
-              let v298 = rocq_array::make::<f64>(n, cinit(()));
-              let M = loop_::<Rc<Array<f64>>>(n, v258, v284, 0u64, v298);
-              let v311 = {
-                move |_v312: u64, v313: ((f64, u64), u64)| -> bool {
-                  std::mem::drop(v313);
-                  true
-                }
-              };
-              let v318: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = Rc::new(v311);
-              let v319: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = v318;
-              let v322 = Rc::clone(&x);
-              let v325 = Rc::clone(&y);
-              let v330 = Rc::clone(a);
-              std::mem::drop(v242);
-              let v334 = {
-                let __anf_capture_339 = K;
-                let __anf_capture_345 = n;
-                move |v347: u64, v348: ((f64, u64), u64)| -> ((f64, u64), u64) {
-                  let x = &v322;
-                  let y = &v325;
-                  let K = &__anf_capture_339;
-                  let M = &M;
-                  let a = &v330;
-                  let v361 = sweep_step(x, y, K, M, a, Clone::clone(&__anf_capture_345), v347, v348);
-                  v361
-                }
-              };
-              let v364: Rc<dyn Fn(u64, ((f64, u64), u64)) -> ((f64, u64), u64)> = Rc::new(v334);
-              let v408 = loop_::<((f64, u64), u64)>(n, v319, v364, 0u64, ((fd_owned(x, y, 0u64, 1u64), 0u64), 1u64));
-              match v408 {
-                (v410, v412) => {
-                  match v410 {
-                    (_v415, v417) => {
-                      (v417, v412)
-                    },
-                  }
-                },
-              }
-            },
-          }
-        },
+  let n = rocq_array::length::<f64>(&x);
+  if leb(2u64, n) {
+    let s = div(of_uint63(n), cinit(()));
+    let n1 = sub(n, 1u64);
+    let callback: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v39: u64, v40: Rc<Array<u64>>| -> bool {
+      std::mem::drop(v40);
+      true
+    });
+    let x_clone = Rc::clone(&x);
+    let callback_1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
+      move |v61: u64, v62: Rc<Array<u64>>| -> Rc<Array<u64>> {
+        let tmp = Rc::clone(&x_clone);
+        let s_clone = Clone::clone(&s);
+        let n1_clone = Clone::clone(&n1);
+        key_step(tmp, s_clone, n1_clone, v61, v62)
       }
-    },
-    false => {
-      std::mem::drop(x);
-      std::mem::drop(y);
-      (0u64, 1u64)
-    },
+    });
+    let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+    let K = loop_::<Rc<Array<u64>>>(n, callback, callback_1, 0u64, tmp_1);
+    let callback_2: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v101: u64, v102: Rc<Array<u64>>| -> bool {
+      std::mem::drop(v102);
+      true
+    });
+    let K_clone = Rc::clone(&K);
+    let callback_3: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
+      move |v115: u64, v116: Rc<Array<u64>>| -> Rc<Array<u64>> {
+        let tmp_2 = Rc::clone(&K_clone);
+        count_step(tmp_2, v115, v116)
+      }
+    });
+    let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+    let C = loop_::<Rc<Array<u64>>>(n, callback_2, callback_3, 0u64, tmp_3);
+    let callback_4: Rc<dyn Fn(u64, (Rc<Array<u64>>, u64)) -> bool> = Rc::new(move |_v151: u64, v152: (Rc<Array<u64>>, u64)| -> bool {
+      std::mem::drop(v152);
+      true
+    });
+    let tmp_4: fn(u64, (Rc<Array<u64>>, u64)) -> (Rc<Array<u64>>, u64) = prefix_step;
+    let tmp_5: Rc<dyn Fn(u64, (Rc<Array<u64>>, u64)) -> (Rc<Array<u64>>, u64)> = Rc::new(tmp_4);
+    let tmp_6 = loop_::<(Rc<Array<u64>>, u64)>(n, callback_4, tmp_5, 0u64, (C, 0u64));
+    match tmp_6 {
+      (v184, _v186) => {
+        let callback_5: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> bool> = Rc::new(move |_v190: u64, v191: (Rc<Array<u64>>, Rc<Array<u64>>)| -> bool {
+          std::mem::drop(v191);
+          true
+        });
+        let K_clone_1 = Rc::clone(&K);
+        let callback_6: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new({
+          move |v204: u64, v205: (Rc<Array<u64>>, Rc<Array<u64>>)| -> (Rc<Array<u64>>, Rc<Array<u64>>) {
+            let K = &K_clone_1;
+            let tmp_7 = place_step(K, v204, v205);
+            tmp_7
+          }
+        });
+        let tmp_8 = rocq_array::make::<u64>(n, 0u64);
+        let tmp_9 = loop_::<(Rc<Array<u64>>, Rc<Array<u64>>)>(n, callback_5, callback_6, 0u64, (tmp_8, v184));
+        match &tmp_9 {
+          (a, _P) => {
+            let callback_7: Rc<dyn Fn(u64, Rc<Array<f64>>) -> bool> = Rc::new(move |_v251: u64, v252: Rc<Array<f64>>| -> bool {
+              std::mem::drop(v252);
+              true
+            });
+            let x_clone_1 = Rc::clone(&x);
+            let K_clone_2 = Rc::clone(&K);
+            let callback_8: Rc<dyn Fn(u64, Rc<Array<f64>>) -> Rc<Array<f64>>> = Rc::new({
+              move |v270: u64, v271: Rc<Array<f64>>| -> Rc<Array<f64>> {
+                let tmp_10 = Rc::clone(&x_clone_1);
+                let tmp_11 = Rc::clone(&K_clone_2);
+                min_step(tmp_10, tmp_11, v270, v271)
+              }
+            });
+            let tmp_12 = rocq_array::make::<f64>(n, cinit(()));
+            let M = loop_::<Rc<Array<f64>>>(n, callback_7, callback_8, 0u64, tmp_12);
+            let callback_9: Rc<dyn Fn(u64, ((f64, u64), u64)) -> bool> = Rc::new(move |_v312: u64, v313: ((f64, u64), u64)| -> bool {
+              std::mem::drop(v313);
+              true
+            });
+            let x_clone_2 = Rc::clone(&x);
+            let y_clone = Rc::clone(&y);
+            let a_clone = Rc::clone(a);
+            std::mem::drop(tmp_9);
+            let callback_10: Rc<dyn Fn(u64, ((f64, u64), u64)) -> ((f64, u64), u64)> = Rc::new({
+              let __anf_capture_339 = K;
+              let __anf_capture_345 = n;
+              move |v347: u64, v348: ((f64, u64), u64)| -> ((f64, u64), u64) {
+                let x = &x_clone_2;
+                let y = &y_clone;
+                let K = &__anf_capture_339;
+                let M = &M;
+                let a = &a_clone;
+                let tmp_13 = sweep_step(x, y, K, M, a, Clone::clone(&__anf_capture_345), v347, v348);
+                tmp_13
+              }
+            });
+            let tmp_14 = loop_::<((f64, u64), u64)>(n, callback_9, callback_10, 0u64, ((fd_owned(x, y, 0u64, 1u64), 0u64), 1u64));
+            match tmp_14 {
+              (v410, v412) => {
+                match v410 {
+                  (_v415, v417) => {
+                    (v417, v412)
+                  },
+                }
+              },
+            }
+          },
+        }
+      },
+    }
+  } else {
+    std::mem::drop(x);
+    std::mem::drop(y);
+    (0u64, 1u64)
   }
 }
 
@@ -2604,12 +2505,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<f64>>, Rc<Array<f64>>) -> (u64, u64)> {
-  let v0: fn(Rc<Array<f64>>, Rc<Array<f64>>) -> (u64, u64) = closestpair;
-  let v1: Rc<dyn Fn(Rc<Array<f64>>, Rc<Array<f64>>) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -2690,7 +2585,7 @@ fn solve(input: &str) -> String {
         let n: u64 = n.parse().unwrap(); if n == 0 { break; }
         let mut xs = Vec::new(); let mut ys = Vec::new(); let mut original = Vec::new();
         for _ in 0..n { let x = t.next(); let y = t.next(); xs.push(x.parse().unwrap()); ys.push(y.parse().unwrap()); original.push((x,y)); }
-        let result = run()(array(xs, 0.0), array(ys, 0.0)); let (i, j) = &result;
+        let result = closestpair(array(xs, 0.0), array(ys, 0.0)); let (i, j) = &result;
         let (x, y) = original[*i as usize]; let (u, v) = original[*j as usize]; out.push_str(&format!("{x} {y} {u} {v}\n"));
     }
     out

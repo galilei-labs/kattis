@@ -21,4 +21,4 @@ archive = "bigfactoring_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/bigfactoring.ml"
-Rust = "extraction/rust/submit/bigfactoring.rs"
+Rust = "extraction/rust/snapshots/bigfactoring_extracted.rs.interface.json"

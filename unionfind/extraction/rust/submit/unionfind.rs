@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Unionfind.unionfind_implem.run_ops
-// Variant: uncurried
-pub fn run_ops() -> Rc<dyn Fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>>> {
-  let v0: fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>> = run_ops_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Unionfind.unionfind_implem.run_ops
-pub fn run_ops_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>> = run_ops_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -698,28 +682,100 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Unionfind.unionfind_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
+  }
+}
+
+// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
+// Variant: uncurried
+pub fn add(v0: u64, v1: u64) -> u64 {
+  rocq_int63::add(v0, v1)
+}
+
+// Rocq: Unionfind.unionfind_implem.count_queries
+// Variant: uncurried
+pub fn count_queries_1(xu: Rc<Array<bool>>, q: u64, k: u64, c: u64) -> u64 {
+  count_queries(xu, q, k, c, ())
+}
+
+// Rocq: Unionfind.unionfind_implem.count_queries (local: count_queries)
+// Variant: uncurried, lifted
+pub fn count_queries(xu: Rc<Array<bool>>, q: u64, k: u64, c: u64, _H: ()) -> u64 {
+  let tmp = ltb(k, q);
+  match bdec(tmp) {
+    sumbool::left => {
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<bool>(&xu, k);
+      let tmp_3 = if tmp_2 {
+        c
+      } else {
+        add(c, 1u64)
+      };
+      count_queries(xu, q, tmp_1, tmp_3, ())
     },
-    false => {
-      sumbool::right
+    sumbool::right => {
+      std::mem::drop(xu);
+      c
     },
   }
 }
 
+// Rocq: Unionfind.unionfind_implem.pack_queries
+// Variant: uncurried
+pub fn pack_queries_1(xu: Rc<Array<bool>>, raw: Rc<Array<bool>>, q: u64, k: u64, c: u64, out: Rc<Array<bool>>) -> Rc<Array<bool>> {
+  pack_queries(xu, raw, q, k, c, out, ())
+}
+
+// Rocq: Unionfind.unionfind_implem.pack_queries (local: pack_queries)
+// Variant: uncurried, lifted
+pub fn pack_queries(xu: Rc<Array<bool>>, raw: Rc<Array<bool>>, q: u64, k: u64, c: u64, out: Rc<Array<bool>>, _H: ()) -> Rc<Array<bool>> {
+  let tmp = ltb(k, q);
+  match bdec(tmp) {
+    sumbool::left => {
+      let tmp_1 = rocq_array::get::<bool>(&xu, k);
+      if tmp_1 {
+        pack_queries(xu, raw, q, add(k, 1u64), c, out, ())
+      } else {
+        let tmp_2 = add(k, 1u64);
+        let tmp_3 = add(c, 1u64);
+        let tmp_4 = rocq_array::get::<bool>(&raw, k);
+        let tmp_5 = rocq_array::set::<bool>(out, c, tmp_4);
+        pack_queries(xu, raw, q, tmp_2, tmp_3, tmp_5, ())
+      }
+    },
+    sumbool::right => {
+      std::mem::drop(xu);
+      std::mem::drop(raw);
+      out
+    },
+  }
+}
+
+// Rocq: Unionfind.unionfind_implem.compact_queries
+// Variant: uncurried
+pub fn compact_queries(xu: Rc<Array<bool>>, raw: Rc<Array<bool>>) -> Rc<Array<bool>> {
+  let q = rocq_array::length::<bool>(&xu);
+  let xu_clone = Rc::clone(&xu);
+  let count = count_queries_1(xu_clone, q, 0u64, 0u64);
+  let tmp = rocq_array::make::<bool>(count, false);
+  pack_queries_1(xu, raw, q, 0u64, 0u64, tmp)
+}
+
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Unionfind.unionfind_implem.find
@@ -731,63 +787,45 @@ pub fn find_1(par: Rc<Array<u64>>, x: u64) -> (u64, Rc<Array<u64>>) {
 // Rocq: Unionfind.unionfind_implem.find (local: find)
 // Variant: uncurried, lifted
 pub fn find(par: Rc<Array<u64>>, x: u64, _H: ()) -> (u64, Rc<Array<u64>>) {
-  let v3 = &par;
-  let p = rocq_array::get::<u64>(&v3, x);
-  let v14 = eqb(p, x);
-  match bdec(v14) {
+  let p = rocq_array::get::<u64>(&par, x);
+  let tmp = eqb(p, x);
+  match bdec(tmp) {
     sumbool::left => {
       (x, par)
     },
     sumbool::right => {
       let rp = find(par, p, ());
-      let v38 = Clone::clone(&rp);
-      let v40 = fst::<u64, Rc<Array<u64>>>(v38);
-      let v43 = Clone::clone(&rp);
-      let v45 = snd::<u64, Rc<Array<u64>>>(v43);
-      let v56 = rocq_array::set::<u64>(v45, x, fst::<u64, Rc<Array<u64>>>(rp));
-      (v40, v56)
+      let rp_clone = Clone::clone(&rp);
+      let tmp_1 = fst::<u64, Rc<Array<u64>>>(rp_clone);
+      let rp_clone_1 = Clone::clone(&rp);
+      let tmp_2 = snd::<u64, Rc<Array<u64>>>(rp_clone_1);
+      let tmp_3 = rocq_array::set::<u64>(tmp_2, x, fst::<u64, Rc<Array<u64>>>(rp));
+      (tmp_1, tmp_3)
     },
   }
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
-// Variant: uncurried
-pub fn add(v0: u64, v1: u64) -> u64 {
-  rocq_int63::add(v0, v1)
 }
 
 // Rocq: Unionfind.unionfind_implem.link
 // Variant: uncurried
 pub fn link(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, ra: u64, rb: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  match eqb(ra, rb) {
-    true => {
-      (par, rk)
-    },
-    false => {
-      let v19 = &rk;
-      let ka = rocq_array::get::<u64>(&v19, ra);
-      let v23 = &rk;
-      let kb = rocq_array::get::<u64>(&v23, rb);
-      match ltb(ka, kb) {
-        true => {
-          let v41 = rocq_array::set::<u64>(par, ra, rb);
-          (v41, rk)
-        },
-        false => {
-          match ltb(kb, ka) {
-            true => {
-              let v63 = rocq_array::set::<u64>(par, rb, ra);
-              (v63, rk)
-            },
-            false => {
-              let v77 = rocq_array::set::<u64>(par, ra, rb);
-              let v92 = rocq_array::set::<u64>(rk, rb, add(kb, 1u64));
-              (v77, v92)
-            },
-          }
-        },
+  if eqb(ra, rb) {
+    (par, rk)
+  } else {
+    let ka = rocq_array::get::<u64>(&rk, ra);
+    let kb = rocq_array::get::<u64>(&rk, rb);
+    if ltb(ka, kb) {
+      let tmp = rocq_array::set::<u64>(par, ra, rb);
+      (tmp, rk)
+    } else {
+      if ltb(kb, ka) {
+        let tmp_1 = rocq_array::set::<u64>(par, rb, ra);
+        (tmp_1, rk)
+      } else {
+        let tmp_2 = rocq_array::set::<u64>(par, ra, rb);
+        let tmp_3 = rocq_array::set::<u64>(rk, rb, add(kb, 1u64));
+        (tmp_2, tmp_3)
       }
-    },
+    }
   }
 }
 
@@ -800,37 +838,31 @@ pub fn scan_1(xu: Rc<Array<bool>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, q: u6
 // Rocq: Unionfind.unionfind_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(xu: Rc<Array<bool>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, q: u64, k: u64, par: Rc<Array<u64>>, rk: Rc<Array<u64>>, out: Rc<Array<bool>>, _W: (), _H: ()) -> Rc<Array<bool>> {
-  let v17 = ltb(k, q);
-  match bdec(v17) {
+  let tmp = ltb(k, q);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &xa;
-      let a = rocq_array::get::<u64>(&v21, k);
-      let v25 = &xb;
-      let b = rocq_array::get::<u64>(&v25, k);
+      let a = rocq_array::get::<u64>(&xa, k);
+      let b = rocq_array::get::<u64>(&xb, k);
       let fa = find_1(par, a);
-      let v38 = Clone::clone(&fa);
-      let v41 = snd::<u64, Rc<Array<u64>>>(v38);
-      let fb = find_1(v41, b);
-      let v46 = &xu;
-      let v49 = rocq_array::get::<bool>(&v46, k);
-      match v49 {
-        true => {
-          let v54 = Clone::clone(&fb);
-          let v56 = snd::<u64, Rc<Array<u64>>>(v54);
-          let l = link(v56, rk, fst::<u64, Rc<Array<u64>>>(fa), fst::<u64, Rc<Array<u64>>>(fb));
-          let v81 = add(k, 1u64);
-          let v84 = Clone::clone(&l);
-          let v86 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v84);
-          let v90 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(l);
-          scan(xu, xa, xb, q, v81, v86, v90, out, (), ())
-        },
-        false => {
-          let v126 = add(k, 1u64);
-          let v129 = Clone::clone(&fb);
-          let v131 = snd::<u64, Rc<Array<u64>>>(v129);
-          let v152 = rocq_array::set::<bool>(out, k, eqb(fst::<u64, Rc<Array<u64>>>(fa), fst::<u64, Rc<Array<u64>>>(fb)));
-          scan(xu, xa, xb, q, v126, v131, rk, v152, (), ())
-        },
+      let fa_clone = Clone::clone(&fa);
+      let tmp_1 = snd::<u64, Rc<Array<u64>>>(fa_clone);
+      let fb = find_1(tmp_1, b);
+      let tmp_2 = rocq_array::get::<bool>(&xu, k);
+      if tmp_2 {
+        let fb_clone = Clone::clone(&fb);
+        let tmp_3 = snd::<u64, Rc<Array<u64>>>(fb_clone);
+        let l = link(tmp_3, rk, fst::<u64, Rc<Array<u64>>>(fa), fst::<u64, Rc<Array<u64>>>(fb));
+        let tmp_4 = add(k, 1u64);
+        let l_clone = Clone::clone(&l);
+        let tmp_5 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(l_clone);
+        let tmp_6 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(l);
+        scan(xu, xa, xb, q, tmp_4, tmp_5, tmp_6, out, (), ())
+      } else {
+        let tmp_7 = add(k, 1u64);
+        let fb_clone_1 = Clone::clone(&fb);
+        let tmp_8 = snd::<u64, Rc<Array<u64>>>(fb_clone_1);
+        let tmp_9 = rocq_array::set::<bool>(out, k, eqb(fst::<u64, Rc<Array<u64>>>(fa), fst::<u64, Rc<Array<u64>>>(fb)));
+        scan(xu, xa, xb, q, tmp_7, tmp_8, rk, tmp_9, (), ())
       }
     },
     sumbool::right => {
@@ -853,12 +885,12 @@ pub fn init_loop_1(n: u64, i: u64, p: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Unionfind.unionfind_implem.init_loop (local: init_loop)
 // Variant: uncurried, lifted
 pub fn init_loop(n: u64, i: u64, p: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(i, 1u64);
-      let v29 = rocq_array::set::<u64>(p, i, i);
-      init_loop(n, v22, v29, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(p, i, i);
+      init_loop(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       p
@@ -868,51 +900,26 @@ pub fn init_loop(n: u64, i: u64, p: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Unionfind.unionfind_implem.init_par
 pub fn init_par(n: u64) -> Rc<Array<u64>> {
-  let v10 = rocq_array::make::<u64>(n, 0u64);
-  init_loop_1(n, 0u64, v10)
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  init_loop_1(n, 0u64, tmp)
+}
+
+// Rocq: Unionfind.unionfind_implem.run_ops_raw
+// Variant: uncurried
+pub fn run_ops_raw(xn: u64, xu: Rc<Array<bool>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>) -> Rc<Array<bool>> {
+  let q = rocq_array::length::<bool>(&xu);
+  let tmp = init_par(xn);
+  let tmp_1 = rocq_array::make::<u64>(xn, 0u64);
+  let tmp_2 = rocq_array::make::<bool>(q, false);
+  scan_1(xu, xa, xb, q, 0u64, tmp, tmp_1, tmp_2)
 }
 
 // Rocq: Unionfind.unionfind_implem.run_ops_impl
 // Variant: uncurried
 pub fn run_ops_impl(xn: u64, xu: Rc<Array<bool>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>) -> Rc<Array<bool>> {
-  let v4 = &xu;
-  let q = rocq_array::length::<bool>(&v4);
-  let v12 = init_par(xn);
-  let v19 = rocq_array::make::<u64>(xn, 0u64);
-  let v26 = rocq_array::make::<bool>(q, false);
-  scan_1(xu, xa, xb, q, 0u64, v12, v19, v26)
-}
-
-// Rocq: Unionfind.unionfind_implem.run_ops_impl
-pub fn run_ops_impl_curried(xn: u64) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>> {
-  let v3 = {
-    move |xu: Rc<Array<bool>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>> {
-      let xn = &xn;
-      let v8 = Clone::clone(xn);
-      let v11 = {
-        move |xa: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>> {
-          let xn = &v8;
-          let xu = &xu;
-          let v18 = Clone::clone(xn);
-          let v20 = Rc::clone(xu);
-          let v23 = {
-            move |xb: Rc<Array<u64>>| -> Rc<Array<bool>> {
-              let v33 = Clone::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&xa);
-              run_ops_impl(v33, v35, v37, xb)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>> = Rc::new(v3);
-  v51
+  let xu_clone = Rc::clone(&xu);
+  let tmp = run_ops_raw(xn, xu_clone, xa, xb);
+  compact_queries(xu, tmp)
 }
 
 mod __rocq_reuse {
@@ -1064,12 +1071,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>>> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>>> = __rocq_global_321.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_321: Rc<dyn Fn(u64, Rc<Array<bool>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<bool>>> = run_ops(); }
-std::thread_local! { static __rocq_global_324: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<bool>>>>>> = run_ops_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1140,7 +1141,7 @@ pub fn entry_streaming(solve: fn(String, &mut dyn std::io::Write)) {
 
 }
 use kattis_io as submission_io;
-// I/O adapter ported from the historical Rust survey; no algorithm changes.
+// I/O adapter: run_ops returns one answer per query, in query order.
 const STACK_MIB: usize = 512;
 use kattis_io::*;
 
@@ -1150,9 +1151,9 @@ fn main() { submission_io::entry(|input| {
     let n = t.uint(); let q = t.uint();
     let (mut ops, mut a, mut b) = (Vec::new(), Vec::new(), Vec::new());
     for _ in 0..q { ops.push(t.next() == "="); a.push(t.uint()); b.push(t.uint()); }
-    let result = run()(n, submission_io::array(ops.clone(), false), submission_io::ints(a), submission_io::ints(b));
-    for (i, is_union) in ops.iter().enumerate() { if !is_union {
-        writeln!(out, "{}", if *result.get(i as u64) { "yes" } else { "no" }).unwrap();
-    } }
+    let result = run_ops_impl(n, submission_io::array(ops, false), submission_io::ints(a), submission_io::ints(b));
+    for i in 0..result.length() {
+        writeln!(out, "{}", if *result.get(i) { "yes" } else { "no" }).unwrap();
+    }
     out
 }); }

@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,13 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Tugofwar.tugofwar_implem.tugofwar
-pub fn tugofwar() -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: fn(Rc<Array<u64>>) -> (u64, u64) = tugofwar_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -684,13 +676,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Tugofwar.tugofwar_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -715,14 +704,12 @@ pub fn sum_loop_1(a: Rc<Array<u64>>, i: u64, acc: u64) -> u64 {
 // Rocq: Tugofwar.tugofwar_implem.sum_loop (local: sum_loop)
 // Variant: uncurried, lifted
 pub fn sum_loop(a: Rc<Array<u64>>, i: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(0u64, i);
-  match bdec(v13) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = sub(i, 1u64);
-      let v33 = sub(i, 1u64);
-      let v34 = &a;
-      let v37 = rocq_array::get::<u64>(&v34, v33);
-      sum_loop(a, v24, add(acc, v37), ())
+      let tmp_1 = sub(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&a, sub(i, 1u64));
+      sum_loop(a, tmp_1, add(acc, tmp_2), ())
     },
     sumbool::right => {
       std::mem::drop(a);
@@ -752,21 +739,16 @@ pub fn cell_loop_1(t: Rc<Array<bool>>, W: u64, x: u64, c: u64, s: u64) -> Rc<Arr
 // Rocq: Tugofwar.tugofwar_implem.cell_loop (local: cell_loop)
 // Variant: uncurried, lifted
 pub fn cell_loop(t: Rc<Array<bool>>, W: u64, x: u64, c: u64, s: u64, _H: ()) -> Rc<Array<bool>> {
-  let v13 = ltb(s, W);
-  match bdec(v13) {
+  let tmp = ltb(s, W);
+  match bdec(tmp) {
     sumbool::left => {
-      let v42 = add(mul(sub(c, 1u64), W), sub(s, x));
-      let v43 = &t;
-      let v46 = rocq_array::get::<bool>(&v43, v42);
-      let v47 = match v46 {
-        true => {
-          rocq_array::set::<bool>(t, add(mul(c, W), s), true)
-        },
-        false => {
-          t
-        },
+      let tmp_1 = rocq_array::get::<bool>(&t, add(mul(sub(c, 1u64), W), sub(s, x)));
+      let tmp_2 = if tmp_1 {
+        rocq_array::set::<bool>(t, add(mul(c, W), s), true)
+      } else {
+        t
       };
-      cell_loop(v47, W, x, c, add(s, 1u64), ())
+      cell_loop(tmp_2, W, x, c, add(s, 1u64), ())
     },
     sumbool::right => {
       t
@@ -783,11 +765,11 @@ pub fn row_loop_1(t: Rc<Array<bool>>, W: u64, x: u64, c: u64) -> Rc<Array<bool>>
 // Rocq: Tugofwar.tugofwar_implem.row_loop (local: row_loop)
 // Variant: uncurried, lifted
 pub fn row_loop(t: Rc<Array<bool>>, W: u64, x: u64, c: u64, _H: ()) -> Rc<Array<bool>> {
-  let v14 = ltb(0u64, c);
-  match bdec(v14) {
+  let tmp = ltb(0u64, c);
+  match bdec(tmp) {
     sumbool::left => {
-      let v29 = cell_loop_1(t, W, x, c, x);
-      row_loop(v29, W, x, sub(c, 1u64), ())
+      let tmp_1 = cell_loop_1(t, W, x, c, x);
+      row_loop(tmp_1, W, x, sub(c, 1u64), ())
     },
     sumbool::right => {
       t
@@ -804,14 +786,12 @@ pub fn item_loop_1(a: Rc<Array<u64>>, t: Rc<Array<bool>>, W: u64, K: u64, i: u64
 // Rocq: Tugofwar.tugofwar_implem.item_loop (local: item_loop)
 // Variant: uncurried, lifted
 pub fn item_loop(a: Rc<Array<u64>>, t: Rc<Array<bool>>, W: u64, K: u64, i: u64, _H: ()) -> Rc<Array<bool>> {
-  let v15 = ltb(0u64, i);
-  match bdec(v15) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
-      let v27 = sub(i, 1u64);
-      let v28 = &a;
-      let v31 = rocq_array::get::<u64>(&v28, v27);
-      let v40 = row_loop_1(t, W, v31, K);
-      item_loop(a, v40, W, K, sub(i, 1u64), ())
+      let tmp_1 = rocq_array::get::<u64>(&a, sub(i, 1u64));
+      let tmp_2 = row_loop_1(t, W, tmp_1, K);
+      item_loop(a, tmp_2, W, K, sub(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(a);
@@ -823,13 +803,10 @@ pub fn item_loop(a: Rc<Array<u64>>, t: Rc<Array<bool>>, W: u64, K: u64, i: u64, 
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -842,48 +819,40 @@ pub fn best_loop_1(t: Rc<Array<bool>>, W: u64, h: u64, K: u64, s: u64) -> u64 {
 // Rocq: Tugofwar.tugofwar_implem.best_loop (local: best_loop)
 // Variant: uncurried, lifted
 pub fn best_loop(t: Rc<Array<bool>>, W: u64, h: u64, K: u64, s: u64, _H: ()) -> u64 {
-  let v18 = add(mul(h, W), s);
-  let v19 = &t;
-  let v22 = rocq_array::get::<bool>(&v19, v18);
-  let v34 = add(mul(K, W), s);
-  let v35 = &t;
-  let v38 = rocq_array::get::<bool>(&v35, v34);
-  match orb(v22, v38) {
-    true => {
-      std::mem::drop(t);
-      s
-    },
-    false => {
-      let v56 = ltb(0u64, s);
-      match bdec(v56) {
-        sumbool::left => {
-          best_loop(t, W, h, K, sub(s, 1u64), ())
-        },
-        sumbool::right => {
-          std::mem::drop(t);
-          0u64
-        },
-      }
-    },
+  let tmp = rocq_array::get::<bool>(&t, add(mul(h, W), s));
+  let tmp_1 = rocq_array::get::<bool>(&t, add(mul(K, W), s));
+  if orb(tmp, tmp_1) {
+    std::mem::drop(t);
+    s
+  } else {
+    let tmp_2 = ltb(0u64, s);
+    match bdec(tmp_2) {
+      sumbool::left => {
+        best_loop(t, W, h, K, sub(s, 1u64), ())
+      },
+      sumbool::right => {
+        std::mem::drop(t);
+        0u64
+      },
+    }
   }
 }
 
 // Rocq: Tugofwar.tugofwar_implem.tugofwar_impl
 pub fn tugofwar_impl(a: Rc<Array<u64>>) -> (u64, u64) {
-  let v1 = &a;
-  let n = rocq_array::length::<u64>(&v1);
-  let v8 = Rc::clone(&a);
-  let S = sum_loop_1(v8, n, 0u64);
+  let n = rocq_array::length::<u64>(&a);
+  let a_clone = Rc::clone(&a);
+  let S = sum_loop_1(a_clone, n, 0u64);
   let half = div(S, 2u64);
   let W = add(half, 1u64);
   let h = div(n, 2u64);
   let K = sub(n, h);
-  let v64 = rocq_array::make::<bool>(mul(add(K, 1u64), W), false);
-  let t0 = rocq_array::set::<bool>(v64, 0u64, true);
+  let tmp = rocq_array::make::<bool>(mul(add(K, 1u64), W), false);
+  let t0 = rocq_array::set::<bool>(tmp, 0u64, true);
   let t = item_loop_1(a, t0, W, K, n);
   let b = best_loop_1(t, W, h, K, half);
-  let v105 = sub(S, b);
-  (b, v105)
+  let tmp_1 = sub(S, b);
+  (b, tmp_1)
 }
 
 mod __rocq_reuse {
@@ -1035,11 +1004,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = __rocq_global_410.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_410: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = tugofwar(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1115,7 +1079,7 @@ const STACK_MIB: usize = 256;
 use kattis_io::*;
 
 fn solve(input: &str) -> String {
-    let mut t = Tokens::new(input); let n = t.uint(); let result = run()(t.uints(n));
+    let mut t = Tokens::new(input); let n = t.uint(); let result = tugofwar_impl(t.uints(n));
     let (x, y) = &result; format!("{x} {y}\n")
 }
 fn main() { entry(solve); }

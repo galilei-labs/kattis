@@ -6,9 +6,11 @@
  (rocq.theory
   (name Median.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name Median)
  (modules median_implem)
- (theories Median.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Median.spec Stdlib stdpp StdGalilei Flocq)
+  (generate_project_file))

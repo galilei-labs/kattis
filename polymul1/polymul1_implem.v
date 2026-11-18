@@ -18,12 +18,19 @@
    to column J); the final cells are [conv a b k = rows a b |a| k].  The
    math product [pmul] (sum of shifted scaled copies of b) evaluates to
    eval a x * eval b x and has conv a b k as its k-th coefficient, so it
-   is the witness of the existential. *)
+   is the witness of the existential.
+
+   Cost.  [Elpi complexity] translates sumbool, bdec, row_loop, rows_loop,
+   polymul_impl and polymul (callee first).  row_loop from j costs at most
+   50 * (lb - j) + 10 steps (row_loop_time); rows_loop from i at most
+   (50 * lb + 100) * (la - i) + 10 (rows_loop_time); polymul at most
+   150 * ((p + 1) * (q + 1)) + 100 (polymul_time). *)
 
 From Polymul1.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -79,6 +86,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -104,6 +113,8 @@ Fixpoint row_loop (y : array int) (ai i lb j : int) (r : array int)
         (Acc_inv H (dec_step lb j Hj))
   | right _ => r
   end.
+Elpi complexity row_loop.
+Arguments row_loop_cost : simpl never.
 
 Lemma row_loop_eq : forall y ai i lb j r H,
   row_loop y ai i lb j r H =
@@ -126,6 +137,8 @@ Fixpoint rows_loop (x y : array int) (la lb i : int) (r : array int)
         (Acc_inv H (dec_step la i Hi))
   | right _ => r
   end.
+Elpi complexity rows_loop.
+Arguments rows_loop_cost : simpl never.
 
 Lemma rows_loop_eq : forall x y la lb i r H,
   rows_loop x y la lb i r H =
@@ -146,6 +159,8 @@ Definition polymul_impl (x y : array sint) : array sint :=
   else
     rows_loop x y la lb 0 (PArray.make (la + lb - 1) 0)
       (Zwf_well_founded 0 (gap la 0)).
+Elpi complexity polymul_impl.
+Arguments polymul_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Math side: the coefficient functions                                *)
@@ -563,8 +578,145 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition polymul : array sint -> array sint -> array sint := polymul_impl.
+Elpi complexity polymul.
 
 Definition polymul_correct : forall (a b : list Z) (x y : array sint),
   valid_input a b -> repr x a -> repr y b ->
   exists p : list Z, repr (polymul x y) p /\ polymul_spec a b p
   := polymul_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Ltac set_simpl :=
+  repeat match goal with
+  | |- context [cost (extract (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g) ?h ?i)] =>
+      change (cost (extract (extract (extract (set_cost a b c) d e) f g) h i)) with 1%nat
+  | |- context [cost (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (set_cost a b c) d e) f g)) with 0%nat
+  | |- context [cost (extract (set_cost ?a ?b ?c) ?d ?e)] =>
+      change (cost (extract (set_cost a b c) d e)) with 0%nat
+  | |- context [cost (set_cost ?a ?b ?c)] =>
+      change (cost (set_cost a b c)) with 0%nat
+  end.
+
+Ltac z0 f := repeat match goal with |- context [cost (f ?a ?b ?c)] => change (cost (f a b c)) with 0%nat end.
+Ltac z1 f := repeat match goal with |- context [cost (extract (f ?a ?b ?c) ?d ?e)] =>
+  change (cost (extract (f a b c) d e)) with 0%nat end.
+Ltac z2 f := repeat match goal with |- context [cost (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1)] =>
+  change (cost (extract (extract (f a b c) d e) d1 e1)) with 0%nat end.
+Ltac z3 f := repeat match goal with |- context [cost (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2)] =>
+  change (cost (extract (extract (extract (f a b c) d e) d1 e1) d2 e2)) with 0%nat end.
+Ltac z4 f := repeat match goal with |- context [cost (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3)] =>
+  change (cost (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3)) with 0%nat end.
+Ltac z5 f := repeat match goal with |- context [cost (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4)] =>
+  change (cost (extract (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3) d4 e4)) with 0%nat end.
+
+Lemma row_loop_time y yC ai aiC i iC lb lbC j jC r rC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (row_loop_cost stepsCM y yC) ai aiC) i iC) lb lbC) j jC) r rC) H HC)
+   <= 50 * Z.to_nat (gap lb j) + 10)%nat.
+Proof.
+  unfold row_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G y yC ai aiC i iC lb lbC j jC r rC H HC)] =>
+    assert (HG : forall m j jC r rC H HC, (Z.to_nat (gap lb j) <= m)%nat ->
+       (cost (G y yC ai aiC i iC lb lbC j jC r rC H HC) <= 50 * m + 10)%nat) end.
+  { induction m as [|m IH]; intros j' jC' r' rC' [g] HC' Hm;
+      cost_simpl;
+      pose proof (bdec_time (j' <? lb)%uint63 (bool_w (j' <? lb)%uint63)) as HB;
+      cost_destruct (bdec (j' <? lb)%uint63); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hm. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hm' : (Z.to_nat (gap lb (j' + 1)) <= m)%nat).
+      { unfold gap in *. assert (φ (j' + 1) = φ j' + 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      set_simpl. z0 row_loop_cost; z1 row_loop_cost; z2 row_loop_cost; z3 row_loop_cost; z4 row_loop_cost; z5 row_loop_cost.
+      match goal with |- context [@cost ?T (?G' y yC ai aiC i iC lb lbC (j' + 1)%uint63 ?w ?d ?dC ?a ?e)] =>
+        have HI := (IH (j' + 1)%uint63 w d dC a e Hm' : (@cost T (G' y yC ai aiC i iC lb lbC (j' + 1)%uint63 w d dC a e) <= _)%nat) end.
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G y yC ai aiC i iC lb lbC j jC r rC H HC)] =>
+    exact (HG _ j jC r rC H HC (le_n _) : (@cost T (G y yC ai aiC i iC lb lbC j jC r rC H HC) <= _)%nat) end.
+Qed.
+
+Ltac gen_row := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (row_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+    let Hc := fresh "Hrow" in
+    have Hc := (row_loop_time a aC b bC c cC d dC e eC f fC g gC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma rows_loop_time x xC y yC la laC lb lbC i iC r rC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (rows_loop_cost stepsCM x xC) y yC) la laC) lb lbC) i iC) r rC) H HC)
+   <= (50 * Z.to_nat (gap lb 0) + 100) * Z.to_nat (gap la i) + 10)%nat.
+Proof.
+  remember (Z.to_nat (gap lb 0)) as GB eqn:EGB.
+  unfold rows_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC y yC la laC lb lbC i iC r rC H HC)] =>
+    assert (HG : forall m i iC r rC H HC, (Z.to_nat (gap la i) <= m)%nat ->
+       (cost (G x xC y yC la laC lb lbC i iC r rC H HC) <= (50 * GB + 100) * m + 10)%nat) end.
+  { induction m as [|m IH]; intros i' iC' r' rC' [g] HC' Hm;
+      cost_simpl;
+      pose proof (bdec_time (i' <? la)%uint63 (bool_w (i' <? la)%uint63)) as HB;
+      cost_destruct (bdec (i' <? la)%uint63); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hm. lia.
+    - lia.
+    - z0 row_loop_cost; z1 row_loop_cost; z2 row_loop_cost; z3 row_loop_cost; z4 row_loop_cost; z5 row_loop_cost.
+      gen_row. rewrite <- EGB in Hrow.
+      cost_simpl.
+      pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hm' : (Z.to_nat (gap la (i' + 1)) <= m)%nat).
+      { unfold gap in *. assert (φ (i' + 1) = φ i' + 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      z0 rows_loop_cost; z1 rows_loop_cost; z2 rows_loop_cost; z3 rows_loop_cost; z4 rows_loop_cost; z5 rows_loop_cost.
+      match goal with |- context [@cost ?T (?G' x xC y yC la laC lb lbC (i' + 1)%uint63 ?w ?d ?dC ?a ?e)] =>
+        have HI := (IH (i' + 1)%uint63 w d dC a e Hm' : (@cost T (G' x xC y yC la laC lb lbC (i' + 1)%uint63 w d dC a e) <= _)%nat) end.
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G x xC y yC la laC lb lbC i iC r rC H HC)] =>
+    exact (HG _ i iC r rC H HC (le_n _) : (@cost T (G x xC y yC la laC lb lbC i iC r rC H HC) <= _)%nat) end.
+Qed.
+
+Ltac gen_rows := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (rows_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+    let Hc := fresh "Hrows" in
+    have Hc := (rows_loop_time a aC b bC c cC d dC e eC f fC g gC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma gap0 x : Z.to_nat (gap x 0) = Z.to_nat (φ x).
+Proof. unfold gap. change (φ 0) with 0%Z. rewrite Z.sub_0_r. reflexivity. Qed.
+
+
+Theorem polymul_time : exists c1 c2 : nat,
+  forall (first_coeffs second_coeffs : list ℤ)
+  (first_coeffs_arr second_coeffs_arr : array sint),
+  valid_input first_coeffs second_coeffs ->
+  repr first_coeffs_arr first_coeffs ->
+  repr second_coeffs_arr second_coeffs ->
+  (cost2 polymul_cost first_coeffs_arr second_coeffs_arr <= c1 * ((size first_coeffs_arr + 1) * (size second_coeffs_arr + 1)) + c2)%nat.
+Proof.
+  exists 150%nat, 100%nat. intros a b x y _ _ _.
+  remember (size x) as P eqn:EP. remember (size y) as Q eqn:EQ.
+  match goal with |- (_ <= ?R)%nat => remember R as RHS eqn:ER end.
+  unfold cost2, polymul_cost, polymul_impl_cost. cost_simpl.
+  z0 make_cost. z1 make_cost.
+  repeat match goal with
+  | |- context [cost (extract (extract (make_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (make_cost a b c) d e) f g)) with 1%nat
+  end.
+  z0 rows_loop_cost; z1 rows_loop_cost; z2 rows_loop_cost; z3 rows_loop_cost; z4 rows_loop_cost; z5 rows_loop_cost.
+  gen_rows.
+  rewrite !gap0 in Hrows.
+  assert (E1 : Z.to_nat (φ (length x)) = P) by (rewrite EP; reflexivity).
+  assert (E2 : Z.to_nat (φ (length y)) = Q) by (rewrite EQ; reflexivity).
+  rewrite E1 E2 in Hrows.
+  destruct (length x =? 0)%uint63; [|destruct (length y =? 0)%uint63]; cbn [cost].
+  all: clear E1 E2 EP EQ; subst RHS.
+  all: cbn; assert (Hb : ((50 * Q + 100) * P + 10 <= 150 * ((P + 1) * (Q + 1)))%nat) by nia;
+    revert Hb Hrows; generalize ((50 * Q + 100) * P)%nat ((P + 1) * (Q + 1))%nat; intros; lia.
+Qed.
+
+Print Assumptions polymul_time.

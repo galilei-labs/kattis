@@ -2,9 +2,12 @@
 
 (** ** Description *)
 
-(** Find a contiguous substring with the largest absolute difference between
-    counts of two symbols. Break ties by the earliest start, then the
-    earliest end.
+(** A narrow peninsula is divided into sections numbered from west to east.
+    Each section is marked R or B according to whether its rain is primarily
+    red or blue. Find a nonempty contiguous stretch where the difference
+    between the counts of red and blue sections is largest, regardless of
+    which color is more common. Break ties by the westernmost starting
+    section, then the westernmost ending section.
 
     [@kattis purplerain]
     - Difficulty: 3.8
@@ -12,7 +15,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }10^{5}$ characters, each R or B. *)
+    - String length: $1 \le n \le 10^{5}$; each character is R or B. *)
 
 (** ** Examples *)
 
@@ -36,23 +39,26 @@ Output:
                     |#R - #B| over its sections.  Among all maximising
                     parts it returns the one with the smallest west, and
                     then the smallest east.
+                    It runs in at most c1 * n + c2 steps of the cost model,
+                    n the number of sections, for two constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From Stdlib Require Import PrimString String Ascii.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. Section k (1-based, West to East) has the
+(* Section k (1-based, West to East) has the
    colour of character k - 1 of colors. *)
 
 (** ** Definitions *)
 
-(** The number of sections. *)
+(** The number of sections in [colors], one per character. *)
 Definition slen (colors : String.string) : N :=
   N.of_nat (String.length colors).
 
-(** The number of characters of text equal to letter. *)
+(** The number of occurrences of [letter] in [text]. *)
 Fixpoint count (letter : ascii) (text : String.string) : N
   :=
   match text with
@@ -62,27 +68,29 @@ Fixpoint count (letter : ascii) (text : String.string) : N
         letter rest
   end.
 
-(** (west, east) is a [part] of the peninsula: sections
-    west to east, both included. *)
+(** [west] and [east] are valid one-based endpoints of a nonempty inclusive interval
+    of sections. *)
 Definition is_part (colors : String.string) (west east : N)
   : Prop :=
   1 <= west /\ west <= east /\ east <= slen colors.
 
-(** The colours of sections west to east. *)
+(** The substring of [colors] from one-based section [west] through [east],
+    inclusive. *)
 Definition part (colors : String.string) (west east : N) :
   String.string :=
   String.substring (N.to_nat (west - 1))
     (N.to_nat (east - west + 1))
     colors.
 
-(** The absolute difference between the R and B counts in the inclusive interval from west to east. *)
+(** The absolute difference between the counts of R and B in the inclusive interval
+    from [west] through [east]. *)
 Definition difference (colors : String.string)
   (west east : N) : Z :=
   Z.abs (Z.of_N (count "R" (part colors west east))
          - Z.of_N (count "B" (part colors west east))).
 
-(** (west, east) is West of, or is, (west', east'):
-    smaller start, then smaller end. *)
+(** Compare intervals by their western endpoint first, then by their eastern
+    endpoint; equality is permitted. *)
 Definition west_or_equal (west east west' east' : N) : Prop
   :=
   west < west' \/ (west = west' /\ east <= east').
@@ -101,8 +109,9 @@ Record valid_input (colors : String.string) : Prop := {
 (** ** Correctness *)
 
 (** [@requirement]
-    The output identifies an interval maximizing the absolute difference between the two
-    symbol counts, breaking ties by earliest start and then earliest end. *)
+    The output identifies the stretch of peninsula with the largest absolute
+    difference between red and blue section counts, breaking ties by the
+    westernmost start and then the westernmost end. *)
 Definition purplerain_spec
   (colors : String.string)
   (output : N * N)
@@ -119,13 +128,25 @@ Definition purplerain_spec
          west_or_equal west east west' east')
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n)$ steps, where $n$ is the colour sequence length. *)
+Definition purplerain_time_spec (c1 c2 n_colors steps : nat) : Prop :=
+  (steps <= c1 * n_colors + c2)%nat.
+
 (** ** Interface *)
 
-(** Find a contiguous substring with the largest absolute difference between counts of two
-    symbols. Break ties by the earliest start, then the earliest end.
-    - Input [colors]: Sequence of the two symbols R and B.
-    - Output [output]: The output identifies an interval maximizing the absolute difference between the two symbol counts, breaking ties by earliest start and then earliest end. *)
+(** Find the stretch of peninsula with the largest red-blue imbalance,
+    breaking ties by its western endpoint first, then its eastern endpoint.
+    - Input [colors]: Rain colors R or B for sections in west-to-east order.
+    - Output [output]: Inclusive one-based western and eastern section numbers of the selected stretch. *)
 Program purplerain : PrimString.string -> uint * uint.
+
+(** [@example purplerain]
+    - Sample: 1
+    - Input [colors]: "BBRRBRRBRB"%string
+    - Output [output]: (3, 7)
+*)
 
 (** ** Bridge *)
 
@@ -140,6 +161,17 @@ Specification purplerain_correct :
   exists output : N * N,
     repr (purplerain colors_str) output /\
     purplerain_spec colors output.
+
+(** ** Complexity *)
+
+(** [@hide] [purplerain_cost] is the cost translation of [purplerain] (the judge
+    recomputes it and compares) ... *)
+Complexity purplerain_cost for purplerain.
+
+(** [@fold complexity bound] ... and runs in at most c1 * n + c2 steps of the cost model, n the number of sections, for two constants
+    quantified before the input. [@requirement purplerain_time_spec] *)
+Specification purplerain_time : exists c1 c2 : nat, forall colors_str : PrimString.string,
+  purplerain_time_spec c1 c2 (size colors_str) (cost1 purplerain_cost colors_str).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

@@ -21,4 +21,4 @@ archive = "polygonarea_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/polygonarea.ml"
-Rust = "extraction/rust/submit/polygonarea.rs"
+Rust = "extraction/rust/snapshots/polygonarea_extracted.rs.interface.json"

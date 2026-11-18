@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules zapis_extracted_marray)
- (theories Zapis Zapis.spec Stdlib stdpp StdGalilei))
+ (theories Zapis Zapis.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name zapis_extraction)

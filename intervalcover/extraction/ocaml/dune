@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules intervalcover_extracted_marray)
- (theories Intervalcover Intervalcover.spec Stdlib stdpp StdGalilei Flocq))
+ (theories Intervalcover Intervalcover.spec Stdlib stdpp StdGalilei Flocq KattisLib))
 
 (library
  (name intervalcover_extraction)

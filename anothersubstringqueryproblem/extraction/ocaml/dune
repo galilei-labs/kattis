@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules anothersubstringqueryproblem_extracted_marray)
- (theories Anothersubstringqueryproblem Anothersubstringqueryproblem.spec Stdlib stdpp StdGalilei))
+ (theories Anothersubstringqueryproblem Anothersubstringqueryproblem.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name anothersubstringqueryproblem_extraction)

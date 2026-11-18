@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -14,13 +13,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Oddmanout.oddmanout_implem.odd_one
-pub fn odd_one() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = odd_one_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -29,13 +21,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Oddmanout.oddmanout_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -60,13 +49,12 @@ pub fn xor_loop_1(a: Rc<Array<u64>>, n: u64, i: u64, acc: u64) -> u64 {
 // Rocq: Oddmanout.oddmanout_implem.xor_loop (local: xor_loop)
 // Variant: uncurried, lifted
 pub fn xor_loop(a: Rc<Array<u64>>, n: u64, i: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v25 = &a;
-      let v28 = rocq_array::get::<u64>(&v25, i);
-      xor_loop(a, n, v23, lxor(acc, v28), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&a, i);
+      xor_loop(a, n, tmp_1, lxor(acc, tmp_2), ())
     },
     sumbool::right => {
       std::mem::drop(a);
@@ -77,9 +65,8 @@ pub fn xor_loop(a: Rc<Array<u64>>, n: u64, i: u64, acc: u64, _H: ()) -> u64 {
 
 // Rocq: Oddmanout.oddmanout_implem.odd_one_impl
 pub fn odd_one_impl(a: Rc<Array<u64>>) -> u64 {
-  let v2 = &a;
-  let v3 = rocq_array::length::<u64>(&v2);
-  xor_loop_1(a, v3, 0u64, 0u64)
+  let tmp = rocq_array::length::<u64>(&a);
+  xor_loop_1(a, tmp, 0u64, 0u64)
 }
 
 mod __rocq_reuse {
@@ -230,9 +217,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_106.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_106: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = odd_one(); }

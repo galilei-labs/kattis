@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -678,21 +677,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type sint = u64;
 
-// Rocq: Segmentintersection.segmentintersection_implem.intersect
-// Variant: uncurried
-pub fn intersect() -> Rc<dyn Fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>>> {
-  let v0: fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>> = isect_m;
-  let v1: Rc<dyn Fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Segmentintersection.segmentintersection_implem.intersect
-pub fn intersect_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>> = isect_m_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
 // Variant: uncurried
 pub fn sub(v0: u64, v1: u64) -> u64 {
@@ -714,26 +698,20 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -746,13 +724,13 @@ pub fn lesb(v0: u64, v1: u64) -> bool {
 // Rocq: Segmentintersection.segmentintersection_implem.onseg_m
 // Variant: uncurried
 pub fn onseg_m(ax: u64, ay: u64, bx: u64, by_: u64, px: u64, py: u64) -> bool {
-  let v49 = eqb(mul(sub(bx, ax), sub(py, ay)), mul(sub(by_, ay), sub(px, ax)));
-  let v68 = andb(lesb(ax, px), lesb(px, bx));
-  let v86 = andb(lesb(bx, px), lesb(px, ax));
-  let v96 = andb(v49, orb(v68, v86));
-  let v115 = andb(lesb(ay, py), lesb(py, by_));
-  let v133 = andb(lesb(by_, py), lesb(py, ay));
-  andb(v96, orb(v115, v133))
+  let tmp = eqb(mul(sub(bx, ax), sub(py, ay)), mul(sub(by_, ay), sub(px, ax)));
+  let tmp_1 = andb(lesb(ax, px), lesb(px, bx));
+  let tmp_2 = andb(lesb(bx, px), lesb(px, ax));
+  let tmp_3 = andb(tmp, orb(tmp_1, tmp_2));
+  let tmp_4 = andb(lesb(ay, py), lesb(py, by_));
+  let tmp_5 = andb(lesb(by_, py), lesb(py, ay));
+  andb(tmp_3, orb(tmp_4, tmp_5))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltsb
@@ -776,75 +754,54 @@ pub fn lexlt_m(ux: u64, uy: u64, vx: u64, vy: u64) -> bool {
 // Rocq: Segmentintersection.segmentintersection_implem.finish_m
 // Variant: uncurried
 pub fn finish_m(lox: u64, loy: u64, hix: u64, hiy: u64) -> Rc<inter<u64>> {
-  match lexlt_m(lox, loy, hix, hiy) {
-    true => {
-      Rc::new(inter::<u64>::Segment { start_x: lox, start_y: loy, end_x: hix, end_y: hiy })
-    },
-    false => {
-      let v34 = eqb(lox, hix);
-      let v40 = eqb(loy, hiy);
-      match andb(v34, v40) {
-        true => {
-          Rc::new(inter::<u64>::Point { x: lox, y: loy, denominator: 1u64 })
-        },
-        false => {
-          Rc::new(inter::<u64>::Empty)
-        },
-      }
-    },
+  if lexlt_m(lox, loy, hix, hiy) {
+    Rc::new(inter::<u64>::Segment { start_x: lox, start_y: loy, end_x: hix, end_y: hiy })
+  } else {
+    let tmp = eqb(lox, hix);
+    let tmp_1 = eqb(loy, hiy);
+    if andb(tmp, tmp_1) {
+      Rc::new(inter::<u64>::Point { x: lox, y: loy, denominator: 1u64 })
+    } else {
+      Rc::new(inter::<u64>::Empty)
+    }
   }
 }
 
 // Rocq: Segmentintersection.segmentintersection_implem.coll2_m
 // Variant: uncurried
 pub fn coll2_m(p1x: u64, p1y: u64, p2x: u64, p2y: u64, p3x: u64, p3y: u64, p4x: u64, p4y: u64) -> Rc<inter<u64>> {
-  match lexle_m(p1x, p1y, p3x, p3y) {
-    true => {
-      match lexle_m(p2x, p2y, p4x, p4y) {
-        true => {
-          finish_m(p3x, p3y, p2x, p2y)
-        },
-        false => {
-          finish_m(p3x, p3y, p4x, p4y)
-        },
-      }
-    },
-    false => {
-      match lexle_m(p2x, p2y, p4x, p4y) {
-        true => {
-          finish_m(p1x, p1y, p2x, p2y)
-        },
-        false => {
-          finish_m(p1x, p1y, p4x, p4y)
-        },
-      }
-    },
+  if lexle_m(p1x, p1y, p3x, p3y) {
+    if lexle_m(p2x, p2y, p4x, p4y) {
+      finish_m(p3x, p3y, p2x, p2y)
+    } else {
+      finish_m(p3x, p3y, p4x, p4y)
+    }
+  } else {
+    if lexle_m(p2x, p2y, p4x, p4y) {
+      finish_m(p1x, p1y, p2x, p2y)
+    } else {
+      finish_m(p1x, p1y, p4x, p4y)
+    }
   }
 }
 
 // Rocq: Segmentintersection.segmentintersection_implem.coll1_m
 // Variant: uncurried
 pub fn coll1_m(p1x: u64, p1y: u64, p2x: u64, p2y: u64, x3: u64, y3: u64, x4: u64, y4: u64) -> Rc<inter<u64>> {
-  match lexle_m(x3, y3, x4, y4) {
-    true => {
-      coll2_m(p1x, p1y, p2x, p2y, x3, y3, x4, y4)
-    },
-    false => {
-      coll2_m(p1x, p1y, p2x, p2y, x4, y4, x3, y3)
-    },
+  if lexle_m(x3, y3, x4, y4) {
+    coll2_m(p1x, p1y, p2x, p2y, x3, y3, x4, y4)
+  } else {
+    coll2_m(p1x, p1y, p2x, p2y, x4, y4, x3, y3)
   }
 }
 
 // Rocq: Segmentintersection.segmentintersection_implem.coll_m
 // Variant: uncurried
 pub fn coll_m(x1: u64, y1: u64, x2: u64, y2: u64, x3: u64, y3: u64, x4: u64, y4: u64) -> Rc<inter<u64>> {
-  match lexle_m(x1, y1, x2, y2) {
-    true => {
-      coll1_m(x1, y1, x2, y2, x3, y3, x4, y4)
-    },
-    false => {
-      coll1_m(x2, y2, x1, y1, x3, y3, x4, y4)
-    },
+  if lexle_m(x1, y1, x2, y2) {
+    coll1_m(x1, y1, x2, y2, x3, y3, x4, y4)
+  } else {
+    coll1_m(x2, y2, x1, y1, x3, y3, x4, y4)
   }
 }
 
@@ -857,29 +814,23 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 // Rocq: Segmentintersection.segmentintersection_implem.cross_fin_m
 // Variant: uncurried
 pub fn cross_fin_m(x1: u64, y1: u64, rx: u64, ry: u64, den: u64, tn: u64, un: u64) -> Rc<inter<u64>> {
-  let v28 = andb(lesb(0u64, tn), lesb(tn, den));
-  let v41 = andb(v28, lesb(0u64, un));
-  let v47 = lesb(un, den);
-  match andb(v41, v47) {
-    true => {
-      Rc::new(inter::<u64>::Point { x: add(mul(x1, den), mul(tn, rx)), y: add(mul(y1, den), mul(tn, ry)), denominator: den })
-    },
-    false => {
-      Rc::new(inter::<u64>::Empty)
-    },
+  let tmp = andb(lesb(0u64, tn), lesb(tn, den));
+  let tmp_1 = andb(tmp, lesb(0u64, un));
+  let tmp_2 = lesb(un, den);
+  if andb(tmp_1, tmp_2) {
+    Rc::new(inter::<u64>::Point { x: add(mul(x1, den), mul(tn, rx)), y: add(mul(y1, den), mul(tn, ry)), denominator: den })
+  } else {
+    Rc::new(inter::<u64>::Empty)
   }
 }
 
 // Rocq: Segmentintersection.segmentintersection_implem.crossing_m
 // Variant: uncurried
 pub fn crossing_m(x1: u64, y1: u64, rx: u64, ry: u64, den: u64, tn: u64, un: u64) -> Rc<inter<u64>> {
-  match ltsb(den, 0u64) {
-    true => {
-      cross_fin_m(x1, y1, rx, ry, sub(0u64, den), sub(0u64, tn), sub(0u64, un))
-    },
-    false => {
-      cross_fin_m(x1, y1, rx, ry, den, tn, un)
-    },
+  if ltsb(den, 0u64) {
+    cross_fin_m(x1, y1, rx, ry, sub(0u64, den), sub(0u64, tn), sub(0u64, un))
+  } else {
+    cross_fin_m(x1, y1, rx, ry, den, tn, un)
   }
 }
 
@@ -894,149 +845,35 @@ pub fn isect_m(x1: u64, y1: u64, x2: u64, y2: u64, x3: u64, y3: u64, x4: u64, y4
   let qy = sub(y3, y1);
   let den = sub(mul(rx, sy), mul(ry, sx));
   let un = sub(mul(qx, ry), mul(qy, rx));
-  match eqb(den, 0u64) {
-    true => {
-      let v97 = eqb(rx, 0u64);
-      let v105 = eqb(ry, 0u64);
-      match andb(v97, v105) {
-        true => {
-          match onseg_m(x3, y3, x4, y4, x1, y1) {
-            true => {
-              Rc::new(inter::<u64>::Point { x: x1, y: y1, denominator: 1u64 })
-            },
-            false => {
-              Rc::new(inter::<u64>::Empty)
-            },
-          }
-        },
-        false => {
-          let v156 = eqb(sx, 0u64);
-          let v164 = eqb(sy, 0u64);
-          match andb(v156, v164) {
-            true => {
-              match onseg_m(x1, y1, x2, y2, x3, y3) {
-                true => {
-                  Rc::new(inter::<u64>::Point { x: x3, y: y3, denominator: 1u64 })
-                },
-                false => {
-                  Rc::new(inter::<u64>::Empty)
-                },
-              }
-            },
-            false => {
-              match eqb(un, 0u64) {
-                true => {
-                  coll_m(x1, y1, x2, y2, x3, y3, x4, y4)
-                },
-                false => {
-                  Rc::new(inter::<u64>::Empty)
-                },
-              }
-            },
-          }
-        },
+  if eqb(den, 0u64) {
+    let tmp = eqb(rx, 0u64);
+    let tmp_1 = eqb(ry, 0u64);
+    if andb(tmp, tmp_1) {
+      if onseg_m(x3, y3, x4, y4, x1, y1) {
+        Rc::new(inter::<u64>::Point { x: x1, y: y1, denominator: 1u64 })
+      } else {
+        Rc::new(inter::<u64>::Empty)
       }
-    },
-    false => {
-      crossing_m(x1, y1, rx, ry, den, sub(mul(qx, sy), mul(qy, sx)), un)
-    },
-  }
-}
-
-// Rocq: Segmentintersection.segmentintersection_implem.isect_m
-pub fn isect_m_curried(x1: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>> {
-  let v3 = {
-    move |y1: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>> {
-      let x1 = &x1;
-      let v8 = Clone::clone(x1);
-      let v11 = {
-        move |x2: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>> {
-          let x1 = &v8;
-          let y1 = &y1;
-          let v18 = Clone::clone(x1);
-          let v20 = Clone::clone(y1);
-          let v23 = {
-            move |y2: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>> {
-              let x1 = &v18;
-              let y1 = &v20;
-              let x2 = &x2;
-              let v32 = Clone::clone(x1);
-              let v34 = Clone::clone(y1);
-              let v36 = Clone::clone(x2);
-              let v39 = {
-                move |x3: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>> {
-                  let x1 = &v32;
-                  let y1 = &v34;
-                  let x2 = &v36;
-                  let y2 = &y2;
-                  let v50 = Clone::clone(x1);
-                  let v52 = Clone::clone(y1);
-                  let v54 = Clone::clone(x2);
-                  let v56 = Clone::clone(y2);
-                  let v59 = {
-                    move |y3: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>> {
-                      let x1 = &v50;
-                      let y1 = &v52;
-                      let x2 = &v54;
-                      let y2 = &v56;
-                      let x3 = &x3;
-                      let v72 = Clone::clone(x1);
-                      let v74 = Clone::clone(y1);
-                      let v76 = Clone::clone(x2);
-                      let v78 = Clone::clone(y2);
-                      let v80 = Clone::clone(x3);
-                      let v83 = {
-                        move |x4: u64| -> Rc<dyn Fn(u64) -> Rc<inter<u64>>> {
-                          let x1 = &v72;
-                          let y1 = &v74;
-                          let x2 = &v76;
-                          let y2 = &v78;
-                          let x3 = &v80;
-                          let y3 = &y3;
-                          let v98 = Clone::clone(x1);
-                          let v100 = Clone::clone(y1);
-                          let v102 = Clone::clone(x2);
-                          let v104 = Clone::clone(y2);
-                          let v106 = Clone::clone(x3);
-                          let v108 = Clone::clone(y3);
-                          let v111 = {
-                            move |y4: u64| -> Rc<inter<u64>> {
-                              let v129 = Clone::clone(&v98);
-                              let v131 = Clone::clone(&v100);
-                              let v133 = Clone::clone(&v102);
-                              let v135 = Clone::clone(&v104);
-                              let v137 = Clone::clone(&v106);
-                              let v139 = Clone::clone(&v108);
-                              let v141 = Clone::clone(&x4);
-                              isect_m(v129, v131, v133, v135, v137, v139, v141, y4)
-                            }
-                          };
-                          let v147: Rc<dyn Fn(u64) -> Rc<inter<u64>>> = Rc::new(v111);
-                          v147
-                        }
-                      };
-                      let v151: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>> = Rc::new(v83);
-                      v151
-                    }
-                  };
-                  let v155: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>> = Rc::new(v59);
-                  v155
-                }
-              };
-              let v159: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>> = Rc::new(v39);
-              v159
-            }
-          };
-          let v163: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>> = Rc::new(v23);
-          v163
+    } else {
+      let tmp_2 = eqb(sx, 0u64);
+      let tmp_3 = eqb(sy, 0u64);
+      if andb(tmp_2, tmp_3) {
+        if onseg_m(x1, y1, x2, y2, x3, y3) {
+          Rc::new(inter::<u64>::Point { x: x3, y: y3, denominator: 1u64 })
+        } else {
+          Rc::new(inter::<u64>::Empty)
         }
-      };
-      let v167: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>> = Rc::new(v11);
-      v167
+      } else {
+        if eqb(un, 0u64) {
+          coll_m(x1, y1, x2, y2, x3, y3, x4, y4)
+        } else {
+          Rc::new(inter::<u64>::Empty)
+        }
+      }
     }
-  };
-  let v171: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>> = Rc::new(v3);
-  v171
+  } else {
+    crossing_m(x1, y1, rx, ry, den, sub(mul(qx, sy), mul(qy, sx)), un)
+  }
 }
 
 mod __rocq_reuse {
@@ -1188,12 +1025,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>>> {
-  let v0: Rc<dyn Fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>>> = __rocq_global_561.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_561: Rc<dyn Fn(u64, u64, u64, u64, u64, u64, u64, u64) -> Rc<inter<u64>>> = intersect(); }
-std::thread_local! { static __rocq_global_564: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<inter<u64>>>>>>>>>> = intersect_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1278,7 +1109,7 @@ fn hundredths(num: u64, den: u64) -> String {
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let cases = t.uint();
     lines((0..cases).map(|_| {
-        let result = run()(t.int(),t.int(),t.int(),t.int(),t.int(),t.int(),t.int(),t.int());
+        let result = isect_m(t.int(),t.int(),t.int(),t.int(),t.int(),t.int(),t.int(),t.int());
         match result.as_ref() {
             inter::Empty { } => "none".into(),
             inter::Point { x: px, y: py, denominator: d } => format!("{} {}",hundredths(*px,*d),hundredths(*py,*d)),

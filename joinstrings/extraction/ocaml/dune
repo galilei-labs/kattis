@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules joinstrings_extracted_marray)
- (theories Joinstrings Joinstrings.spec Stdlib stdpp StdGalilei))
+ (theories Joinstrings Joinstrings.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name joinstrings_extraction)

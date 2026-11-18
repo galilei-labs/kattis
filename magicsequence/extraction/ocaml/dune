@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_arrays_bigint)
  (extracted_modules magicsequence_extracted_arrays_bigint)
- (theories Magicsequence Magicsequence.spec Stdlib stdpp StdGalilei))
+ (theories Magicsequence Magicsequence.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name magicsequence_extraction)

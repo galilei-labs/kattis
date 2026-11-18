@@ -950,10 +950,6 @@ type char63 = Uint63.t
 
 type string = Pstring.t
 
-(** val make0 : Uint63.t -> char63 -> string **)
-
-let make0 = Pstring.make
-
 (** val length0 : string -> Uint63.t **)
 
 let length0 = Pstring.length
@@ -1143,8 +1139,7 @@ let answer st t w k s1 s2 r =
 let isahasa_impl xsrc xrs xdst xqsrc xqrs xqdst =
   let n = length xsrc in
   let cap = add n n in
-  let st0 = { hkeys =
-    (make cap (make0 (Uint63.of_int (0)) (Uint63.of_int (0)))); hnxt =
+  let st0 = { hkeys = (make cap (Pstring.unsafe_of_string "")); hnxt =
     (make cap (Uint63.of_int (0))); hhead =
     (make (Uint63.of_int (1024)) (Uint63.of_int (0))); hcnt =
     (Uint63.of_int (0)) }

@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules polygonarea_extracted_marray)
- (theories Polygonarea Polygonarea.spec Stdlib stdpp StdGalilei))
+ (theories Polygonarea Polygonarea.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name polygonarea_extraction)

@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules ada_extracted_marray)
- (theories Ada Ada.spec Stdlib stdpp StdGalilei))
+ (theories Ada Ada.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name ada_extraction)

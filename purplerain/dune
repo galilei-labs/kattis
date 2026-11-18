@@ -6,9 +6,11 @@
  (rocq.theory
   (name Purplerain.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Purplerain)
  (modules purplerain_implem)
- (theories Purplerain.spec Stdlib stdpp StdGalilei))
+  (theories Purplerain.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

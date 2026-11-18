@@ -6,9 +6,11 @@
  (rocq.theory
   (name Relatives.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Relatives)
  (modules relatives_implem)
- (theories Relatives.spec Stdlib stdpp StdGalilei))
+  (theories Relatives.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

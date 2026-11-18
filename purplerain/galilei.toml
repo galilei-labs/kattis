@@ -21,4 +21,4 @@ archive = "purplerain_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/purplerain.ml"
-Rust = "extraction/rust/submit/purplerain.rs"
+Rust = "extraction/rust/snapshots/purplerain_extracted.rs.interface.json"

@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules longincsubseq_extracted_marray)
- (theories Longincsubseq Longincsubseq.spec Stdlib stdpp StdGalilei))
+ (theories Longincsubseq Longincsubseq.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name longincsubseq_extraction)

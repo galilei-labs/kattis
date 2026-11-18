@@ -21,4 +21,4 @@ archive = "bank_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/bank.ml"
-Rust = "extraction/rust/submit/bank.rs"
+Rust = "extraction/rust/snapshots/bank_extracted.rs.interface.json"

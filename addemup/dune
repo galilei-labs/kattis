@@ -6,9 +6,11 @@
  (rocq.theory
   (name Addemup.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Addemup)
  (modules addemup_implem)
- (theories Addemup.spec Stdlib stdpp StdGalilei))
+  (theories Addemup.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

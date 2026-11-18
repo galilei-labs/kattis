@@ -801,6 +801,12 @@ Variables eu ev ew : list N.
 
 Definition wsum (ks : list N) : N := fold_right (fun k acc => (Prelude.get ew k + acc)%N) 0%N ks.
 
+Lemma path_weight_wsum : forall ks, path_weight ew ks = wsum ks.
+Proof.
+  induction ks as [|k ks IH]; cbn [path_weight wsum fold_right];
+    [reflexivity|]. rewrite IH. reflexivity.
+Qed.
+
 Lemma wsum_app : forall a b, wsum (a ++ b) = (wsum a + wsum b)%N.
 Proof. induction a; intros b; simpl; [reflexivity|]. rewrite IHa. lia. Qed.
 
@@ -3319,7 +3325,7 @@ Proof.
     assert (Hlast : last vs' 0%N = last vs 0%N) by apply Hl'.
     split.
     + exists (last vs' u), vs', ks'. split; [repeat split; auto|].
-      unfold cost. change (fold_right (fun k acc => (Prelude.get ew k + acc)%N) 0%N ks') with (wsum ew ks').
+      unfold cost. rewrite path_weight_wsum.
       rewrite (last_any vs' u 0%N Ne). unfold P in *. rewrite Hlast in Lw |- *.
       apply N2Z.inj. rewrite Z2N.id by apply to_Z_bounded. rewrite N2Z.inj_add, N2Z.inj_mul.
       assert (Z.of_N (wsum ew ks') <= Z.of_N (wsum ew ks))%Z by (clear - Sk; lia).
@@ -3328,7 +3334,7 @@ Proof.
       pose proof (Low u Hu' vs2 ks2 W2 H2) as L.
       assert (Ne2 : vs2 <> []) by (apply (walk_nonnil eu ev _ _ W2)).
       rewrite (last_any vs2 0%N u Ne2), L2 in L. unfold cost.
-      change (fold_right (fun k acc => (Prelude.get ew k + acc)%N) 0%N ks2) with (wsum ew ks2).
+      rewrite path_weight_wsum.
       unfold P in L. apply N2Z.inj_le. rewrite Z2N.id by apply to_Z_bounded. rewrite N2Z.inj_add, N2Z.inj_mul.
       exact L.
   - apply N2Z.inj. rewrite Z2N.id by apply to_Z_bounded. rewrite Sm. reflexivity.

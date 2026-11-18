@@ -20,6 +20,7 @@
 From Candydistribution.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -40,6 +41,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Lemma dec_mod : forall a b : int,
   (b =? 0) = false -> Zwf 0 (φ (a mod b)) (φ b).
@@ -65,6 +68,7 @@ Fixpoint egcd_loop (k a b sa sb : int)
       egcd_loop k b (a mod b) sb ((sa + (k - ((a / b) * sb) mod k)) mod k)
         (Acc_inv H (dec_mod a b Hb))
   end.
+Elpi complexity egcd_loop.
 
 Lemma egcd_loop_eq : forall k a b sa sb H,
   egcd_loop k a b sa sb H =
@@ -76,6 +80,9 @@ Lemma egcd_loop_eq : forall k a b sa sb H,
   end.
 Proof. intros. destruct H. reflexivity. Qed.
 
+Elpi complexity andb.
+Elpi complexity fst.
+Elpi complexity snd.
 Definition candy_impl (k c : uint) : option uint :=
   let p := egcd_loop k k (c mod k) 0 (1 mod k)
              (Zwf_well_founded 0 (φ (c mod k))) in
@@ -86,6 +93,7 @@ Definition candy_impl (k c : uint) : option uint :=
     let b2 := if andb (b1 =? 1) (c =? 1) then b1 + k else b1 in
     if b2 <=? 1000000000 then Some b2 else None
   else None.
+Elpi complexity candy_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: arithmetic in Z                                          *)
@@ -380,9 +388,159 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition candydistribution : uint -> uint -> option uint := candy_impl.
+Elpi complexity candydistribution.
 
 Definition candydistribution_correct : forall (k c : N) (x y : uint),
   valid_input k c -> repr x k -> repr y c ->
   exists o : option N, repr (candydistribution x y) o /\
                        candydistribution_spec k c o
   := candy_impl_correct.
+
+(* Unconditional logarithmic cost: consecutive Euclidean remainders have
+   a product that halves at every ordered step. Coefficient arithmetic is
+   fixed-word arithmetic even outside valid_input. *)
+From Stdlib Require Import ssreflect Arith.
+Arguments Uint63.to_Z : simpl never.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) :
+  (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma eqb0_false (r : int) : (r =? 0) = false -> (φ r <> 0)%Z.
+Proof.
+  intros H E. assert (r = 0) by (apply to_Z_inj; exact E).
+  subst. discriminate.
+Qed.
+
+Lemma mod_half (a b : Z) : (0 < b <= a)%Z -> (2 * (a mod b) <= a)%Z.
+Proof.
+  intros Hb. pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  pose proof (Z.div_mod a b ltac:(lia)).
+  assert (1 <= a / b)%Z by (apply Z.div_le_lower_bound; lia).
+  nia.
+Qed.
+
+Lemma halve (a b : Z) (m : nat) : (0 < b <= a)%Z ->
+  (a * b < 2 ^ Z.of_nat (S m))%Z ->
+  (b * (a mod b) < 2 ^ Z.of_nat m)%Z.
+Proof.
+  intros Hb Hlt. pose proof (mod_half a b Hb).
+  pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  rewrite Nat2Z.inj_succ Z.pow_succ_r in Hlt; [lia|]. nia.
+Qed.
+
+Lemma egcd_loop_ord_time k kC a aC b bC sa saC sb sbC H HC n :
+  (φ b <= φ a)%Z -> (φ a * φ b < 2 ^ Z.of_nat n)%Z ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_loop_cost stepsCM k kC) a aC) b bC) sa saC) sb sbC) H HC)
+     <= 100 * n + 100)%nat.
+Proof.
+  unfold egcd_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G k kC a aC b bC sa saC sb sbC H HC)] =>
+    assert (HG : forall m a aC b bC sa saC sb sbC H HC,
+       (φ b <= φ a)%Z -> (φ a * φ b < 2 ^ Z.of_nat m)%Z ->
+       (cost (G k kC a aC b bC sa saC sb sbC H HC) <= 100 * m + 100)%nat) end.
+  { clear H HC. induction m as [|m IH];
+      intros a' aC' b' bC' sa' saC' sb' sbC' [g] HC' Hle Hlt;
+      cost_simpl;
+      pose proof (bdec_time (b' =? 0) (bool_w (b' =? 0))) as HB;
+      cost_destruct (bdec (b' =? 0)); cost_simpl.
+    - lia.
+    - exfalso. pose proof (to_Z_bounded b'). pose proof (to_Z_bounded a').
+      pose proof (eqb0_false b' e).
+      change (2 ^ Z.of_nat 0)%Z with 1%Z in Hlt. nia.
+    - lia.
+    - pose proof (to_Z_bounded b'). pose proof (to_Z_bounded a').
+      pose proof (eqb0_false b' e).
+      assert (Hle' : (φ (a' mod b') <= φ b')%Z).
+      { rewrite Uint63.mod_spec. pose proof (Z.mod_pos_bound (φ a') (φ b')). lia. }
+      assert (Hlt' : (φ b' * φ (a' mod b') < 2 ^ Z.of_nat m)%Z).
+      { rewrite Uint63.mod_spec. apply halve; [lia|exact Hlt]. }
+      match goal with |- context [@cost ?T (?G' k kC b' ?w1 (a' mod b')%uint63 ?w2 sb' ?w3 ?s ?w4 ?h ?e)] =>
+        have HI := (IH b' w1 (a' mod b')%uint63 w2 sb' w3 s w4 h e
+                    : _ -> _ -> (@cost T (G' k kC b' w1 (a' mod b')%uint63 w2 sb' w3 s w4 h e) <= _)%nat) end.
+      specialize (HI Hle' Hlt'). lia. }
+  match goal with |- context [@cost ?T (?G k kC a aC b bC sa saC sb sbC H HC)] =>
+    exact (HG _ a aC b bC sa saC sb sbC H HC : _ -> _ ->
+      (@cost T (G k kC a aC b bC sa saC sb sbC H HC) <= _)%nat) end.
+Qed.
+
+Lemma egcd_loop_time k kC a aC b bC sa saC sb sbC H HC n :
+  (φ a * φ b < 2 ^ Z.of_nat n)%Z ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_loop_cost stepsCM k kC) a aC) b bC) sa saC) sb sbC) H HC)
+     <= 100 * n + 200)%nat.
+Proof.
+  intros Hlt. destruct (Z.le_gt_cases (φ b) (φ a)) as [Hle|Hgt].
+  { pose proof (egcd_loop_ord_time k kC a aC b bC sa saC sb sbC H HC n Hle Hlt). lia. }
+  pose proof (to_Z_bounded b). pose proof (to_Z_bounded a).
+  assert (Hm : φ (a mod b) = φ a).
+  { rewrite Uint63.mod_spec. apply Z.mod_small. lia. }
+  destruct H as [g]. unfold egcd_loop_cost. cost_simpl.
+  pose proof (bdec_time (b =? 0) (bool_w (b =? 0))) as HB.
+  cost_destruct (bdec (b =? 0)); cost_simpl.
+  - lia.
+  - assert (Hle' : (φ (a mod b) <= φ b)%Z) by lia.
+    assert (Hlt' : (φ b * φ (a mod b) < 2 ^ Z.of_nat n)%Z) by (rewrite Hm; lia).
+    match goal with |- context [@cost ?T (?G' k kC b ?w1 (a mod b)%uint63 ?w2 sb ?w3 ?s ?w4 ?h ?e)] =>
+      have HI := (egcd_loop_ord_time k kC b w1 (a mod b)%uint63 w2 sb w3 s w4 h e n
+                  : _ -> _ -> (@cost T (G' k kC b w1 (a mod b)%uint63 w2 sb w3 s w4 h e) <= _)%nat) end.
+    specialize (HI Hle' Hlt'). lia.
+Qed.
+
+Lemma pow_log2_bound (X : Z) : (0 < X)%Z ->
+  (X < 2 ^ Z.of_nat (S (Nat.log2 (Z.to_nat X))))%Z.
+Proof.
+  intros HX. pose proof (Nat.log2_spec (Z.to_nat X) ltac:(lia)) as [_ H2].
+  apply Nat2Z.inj_lt in H2. rewrite Nat2Z.inj_pow Z2Nat.id in H2; [lia|]. exact H2.
+Qed.
+
+Lemma prod_bound (X Y : Z) : (0 <= X)%Z -> (0 <= Y)%Z ->
+  (X * (Y mod X) < 2 ^ Z.of_nat (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2))%Z.
+Proof.
+  intros HX HY.
+  assert (P : (0 < 2 ^ Z.of_nat (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2))%Z)
+    by (apply Z.pow_pos_nonneg; lia).
+  destruct (Z.eq_dec X 0) as [->|HX0]; [lia|].
+  destruct (Z.eq_dec Y 0) as [->|HY0]; [rewrite Z.mod_0_l; lia|].
+  pose proof (pow_log2_bound X ltac:(lia)). pose proof (pow_log2_bound Y ltac:(lia)).
+  pose proof (Z.mod_le Y X HY ltac:(lia)). pose proof (Z.mod_pos_bound Y X ltac:(lia)).
+  replace (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2)%nat
+    with (S (Nat.log2 (Z.to_nat X)) + S (Nat.log2 (Z.to_nat Y)))%nat by lia.
+  rewrite Nat2Z.inj_add Z.pow_add_r; [lia|lia|]. nia.
+Qed.
+
+Theorem candydistribution_time : exists c1 c2 : nat, forall kid_count_int bag_size_int : uint,
+  (cost2 candydistribution_cost kid_count_int bag_size_int <=
+    c1 * (Nat.log2 (size kid_count_int) + Nat.log2 (size bag_size_int) + 1) + c2)%nat.
+Proof.
+  exists 100%nat, 500%nat. intros x y.
+  assert (Hp : (φ x * φ (y mod x) < 2 ^ Z.of_nat (Nat.log2 (size x) + Nat.log2 (size y) + 2))%Z).
+  { rewrite Uint63.mod_spec. pose proof (to_Z_bounded x). pose proof (to_Z_bounded y).
+    exact (prod_bound (φ x) (φ y) ltac:(lia) ltac:(lia)). }
+  revert Hp. generalize (Nat.log2 (size x) + Nat.log2 (size y))%nat. intros L Hp.
+  unfold cost2, candydistribution_cost, candy_impl_cost. cost_simpl.
+  match goal with |- context [@cost ?T (?G x ?kw x ?w0 (y mod x)%uint63 ?w1 0%uint63 ?w2 (1 mod x)%uint63 ?w3 ?h ?e)] =>
+    have HI := (egcd_loop_time x kw x w0 (y mod x)%uint63 w1 0%uint63 w2 (1 mod x)%uint63 w3 h e (L + 2)
+                : _ -> (@cost T (G x kw x w0 (y mod x)%uint63 w1 0%uint63 w2 (1 mod x)%uint63 w3 h e) <= _)%nat) end.
+  specialize (HI Hp).
+  match type of HI with (?C <= _)%nat =>
+    let c := fresh "loop_cost" in set (c := C) in *; clearbody c end.
+  cost_destruct_prep (egcd_loop x x (y mod x) 0 (1 mod x)
+    (Zwf_well_founded 0 (φ (y mod x)))).
+  remember (egcd_loop x x (y mod x) 0 (1 mod x)
+    (Zwf_well_founded 0 (φ (y mod x)))) as p eqn:E.
+  match goal with w : prod_cost _ _ _ _ _ p |- _ =>
+    destruct w as [g gC s sC] end.
+  cbn [fst snd] in *.
+  cost_simpl.
+  cost_destruct (g =? 1); cost_simpl; [|lia].
+  cost_destruct (s =? 0); cost_simpl.
+  all: repeat match goal with |- context [match ?b as _ return _ with true => _ | false => _ end] =>
+    lazymatch b with context [match _ as _ return _ with true => _ | false => _ end] => fail | _ => idtac end;
+    cost_destruct b; cbn [fst snd andb] in *; cost_simpl end.
+  all: lia.
+Qed.
+
+Print Assumptions candydistribution_correct.
+Print Assumptions candydistribution_time.

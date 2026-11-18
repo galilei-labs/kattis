@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -678,31 +677,13 @@ pub fn INF() -> u64 {
   4611686018427387904u64
 }
 
-// Rocq: Closestpair2.closestpair2_implem.closestpair
-// Variant: uncurried
-pub fn closestpair() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64) = closestpair_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Closestpair2.closestpair2_implem.closestpair
-pub fn closestpair_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = closestpair_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -726,13 +707,10 @@ pub fn splits(lo: u64, hi: u64) -> bool {
 
 // Rocq: Closestpair2.closestpair2_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -751,8 +729,8 @@ pub fn div(v0: u64, v1: u64) -> u64 {
 // Rocq: Closestpair2.closestpair2_implem.midp
 // Variant: uncurried
 pub fn midp(lo: u64, hi: u64) -> u64 {
-  let v9 = sub(hi, lo);
-  add(lo, div(v9, 2u64))
+  let tmp = sub(hi, lo);
+  add(lo, div(tmp, 2u64))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -776,58 +754,41 @@ pub fn merge_loop_1(key: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64,
 // Rocq: Closestpair2.closestpair2_implem.merge_loop (local: merge_loop)
 // Variant: uncurried, lifted
 pub fn merge_loop(key: Rc<Array<u64>>, src: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(k, hi);
-  match bdec(v16) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      match ltb(i, mid) {
-        true => {
-          match leb(hi, j) {
-            true => {
-              let v41 = add(i, 1u64);
-              let v49 = add(k, 1u64);
-              let v50 = &src;
-              let v53 = rocq_array::get::<u64>(&v50, i);
-              let v60 = rocq_array::set::<u64>(dst, k, v53);
-              merge_loop(key, src, mid, hi, v41, j, v49, v60, ())
-            },
-            false => {
-              let v86 = &src;
-              let v89 = rocq_array::get::<u64>(&v86, i);
-              let v90 = &key;
-              let v93 = rocq_array::get::<u64>(&v90, v89);
-              let v94 = &src;
-              let v97 = rocq_array::get::<u64>(&v94, j);
-              let v98 = &key;
-              let v101 = rocq_array::get::<u64>(&v98, v97);
-              match lesb(v93, v101) {
-                true => {
-                  let v115 = add(i, 1u64);
-                  let v123 = add(k, 1u64);
-                  let v124 = &src;
-                  let v127 = rocq_array::get::<u64>(&v124, i);
-                  let v134 = rocq_array::set::<u64>(dst, k, v127);
-                  merge_loop(key, src, mid, hi, v115, j, v123, v134, ())
-                },
-                false => {
-                  let v166 = add(j, 1u64);
-                  let v174 = add(k, 1u64);
-                  let v175 = &src;
-                  let v178 = rocq_array::get::<u64>(&v175, j);
-                  let v185 = rocq_array::set::<u64>(dst, k, v178);
-                  merge_loop(key, src, mid, hi, i, v166, v174, v185, ())
-                },
-              }
-            },
+      if ltb(i, mid) {
+        if leb(hi, j) {
+          let tmp_1 = add(i, 1u64);
+          let tmp_2 = add(k, 1u64);
+          let tmp_3 = rocq_array::get::<u64>(&src, i);
+          let tmp_4 = rocq_array::set::<u64>(dst, k, tmp_3);
+          merge_loop(key, src, mid, hi, tmp_1, j, tmp_2, tmp_4, ())
+        } else {
+          let tmp_5 = rocq_array::get::<u64>(&src, i);
+          let tmp_6 = rocq_array::get::<u64>(&key, tmp_5);
+          let tmp_7 = rocq_array::get::<u64>(&src, j);
+          let tmp_8 = rocq_array::get::<u64>(&key, tmp_7);
+          if lesb(tmp_6, tmp_8) {
+            let tmp_9 = add(i, 1u64);
+            let tmp_10 = add(k, 1u64);
+            let tmp_11 = rocq_array::get::<u64>(&src, i);
+            let tmp_12 = rocq_array::set::<u64>(dst, k, tmp_11);
+            merge_loop(key, src, mid, hi, tmp_9, j, tmp_10, tmp_12, ())
+          } else {
+            let tmp_13 = add(j, 1u64);
+            let tmp_14 = add(k, 1u64);
+            let tmp_15 = rocq_array::get::<u64>(&src, j);
+            let tmp_16 = rocq_array::set::<u64>(dst, k, tmp_15);
+            merge_loop(key, src, mid, hi, i, tmp_13, tmp_14, tmp_16, ())
           }
-        },
-        false => {
-          let v223 = add(j, 1u64);
-          let v231 = add(k, 1u64);
-          let v232 = &src;
-          let v235 = rocq_array::get::<u64>(&v232, j);
-          let v242 = rocq_array::set::<u64>(dst, k, v235);
-          merge_loop(key, src, mid, hi, i, v223, v231, v242, ())
-        },
+        }
+      } else {
+        let tmp_17 = add(j, 1u64);
+        let tmp_18 = add(k, 1u64);
+        let tmp_19 = rocq_array::get::<u64>(&src, j);
+        let tmp_20 = rocq_array::set::<u64>(dst, k, tmp_19);
+        merge_loop(key, src, mid, hi, i, tmp_17, tmp_18, tmp_20, ())
       }
     },
     sumbool::right => {
@@ -853,26 +814,26 @@ pub fn msort_1(xs: Rc<Array<u64>>, lo: u64, hi: u64, tgt: Rc<Array<u64>>, oth: R
 // Rocq: Closestpair2.closestpair2_implem.msort (local: msort)
 // Variant: uncurried, lifted
 pub fn msort(xs: Rc<Array<u64>>, lo: u64, hi: u64, tgt: Rc<Array<u64>>, oth: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v13 = splits(lo, hi);
-  match bdec(v13) {
+  let tmp = splits(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
       let mid = midp(lo, hi);
-      let v28 = Rc::clone(&xs);
-      let v39 = msort(v28, lo, mid, oth, tgt, ());
-      match &v39 {
+      let xs_clone = Rc::clone(&xs);
+      let tmp_1 = msort(xs_clone, lo, mid, oth, tgt, ());
+      match &tmp_1 {
         (t1, o1) => {
-          let v47 = ();
-          let v51 = Rc::clone(&xs);
-          let v57 = Rc::clone(t1);
-          let v58 = Rc::clone(o1);
-          std::mem::drop(v39);
-          let v62 = msort(v51, mid, hi, v57, v58, v47);
-          match v62 {
+          let tmp_2 = ();
+          let xs_clone_1 = Rc::clone(&xs);
+          let t1_clone = Rc::clone(t1);
+          let o1_clone = Rc::clone(o1);
+          std::mem::drop(tmp_1);
+          let tmp_3 = msort(xs_clone_1, mid, hi, t1_clone, o1_clone, tmp_2);
+          match tmp_3 {
             (v64, v66) => {
               let t2 = &v64;
-              let v73 = Rc::clone(t2);
-              let v83 = merge(xs, v73, lo, mid, hi, v66);
-              (v83, v64)
+              let t2_clone = Rc::clone(t2);
+              let tmp_4 = merge(xs, t2_clone, lo, mid, hi, v66);
+              (tmp_4, v64)
             },
           }
         },
@@ -880,17 +841,17 @@ pub fn msort(xs: Rc<Array<u64>>, lo: u64, hi: u64, tgt: Rc<Array<u64>>, oth: Rc<
     },
     sumbool::right => {
       std::mem::drop(xs);
-      let v104 = rocq_array::set::<u64>(tgt, lo, lo);
-      (v104, oth)
+      let tmp_5 = rocq_array::set::<u64>(tgt, lo, lo);
+      (tmp_5, oth)
     },
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Closestpair2.closestpair2_implem.bd
@@ -907,10 +868,9 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Closestpair2.closestpair2_implem.near
 // Variant: uncurried
 pub fn near(xs: Rc<Array<u64>>, xm: u64, b: u64, v: u64) -> bool {
-  let v5 = &xs;
-  let v8 = rocq_array::get::<u64>(&v5, v);
+  let tmp = rocq_array::get::<u64>(&xs, v);
   std::mem::drop(xs);
-  let dx = sub(v8, xm);
+  let dx = sub(tmp, xm);
   ltb(mul(dx, dx), b)
 }
 
@@ -923,22 +883,18 @@ pub fn strip_loop_1(xs: Rc<Array<u64>>, xm: u64, b: u64, t: Rc<Array<u64>>, hi: 
 // Rocq: Closestpair2.closestpair2_implem.strip_loop (local: strip_loop)
 // Variant: uncurried, lifted
 pub fn strip_loop(xs: Rc<Array<u64>>, xm: u64, b: u64, t: Rc<Array<u64>>, hi: u64, k: u64, c: u64, o: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v16 = ltb(k, hi);
-  match bdec(v16) {
+  let tmp = ltb(k, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &t;
-      let v = rocq_array::get::<u64>(&v20, k);
-      let v27 = Rc::clone(&xs);
-      match near(v27, xm, b, v) {
-        true => {
-          let v43 = add(k, 1u64);
-          let v51 = add(c, 1u64);
-          let v58 = rocq_array::set::<u64>(o, c, v);
-          strip_loop(xs, xm, b, t, hi, v43, v51, v58, ())
-        },
-        false => {
-          strip_loop(xs, xm, b, t, hi, add(k, 1u64), c, o, ())
-        },
+      let v = rocq_array::get::<u64>(&t, k);
+      let xs_clone = Rc::clone(&xs);
+      if near(xs_clone, xm, b, v) {
+        let tmp_1 = add(k, 1u64);
+        let tmp_2 = add(c, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(o, c, v);
+        strip_loop(xs, xm, b, t, hi, tmp_1, tmp_2, tmp_3, ())
+      } else {
+        strip_loop(xs, xm, b, t, hi, add(k, 1u64), c, o, ())
       }
     },
     sumbool::right => {
@@ -952,18 +908,14 @@ pub fn strip_loop(xs: Rc<Array<u64>>, xm: u64, b: u64, t: Rc<Array<u64>>, hi: u6
 // Rocq: Closestpair2.closestpair2_implem.d2
 // Variant: uncurried
 pub fn d2(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, a: u64, b: u64) -> u64 {
-  let v5 = &xs;
-  let v8 = rocq_array::get::<u64>(&v5, a);
-  let v9 = &xs;
-  let v12 = rocq_array::get::<u64>(&v9, b);
+  let tmp = rocq_array::get::<u64>(&xs, a);
+  let tmp_1 = rocq_array::get::<u64>(&xs, b);
   std::mem::drop(xs);
-  let dx = sub(v8, v12);
-  let v19 = &ys;
-  let v22 = rocq_array::get::<u64>(&v19, a);
-  let v23 = &ys;
-  let v26 = rocq_array::get::<u64>(&v23, b);
+  let dx = sub(tmp, tmp_1);
+  let tmp_2 = rocq_array::get::<u64>(&ys, a);
+  let tmp_3 = rocq_array::get::<u64>(&ys, b);
   std::mem::drop(ys);
-  let dy = sub(v22, v26);
+  let dy = sub(tmp_2, tmp_3);
   add(mul(dx, dx), mul(dy, dy))
 }
 
@@ -976,46 +928,36 @@ pub fn inner_loop_1(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, T: Rc<Array<u64>>, e
 // Rocq: Closestpair2.closestpair2_implem.inner_loop (local: inner_loop)
 // Variant: uncurried, lifted
 pub fn inner_loop(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, T: Rc<Array<u64>>, e: u64, s: u64, t: u64, r: ((u64, u64), u64), _H: ()) -> ((u64, u64), u64) {
-  let v15 = ltb(t, e);
-  match bdec(v15) {
+  let tmp = ltb(t, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &T;
-      let a = rocq_array::get::<u64>(&v19, s);
-      let v23 = &T;
-      let b = rocq_array::get::<u64>(&v23, t);
-      let v28 = &ys;
-      let v31 = rocq_array::get::<u64>(&v28, b);
-      let v32 = &ys;
-      let v35 = rocq_array::get::<u64>(&v32, a);
-      let dy = sub(v31, v35);
-      let v47 = mul(dy, dy);
-      let v50 = Clone::clone(&r);
-      let v52 = bd(v50);
-      match ltb(v47, v52) {
-        true => {
-          let v62 = Rc::clone(&xs);
-          let v65 = Rc::clone(&ys);
-          let d = d2(v62, v65, a, b);
-          let v78 = add(t, 1u64);
-          let v82 = Clone::clone(&r);
-          let v84 = bd(v82);
-          let v90 = match ltb(d, v84) {
-            true => {
-              std::mem::drop(r);
-              ((a, b), d)
-            },
-            false => {
-              r
-            },
-          };
-          inner_loop(xs, ys, T, e, s, v78, v90, ())
-        },
-        false => {
-          std::mem::drop(xs);
-          std::mem::drop(T);
-          std::mem::drop(ys);
+      let a = rocq_array::get::<u64>(&T, s);
+      let b = rocq_array::get::<u64>(&T, t);
+      let tmp_1 = rocq_array::get::<u64>(&ys, b);
+      let tmp_2 = rocq_array::get::<u64>(&ys, a);
+      let dy = sub(tmp_1, tmp_2);
+      let tmp_3 = mul(dy, dy);
+      let r_clone = Clone::clone(&r);
+      let tmp_4 = bd(r_clone);
+      if ltb(tmp_3, tmp_4) {
+        let xs_clone = Rc::clone(&xs);
+        let ys_clone = Rc::clone(&ys);
+        let d = d2(xs_clone, ys_clone, a, b);
+        let tmp_5 = add(t, 1u64);
+        let r_clone_1 = Clone::clone(&r);
+        let tmp_6 = bd(r_clone_1);
+        let tmp_7 = if ltb(d, tmp_6) {
+          std::mem::drop(r);
+          ((a, b), d)
+        } else {
           r
-        },
+        };
+        inner_loop(xs, ys, T, e, s, tmp_5, tmp_7, ())
+      } else {
+        std::mem::drop(xs);
+        std::mem::drop(T);
+        std::mem::drop(ys);
+        r
       }
     },
     sumbool::right => {
@@ -1036,16 +978,16 @@ pub fn outer_loop_1(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, T: Rc<Array<u64>>, e
 // Rocq: Closestpair2.closestpair2_implem.outer_loop (local: outer_loop)
 // Variant: uncurried, lifted
 pub fn outer_loop(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, T: Rc<Array<u64>>, e: u64, s: u64, r: ((u64, u64), u64), _H: ()) -> ((u64, u64), u64) {
-  let v14 = ltb(s, e);
-  match bdec(v14) {
+  let tmp = ltb(s, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(s, 1u64);
-      let v34 = add(s, 1u64);
-      let v37 = Rc::clone(&xs);
-      let v40 = Rc::clone(&ys);
-      let v43 = Rc::clone(&T);
-      let v52 = inner_loop_1(v37, v40, v43, e, s, v34, r);
-      outer_loop(xs, ys, T, e, v25, v52, ())
+      let tmp_1 = add(s, 1u64);
+      let tmp_2 = add(s, 1u64);
+      let xs_clone = Rc::clone(&xs);
+      let ys_clone = Rc::clone(&ys);
+      let T_clone = Rc::clone(&T);
+      let tmp_3 = inner_loop_1(xs_clone, ys_clone, T_clone, e, s, tmp_2, r);
+      outer_loop(xs, ys, T, e, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(xs);
@@ -1065,63 +1007,58 @@ pub fn solve_1(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, P: Rc<Array<u64>>, lo: u6
 // Rocq: Closestpair2.closestpair2_implem.solve (local: solve)
 // Variant: uncurried, lifted
 pub fn solve(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, P: Rc<Array<u64>>, lo: u64, hi: u64, tgt: Rc<Array<u64>>, oth: Rc<Array<u64>>, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), ((u64, u64), u64)) {
-  let v15 = splits(lo, hi);
-  match bdec(v15) {
+  let tmp = splits(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
       let mid = midp(lo, hi);
-      let v30 = Rc::clone(&xs);
-      let v33 = Rc::clone(&ys);
-      let v36 = Rc::clone(&P);
-      let v47 = solve(v30, v33, v36, lo, mid, oth, tgt, ());
-      match v47 {
+      let xs_clone = Rc::clone(&xs);
+      let ys_clone = Rc::clone(&ys);
+      let P_clone = Rc::clone(&P);
+      let tmp_1 = solve(xs_clone, ys_clone, P_clone, lo, mid, oth, tgt, ());
+      match tmp_1 {
         (v49, v51) => {
           let p = &v51;
           match v49 {
             (v55, v57) => {
-              let v64 = Rc::clone(&xs);
-              let v67 = Rc::clone(&ys);
-              let v70 = Rc::clone(&P);
-              let v81 = solve(v64, v67, v70, mid, hi, v55, v57, ());
-              match v81 {
+              let xs_clone_1 = Rc::clone(&xs);
+              let ys_clone_1 = Rc::clone(&ys);
+              let P_clone_1 = Rc::clone(&P);
+              let tmp_2 = solve(xs_clone_1, ys_clone_1, P_clone_1, mid, hi, v55, v57, ());
+              match tmp_2 {
                 (v83, v85) => {
                   let p_1 = &v85;
                   match v83 {
                     (v89, v91) => {
                       let t2 = &v89;
-                      let v97 = Rc::clone(&ys);
-                      let v99 = Rc::clone(t2);
-                      let t3 = merge(v97, v99, lo, mid, hi, v91);
-                      let v111 = Clone::clone(p_1);
-                      let v113 = bd(v111);
-                      let v115 = Clone::clone(p);
-                      let v117 = bd(v115);
-                      let r0 = match ltb(v113, v117) {
-                        true => {
-                          std::mem::drop(v51);
-                          v85
-                        },
-                        false => {
-                          std::mem::drop(v85);
-                          v51
-                        },
+                      let ys_clone_2 = Rc::clone(&ys);
+                      let t2_clone = Rc::clone(t2);
+                      let t3 = merge(ys_clone_2, t2_clone, lo, mid, hi, v91);
+                      let p_clone = Clone::clone(p_1);
+                      let tmp_3 = bd(p_clone);
+                      let p_clone_1 = Clone::clone(p);
+                      let tmp_4 = bd(p_clone_1);
+                      let r0 = if ltb(tmp_3, tmp_4) {
+                        std::mem::drop(v51);
+                        v85
+                      } else {
+                        std::mem::drop(v85);
+                        v51
                       };
-                      let v130 = &P;
-                      let v133 = rocq_array::get::<u64>(&v130, mid);
+                      let tmp_5 = rocq_array::get::<u64>(&P, mid);
                       std::mem::drop(P);
-                      let v134 = &xs;
-                      let v137 = rocq_array::get::<u64>(&v134, v133);
-                      let v140 = Clone::clone(&r0);
-                      let v142 = bd(v140);
-                      let v145 = Rc::clone(&xs);
-                      let v152 = Rc::clone(&t3);
-                      let v159 = Rc::clone(t2);
+                      let tmp_6 = rocq_array::get::<u64>(&xs, tmp_5);
+                      let r0_clone = Clone::clone(&r0);
+                      let tmp_7 = bd(r0_clone);
+                      let xs_clone_2 = Rc::clone(&xs);
+                      let t3_clone = Rc::clone(&t3);
+                      let t2_clone_1 = Rc::clone(t2);
                       std::mem::drop(v89);
-                      let v161 = strip_loop_1(v145, v137, v142, v152, hi, lo, lo, v159);
-                      match v161 {
+                      let tmp_8 = strip_loop_1(xs_clone_2, tmp_6, tmp_7, t3_clone, hi, lo, lo, t2_clone_1);
+                      match tmp_8 {
                         (v163, v165) => {
                           let e = &v163;
-                          let v171 = Rc::clone(e);
-                          ((t3, v171), outer_loop_1(xs, ys, v163, v165, lo, r0))
+                          let e_clone = Rc::clone(e);
+                          ((t3, e_clone), outer_loop_1(xs, ys, v163, v165, lo, r0))
                         },
                       }
                     },
@@ -1136,40 +1073,38 @@ pub fn solve(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, P: Rc<Array<u64>>, lo: u64,
     sumbool::right => {
       std::mem::drop(xs);
       std::mem::drop(ys);
-      let v211 = &P;
-      let v214 = rocq_array::get::<u64>(&v211, lo);
+      let tmp_9 = rocq_array::get::<u64>(&P, lo);
       std::mem::drop(P);
-      let v222 = rocq_array::set::<u64>(tgt, lo, v214);
-      ((v222, oth), ((0u64, 0u64), __rocq_global_643))
+      let tmp_10 = rocq_array::set::<u64>(tgt, lo, tmp_9);
+      ((tmp_10, oth), ((0u64, 0u64), __rocq_global_643))
     },
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Closestpair2.closestpair2_implem.closestpair_impl
 // Variant: uncurried
 pub fn closestpair_impl(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>) -> (u64, u64) {
-  let v2 = &xs;
-  let n = rocq_array::length::<u64>(&v2);
-  let v13 = rocq_array::make::<u64>(n, 0u64);
-  let v20 = rocq_array::make::<u64>(n, 0u64);
-  let v23 = Rc::clone(&xs);
-  let v32 = msort_1(v23, 0u64, n, v13, v20);
-  match &v32 {
+  let n = rocq_array::length::<u64>(&xs);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let xs_clone = Rc::clone(&xs);
+  let tmp_2 = msort_1(xs_clone, 0u64, n, tmp, tmp_1);
+  match &tmp_2 {
     (A, P) => {
-      let v41 = 0u64;
-      let v48 = rocq_array::make::<u64>(n, 0u64);
-      let v54 = Rc::clone(A);
-      let v59 = Rc::clone(P);
-      std::mem::drop(v32);
-      let v63 = solve_1(xs, ys, v54, v41, n, v59, v48);
-      match v63 {
+      let tmp_3 = 0u64;
+      let tmp_4 = rocq_array::make::<u64>(n, 0u64);
+      let A_clone = Rc::clone(A);
+      let P_clone = Rc::clone(P);
+      std::mem::drop(tmp_2);
+      let tmp_5 = solve_1(xs, ys, A_clone, tmp_3, n, P_clone, tmp_4);
+      match tmp_5 {
         (v65, v67) => {
           std::mem::drop(v65);
           fst::<(u64, u64), u64>(v67)
@@ -1177,18 +1112,6 @@ pub fn closestpair_impl(xs: Rc<Array<u64>>, ys: Rc<Array<u64>>) -> (u64, u64) {
       }
     },
   }
-}
-
-// Rocq: Closestpair2.closestpair2_implem.closestpair_impl
-pub fn closestpair_impl_curried(xs: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> {
-  let v3 = {
-    move |ys: Rc<Array<u64>>| -> (u64, u64) {
-      let v9 = Rc::clone(&xs);
-      closestpair_impl(v9, ys)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = Rc::new(v3);
-  v15
 }
 
 mod __rocq_reuse {
@@ -1339,14 +1262,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64)> = __rocq_global_785.with(Clone::clone);
-  v0
-}
 const __rocq_global_643: u64 = 4611686018427387904u64;
-std::thread_local! { static __rocq_global_785: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, u64)> = closestpair(); }
-std::thread_local! { static __rocq_global_788: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)>> = closestpair_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1438,7 +1354,7 @@ fn solve_input(input: &str) -> String {
         let mut xs = Vec::new(); let mut ys = Vec::new();
         let mut original = Vec::new();
         for _ in 0..n { let x = t.next(); let y = t.next(); xs.push(hundredths(x)); ys.push(hundredths(y)); original.push((x, y)); }
-        let result = run()(ints(xs), ints(ys));
+        let result = closestpair_impl(ints(xs), ints(ys));
         let (i, j) = &result;
         let (x, y) = original[*i as usize]; let (u, v) = original[*j as usize];
         out.push_str(&format!("{x} {y} {u} {v}\n"));

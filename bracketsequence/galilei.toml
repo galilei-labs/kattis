@@ -21,4 +21,4 @@ archive = "bracketsequence_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/bracketsequence.ml"
-Rust = "extraction/rust/submit/bracketsequence.rs"
+Rust = "extraction/rust/snapshots/bracketsequence_extracted.rs.interface.json"

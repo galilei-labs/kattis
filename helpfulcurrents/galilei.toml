@@ -21,4 +21,4 @@ archive = "helpfulcurrents_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/helpfulcurrents.ml"
-Rust = "extraction/rust/submit/helpfulcurrents.rs"
+Rust = "extraction/rust/snapshots/helpfulcurrents_extracted.rs.interface.json"

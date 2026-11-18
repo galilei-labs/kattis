@@ -21,4 +21,4 @@ archive = "tugofwar_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/tugofwar.ml"
-Rust = "extraction/rust/submit/tugofwar.rs"
+Rust = "extraction/rust/snapshots/tugofwar_extracted.rs.interface.json"

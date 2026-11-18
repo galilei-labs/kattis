@@ -30,6 +30,7 @@
 From Bracketsequence.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -78,6 +79,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -94,13 +97,21 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition Mi : int := 1000000007.
+Elpi complexity Mi.
+Arguments Mi_cost : simpl never.
 
 (* Fold v into the accumulator a with the operator of the level. *)
 Definition opm (add : bool) (a v : int) : int :=
   if add then (a + v) mod Mi else (a * v) mod Mi.
+Elpi complexity opm.
+Arguments opm_cost : simpl never.
 
 (* The identity of the operator. *)
 Definition idm (add : bool) : int := if add then 0 else 1.
+Elpi complexity idm.
+Arguments idm_cost : simpl never.
+Elpi complexity negb.
+Arguments negb_cost : simpl never.
 
 Fixpoint loop (x : array (token uint)) (n i d : int) (add : bool)
     (stk : array int) (H : Acc (Zwf 0) (gap n i)) {struct H} : int :=
@@ -123,6 +134,8 @@ Fixpoint loop (x : array (token uint)) (n i d : int) (add : bool)
       end
   | right _ => stk.[d]
   end.
+Elpi complexity loop.
+Arguments loop_cost : simpl never.
 
 Lemma loop_eq : forall x n i d add stk H,
   loop x n i d add stk H =
@@ -150,6 +163,8 @@ Proof. intros. destruct H. reflexivity. Qed.
 Definition bracketsequence_impl (x : array (token uint)) : uint :=
   let n := PArray.length x in
   loop x n 0 0 true (PArray.make (n + 1) 0) (Zwf_well_founded 0 (gap n 0)).
+Elpi complexity bracketsequence_impl.
+Arguments bracketsequence_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: the math model of the pass                               *)
@@ -283,11 +298,10 @@ Qed.
 
 Lemma claim_nil : items_claim [].
 Proof.
-  intros add top below Ht. simpl. destruct add.
-  - change (Prelude.combine true []) with (idv true).
-    rewrite (op_small true top Ht). reflexivity.
-  - change (Prelude.combine false []) with (idv false).
-    rewrite (op_small false top Ht). reflexivity.
+  intros add top below Ht.
+  change ((add, top, below) =
+    (add, op add top (idv add mod modulus), below)).
+  rewrite (op_small add top Ht). reflexivity.
 Qed.
 
 Lemma claim_cons : forall it l, item_claim it -> items_claim l -> items_claim (it :: l).
@@ -564,9 +578,132 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition bracketsequence : array (token uint) -> uint := bracketsequence_impl.
+Elpi complexity bracketsequence.
 
 Definition bracketsequence_correct :
   forall (ts : list (token N)) (x : array (token uint)),
   valid_input ts -> repr x ts ->
   exists o : N, repr (bracketsequence x) o /\ bracketsequence_spec ts o
   := bracketsequence_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+(* The cost translations (Elpi complexity, next to each definition):
+   sumbool, bdec, Mi, opm, idm, negb, loop, bracketsequence_impl,
+   bracketsequence.  Bounds: bdec, negb, idm <= 2; opm <= 20; the loop
+   from i <= 100 (n - i) + 20 (loop_time, by induction on a nat bound of
+   the gap n - i, the cell's token witness generalized before the case
+   split on x.[i]); bracketsequence <= 100 (n + 1) + 100. *)
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbv [negb_cost idm_cost bdec_cost]; cbn; lia. Qed.
+
+Lemma negb_time b (w : bool_cost stepsCM b) : (cost (negb_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbv [negb_cost idm_cost bdec_cost]; cbn; lia. Qed.
+
+Lemma idm_time b (w : bool_cost stepsCM b) : (cost (idm_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbv [negb_cost idm_cost bdec_cost]; cbn; lia. Qed.
+
+Lemma opm_time b w a aC v vC :
+  (cost (extract (extract (opm_cost stepsCM b w) a aC) v vC) <= 20)%nat.
+Proof. unfold opm_cost. cost_simpl. destruct w; cbn; lia. Qed.
+
+Ltac gen_bound T X L :=
+  let Hc := fresh "Hc" in
+  pose proof (L : (@cost T X <= _)%nat) as Hc;
+  revert Hc; generalize (@cost T X); intros ? Hc.
+
+Ltac gen_costs := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with
+  | negb_cost stepsCM ?b ?w => gen_bound T X (negb_time b w)
+  | idm_cost stepsCM ?b ?w => gen_bound T X (idm_time b w)
+  | extract (extract (opm_cost stepsCM ?b ?w) ?a ?aC) ?v ?vC => gen_bound T X (opm_time b w a aC v vC)
+  | extract (opm_cost stepsCM ?b ?w) ?a ?aC => change (@cost T X) with 0%nat
+  | opm_cost stepsCM ?b ?w => change (@cost T X) with 0%nat
+  | set_cost _ _ _ => change (@cost T X) with 0%nat
+  | extract (set_cost _ _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (set_cost _ _ _) _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (extract (set_cost _ _ _) _ _) _ _) _ _ => change (@cost T X) with 1%nat
+  end end.
+
+Ltac use_IH IH x xC n nC j Hm :=
+  match goal with |- context [@cost ?T (?G' x xC n nC j ?iC ?d ?dC ?a ?aC ?s ?sC ?H ?HC)] =>
+    let HI := fresh "HI" in
+    pose proof (IH j iC d dC a aC s sC H HC Hm : (@cost T (G' x xC n nC j iC d dC a aC s sC H HC) <= _)%nat) as HI;
+    revert HI; generalize (@cost T (G' x xC n nC j iC d dC a aC s sC H HC)); intros ? HI end.
+
+Lemma gap_step n i : (i <? n) = true -> forall m, (Z.to_nat (gap n i) <= S m)%nat ->
+  (Z.to_nat (gap n (i + 1)) <= m)%nat.
+Proof.
+  intros Hi m Hm. pose proof (proj1 (Uint63.ltb_spec _ _) Hi).
+  assert (φ (i + 1) = φ i + 1)%Z by (zify; Z.to_euclidean_division_equations; lia).
+  unfold gap in *. lia.
+Qed.
+
+Lemma loop_time x xC n nC i iC d dC add addC stk stkC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (loop_cost stepsCM x xC) n nC) i iC) d dC) add addC) stk stkC) H HC)
+     <= Z.to_nat (gap n i) * 100 + 20)%nat.
+Proof.
+  unfold loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC n nC i iC d dC add addC stk stkC H HC)] =>
+    assert (HG : forall m i iC d dC add addC stk stkC H HC, (Z.to_nat (gap n i) <= m)%nat ->
+       (cost (G x xC n nC i iC d dC add addC stk stkC H HC) <= m * 100 + 20)%nat) end.
+  { induction m as [|m IH]; intros i' iC' d' dC' a' aC' s' sC' [g] HC' Hm.
+    { cost_simpl.
+      pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB.
+      cost_destruct (bdec (i' <? n)).
+      - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hm. lia.
+      - cost_simpl. lia. }
+    cost_simpl.
+    pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB.
+    cost_destruct (bdec (i' <? n)).
+    2:{ cost_simpl. lia. }
+    cost_simpl.
+    pose proof (gap_step n i' e m Hm) as Hm'. clear Hm.
+    generalize (array_elems xC i').
+    cost_destruct (x.[i']); intros wt.
+    all: cost_simpl.
+    2: cost_destruct (d' =? 0)%uint63; cost_simpl.
+    all: gen_costs.
+    all: use_IH IH x xC n nC (i' + 1)%uint63 Hm'.
+    all: lia. }
+  match goal with |- context [@cost ?T (?G x xC n nC i iC d dC add addC stk stkC H HC)] =>
+    exact (HG _ i iC d dC add addC stk stkC H HC (le_n _) : (@cost T (G x xC n nC i iC d dC add addC stk stkC H HC) <= _)%nat) end.
+Qed.
+
+Ltac zero_layers := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with
+  | loop_cost _ _ _ => change (@cost T X) with 0%nat
+  | extract (loop_cost _ _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (loop_cost _ _ _) _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (extract (loop_cost _ _ _) _ _) _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (extract (extract (loop_cost _ _ _) _ _) _ _) _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (extract (extract (extract (loop_cost _ _ _) _ _) _ _) _ _) _ _) _ _ => change (@cost T X) with 0%nat
+  | make_cost _ _ _ => change (@cost T X) with 0%nat
+  | extract (make_cost _ _ _) _ _ => change (@cost T X) with 0%nat
+  | extract (extract (make_cost _ _ _) _ _) _ _ => change (@cost T X) with 1%nat
+  end end.
+
+Theorem bracketsequence_time : exists c1 c2 : nat,
+  forall (tokens : list (token N)) (tokens_arr : array
+  (token uint)),
+  valid_input tokens -> repr tokens_arr tokens ->
+  (cost1 bracketsequence_cost tokens_arr <= c1 * (size tokens_arr + 1) + c2)%nat.
+Proof.
+  exists 100%nat, 100%nat.
+  intros tokens x _ _.
+  enough (E : (cost1 bracketsequence_cost x <= (size x + 1) * 100 + 100)%nat) by lia.
+  unfold cost1, bracketsequence_cost, bracketsequence_impl_cost. cost_simpl.
+  zero_layers.
+  match goal with |- context [@cost ?T (extract (extract (extract (extract (extract (extract (loop_cost stepsCM ?x ?xC) ?n ?nC) ?i ?iC) ?d ?dC) ?a ?aC) ?s ?sC) ?H ?HC)] =>
+    pose proof (loop_time x xC n nC i iC d dC a aC s sC H HC : (@cost T _ <= _)%nat) as HL;
+    revert HL; generalize (@cost T (extract (extract (extract (extract (extract (extract (loop_cost stepsCM x xC) n nC) i iC) d dC) a aC) s sC) H HC)); intros r HL end.
+  match type of HL with (_ <= Z.to_nat (gap ?l ?z) * 100 + 20)%nat =>
+    assert (Eg : Z.to_nat (gap l z) = size x) by
+      (unfold gap, size, size_array; change (φ z) with 0%Z; rewrite Z.sub_0_r; reflexivity) end.
+  rewrite Eg in HL. lia.
+Qed.
+
+Print Assumptions bracketsequence_time.

@@ -2,10 +2,13 @@
 
 (** ** Description *)
 
-(** Process annual arrivals into a competition where the strongest active
-    participant wins and leaves each year. Determine when a designated
-    participant wins, or whether the known arrivals are insufficient to
-    tell.
+(** A moose tribe holds an annual tournament. The strongest competing moose
+    wins and permanently leaves; a newcomer replaces the winner for the next
+    tournament, keeping the pool size constant. Karl wants to know when he
+    will win. Given his entry year and strength, together with the other
+    moose's strengths and entry years, determine his winning year. If he
+    does not win during the years covered by the supplied arrivals, report
+    that the information is insufficient; this does not mean he never wins.
 
     [@kattis knigsoftheforest]
     - Difficulty: 3.4
@@ -13,9 +16,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Pool size and observed year count in $[1, 10^{5}]$.
+    - Pool size and observed year count: $1 \le k, T \le 10^{5}$.
     - Entry years $y$ satisfy $2011 \le y \le 2011 + T - 1$, where $T$ is the year count.
-    - Distinct strengths in $[0, 2^{31}-1]$; a full pool enters initially
+    - Distinct strengths: $0 \le p_i \le 2^{31} - 1$; a full pool enters initially
       and one new participant enters each subsequent year. *)
 
 (** ** Examples *)
@@ -48,34 +51,36 @@ Output:
                     when Karl wins in that year, one of the year_count years
                     2011 .. 2011 + year_count - 1 the data cover, and None
                     ("unknown") otherwise.
+                    It runs in at most c1 * (n + k + y + 1) * (log2 k + 1) +
+                    c2 steps of the cost model on a valid input, n the
+                    number of other moose, k the pool size and y the number
+                    of years (one heap extraction per year and one insertion
+                    per newcomer, on a heap of at most k moose), for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The moose are numbered: moose 0 is Karl-Algtav, moose i +
-    1 the i-th of the other moose, so their years are karl_year ::
-    other_years and their strengths karl_strength ::
-    other_strengths. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The entry of moose in the column. *)
+(** The entry for [moose] in the supplied data column. *)
 Definition entry (column : list N) (moose : N) : N :=
   nth (N.to_nat moose) column 0.
 
-(** year is one of the year_count years for which the data are
-    sufficient. *)
+(** [year] is one of the [year_count] years for which the data are sufficient. *)
 Definition data_year (year_count year : N) : Prop :=
   2011 <= year <= 2011 + year_count - 1.
 
-(** Given the winners winner of the earlier years, moose competes in
-    year: it exists, has entered by year, and has not won in any
-    year 2011 .. year - 1. *)
+(** [moose] has entered by [year] and has not won in any earlier year, according to
+    [winner]. *)
 Definition contender (all_years : list N)
   (winner : N -> N) (year moose : N)
     : Prop :=
@@ -83,8 +88,8 @@ Definition contender (all_years : list N)
   forall year', 2011 <= year' < year ->
     winner year' <> moose.
 
-(** winner gives the winner of every data year: a contender of that
-    year, at least as strong as every contender of that year. *)
+(** [winner] selects, for each year covered by the data, a competing moose at least
+    as strong as every other contender. *)
 Definition schedule (year_count : N)
   (all_years all_strengths : list N)
     (winner : N -> N) : Prop :=
@@ -134,8 +139,8 @@ Record valid_input
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the year when the designated participant wins, or None if that
-    participant does not win within the years determined by the input. *)
+    The output is the year Karl wins the moose tournament, or [None] if he
+    does not win during the years covered by the known arrivals. *)
 Definition knigsoftheforest_spec
     (pool_size year_count karl_year karl_strength : N)
     (other_years other_strengths : list N) (output : option
@@ -151,21 +156,37 @@ Definition knigsoftheforest_spec
     forall year, output = Some year <->
       data_year year_count year /\ winner year = 0.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((m+k+y+1)\log(k+2))$ steps, where $m$ is the number of other moose, $k$ the pool size, and $y$ the number of years. *)
+Definition knigsoftheforest_time_spec (c1 c2 n_other_years n_pool_size n_year_count steps : nat) : Prop :=
+  (steps <= c1 * ((n_other_years + n_pool_size + n_year_count + 1) * (Nat.log2 (n_pool_size) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Process annual arrivals into a competition where the strongest active participant wins
-    and leaves each year. Determine when a designated participant wins, or whether the
-    known arrivals are insufficient to tell.
-    - Input [pool_size]: Number of active participants in each annual competition.
-    - Input [year_count]: Number of years covered by the known arrivals.
-    - Input [karl_year]: Entry year of the designated participant.
-    - Input [karl_strength]: Strength of the designated participant.
-    - Input [other_years]: Entry years of the other participants.
-    - Input [other_strengths]: Strengths of the corresponding participants.
-    - Output [output]: The output is the year when the designated participant wins, or None if that participant does not win within the years determined by the input. *)
+(** Determine when Karl becomes the winning moose, as each year's strongest
+    contender wins and leaves the tournament pool.
+    - Input [pool_size]: Number of moose competing each year.
+    - Input [year_count]: Number of tournament years covered by the known arrivals, starting in 2011.
+    - Input [karl_year]: Year Karl enters the tournament pool.
+    - Input [karl_strength]: Karl's strength.
+    - Input [other_years]: Entry years of the other moose.
+    - Input [other_strengths]: Strengths of the corresponding moose.
+    - Output [output]: [Some] year when Karl wins, or [None] if he does not win within the known years and later results cannot be determined. *)
 Program knigsoftheforest :
   uint -> uint -> uint -> uint -> array uint ->
     array uint -> option uint.
+
+(** [@example knigsoftheforest]
+    - Sample: 1
+    - Input [pool_size]: 2
+    - Input [year_count]: 4
+    - Input [karl_year]: 2013
+    - Input [karl_strength]: 2
+    - Input [other_years]: [2011; 2011; 2014; 2012]
+    - Input [other_strengths]: [1; 3; 4; 6]
+    - Output [output]: Some 2013
+*)
 
 (** ** Bridge *)
 
@@ -195,6 +216,31 @@ Specification knigsoftheforest_correct :
     knigsoftheforest_spec pool_size year_count karl_year
       karl_strength
       other_years other_strengths output.
+
+(** ** Complexity *)
+
+(** [@hide] [knigsoftheforest_cost] is the cost translation of [knigsoftheforest] (the judge
+    recomputes it and compares) ... *)
+Complexity knigsoftheforest_cost for knigsoftheforest.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + k + y + 1) * (log2 k + 1) + c2 steps of the cost model on a valid input, n the number of other moose, k the pool size and y the number of years (one heap extraction per year and one insertion per newcomer, on a heap of at most k moose), for two constants
+    quantified before the inputs, on every valid input. [@requirement knigsoftheforest_time_spec] *)
+Specification knigsoftheforest_time : exists c1 c2 : nat,
+  forall (pool_size year_count karl_year karl_strength : N)
+  (other_years other_strengths : list N)
+  (pool_size_int year_count_int karl_year_int
+  karl_strength_int : uint)
+  (other_years_arr other_strengths_arr : array uint),
+  valid_input pool_size year_count karl_year karl_strength
+  other_years
+  other_strengths ->
+  repr pool_size_int pool_size ->
+  repr year_count_int year_count ->
+  repr karl_year_int karl_year ->
+  repr karl_strength_int karl_strength ->
+  repr other_years_arr other_years ->
+  repr other_strengths_arr other_strengths ->
+  knigsoftheforest_time_spec c1 c2 (size other_years_arr) (size pool_size_int) (size year_count_int) (cost6 knigsoftheforest_cost pool_size_int year_count_int karl_year_int karl_strength_int other_years_arr other_strengths_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

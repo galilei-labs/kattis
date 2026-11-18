@@ -4,7 +4,7 @@
 
 (** Solve a square linear system, distinguishing a unique solution, multiple
     solutions and inconsistency. For a unique solution, approximate each
-    component within 0.001 wherever that accuracy is representable.
+    component within $0.001$ wherever that accuracy is representable.
 
     [@kattis equationsolver]
     - Difficulty: 4.4
@@ -73,11 +73,16 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** A solution classification, parameterized by array float for machine values or list R for mathematical values. *)
+(** A linear-system result: no solution, multiple solutions, or a unique solution.
+    Solution vectors use [array float] for machine values and [list R] for
+    mathematical values. *)
 Inductive outcome (V : Type) : Type :=
   | Unique : V -> outcome V
   | Multiple : outcome V
   | Inconsistent : outcome V.
+
+(** [@hide] Constructor argument declarations and the representation relation
+    between machine and mathematical outcomes. *)
 Arguments Unique {V} _.
 Arguments Multiple {V}.
 Arguments Inconsistent {V}.
@@ -95,15 +100,12 @@ Instance repr_outcome V M `{Repr V M} : Repr (outcome V)
     | _, _ => False
     end.
 
-(** Math side. A float input is read as the real it denotes (repr_float)
-    ; the system is the one those reals form, and it is solved
-    exactly in R. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The sum of the products of the entries of row and vector, term by
-    term (the shorter list ends the sum : never relied on, both have
-    unknown_count entries wherever it matters). *)
+(** The dot product of [row] and [vector]. The sum stops at the shorter list; valid
+    systems use equal-length rows and vectors. *)
 Fixpoint dot (row vector : list R) : R :=
   match row, vector with
   | coefficient :: coefficients, component :: components =>
@@ -112,9 +114,9 @@ Fixpoint dot (row vector : list R) : R :=
   | _, _ => 0%R
   end.
 
-(** solution solves matrix x = right_sides : unknown_count components,
-    and row by row the sum of the coefficients times the components
-    is the right-hand side. *)
+(** [solution] has [unknown_count] components and satisfies every row of the
+    real-valued linear system with matrix [matrix] and right-hand side
+    [right_sides]. *)
 Definition solves (unknown_count : N)
   (matrix : list (list R))
     (right_sides solution : list R) : Prop :=
@@ -123,20 +125,16 @@ Definition solves (unknown_count : N)
     right_side)
     matrix right_sides.
 
-(** Some float lies within 10^-3 of target. The tolerance is absolute
-    and the doubles thin out as they grow : above 2^44 two
-    consecutive ones are more than 2 * 10^-3 apart, so a component
-    of the solution that large may have no float within 10^-3 of it,
-    and one beyond 2^1024 has none. The contract asks for the
-    tolerance exactly where a float can meet it. *)
+(** Some machine floating-point value approximates [target] with absolute error at
+    most $10^{-3}$. The accuracy requirement applies only where this is
+    representable; large magnitudes may have no sufficiently close float. *)
 Definition attainable (target : R) : Prop :=
   exists float_value : R, representable (A :=
     float) float_value /\
     (Rabs (float_value - target) <= 1 / 1000)%R.
 
-(** Component by component, approximation is within 10^-3 of solution
-    wherever some float is : "the entries of x are allowed to have
-    an error of at most 10^-3". *)
+(** Each component of [approximation] has absolute error at most $10^{-3}$ from
+    [solution] whenever some float can achieve that accuracy. *)
 Definition approximates
   (approximation solution : list R) : Prop :=
   Forall2 (fun estimate true_value =>
@@ -201,6 +199,42 @@ Definition solve_spec (unknown_count : N)
 Program solve : uint -> array
   (array float) -> array float ->
                   outcome (array float).
+
+(** [@example solve]
+    - Sample: 1
+    - Case: 1
+    - Input [unknown_count]: 2
+    - Input [matrix]: [[1; 1]; [0; 1]]%R
+    - Input [right_sides]: [23; 42]%R
+    - Output [output]: Unique [-19; 42]%R
+*)
+
+(** [@example solve]
+    - Sample: 1
+    - Case: 2
+    - Input [unknown_count]: 1
+    - Input [matrix]: [[5]]%R
+    - Input [right_sides]: [1]%R
+    - Output [output]: Unique [fval 0.2%float]
+*)
+
+(** [@example solve]
+    - Sample: 1
+    - Case: 3
+    - Input [unknown_count]: 3
+    - Input [matrix]: [[1; -2; 0]; [2; -4; 0]; [1; -2; 1]]%R
+    - Input [right_sides]: [3; 6; 4]%R
+    - Output [output]: Multiple
+*)
+
+(** [@example solve]
+    - Sample: 1
+    - Case: 4
+    - Input [unknown_count]: 3
+    - Input [matrix]: [[1; 1; 0]; [3; 3; 0]; [0; 1; 2]]%R
+    - Input [right_sides]: [1; 4; 8]%R
+    - Output [output]: Inconsistent
+*)
 
 (** ** Bridge *)
 

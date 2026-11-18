@@ -21,4 +21,4 @@ archive = "shortestpath1_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/shortestpath1.ml"
-Rust = "extraction/rust/submit/shortestpath1.rs"
+Rust = "extraction/rust/snapshots/shortestpath1_extracted.rs.interface.json"

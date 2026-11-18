@@ -21,4 +21,4 @@ archive = "knapsack2_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/knapsack2.ml"
-Rust = "extraction/rust/submit/knapsack2.rs"
+Rust = "extraction/rust/snapshots/knapsack2_extracted.rs.interface.json"

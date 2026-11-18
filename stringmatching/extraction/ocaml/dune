@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules stringmatching_extracted_marray)
- (theories Stringmatching Stringmatching.spec Stdlib stdpp StdGalilei))
+ (theories Stringmatching Stringmatching.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name stringmatching_extraction)

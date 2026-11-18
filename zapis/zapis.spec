@@ -4,7 +4,7 @@
 
 (** Count substitutions of question marks that produce a balanced sequence
     of round, square and curly brackets. Return the last five digits and
-    whether the count reaches 100000.
+    whether the count reaches $10^{5}$.
 
     [@kattis zapis]
     - Difficulty: 5.0
@@ -12,13 +12,13 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Even string length in $[2, 200]$.
+    - Even string length: $2 \le n \le 200$.
     - Characters are round, square or curly brackets, or question marks. *)
 
 (** ** Examples *)
 
 (** - Input convention: String length, followed by brackets and ? placeholders.
-    - Output convention: The completion count; counts of at least 100,000 use their last five digits, including leading zeros. *)
+    - Output convention: The completion count; counts of at least $10^{5}$ use their last five digits, including leading zeros. *)
 (* Input:
 6
 ()()()
@@ -38,20 +38,25 @@ Output:
                     100000 and whether the count is at least 100000: the
                     answer printed is the residue, padded with leading zeros
                     to 5 digits when the flag is set (the last 5 digits).
+                    It runs in at most c1 * (n + 1)^3 + c2 steps of the cost
+                    model on a valid input, n the length of the sequence
+                    (the interval table, a split loop per entry), for two
+                    constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   PrimString.
 From Stdlib Require Import String Ascii.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. A string is a String.string, a character an
+(* A string is a String.string, a character an
    ascii. *)
 
 (** ** Definitions *)
 
-(** The number of characters of text. *)
+(** The number of characters in [text]. *)
 Definition slen (text : string) : N :=
   N.of_nat (String.length text).
 
@@ -62,7 +67,9 @@ Definition matching (opening closing : ascii) : Prop :=
   \/ (opening = "["%char /\ closing = "]"%char)
   \/ (opening = "{"%char /\ closing = "}"%char).
 
-(** A balanced bracket sequence: empty, a balanced sequence enclosed by matching brackets, or a concatenation of balanced sequences. *)
+(** [regular text] means that [text] is a balanced bracket sequence: empty, a
+    balanced sequence enclosed by matching brackets, or a concatenation of
+    balanced sequences. *)
 Inductive regular : string -> Prop :=
   | regular_empty : regular ""
   | regular_wrap  : forall opening closing inner,
@@ -72,9 +79,8 @@ Inductive regular : string -> Prop :=
       regular prefix -> regular suffix -> regular
         (prefix ++ suffix).
 
-(** candidate is [sequence] with each '?' replaced by
-    some character: same length, and at every position
-    [sequence] has '?' or the character of candidate. *)
+(** [candidate] has the same length as [sequence] and agrees at every position that
+    is not a question mark. *)
 Definition completion (sequence candidate : string) : Prop
   :=
   String.length candidate = String.length sequence /\
@@ -103,8 +109,8 @@ Record valid_input (sequence : string) : Prop := {
 (** ** Correctness *)
 
 (** [@requirement]
-    The output gives the number of balanced-bracket completions modulo 100,000 and a
-    flag indicating whether the full count is at least 100,000. *)
+    The output gives the number of balanced-bracket completions modulo $10^{5}$ and a
+    flag indicating whether the full count is at least $10^{5}$. *)
 Definition zapis_spec
   (sequence : string)
   (output : N * bool)
@@ -122,14 +128,26 @@ Definition zapis_spec
           completions))
     end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n^3)$ steps, where $n$ is the input string length. *)
+Definition zapis_time_spec (c1 c2 n_sequence steps : nat) : Prop :=
+  (steps <= c1 * ((n_sequence + 1) * (n_sequence + 1) * (n_sequence + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Count substitutions of question marks that produce a balanced sequence of round, square
     and curly brackets. Return the last five digits and whether the count reaches
-    100000.
+    $10^{5}$.
     - Input [sequence]: Bracket sequence containing question marks to replace.
-    - Output [output]: The output gives the number of balanced-bracket completions modulo 100,000 and a flag indicating whether the full count is at least 100,000. *)
+    - Output [output]: The output gives the number of balanced-bracket completions modulo $10^{5}$ and a flag indicating whether the full count is at least $10^{5}$. *)
 Program zapis : PrimString.string -> uint * bool.
+
+(** [@example zapis]
+    - Sample: 1
+    - Input [sequence]: "()()()"%string
+    - Output [output]: (1, false)
+*)
 
 (** ** Bridge *)
 
@@ -144,6 +162,20 @@ Specification zapis_correct :
   exists output : N * bool,
     repr (zapis sequence_str) output /\ zapis_spec sequence
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [zapis_cost] is the cost translation of [zapis] (the judge
+    recomputes it and compares) ... *)
+Complexity zapis_cost for zapis.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1)^3 + c2 steps of the cost model on a valid input, n the length of the sequence (the interval table, a split loop per entry), for two constants
+    quantified before the inputs, on every valid input. [@requirement zapis_time_spec] *)
+Specification zapis_time : exists c1 c2 : nat,
+  forall (sequence : string) (sequence_str :
+  PrimString.string),
+  valid_input sequence -> repr sequence_str sequence ->
+  zapis_time_spec c1 c2 (size sequence_str) (cost1 zapis_cost sequence_str).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Cudak.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Cudak)
  (modules cudak_implem)
- (theories Cudak.spec Stdlib stdpp StdGalilei))
+  (theories Cudak.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

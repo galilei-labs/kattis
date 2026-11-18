@@ -21,4 +21,4 @@ archive = "excavatorexpedition_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/excavatorexpedition.ml"
-Rust = "extraction/rust/submit/excavatorexpedition.rs"
+Rust = "extraction/rust/snapshots/excavatorexpedition_extracted.rs.interface.json"

@@ -2,9 +2,17 @@
 
 (** ** Description *)
 
-(** Given multiplicative equations between quantities, decide whether any
-    quantity is forced to be dimensionless. Each equation is represented by
-    its signed exponent vector.
+(** Check a set of physical equations involving multiplication and division.
+    Every named quantity is supposed to have physical units. The equations
+    are invalid if they force any individual quantity to be dimensionless,
+    meaning that all its unit exponents must be zero. Otherwise they are valid.
+    For example, an equation stating that a quantity times itself is one
+    forces that quantity to be dimensionless.
+
+    The function receives one signed exponent vector per equation: move all
+    factors to the left, recording numerator occurrences positively and
+    denominator occurrences negatively. Dimensions turn these multiplicative
+    equations into linear constraints on unit exponents.
 
     [@kattis dimensionalanalysis]
     - Difficulty: 8.1
@@ -54,11 +62,9 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 
-(* Math side *)
-
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -71,9 +77,8 @@ Definition len {A} (l : list A) : N :=
     whether a quantity is forced to zero.) *)
 Definition assignment := N -> Q.
 
-(** The value of a row under dimensions : the sum of
-    entry_j * dimensions j, j counting from the given
-    index. *)
+(** Evaluate the linear equation row at [dimensions], starting the variable indices
+    at [j]. *)
 Fixpoint row_value (row : list Z) (dimensions : assignment)
   (j : N) : Q :=
   match row with
@@ -83,26 +88,27 @@ Fixpoint row_value (row : list Z) (dimensions : assignment)
         dimensions (j + 1))%Q
   end.
 
-(** dimensions satisfies every equation : every row sums
-    to zero. *)
+(** [dimensions] satisfies every equation: each row evaluates to zero. *)
 Definition satisfies (equations : list (list Z))
   (dimensions : assignment)
     : Prop :=
   Forall (fun row =>
     (row_value row dimensions 0 == 0)%Q) equations.
 
-(** The quantity numbered quantity can have a dimension
-    : some assignment satisfying the equations gives it
-    a nonzero one. *)
+(** Some dimension assignment satisfying [equations] gives [quantity] a nonzero
+    exponent. *)
 Definition free_quantity (equations : list (list Z))
   (quantity : N) : Prop :=
   exists dimensions, satisfies equations dimensions /\
     ~ (dimensions quantity == 0)%Q.
 
-(** The sum of the absolute values of a row : at most
-    the number of atoms of the equation. *)
-Definition abs_sum (row : list Z) : Z :=
-  fold_right (fun entry total => Z.abs entry + total) 0 row.
+(** The sum of the absolute values of the row coefficients, used to bound the number
+    of equation atoms. *)
+Fixpoint abs_sum (row : list Z) : Z :=
+  match row with
+  | [] => 0
+  | entry :: rest => Z.abs entry + abs_sum rest
+  end.
 
 (** [@inside valid_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (quantity_count : N) (equations : list
@@ -128,23 +134,26 @@ Record valid_input (quantity_count : N) (equations : list
 Definition valid_spec (quantity_count : N)
   (equations : list (list Z))
     (output : bool) : Prop :=
-  match output with
-  | true =>
-      forall quantity, (quantity < quantity_count)%N ->
-        free_quantity equations quantity
-  | false =>
-      ~ forall quantity, (quantity < quantity_count)%N ->
-          free_quantity equations quantity
-  end.
+  output = true <->
+    forall quantity, (quantity < quantity_count)%N ->
+      free_quantity equations quantity.
 
 (** ** Interface *)
 
-(** Given multiplicative equations between quantities, decide whether any quantity is forced
-    to be dimensionless. Each equation is represented by its signed exponent vector.
+(** Check that the physical equations do not force any named quantity to
+    have no units. Return [true] for a valid system and [false] if some
+    quantity must be dimensionless in every dimension assignment.
     - Input [quantity_count]: Number of distinct physical quantities.
     - Input [equations]: Signed exponent vectors representing the multiplicative equations.
     - Output [output]: The output is true exactly when no individual quantity is forced to be dimensionless by the equations. *)
 Program valid : uint -> array (array sint) -> bool.
+
+(** [@example valid]
+    - Sample: 1
+    - Input [quantity_count]: 7
+    - Input [equations]: [[1; 1; -1; 0; 0; 0; 0]; [0; 1; 0; 1; 0; 0; 0]; [-1; 1; 0; 0; 1; 0; 0]; [0; 0; 0; 0; -1; 1; -1]; [0; 2; -1; 0; 0; 1; -1]]%Z
+    - Output [output]: true
+*)
 
 (** ** Bridge *)
 

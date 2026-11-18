@@ -6,9 +6,11 @@
  (rocq.theory
   (name Zapis.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Zapis)
  (modules zapis_implem)
- (theories Zapis.spec Stdlib stdpp StdGalilei))
+  (theories Zapis.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

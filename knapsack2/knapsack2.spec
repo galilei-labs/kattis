@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }20$ item sizes, each in $[1, 10^{3}]$.
-    - Target size in $[1, 10^{18}]$. *)
+    - Item size count: $1 \le n \le 20$; each size: $1 \le g_i \le 10^{3}$.
+    - Target size: $1 \le k \le 10^{18}$. *)
 
 (** ** Examples *)
 
@@ -32,30 +32,35 @@ impossible
    @summary         [fillable knapsack_size item_sizes] returns whether
                     items of the sizes item_sizes, in unlimited supply, can
                     fill a knapsack of size knapsack_size exactly
+                    It runs in at most c1 * (n + 1) * (G + 1) + c2 steps of
+                    the cost model on a valid input, n the number of item
+                    sizes and G the largest of them ([max_size]; the
+                    residue-class closure costs the smallest size per item,
+                    plus a gcd), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th element of l, for k < len l (0 outside, never relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_N (l : list N) (k : N) : N :=
   nth (N.to_nat k) l 0.
 
-(** items is a bag of items : type indices in [0, n - 1], repetitions
-    allowed. *)
+(** [items] lists valid zero-based item-type indices, allowing repetitions. *)
 Definition bag (item_sizes : list N)
   (items : list N) : Prop :=
   Forall (fun item => item < len item_sizes) items.
 
-(** The total size of the items of items. *)
+(** The sum of the sizes of the item types listed in [items], counting repetitions. *)
 Fixpoint total_size (item_sizes : list N)
   (items : list N) : N :=
   match items with
@@ -64,7 +69,7 @@ Fixpoint total_size (item_sizes : list N)
     item_sizes rest
   end.
 
-(** Some bag of items has total size exactly knapsack_size. *)
+(** Some bag of items has total size exactly [knapsack_size]. *)
 Definition exact_filling (item_sizes : list N)
   (knapsack_size : N) : Prop :=
   exists items, bag item_sizes items /\
@@ -90,10 +95,13 @@ Record valid_input (knapsack_size : N)
 Definition fillable_spec (knapsack_size : N)
   (item_sizes : list N)
     (output : bool) : Prop :=
-  match output with
-  | true => exact_filling item_sizes knapsack_size
-  | false => ~ exact_filling item_sizes knapsack_size
-  end.
+  output = true <-> exact_filling item_sizes knapsack_size.
+
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((n+1)(M+1))$ steps, where $n$ is the number of item sizes and $M$ the largest item size. *)
+Definition fillable_time_spec (c1 c2 n_item_sizes max_item_sizes steps : nat) : Prop :=
+  (steps <= c1 * ((n_item_sizes + 1) * (max_item_sizes + 1)) + c2)%nat.
 
 (** ** Interface *)
 
@@ -103,6 +111,13 @@ Definition fillable_spec (knapsack_size : N)
     - Input [item_sizes]: Available item sizes; each can be used any number of times.
     - Output [output]: The output is true exactly when the target size is a nonnegative integer combination of the available item sizes. *)
 Program fillable : uint -> array uint -> bool.
+
+(** [@example fillable]
+    - Sample: 1
+    - Input [knapsack_size]: 10000000000
+    - Input [item_sizes]: [3; 6]
+    - Output [output]: false
+*)
 
 (** ** Bridge *)
 
@@ -120,6 +135,23 @@ Specification fillable_correct :
     repr (fillable knapsack_size_int item_sizes_arr) output
       /\
     fillable_spec knapsack_size item_sizes output.
+
+(** ** Complexity *)
+
+(** [@hide] [fillable_cost] is the cost translation of [fillable] (the judge
+    recomputes it and compares) ... *)
+Complexity fillable_cost for fillable.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) * (G + 1) + c2 steps of the cost model on a valid input, n the number of item sizes and G the largest of them ([max_size]; the residue-class closure costs the smallest size per item, plus a gcd), for two constants
+    quantified before the inputs, on every valid input. [@requirement fillable_time_spec] *)
+Specification fillable_time : exists c1 c2 : nat,
+  forall (knapsack_size : N) (item_sizes : list N)
+  (knapsack_size_int : uint) (item_sizes_arr : array
+  uint),
+  valid_input knapsack_size item_sizes ->
+  repr knapsack_size_int knapsack_size ->
+  repr item_sizes_arr item_sizes ->
+  fillable_time_spec c1 c2 (size item_sizes_arr) (max_size item_sizes_arr) (cost2 fillable_cost knapsack_size_int item_sizes_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

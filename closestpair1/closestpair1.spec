@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Point count: $2 \le n \le 100{,}000$.
-    - Each coordinate has absolute value at most $100{,}000$. *)
+    - Point count: $2 \le n \le 10^{5}$.
+    - Each coordinate has absolute value at most $10^{5}$. *)
 
 (** ** Examples *)
 
@@ -58,31 +58,28 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The points are two parallel lists, one per
+(* The points are two parallel lists, one per
   column of the
    input lines "x y"; a coordinate is the real its float
      denotes. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th coordinate, for k < len l (0 outside, never
-    relied on). *)
+(** The entry at zero-based index [k] in [l], or zero beyond the end. *)
 Definition get_list_R (l : list R) (k : N) : R :=
   nth (N.to_nat k) l 0%R.
 
-(** i and j are two distinct points of the input:
-    distinct indices; two indices may hold the same
-    point, at distance 0 (third sample case). *)
+(** [i] and [j] are distinct valid input indices. Their coordinates may coincide,
+    giving distance zero. *)
 Definition point_pair (x_coordinates : list R)
   (i j : N) : Prop :=
   i < len x_coordinates /\ j < len x_coordinates /\ i <> j.
 
-(** The squared Euclidean distance between points i and
-    j. *)
+(** The squared Euclidean distance between the points at indices [i] and [j]. *)
 Definition dist2 (x_coordinates y_coordinates : list R)
   (i j : N) : R :=
   let delta_x :=
@@ -96,11 +93,11 @@ Definition dist2 (x_coordinates y_coordinates : list R)
 (** [@inside closestpair_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input
   (x_coordinates y_coordinates : list R) : Prop := {
-  (* 2 <= n <= 100 000 *)
+  (* 2 <= n <= 10^5 *)
   vi_n : 2 <= len x_coordinates <= 100000;
   (* n points, each of the form x y *)
   vi_ys : len y_coordinates = len x_coordinates;
-  (* coordinates ... absolute value bounded by 100 000 *)
+  (* coordinates ... absolute value bounded by 10^5 *)
   vi_x : Forall (fun coordinate =>
     (Rabs coordinate <= 100000)%R)
            x_coordinates;
@@ -135,6 +132,30 @@ Definition closestpair_spec
 Program closestpair : array float -> array float
   -> uint * uint.
 
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 1
+    - Input [x_coordinates]: [fval 1.12%float; 0]%R
+    - Input [y_coordinates]: [0; fval 0.51%float]%R
+    - Output [output]: (1, 0)
+*)
+
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 2
+    - Input [x_coordinates]: [158; 123; 1859]%R
+    - Input [y_coordinates]: [12; 15; -1489]%R
+    - Output [output]: (1, 0)
+*)
+
+(** [@example closestpair]
+    - Sample: 1
+    - Case: 3
+    - Input [x_coordinates]: [fval 21.12%float; fval 18.18%float; fval 21.12%float]
+    - Input [y_coordinates]: [fval (-884.2)%float; fval 43.34%float; fval (-884.2)%float]
+    - Output [output]: (0, 2)
+*)
+
 (** ** Bridge *)
 
 (** [@requirement closestpair_spec] [@fold full
@@ -158,7 +179,7 @@ Specification closestpair_correct :
 Allowed Primitive Axioms.
 
 (** [@hide] The four classical axioms Stdlib's reals
-    rest on: the math side is over R. *)
+    rest on: the specification is over R. *)
 Allowed Axioms ClassicalDedekindReals.sig_forall_dec
   ClassicalDedekindReals.sig_not_dec Classical_Prop.classic
   FunctionalExtensionality.functional_extensionality_dep.

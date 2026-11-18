@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules helpfulcurrents_extracted_marray)
- (theories Helpfulcurrents Helpfulcurrents.spec Stdlib stdpp StdGalilei))
+ (theories Helpfulcurrents Helpfulcurrents.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name helpfulcurrents_extraction)

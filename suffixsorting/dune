@@ -6,9 +6,11 @@
  (rocq.theory
   (name Suffixsorting.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Suffixsorting)
  (modules suffixsorting_implem)
- (theories Suffixsorting.spec Stdlib stdpp StdGalilei))
+  (theories Suffixsorting.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

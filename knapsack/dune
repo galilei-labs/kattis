@@ -6,9 +6,11 @@
  (rocq.theory
   (name Knapsack.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Knapsack)
  (modules knapsack_implem)
- (theories Knapsack.spec Stdlib stdpp StdGalilei))
+  (theories Knapsack.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

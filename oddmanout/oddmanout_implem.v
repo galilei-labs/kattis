@@ -17,6 +17,7 @@
 From Oddmanout.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -35,6 +36,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -57,6 +60,7 @@ Fixpoint xor_loop (a : array int) (n i acc : int)
   | left Hi => xor_loop a n (i + 1) (acc lxor a.[i]) (Acc_inv H (dec_step n i Hi))
   | right _ => acc
   end.
+Elpi complexity xor_loop.
 
 Lemma xor_loop_eq : forall a n i acc H,
   xor_loop a n i acc H =
@@ -68,6 +72,7 @@ Proof. intros. destruct H. reflexivity. Qed.
 
 Definition odd_one_impl (a : array uint) : uint :=
   xor_loop a (PArray.length a) 0 0 (Zwf_well_founded 0 (gap (PArray.length a) 0)).
+Elpi complexity odd_one_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Math side: the XOR of a list                                        *)
@@ -232,8 +237,58 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition odd_one : array uint -> uint := odd_one_impl.
+Elpi complexity odd_one.
 
 Definition odd_one_correct : forall (l : list N) (a : array uint),
   valid_input l -> repr a l ->
   exists x : N, repr (odd_one a) x /\ odd_one_spec l x
   := odd_one_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma xor_loop_time a aC n nC i iC acc accC H HC :
+  (cost (extract (extract (extract (extract (xor_loop_cost stepsCM a aC) n nC) i iC) acc accC) H HC)
+     <= 30 * Z.to_nat (gap n i) + 10)%nat.
+Proof.
+  unfold xor_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G a aC n nC i iC acc accC H HC)] =>
+    assert (HG : forall k i iC acc accC H HC, (Z.to_nat (gap n i) <= k)%nat ->
+       (cost (G a aC n nC i iC acc accC H HC) <= 30 * k + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' acc' accC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB;
+      cost_destruct (bdec (i' <? n)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hk' : (Z.to_nat (gap n (i' + 1)) <= k)%nat).
+      { unfold gap in *. assert (φ (i' + 1) = φ i' + 1)%Z by sia. lia. }
+      match goal with |- context [@cost ?T (?G' a aC n nC (i' + 1)%uint63 ?w ?c ?wc ?h ?e)] =>
+        have HI := (IH (i' + 1)%uint63 w c wc h e : _ -> (@cost T (G' a aC n nC (i' + 1)%uint63 w c wc h e) <= _)%nat) end.
+      specialize (HI Hk'). lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G a aC n nC i iC acc accC H HC)] =>
+    exact (HG _ i iC acc accC H HC (le_n _) : (@cost T (G a aC n nC i iC acc accC H HC) <= _)%nat) end.
+Qed.
+
+Theorem odd_one_time : exists c1 c2 : nat, forall codes_arr : array uint,
+  (cost1 odd_one_cost codes_arr <= c1 * size codes_arr + c2)%nat.
+Proof.
+  exists 30%nat, 30%nat. intros x. unfold cost1, odd_one_cost, odd_one_impl_cost. cost_simpl.
+  match goal with |- context [@cost ?T (?G x ?xw ?n ?nw 0%uint63 ?w1 0%uint63 ?w2 ?h ?e)] =>
+    have HS := (xor_loop_time x xw n nw 0 w1 0 w2 h e
+                : (@cost T (G x xw n nw 0%uint63 w1 0%uint63 w2 h e) <= _)%nat);
+    revert HS; generalize (@cost T (G x xw n nw 0%uint63 w1 0%uint63 w2 h e)); intros C HS end.
+  unfold gap in HS. change (φ 0) with 0%Z in HS. rewrite Z.sub_0_r in HS.
+  assert (E : Z.to_nat (φ (PArray.length x)) = size x) by reflexivity.
+  rewrite E in HS. lia.
+Qed.
+
+Print Assumptions odd_one_time.

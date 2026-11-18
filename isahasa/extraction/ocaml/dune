@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules isahasa_extracted_marray)
- (theories Isahasa Isahasa.spec Stdlib stdpp StdGalilei))
+ (theories Isahasa Isahasa.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name isahasa_extraction)

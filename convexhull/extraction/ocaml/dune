@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules convexhull_extracted_marray)
- (theories Convexhull Convexhull.spec Stdlib stdpp StdGalilei))
+ (theories Convexhull Convexhull.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name convexhull_extraction)

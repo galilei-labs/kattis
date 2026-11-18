@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules excavatorexpedition_extracted_marray)
- (theories Excavatorexpedition Excavatorexpedition.spec Stdlib stdpp StdGalilei))
+ (theories Excavatorexpedition Excavatorexpedition.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name excavatorexpedition_extraction)

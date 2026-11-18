@@ -21,4 +21,4 @@ archive = "farmingmars_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/farmingmars.ml"
-Rust = "extraction/rust/submit/farmingmars.rs"
+Rust = "extraction/rust/snapshots/farmingmars_extracted.rs.interface.json"

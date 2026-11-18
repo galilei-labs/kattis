@@ -6,9 +6,11 @@
  (rocq.theory
   (name Cuboidslicinggame.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Cuboidslicinggame)
  (modules cuboidslicinggame_implem)
- (theories Cuboidslicinggame.spec Stdlib stdpp StdGalilei))
+  (theories Cuboidslicinggame.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

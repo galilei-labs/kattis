@@ -1849,7 +1849,7 @@ Proof.
   assert (HL : (1 <= (φ y) <= 10 ^ 15)%Z) by lia.
   assert (Hdist : forall i j, (Z.of_N (dist d i j) <= (φ y))%Z)
     by (intros i j; pose proof (Hle i j); lia).
-  unfold indoorienteering_spec, indoor. cbv zeta. apply bool_match_of_iff.
+  unfold indoorienteering_spec, indoor. cbv zeta.
   set (n := PArray.length x) in *.
   assert (HNl : PArray.length (PArray.make (n * n) 0) = n * n).
   { rewrite alength_make. replace (n * n <=? PArray.max_length) with true; [reflexivity|].

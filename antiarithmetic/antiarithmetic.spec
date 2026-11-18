@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Entry count: $3 \le n \le 10{,}000$, forming a permutation of $0$ through $n-1$. *)
+    - Entry count: $3 \le n \le 10^{4}$, forming a permutation of the integers $0 \le x < n$. *)
 
 (** ** Examples *)
 
@@ -40,53 +40,52 @@ yes
                     (p_i, p_j, p_k) forms an arithmetic progression, p_i
                     being the i-th value of permutation.  One call per test
                     case.
+                    It runs in at most c1 * (n + 1) * (n / 63 + 1) + c2
+                    steps of the cost model on a valid input, n the length
+                    of the permutation (the bitset scan, one word of 63
+                    steps at a time), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  A permutation is the list of its values, p_0
+(* A permutation is the list of its values, p_0
   first. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The i-th element of permutation (p_i); 0 beyond the
-    end. *)
+(** The entry at zero-based index [i] in [permutation], or zero beyond the end. *)
 Definition get (permutation : list N) (i : N) : N :=
   nth (N.to_nat i) permutation 0.
 
-(** (first, second, third) forms an arithmetic
-    progression: there is a constant c with first -
-    second = c and second - third = c, the differences
-    taken in Z. *)
+(** [first], [second], and [third] have equal successive differences, computed as
+    integers. *)
 Definition progression (first second third : N) : Prop :=
   (Z.of_N first - Z.of_N second = Z.of_N second - Z.of_N
     third)%Z.
 
-(** There are three indices 0 <= i < j < k < n such that
-    (p_i, p_j, p_k) forms an arithmetic progression. *)
+(** Three entries at strictly increasing indices form an arithmetic progression. *)
 Definition has_progression (permutation : list N) : Prop :=
   exists i j k : N,
     i < j /\ j < k /\ k < len permutation /\
     progression (get permutation i) (get permutation j)
       (get permutation k).
 
-(** permutation is antiarithmetic: no subsequence of it
-    of length greater than 2 is an arithmetic
-    progression. *)
+(** [permutation] has no arithmetic-progression subsequence of length three or more. *)
 Definition is_antiarithmetic
   (permutation : list N) : Prop :=
   ~ has_progression permutation.
 
 (** [@inside antiarithmetic_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (permutation : list N) : Prop := {
-  (* a natural number 3 <= n <= 10 000 *)
+  (* a natural number 3 <= n <= 10^4 *)
   vi_n : 3 <= len permutation <= 10000;
   (* all n numbers are nonnegative integers smaller than n
     *)
@@ -104,10 +103,13 @@ Record valid_input (permutation : list N) : Prop := {
 Definition antiarithmetic_spec (permutation : list N)
   (output : bool)
     : Prop :=
-  match output with
-  | true => is_antiarithmetic permutation
-  | false => has_progression permutation
-  end.
+  output = true <-> is_antiarithmetic permutation.
+
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n^2)$ steps, where $n$ is the permutation length; the formal bound retains the factor $\lfloor n/63\rfloor+1$. *)
+Definition antiarithmetic_time_spec (c1 c2 n_permutation steps : nat) : Prop :=
+  (steps <= c1 * ((n_permutation + 1) * (n_permutation / 63 + 1)) + c2)%nat.
 
 (** ** Interface *)
 
@@ -116,6 +118,27 @@ Definition antiarithmetic_spec (permutation : list N)
     - Input [permutation]: Permutation to test for a three-term arithmetic progression.
     - Output [output]: The output is true exactly when no three entries in increasing index order form an arithmetic progression. *)
 Program antiarithmetic : array uint -> bool.
+
+(** [@example antiarithmetic]
+    - Sample: 1
+    - Case: 1
+    - Input [permutation]: [0; 2; 1]
+    - Output [output]: true
+*)
+
+(** [@example antiarithmetic]
+    - Sample: 1
+    - Case: 2
+    - Input [permutation]: [2; 0; 1; 3; 4]
+    - Output [output]: false
+*)
+
+(** [@example antiarithmetic]
+    - Sample: 1
+    - Case: 3
+    - Input [permutation]: [2; 4; 3; 5; 0; 1]
+    - Output [output]: true
+*)
 
 (** ** Bridge *)
 
@@ -131,6 +154,21 @@ Specification antiarithmetic_correct :
   exists output : bool,
     repr (antiarithmetic permutation_arr) output /\
     antiarithmetic_spec permutation output.
+
+(** ** Complexity *)
+
+(** [@hide] [antiarithmetic_cost] is the cost translation of [antiarithmetic] (the judge
+    recomputes it and compares) ... *)
+Complexity antiarithmetic_cost for antiarithmetic.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) * (n / 63 + 1) + c2 steps of the cost model on a valid input, n the length of the permutation (the bitset scan, one word of 63 steps at a time), for two constants
+    quantified before the inputs, on every valid input. [@requirement antiarithmetic_time_spec] *)
+Specification antiarithmetic_time : exists c1 c2 : nat,
+  forall (permutation : list N)
+  (permutation_arr : array uint),
+  valid_input permutation
+  -> repr permutation_arr permutation ->
+  antiarithmetic_time_spec c1 c2 (size permutation_arr) (cost1 antiarithmetic_cost permutation_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

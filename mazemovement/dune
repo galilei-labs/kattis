@@ -6,9 +6,11 @@
  (rocq.theory
   (name Mazemovement.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Mazemovement)
  (modules mazemovement_implem)
- (theories Mazemovement.spec Stdlib stdpp StdGalilei))
+  (theories Mazemovement.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -16,13 +15,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Longincsubseq.longincsubseq_implem.lis
-pub fn lis() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<Array<u64>> = lis_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -37,13 +29,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Longincsubseq.longincsubseq_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -80,17 +69,15 @@ pub fn bsearch_1(x: Rc<Array<u64>>, tails: Rc<Array<u64>>, v: u64, lo: u64, hi: 
 // Rocq: Longincsubseq.longincsubseq_implem.bsearch (local: bsearch)
 // Variant: uncurried, lifted
 pub fn bsearch(x: Rc<Array<u64>>, tails: Rc<Array<u64>>, v: u64, lo: u64, hi: u64, _H: ()) -> u64 {
-  let v13 = ltb(lo, hi);
-  match bdec(v13) {
+  let tmp = ltb(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = sub(hi, lo);
-      let mid = add(lo, div(v24, 2u64));
-      let v39 = &tails;
-      let v42 = rocq_array::get::<u64>(&v39, mid);
-      let v43 = &x;
-      let v47 = rocq_array::get::<u64>(&v43, v42);
-      let v52 = ltsb(v47, v);
-      match bdec(v52) {
+      let tmp_1 = sub(hi, lo);
+      let mid = add(lo, div(tmp_1, 2u64));
+      let tmp_2 = rocq_array::get::<u64>(&tails, mid);
+      let tmp_3 = rocq_array::get::<u64>(&x, tmp_2);
+      let tmp_4 = ltsb(tmp_3, v);
+      match bdec(tmp_4) {
         sumbool::left => {
           bsearch(x, tails, v, add(mid, 1u64), hi, ())
         },
@@ -116,37 +103,29 @@ pub fn main_loop_1(x: Rc<Array<u64>>, n: u64, i: u64, L: u64, tails: Rc<Array<u6
 // Rocq: Longincsubseq.longincsubseq_implem.main_loop (local: main_loop)
 // Variant: uncurried, lifted
 pub fn main_loop(x: Rc<Array<u64>>, n: u64, i: u64, L: u64, tails: Rc<Array<u64>>, pred: Rc<Array<u64>>, _H: ()) -> (u64, (Rc<Array<u64>>, Rc<Array<u64>>)) {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &x;
-      let v = rocq_array::get::<u64>(&v18, i);
-      let v27 = Rc::clone(&x);
-      let v30 = Rc::clone(&tails);
-      let k = bsearch_1(v27, v30, v, 0u64, L);
-      let v40 = 0u64;
-      let p = match eqb(k, v40) {
-        true => {
-          0u64
-        },
-        false => {
-          let v58 = sub(k, 1u64);
-          let v59 = &tails;
-          rocq_array::get::<u64>(&v59, v58)
-        },
+      let v = rocq_array::get::<u64>(&x, i);
+      let x_clone = Rc::clone(&x);
+      let tails_clone = Rc::clone(&tails);
+      let k = bsearch_1(x_clone, tails_clone, v, 0u64, L);
+      let tmp_1 = 0u64;
+      let p = if eqb(k, tmp_1) {
+        0u64
+      } else {
+        let tmp_2 = sub(k, 1u64);
+        rocq_array::get::<u64>(&tails, tmp_2)
       };
       let pred_ = rocq_array::set::<u64>(pred, i, p);
       let tails_ = rocq_array::set::<u64>(tails, k, i);
-      let v87 = add(i, 1u64);
-      let v94 = match eqb(k, L) {
-        true => {
-          add(L, 1u64)
-        },
-        false => {
-          L
-        },
+      let tmp_3 = add(i, 1u64);
+      let tmp_4 = if eqb(k, L) {
+        add(L, 1u64)
+      } else {
+        L
       };
-      main_loop(x, n, v87, v94, tails_, pred_, ())
+      main_loop(x, n, tmp_3, tmp_4, tails_, pred_, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -164,14 +143,13 @@ pub fn build_1(pred: Rc<Array<u64>>, c: u64, j: u64, res: Rc<Array<u64>>) -> Rc<
 // Rocq: Longincsubseq.longincsubseq_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(pred: Rc<Array<u64>>, c: u64, j: u64, res: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(0u64, c);
-  match bdec(v14) {
+  let tmp = ltb(0u64, c);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = sub(c, 1u64);
-      let v26 = &pred;
-      let v29 = rocq_array::get::<u64>(&v26, j);
-      let v44 = rocq_array::set::<u64>(res, sub(c, 1u64), j);
-      build(pred, v25, v29, v44, ())
+      let tmp_1 = sub(c, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&pred, j);
+      let tmp_3 = rocq_array::set::<u64>(res, sub(c, 1u64), j);
+      build(pred, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(pred);
@@ -182,21 +160,19 @@ pub fn build(pred: Rc<Array<u64>>, c: u64, j: u64, res: Rc<Array<u64>>, _H: ()) 
 
 // Rocq: Longincsubseq.longincsubseq_implem.lis_impl
 pub fn lis_impl(x: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
-  let v14 = rocq_array::make::<u64>(n, 0u64);
-  let v21 = rocq_array::make::<u64>(n, 0u64);
-  let v34 = main_loop_1(x, n, 0u64, 0u64, v14, v21);
-  match v34 {
+  let n = rocq_array::length::<u64>(&x);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = main_loop_1(x, n, 0u64, 0u64, tmp, tmp_1);
+  match tmp_2 {
     (v36, v38) => {
       match v38 {
         (v41, v43) => {
           let pred = &v41;
-          let v55 = sub(v36, 1u64);
-          let v57 = rocq_array::get::<u64>(&pred, v55);
+          let tmp_3 = rocq_array::get::<u64>(pred, sub(v36, 1u64));
           std::mem::drop(v41);
-          let v64 = rocq_array::make::<u64>(v36, 0u64);
-          build_1(v43, v36, v57, v64)
+          let tmp_4 = rocq_array::make::<u64>(v36, 0u64);
+          build_1(v43, v36, tmp_3, tmp_4)
         },
       }
     },
@@ -351,9 +327,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_318.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_318: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = lis(); }

@@ -36,6 +36,18 @@ val scan :
   Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> bool Marray.t -> bool
   Marray.t
 
+val run_ops_raw :
+  uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t
+
+val count_queries :
+  bool Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t
+
+val pack_queries :
+  bool Marray.t -> bool Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> bool
+  Marray.t -> bool Marray.t
+
+val compact_queries : bool Marray.t -> bool Marray.t -> bool Marray.t
+
 val run_ops_impl :
   uint -> bool Marray.t -> uint Marray.t -> uint Marray.t -> bool Marray.t
 

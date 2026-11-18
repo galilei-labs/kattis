@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules bst_extracted_marray)
- (theories Bst Bst.spec Stdlib stdpp StdGalilei))
+ (theories Bst Bst.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name bst_extraction)

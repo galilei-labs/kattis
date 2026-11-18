@@ -21,4 +21,4 @@ archive = "closestpair2_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/closestpair2.ml"
-Rust = "extraction/rust/submit/closestpair2.rs"
+Rust = "extraction/rust/snapshots/closestpair2_extracted.rs.interface.json"

@@ -2,9 +2,12 @@
 
 (** ** Description *)
 
-(** On a grid, each cell receives light from all bulbs, with contribution s
-    / (dr^2 + dc^2 + h^2) for bulb strength s and height h. Find the
-    cheapest barriers separating cells below a threshold from the boundary.
+(** A nightclub floor is divided into grid cells, with one bulb above each
+    cell. A bulb of strength $s$ at height $h$ contributes
+    $s/(\Delta r^2 + \Delta c^2 + h^2)$ to a cell, where $\Delta r$ and
+    $\Delta c$ are the row and column offsets from the bulb. Light levels
+    are the sums of all bulb contributions. Find the cheapest fences
+    separating cells below the light threshold from the floor boundary.
     A barrier between adjacent cells costs 43 if both are sufficiently lit,
     and 11 otherwise.
 
@@ -14,8 +17,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }30$ rows and columns; bulb strengths are digits $0\text{ to }9$.
-    - Light threshold in $[1, 9]$; height in $[1, 5]$.
+    - Row and column counts: $1 \le R, C \le 30$; bulb strengths: $0 \le s \le 9$.
+    - Light threshold: $1 \le B \le 9$; height: $1 \le H \le 5$.
     - Every boundary cell meets the light threshold. *)
 
 (** ** Examples *)
@@ -58,14 +61,14 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The club is the list of its R rows, each the
+(* The club is the list of its R rows, each the
   list of the C
    bulb strengths of its cells; cell
      (i, j) is row i, column j. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -85,11 +88,12 @@ Definition on_border club (i j : N) : Prop :=
   (i = 0 \/ i = rows club - 1 \/ j = 0
     \/ j = cols club - 1).
 
-(** The strength of the bulb above cell (i, j). *)
+(** The strength of the bulb above cell [(i, j)]. *)
 Definition strength club (i j : N) : N :=
   nth (N.to_nat j) (nth (N.to_nat i) club []) 0.
 
-(** term 0 + term 1 + ... + term (term_count - 1), in Q. *)
+(** The sum of [term] over indices from zero through [term_count - 1], computed in
+    [Q]. *)
 Fixpoint qsum (term : N -> Q) (term_count : nat) : Q :=
   match term_count with
   | O => 0%Q
@@ -97,9 +101,9 @@ Fixpoint qsum (term : N -> Q) (term_count : nat) : Q :=
     (N.of_nat previous))%Q
   end.
 
-(** The light level, exactly, at the centre of cell (i,
-    j): the bulb of every cell (i', j'), its own
-    included, adds s / (dr^2 + dc^2 + ceiling_height^2). *)
+(** The exact light level at the centre of cell [(i, j)]. Each bulb, including the
+    one directly above this cell, contributes its strength divided by the squared
+    distance to the cell centre. *)
 Definition light (ceiling_height : N) club (i j : N) : Q :=
   qsum (fun i' => qsum (fun j' =>
     inject_Z (Z.of_N (strength club i' j')) /
@@ -108,18 +112,17 @@ Definition light (ceiling_height : N) club (i j : N) : Q :=
               + Z.of_N ceiling_height ^ 2))%Q
     (N.to_nat (cols club))) (N.to_nat (rows club)).
 
-(** Cell (i, j) meets the minimum lighting standard
-    min_light. *)
+(** Cell [(i, j)] has light level at least [min_light]. *)
 Definition lit (min_light ceiling_height : N) club
   (i j : N) : bool :=
   Qle_bool (inject_Z (Z.of_N min_light))
     (light ceiling_height club i j).
 
-(** A fencing: [h_fences i j] fences (i, j) off from (i,
-    j+1), [v_fences i j] fences (i, j) off from (i+1,
-    j); values off the internal sections are never read.
-    [step] is one move between side-adjacent cells
-    through no fence. *)
+(** One move between side-adjacent cells with no fence between them.
+    [h_fences i j] marks the fence between [(i, j)] and [(i, j + 1)];
+    [v_fences i j] marks the fence between [(i, j)] and [(i + 1, j)].
+    Coordinates are zero-based, with rows increasing downward. Fence values
+    outside the internal cell boundaries are never read. *)
 Definition step (h_fences v_fences : N -> N -> bool) club
   (cell cell' : N * N)
     : Prop :=
@@ -141,15 +144,15 @@ Definition fences_out_dark
   ~ clos_refl_trans _ (step h_fences v_fences club) (i, j)
     (i', j').
 
-(** The price of the section between cells (i, j) and
-    (i', j'). *)
+(** The cost of fencing the shared boundary between the two cells. *)
 Definition price (min_light ceiling_height : N) club
   (i j i' j' : N) : N :=
   if lit min_light ceiling_height club i j &&
      lit min_light ceiling_height club i' j' then 43 else
        11.
 
-(** term 0 + term 1 + ... + term (term_count - 1), in N. *)
+(** The sum of [term] over indices from zero through [term_count - 1], computed in
+    [N]. *)
 Fixpoint nsum (term : N -> N) (term_count : nat) : N :=
   match term_count with
   | O => 0
@@ -213,16 +216,24 @@ Definition darkness_spec (min_light ceiling_height : N) club
 
 (** ** Interface *)
 
-(** On a grid, each cell receives light from all bulbs, with contribution s / (dr^2 + dc^2 +
-    h^2) for bulb strength s and height h. Find the cheapest barriers separating cells
-    below a threshold from the boundary. A barrier between adjacent cells costs 43 if
-    both are sufficiently lit, and 11 otherwise.
+(** Find the cheapest fences separating dark cells from the nightclub floor
+    boundary. Light at each cell is the sum of bulb strengths divided by
+    squared spatial distances. A fence between adjacent cells costs 43 if
+    both meet the light threshold, and 11 otherwise.
     - Input [min_light]: Minimum acceptable illumination of a cell.
     - Input [ceiling_height]: Height of the light sources above the grid.
-    - Input [club]: Grid of light-source strengths, one row per array entry.
+    - Input [club]: Bulb strengths as integers from zero through nine, one grid row per array entry; a bulb is directly above each cell. The Kattis text input encodes these integers as digit characters.
     - Output [output]: The output is the minimum total barrier cost separating every insufficiently lit cell from the grid boundary. *)
 Program darkness : uint -> uint -> array (array uint)
   -> uint.
+
+(** [@example darkness]
+    - Sample: 1
+    - Input [min_light]: 9
+    - Input [ceiling_height]: 1
+    - Input [club]: [[3; 3; 3; 3; 3; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 3; 3; 3; 3; 3]]
+    - Output [output]: 176
+*)
 
 (** ** Bridge *)
 

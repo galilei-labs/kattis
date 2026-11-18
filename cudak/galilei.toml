@@ -21,4 +21,4 @@ archive = "cudak_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/cudak.ml"
-Rust = "extraction/rust/submit/cudak.rs"
+Rust = "extraction/rust/snapshots/cudak_extracted.rs.interface.json"

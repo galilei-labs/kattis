@@ -6,9 +6,11 @@
  (rocq.theory
   (name Committeeassignment.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Committeeassignment)
  (modules committeeassignment_implem)
- (theories Committeeassignment.spec Stdlib stdpp StdGalilei))
+  (theories Committeeassignment.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

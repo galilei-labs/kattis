@@ -21,4 +21,4 @@ archive = "darkness_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/darkness.ml"
-Rust = "extraction/rust/submit/darkness.rs"
+Rust = "extraction/rust/snapshots/darkness_extracted.rs.interface.json"

@@ -14,7 +14,7 @@
 
     **Kattis Bounds**
     - Cuboid count: $1 \le n \le 100$.
-    - Each integer side length is in $[1, 30]$. *)
+    - Each integer side length satisfies $1 \le s \le 30$. *)
 
 (** ** Examples *)
 
@@ -40,17 +40,23 @@ RUBEN
                     optimally. A move cuts one cuboid along three planes
                     through it, leaving up to 8 smaller cuboids; the player
                     who removes the last cuboid wins.
+                    It runs in at most c1 * ((M + 1)^6 + N) + c2 steps of
+                    the cost model on a valid input, M the largest side
+                    ([max_size] over the three columns) and N the number of
+                    cuboids (the Grundy table over the canonical cuboids up
+                    to M, M^3 of them with at most M^3 cuts each, then one
+                    fold over the input), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The two names of the input and of the output line; a
-    type of the problem's own, the same on both sides. *)
+(** The two players, using the same player type in machine and mathematical results. *)
 Inductive player := Ruben | Albert.
 
 (** [@hide] Machine and mathematical player values are
@@ -59,31 +65,36 @@ Instance repr_player : Repr player player :=
   fun machine_player math_player => machine_player =
     math_player.
 
+(** [@hide] The cost translation of [player] and the witness of a machine
+    player (the vocabulary of [KattisLib.Cost]), for the bound below. *)
+Elpi complexity player.
+Instance witness_player : Witness player (fun CM p => player_cost CM p) :=
+  fun p => match p with
+           | Ruben => Ruben_cost stepsCM
+           | Albert => Albert_cost stepsCM
+           end.
+
 (** The other player. *)
 Definition opponent (who : player) : player :=
   match who with Ruben => Albert | Albert => Ruben end.
 
-(* Math side. *)
-
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** A cuboid x * y * z, and a position of the game: the
-    cuboids on the table. *)
+(** The three side lengths of a cuboid. *)
 Definition cuboid : Type := (N * N * N)%type.
 (** The cuboids remaining in the game. *)
 Definition position : Type := list cuboid.
 
-(** Cutting a side of length side at plane cut (1 <= cut
-    <= side) leaves cut-1 and side-cut. *)
+(** Cutting a side of length [side] at plane [cut] leaves lengths [cut - 1] and
+    [side - cut]. *)
 Definition sides (side cut : N) : list N :=
   [cut - 1; side - cut].
 
-(** The up to 8 cuboids left when x_side * y_side *
-    z_side is cut at planes x_cut, y_cut and z_cut:
-    every combination of the remaining sides, those with
-    a side 0 dropped. *)
+(** The cuboids remaining after cuts at [x_cut], [y_cut], and [z_cut] along
+    the three sides. All combinations of the remaining side lengths are included;
+    pieces with a zero side length are discarded. *)
 Definition pieces
   (x_side y_side z_side x_cut y_cut z_cut : N) : position :=
   filter (fun '(x_rest, y_rest, z_rest) =>
@@ -94,8 +105,9 @@ Definition pieces
        (sides z_side z_cut)) (sides y_side y_cut))
          (sides x_side x_cut)).
 
-(** A legal move: choose a cuboid and three planes on
-    it, and replace the cuboid by its pieces. *)
+(** [move position_before position_after] means that a legal move transforms
+    [position_before] into [position_after]: choose a cuboid and three cutting
+    planes, and replace that cuboid by its pieces. *)
 Inductive move : position -> position -> Prop :=
   | move_cut :
     forall before after x_side y_side z_side x_cut y_cut
@@ -106,11 +118,10 @@ Inductive move : position -> position -> Prop :=
            (before ++ pieces x_side y_side z_side x_cut
              y_cut z_cut ++ after).
 
-(** Optimal play: the player to move wins iff some move
-    leads to a position lost for the player to move
-    then; it loses iff every move leads to a won
-    position (so the empty position, where the opponent
-    removed the last cuboid, is lost). *)
+(** [wins state] means that the player to move in [state] has a winning strategy;
+    [loses state] means that every legal move leaves the next player a winning
+    position. A position is winning exactly when some legal move leaves a losing
+    position. A position with no legal move is losing. *)
 Inductive wins : position -> Prop :=
   | wins_move : forall state next_state,
       move state next_state -> loses next_state
@@ -121,8 +132,8 @@ with loses : position -> Prop :=
         -> wins next_state) ->
       loses state.
 
-(** The starting position: cuboid i is x_lengths_i *
-    y_lengths_i * z_lengths_i, in input order. *)
+(** The starting cuboids, with side lengths taken from the corresponding entries of
+    [x_lengths], [y_lengths], and [z_lengths]. *)
 Definition initial
   (x_lengths y_lengths z_lengths : list N) : position :=
   combine (combine x_lengths y_lengths) z_lengths.
@@ -159,6 +170,12 @@ Definition winner_spec (first_player : player)
   (output = opponent first_player <->
      loses (initial x_lengths y_lengths z_lengths)).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((X+Y+Z+1)^6+n)$ steps, where $X$, $Y$, and $Z$ are the maximum side lengths in each dimension and $n$ is the number of cuboids. *)
+Definition winner_time_spec (c1 c2 max_x_lengths max_y_lengths max_z_lengths n_x_lengths steps : nat) : Prop :=
+  (steps <= c1 * ((max_x_lengths + max_y_lengths + max_z_lengths + 1) ^ 6 + n_x_lengths) + c2)%nat.
+
 (** ** Interface *)
 
 (** Determine the winner under optimal play in a game on integer-sized cuboids. Each move
@@ -171,6 +188,15 @@ Definition winner_spec (first_player : player)
     - Output [output]: The output identifies the winner under optimal play from the initial cuboid configuration and starting player. *)
 Program winner : player -> array uint -> array uint
   -> array uint -> player.
+
+(** [@example winner]
+    - Sample: 1
+    - Input [first_player]: Ruben
+    - Input [x_lengths]: [4]
+    - Input [y_lengths]: [1]
+    - Input [z_lengths]: [7]
+    - Output [output]: Ruben
+*)
 
 (** ** Bridge *)
 
@@ -195,6 +221,27 @@ Specification winner_correct :
       output /\
     winner_spec first_player x_lengths y_lengths z_lengths
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [winner_cost] is the cost translation of [winner] (the judge
+    recomputes it and compares) ... *)
+Complexity winner_cost for winner.
+
+(** [@fold complexity bound] ... and runs in at most c1 * ((M + 1)^6 + N) + c2 steps of the cost model on a valid input, M the largest side ([max_size] over the three columns) and N the number of cuboids (the Grundy table over the canonical cuboids up to M, M^3 of them with at most M^3 cuts each, then one fold over the input), for two constants
+    quantified before the inputs, on every valid input. [@requirement winner_time_spec] *)
+Specification winner_time : exists c1 c2 : nat,
+  forall (first_player : player)
+  (x_lengths y_lengths z_lengths : list N)
+  (first_player_arg : player)
+  (x_lengths_arr y_lengths_arr z_lengths_arr : array
+  uint),
+  valid_input x_lengths y_lengths z_lengths ->
+  repr first_player_arg first_player ->
+  repr x_lengths_arr x_lengths
+  -> repr y_lengths_arr y_lengths ->
+  repr z_lengths_arr z_lengths ->
+  winner_time_spec c1 c2 (max_size x_lengths_arr) (max_size y_lengths_arr) (max_size z_lengths_arr) (size x_lengths_arr) (cost4 winner_cost first_player_arg x_lengths_arr y_lengths_arr z_lengths_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Magicsequence.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Magicsequence)
  (modules magicsequence_implem)
- (theories Magicsequence.spec Stdlib stdpp StdGalilei))
+  (theories Magicsequence.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

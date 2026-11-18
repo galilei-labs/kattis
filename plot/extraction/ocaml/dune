@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules plot_extracted_marray)
- (theories Plot Plot.spec Stdlib stdpp StdGalilei))
+ (theories Plot Plot.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name plot_extraction)

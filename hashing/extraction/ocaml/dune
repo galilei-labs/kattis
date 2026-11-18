@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules hashing_extracted_marray)
- (theories Hashing Hashing.spec Stdlib stdpp StdGalilei))
+ (theories Hashing Hashing.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name hashing_extraction)

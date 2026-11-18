@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules intersectingrectangles_extracted_marray)
- (theories Intersectingrectangles Intersectingrectangles.spec Stdlib stdpp StdGalilei))
+ (theories Intersectingrectangles Intersectingrectangles.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name intersectingrectangles_extraction)

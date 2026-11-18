@@ -1242,7 +1242,7 @@ Proof.
       + intros i Hi Hu k Hk. lia. }
   destruct (col_loop_spec n xm Hnm (Ae e) T0 U0 HL0 HU0 HI0) as [HL [HU [Hsol [piv HP]]]].
   set (st := for_ 0 xm (T0, U0) (col_step n xm)) in *.
-  unfold valid_spec. apply bool_match_of_iff. rewrite (final_loop_spec n xm Hnm (fst st)).
+  unfold valid_spec. rewrite (final_loop_spec n xm Hnm (fst st)).
   pose proof (to_Z_bounded n) as Bn. pose proof (to_Z_bounded xm) as Bm.
   rewrite (final_iff (Ae e) (cell (fst st) (φ xm)) (fun i => (snd st).[of_Z i]) piv (φ n) (φ xm)); [ | lia | lia | exact HP | exact Hsol].
   rewrite Hxn, Hxm. split.

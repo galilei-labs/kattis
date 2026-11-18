@@ -2240,7 +2240,7 @@ Proof.
             ((φ (@PArray.get@{Set} int xls j)) < (φ xn))%Z).
   { intros j Hj. rewrite (RL j ltac:(lia)), Hxn.
     pose proof (Bnth ls (Z.to_N (φ j)) Vls ltac:(lia)). lia. }
-  unfold chess_consistent_spec. apply bool_match_of_iff.
+  unfold chess_consistent_spec.
   assert (B1 : ((φ xn) <= 50000)%Z) by lia.
   assert (B2 : ((φ (@PArray.length@{Set} int xks)) <= 250000)%Z) by lia.
   rewrite (chess_impl_correct xn xks xls xwins B1 B2 Hks Hls).

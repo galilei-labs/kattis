@@ -6,9 +6,11 @@
  (rocq.theory
   (name Isahasa.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Isahasa)
  (modules isahasa_implem)
- (theories Isahasa.spec Stdlib stdpp StdGalilei))
+  (theories Isahasa.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

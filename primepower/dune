@@ -6,9 +6,11 @@
  (rocq.theory
   (name Primepower.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Primepower)
  (modules primepower_implem)
- (theories Primepower.spec Stdlib stdpp StdGalilei))
+  (theories Primepower.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

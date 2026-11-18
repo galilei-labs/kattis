@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_arrays_bigint)
  (extracted_modules knapsack_extracted_arrays_bigint)
- (theories Knapsack Knapsack.spec Stdlib stdpp StdGalilei))
+ (theories Knapsack Knapsack.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name knapsack_extraction)

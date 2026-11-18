@@ -31,6 +31,7 @@
 
 From Ultraquicksort.spec Require Import Prelude.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Sorted Permutation.
 Import ListNotations.
@@ -811,3 +812,209 @@ Definition inversions_correct : forall (l : list N) (a : array uint),
   valid_input l -> repr a l ->
   exists c : N, repr (inversions a) c /\ inversions_spec l c
   := inversions_impl_correct.
+
+(* Cost proofs for main's unchanged top-down merge sort. *)
+Elpi complexity sumbool.
+Elpi complexity bdec.
+Elpi complexity merge.
+Elpi complexity negb.
+Elpi complexity msort.
+Elpi complexity snd.
+Elpi complexity inversions_impl.
+Elpi complexity inversions.
+
+From Stdlib Require Import ssreflect.
+Arguments Uint63.to_Z : simpl never.
+Arguments merge : simpl never.
+Arguments msort : simpl never.
+Arguments Zwf_well_founded : simpl never.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+Ltac bound_bdec :=
+  repeat match goal with |- context [@cost ?T (bdec_cost stepsCM ?b ?w)] =>
+    let H := fresh "Hbdec" in
+    have H := (bdec_time b w : (@cost T (bdec_cost stepsCM b w) <= _)%nat);
+    let C := fresh "branch_cost" in set (C := @cost T (bdec_cost stepsCM b w)) in *; clearbody C end.
+Ltac cost_head f c := lazymatch c with
+  | f stepsCM _ _ => idtac
+  | extract ?g _ _ => cost_head f g end.
+Ltac zero_partial f := repeat match goal with |- context [@cost ?T ?c] =>
+  cost_head f c; change (@cost T c) with 0%nat end.
+Ltac set_simpl :=
+  repeat match goal with
+  | |- context [cost (extract (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g) ?h ?i)] =>
+      change (cost (extract (extract (extract (set_cost a b c) d e) f g) h i)) with 1%nat
+  | |- context [cost (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (set_cost a b c) d e) f g)) with 0%nat
+  | |- context [cost (extract (set_cost ?a ?b ?c) ?d ?e)] =>
+      change (cost (extract (set_cost a b c) d e)) with 0%nat
+  | |- context [cost (set_cost ?a ?b ?c)] => change (cost (set_cost a b c)) with 0%nat end.
+
+Lemma mm_i mid hi i j : (i <? mid) = true ->
+  (mm mid hi (i + 1) j = mm mid hi i j - 1)%Z.
+Proof.
+  intros E. pose proof (proj1 (Uint63.ltb_spec _ _) E).
+  assert (φ (i + 1) = φ i + 1)%Z by sia. unfold mm. lia.
+Qed.
+Lemma mm_j mid hi i j : (j <? hi) = true ->
+  (mm mid hi i (j + 1) = mm mid hi i j - 1)%Z.
+Proof.
+  intros E. pose proof (proj1 (Uint63.ltb_spec _ _) E).
+  assert (φ (j + 1) = φ j + 1)%Z by sia. unfold mm. lia.
+Qed.
+
+Lemma merge_time src sC dst dC mid mC hi hC i iC j jC k kC c cC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (extract
+    (merge_cost stepsCM src sC) dst dC) mid mC) hi hC) i iC) j jC) k kC) c cC) H HC)
+    <= 100 * Z.to_nat (mm mid hi i j) + 50)%nat.
+Proof.
+  unfold merge_cost. cbn.
+  match goal with |- context [@cost ?T (?G src sC dst dC mid mC hi hC i iC j jC k kC c cC H HC)] =>
+    assert (HG : forall n dst dC i iC j jC k kC c cC H HC,
+      (Z.to_nat (mm mid hi i j) <= n)%nat ->
+      (cost (G src sC dst dC mid mC hi hC i iC j jC k kC c cC H HC) <= 100*n+50)%nat) end.
+  { induction n as [|n IH]; intros dst' dC' i' iC' j' jC' k' kC' c' cC' [g] HC' Hn;
+      cost_simpl; bound_bdec; cost_destruct (bdec (i' <? mid)); cost_simpl;
+      bound_bdec; cost_destruct (bdec (j' <? hi)); cost_simpl; set_simpl.
+    all: try (exfalso; first [pose proof (mm_i mid hi i' j' e)|pose proof (mm_j mid hi i' j' e0)];
+      unfold mm in *; lia).
+    all: try lia.
+    all: try (rewrite cost_if; lazymatch goal with |- context [if ?b then _ else _] => destruct b end; cost_simpl; set_simpl).
+    all: match goal with |- context [@cost ?T (?G' ?s ?sc ?dd ?dc ?md ?mc ?hh0 ?hhc ?ii ?ic ?jj ?jc ?kk ?kc ?cc ?ccc ?hh ?hc)] =>
+      have HI := (IH dd dc ii ic jj jc kk kc cc ccc hh hc
+        ltac:(first [rewrite (mm_i mid hi i' j' e)|rewrite (mm_j mid hi i' j' e0)|rewrite (mm_j mid hi i' j' e1)];
+          pose proof (Z.le_max_l 0 (φ mid-φ i')); pose proof (Z.le_max_l 0 (φ hi-φ j')); unfold mm in *; lia)
+        : (@cost T (G' s sc dd dc md mc hh0 hhc ii ic jj jc kk kc cc ccc hh hc) <= _)%nat) end.
+    all: lia. }
+  match goal with |- context [@cost ?T (?G src sC dst dC mid mC hi hC i iC j jC k kC c cC H HC)] =>
+    exact (HG _ dst dC i iC j jC k kC c cC H HC (le_n _)
+      : (@cost T (G src sC dst dC mid mC hi hC i iC j jC k kC c cC H HC) <= _)%nat) end.
+Qed.
+
+Lemma split_sizes lo hi m : (φ lo <= φ hi)%Z -> (1 <? hi - lo) = true ->
+  (Z.to_nat (φ hi - φ lo) <= 2 ^ S m)%nat ->
+  let mid := lo + (hi - lo) / 2 in
+  (φ lo < φ mid < φ hi)%Z /\
+  (Z.to_nat (φ mid - φ lo) <= 2 ^ m)%nat /\
+  (Z.to_nat (φ hi - φ mid) <= 2 ^ m)%nat /\
+  (Z.to_nat (φ mid - φ lo) + Z.to_nat (φ hi - φ mid) = Z.to_nat (φ hi - φ lo))%nat.
+Proof.
+  intros Hle E Hm mid.
+  assert (Ed : φ (hi - lo) = (φ hi - φ lo)%Z) by sia.
+  assert (Em : φ mid = (φ lo + (φ hi - φ lo)/2)%Z) by (unfold mid; sia).
+  pose proof (proj1 (Uint63.ltb_spec _ _) E) as Hd.
+  change (φ 1) with 1%Z in Hd. rewrite Ed in Hd.
+  pose proof (Z.div_mod (φ hi - φ lo) 2 ltac:(lia)).
+  pose proof (Z.mod_pos_bound (φ hi - φ lo) 2 ltac:(lia)).
+  cbn [Nat.pow] in Hm. repeat split; lia.
+Qed.
+
+Arguments merge_cost : simpl never.
+Ltac gen_merge :=
+  try match goal with |- context [@cost ?T (?G ?a ?ac ?b ?bc ?c ?cc ?d ?dc ?e ?ec ?f ?fc ?g ?gc ?h ?hc ?p ?pc)] =>
+    change (@cost T (G a ac b bc c cc d dc e ec f fc g gc h hc p pc)) with
+      (cost (extract (extract (extract (extract (extract (extract (extract (extract
+        (merge_cost stepsCM a ac) b bc) c cc) d dc) e ec) f fc) g gc) h hc) p pc)) end;
+  zero_partial merge_cost;
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with extract (extract (extract (extract (extract (extract (extract (extract
+      (merge_cost stepsCM ?a ?ac) ?b ?bc) ?c ?cc) ?d ?dc) ?e ?ec) ?f ?fc) ?g ?gc) ?h ?hc) ?p ?pc =>
+      let HI := fresh "Hmerge" in
+      have HI := (merge_time a ac b bc c cc d dc e ec f fc g gc h hc p pc : (@cost T X <= _)%nat);
+      let C := fresh "merge_cost_bound" in set (C := @cost T X) in *; clearbody C end end.
+
+Ltac split_pair :=
+  once match goal with |- context [match ?t as _ return _ with (_,_) => _ end] =>
+    cost_destruct_prep t; let p := fresh "result" in remember t as p;
+    match goal with w : prod_cost _ _ _ _ _ p |- _ => destruct w end end;
+  cbn [fst snd] in *; cost_simpl.
+
+Lemma msort_time m b bC lo loC hi hiC w wC s sC c cC H HC :
+  (φ lo <= φ hi)%Z -> (Z.to_nat (φ hi - φ lo) <= 2^m)%nat ->
+  (cost (extract (extract (extract (extract (extract (extract
+    (msort_cost stepsCM b bC) lo loC) hi hiC) w wC) s sC) c cC) H HC) + 100
+    <= 1000 * Nat.max 1 (Z.to_nat (φ hi - φ lo)) * (m+1))%nat.
+Proof.
+  unfold msort_cost. cbn -[merge_cost].
+  match goal with |- context [@cost ?T (?G b bC lo loC hi hiC w wC s sC c cC H HC)] =>
+    assert (HG : forall m b bC lo loC hi hiC w wC s sC c cC H HC,
+      (φ lo <= φ hi)%Z -> (Z.to_nat (φ hi - φ lo) <= 2^m)%nat ->
+      (cost (G b bC lo loC hi hiC w wC s sC c cC H HC) + 100 <=
+        1000 * Nat.max 1 (Z.to_nat (φ hi - φ lo)) * (m+1))%nat) end.
+  { intro depth; induction depth as [|depth IH]; intros b' bC' lo' loC' hi' hiC' w' wC' s' sC' c' cC' [g] HC' Hle Hn;
+      match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end;
+      cost_simpl; bound_bdec; cost_destruct (bdec (1 <? hi' - lo')); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). change (φ 1) with 1%Z in H0.
+      assert (φ (hi'-lo') = (φ hi'-φ lo')%Z) by sia. cbn in Hn. lia.
+    - destruct b'; cost_simpl; set_simpl; pose proof (Nat.le_max_l 1 (Z.to_nat (φ hi'-φ lo'))); nia.
+    - pose proof (split_sizes lo' hi' depth Hle e Hn) as [Hmid [Hl [Hr Hsum]]].
+      cbv zeta in Hmid, Hl, Hr, Hsum.
+      match goal with |- context [@cost ?T (?G' ?b ?bc ?lo ?lc ?hi ?hc ?w ?wc ?s ?sc ?c ?cc ?h ?hhc)] =>
+        have HI1 := (IH b bc lo lc hi hc w wc s sc c cc h hhc ltac:(lia) Hl
+          : (@cost T (G' b bc lo lc hi hc w wc s sc c cc h hhc) + 100 <= _)%nat);
+        let C := fresh "left_cost" in set (C := @cost T (G' b bc lo lc hi hc w wc s sc c cc h hhc)) in *; clearbody C end.
+      split_pair. split_pair.
+      match goal with |- context [@cost ?T (?G' ?b ?bc ?lo ?lc ?hi ?hc ?w ?wc ?s ?sc ?c ?cc ?h ?hhc)] =>
+        have HI2 := (IH b bc lo lc hi hc w wc s sc c cc h hhc ltac:(lia) Hr
+          : (@cost T (G' b bc lo lc hi hc w wc s sc c cc h hhc) + 100 <= _)%nat);
+        let C := fresh "right_cost" in set (C := @cost T (G' b bc lo lc hi hc w wc s sc c cc h hhc)) in *; clearbody C end.
+      split_pair. split_pair.
+      destruct b'; cost_simpl; gen_merge.
+      all: split_pair.
+      all: unfold mm in *.
+      all: repeat match goal with HH : context [Z.max 0 ?x] |- _ =>
+        rewrite (Z.max_r 0 x ltac:(lia)) in HH end.
+      all: match type of HI1 with context [Nat.max 1 ?v] => rewrite (Nat.max_r 1 v ltac:(lia)) in HI1 end.
+      all: match type of HI2 with context [Nat.max 1 ?v] => rewrite (Nat.max_r 1 v ltac:(lia)) in HI2 end.
+      all: match type of Hbudget with context [Nat.max 1 ?v] => rewrite (Nat.max_r 1 v ltac:(lia)) in Hbudget end.
+      all: replace (φ (lo' + (hi' - lo') / 2) - φ lo' +
+        (φ hi' - φ (lo' + (hi' - lo') / 2)))%Z with (φ hi' - φ lo')%Z in Hmerge by ring.
+      all: clear - Hsum HI1 HI2 Hbudget Hmerge Hbdec.
+      all: nia.
+    - destruct b'; cost_simpl; set_simpl; pose proof (Nat.le_max_l 1 (Z.to_nat (φ hi'-φ lo'))); nia. }
+  intros Hle Hn.
+  match goal with |- context [@cost ?T (?G b bC lo loC hi hiC w wC s sC c cC H HC)] =>
+    exact (HG m b bC lo loC hi hiC w wC s sC c cC H HC Hle Hn
+      : (@cost T (G b bC lo loC hi hiC w wC s sC c cC H HC) + 100 <= _)%nat) end.
+Qed.
+
+Arguments msort_cost : simpl never.
+
+Lemma inversions_time : exists c1 c2, forall (sequence_arr : array uint),
+  (cost1 inversions_cost sequence_arr <=
+    c1 * (Cost.size sequence_arr * (Nat.log2 (Cost.size sequence_arr) + 1)) + c2)%nat.
+Proof.
+  exists 3000%nat, 5000%nat. intro a.
+  remember (Cost.size a) as N eqn:EN.
+  assert (EL : Z.to_nat (φ (PArray.length@{Set} a)) = N) by (rewrite EN; reflexivity).
+  assert (HP : (N <= 2 ^ (Nat.log2 N + 1))%nat).
+  { destruct N as [|N]; [cbn; lia|].
+    pose proof (Nat.log2_spec (S N) ltac:(lia)). rewrite Nat.add_1_r. lia. }
+  unfold cost1, inversions_cost, inversions_impl_cost. cost_simpl.
+  try match goal with |- context [@cost ?T (?G ?b ?bc ?lo ?lc ?hi ?hc ?w ?wc ?s ?sc ?c ?cc ?h ?hhc)] =>
+    change (@cost T (G b bc lo lc hi hc w wc s sc c cc h hhc)) with
+      (cost (extract (extract (extract (extract (extract (extract
+        (msort_cost stepsCM b bc) lo lc) hi hc) w wc) s sc) c cc) h hhc)) end.
+  zero_partial msort_cost.
+  match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with extract (extract (extract (extract (extract (extract
+      (msort_cost stepsCM ?b ?bc) ?lo ?lc) ?hi ?hc) ?w ?wc) ?s ?sc) ?c ?cc) ?h ?hhc =>
+      have HI := (msort_time (Nat.log2 N + 1) b bc lo lc hi hc w wc s sc c cc h hhc
+        ltac:(pose proof (to_Z_bounded hi); change (φ 0) with 0%Z; lia)
+        ltac:(change (φ 0) with 0%Z; rewrite Z.sub_0_r; cbv delta [uint] in *; rewrite EL; exact HP)
+        : (@cost T X + 100 <= _)%nat);
+      let C := fresh "sort_cost" in set (C := @cost T X) in *; clearbody C end end.
+  repeat match goal with |- context [@cost ?T ?X] =>
+    first [change (@cost T X) with 1%nat | change (@cost T X) with 0%nat] end.
+  split_pair.
+  cbv delta [uint] in *.
+  change (φ 0) with 0%Z in HI.
+  rewrite Z.sub_0_r in HI. rewrite EL in HI.
+  match goal with |- (?lhs <= _)%nat =>
+    change (lhs <= 3000*(N*(Nat.log2 N+1))+5000)%nat end.
+  clear - HI. destruct N; [cbn in HI; lia | cbn [Nat.max] in HI; nia].
+Qed.
+
+Print Assumptions inversions_correct.
+Print Assumptions inversions_time.

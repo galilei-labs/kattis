@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -16,13 +15,6 @@ pub type uint = u64;
 
 pub type char63 = u64;
 
-// Rocq: Cardhand.cardhand_implem.min_moves
-pub fn min_moves() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64 = min_moves_impl;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -37,13 +29,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Cardhand.cardhand_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -55,36 +44,27 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Cardhand.cardhand_implem.sidx_m
 pub fn sidx_m(c: u64) -> u64 {
-  match eqb(c, 115u64) {
-    true => {
-      0u64
-    },
-    false => {
-      match eqb(c, 104u64) {
-        true => {
-          1u64
-        },
-        false => {
-          match eqb(c, 100u64) {
-            true => {
-              2u64
-            },
-            false => {
-              3u64
-            },
-          }
-        },
+  if eqb(c, 115u64) {
+    0u64
+  } else {
+    if eqb(c, 104u64) {
+      1u64
+    } else {
+      if eqb(c, 100u64) {
+        2u64
+      } else {
+        3u64
       }
-    },
+    }
   }
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -101,41 +81,26 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Cardhand.cardhand_implem.rank_m
 pub fn rank_m(c: u64) -> u64 {
-  match leb(c, 57u64) {
-    true => {
-      sub(c, 50u64)
-    },
-    false => {
-      match eqb(c, 84u64) {
-        true => {
-          8u64
-        },
-        false => {
-          match eqb(c, 74u64) {
-            true => {
-              9u64
-            },
-            false => {
-              match eqb(c, 81u64) {
-                true => {
-                  10u64
-                },
-                false => {
-                  match eqb(c, 75u64) {
-                    true => {
-                      11u64
-                    },
-                    false => {
-                      12u64
-                    },
-                  }
-                },
-              }
-            },
+  if leb(c, 57u64) {
+    sub(c, 50u64)
+  } else {
+    if eqb(c, 84u64) {
+      8u64
+    } else {
+      if eqb(c, 74u64) {
+        9u64
+      } else {
+        if eqb(c, 81u64) {
+          10u64
+        } else {
+          if eqb(c, 75u64) {
+            11u64
+          } else {
+            12u64
           }
-        },
+        }
       }
-    },
+    }
   }
 }
 
@@ -148,16 +113,15 @@ pub fn prep_1(x: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, i: u64, SU: Rc<
 // Rocq: Cardhand.cardhand_implem.prep (local: prep)
 // Variant: uncurried, lifted
 pub fn prep(x: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, i: u64, SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &x;
-      let w = rocq_array::get::<Rc<rocq_string::RocqString>>(&v17, i);
-      let v28 = add(i, 1u64);
-      let v35 = Rc::clone(&w);
-      let v48 = rocq_array::set::<u64>(SU, i, sidx_m(get(v35, 1u64)));
-      let v67 = rocq_array::set::<u64>(RK, i, rank_m(get(w, 0u64)));
-      prep(x, n, v28, v48, v67, ())
+      let w = rocq_array::get::<Rc<rocq_string::RocqString>>(&x, i);
+      let tmp_1 = add(i, 1u64);
+      let w_clone = Rc::clone(&w);
+      let tmp_2 = rocq_array::set::<u64>(SU, i, sidx_m(get(w_clone, 1u64)));
+      let tmp_3 = rocq_array::set::<u64>(RK, i, rank_m(get(w, 0u64)));
+      prep(x, n, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -180,27 +144,18 @@ pub fn div(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Cardhand.cardhand_implem.pw4
 pub fn pw4(s: u64) -> u64 {
-  match eqb(s, 0u64) {
-    true => {
-      1u64
-    },
-    false => {
-      match eqb(s, 1u64) {
-        true => {
-          4u64
-        },
-        false => {
-          match eqb(s, 2u64) {
-            true => {
-              16u64
-            },
-            false => {
-              64u64
-            },
-          }
-        },
+  if eqb(s, 0u64) {
+    1u64
+  } else {
+    if eqb(s, 1u64) {
+      4u64
+    } else {
+      if eqb(s, 2u64) {
+        16u64
+      } else {
+        64u64
       }
-    },
+    }
   }
 }
 
@@ -213,25 +168,19 @@ pub fn sg_m(t: u64, s: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -241,23 +190,20 @@ pub fn inj_m(t: u64) -> bool {
   let b = sg_m(t, 1u64);
   let c = sg_m(t, 2u64);
   let d = sg_m(t, 3u64);
-  let v62 = andb(negb(eqb(a, b)), negb(eqb(a, c)));
-  let v77 = andb(v62, negb(eqb(a, d)));
-  let v92 = andb(v77, negb(eqb(b, c)));
-  let v107 = andb(v92, negb(eqb(b, d)));
-  andb(v107, negb(eqb(c, d)))
+  let tmp = andb(negb(eqb(a, b)), negb(eqb(a, c)));
+  let tmp_1 = andb(tmp, negb(eqb(a, d)));
+  let tmp_2 = andb(tmp_1, negb(eqb(b, c)));
+  let tmp_3 = andb(tmp_2, negb(eqb(b, d)));
+  andb(tmp_3, negb(eqb(c, d)))
 }
 
 // Rocq: Cardhand.cardhand_implem.imax
 // Variant: uncurried
 pub fn imax(a: u64, b: u64) -> u64 {
-  match ltb(a, b) {
-    true => {
-      b
-    },
-    false => {
-      a
-    },
+  if ltb(a, b) {
+    b
+  } else {
+    a
   }
 }
 
@@ -269,27 +215,18 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Cardhand.cardhand_implem.pw2
 pub fn pw2(s: u64) -> u64 {
-  match eqb(s, 0u64) {
-    true => {
-      256u64
-    },
-    false => {
-      match eqb(s, 1u64) {
-        true => {
-          512u64
-        },
-        false => {
-          match eqb(s, 2u64) {
-            true => {
-              1024u64
-            },
-            false => {
-              2048u64
-            },
-          }
-        },
+  if eqb(s, 0u64) {
+    256u64
+  } else {
+    if eqb(s, 1u64) {
+      512u64
+    } else {
+      if eqb(s, 2u64) {
+        1024u64
+      } else {
+        2048u64
       }
-    },
+    }
   }
 }
 
@@ -302,18 +239,15 @@ pub fn dr_m(t: u64, s: u64) -> u64 {
 // Rocq: Cardhand.cardhand_implem.key_m
 // Variant: uncurried
 pub fn key_m(t: u64, s: u64, r: u64) -> u64 {
-  let v17 = mul(sg_m(t, s), 13u64);
-  let v24 = dr_m(t, s);
-  let v26 = 1u64;
-  let v32 = match eqb(v24, v26) {
-    true => {
-      r
-    },
-    false => {
-      sub(12u64, r)
-    },
+  let tmp = mul(sg_m(t, s), 13u64);
+  let tmp_1 = dr_m(t, s);
+  let tmp_2 = 1u64;
+  let tmp_3 = if eqb(tmp_1, tmp_2) {
+    r
+  } else {
+    sub(12u64, r)
   };
-  add(v17, v32)
+  add(tmp, tmp_3)
 }
 
 // Rocq: Cardhand.cardhand_implem.keys
@@ -325,18 +259,16 @@ pub fn keys_1(t: u64, SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64, i: u64, K:
 // Rocq: Cardhand.cardhand_implem.keys (local: keys)
 // Variant: uncurried, lifted
 pub fn keys(t: u64, SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64, i: u64, K: Rc<Array<u64>>, P: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &SU;
-      let v23 = rocq_array::get::<u64>(&v20, i);
-      let v24 = &RK;
-      let v27 = rocq_array::get::<u64>(&v24, i);
-      let k = key_m(t, v23, v27);
-      let v42 = add(i, 1u64);
-      let v49 = rocq_array::set::<u64>(K, i, k);
-      let v58 = rocq_array::set::<u64>(P, k, 1u64);
-      keys(t, SU, RK, n, v42, v49, v58, ())
+      let tmp_1 = rocq_array::get::<u64>(&SU, i);
+      let tmp_2 = rocq_array::get::<u64>(&RK, i);
+      let k = key_m(t, tmp_1, tmp_2);
+      let tmp_3 = add(i, 1u64);
+      let tmp_4 = rocq_array::set::<u64>(K, i, k);
+      let tmp_5 = rocq_array::set::<u64>(P, k, 1u64);
+      keys(t, SU, RK, n, tmp_3, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(SU);
@@ -355,20 +287,16 @@ pub fn compact_1(P: Rc<Array<u64>>, k: u64, B: Rc<Array<u64>>, m: u64) -> (Rc<Ar
 // Rocq: Cardhand.cardhand_implem.compact (local: compact)
 // Variant: uncurried, lifted
 pub fn compact(P: Rc<Array<u64>>, k: u64, B: Rc<Array<u64>>, m: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v14 = ltb(k, 52u64);
-  match bdec(v14) {
+  let tmp = ltb(k, 52u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &P;
-      let v22 = rocq_array::get::<u64>(&v19, k);
-      match eqb(v22, 1u64) {
-        true => {
-          let v38 = add(k, 1u64);
-          let v45 = rocq_array::set::<u64>(B, m, k);
-          compact(P, v38, v45, add(m, 1u64), ())
-        },
-        false => {
-          compact(P, add(k, 1u64), B, m, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&P, k);
+      if eqb(tmp_1, 1u64) {
+        let tmp_2 = add(k, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(B, m, k);
+        compact(P, tmp_2, tmp_3, add(m, 1u64), ())
+      } else {
+        compact(P, add(k, 1u64), B, m, ())
       }
     },
     sumbool::right => {
@@ -387,40 +315,29 @@ pub fn dp_1(K: Rc<Array<u64>>, B: Rc<Array<u64>>, m: u64, w: u64, q: u64, T: Rc<
 // Rocq: Cardhand.cardhand_implem.dp (local: dp)
 // Variant: uncurried, lifted
 pub fn dp(K: Rc<Array<u64>>, B: Rc<Array<u64>>, m: u64, w: u64, q: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(0u64, q);
-  match bdec(v16) {
+  let tmp = ltb(0u64, q);
+  match bdec(tmp) {
     sumbool::left => {
       let q_ = sub(q, 1u64);
       let i = div(q_, m);
       let j = mod_(q_, m);
-      let v41 = &K;
-      let v44 = rocq_array::get::<u64>(&v41, i);
-      let v45 = &B;
-      let v48 = rocq_array::get::<u64>(&v45, j);
-      let c = match eqb(v44, v48) {
-        true => {
-          let v70 = mul(add(i, 1u64), w);
-          let v78 = add(j, 1u64);
-          let v83 = add(v70, v78);
-          let v84 = &T;
-          let v87 = rocq_array::get::<u64>(&v84, v83);
-          add(v87, 1u64)
-        },
-        false => {
-          let v108 = add(i, 1u64);
-          let v117 = add(mul(v108, w), j);
-          let v118 = &T;
-          let v121 = rocq_array::get::<u64>(&v118, v117);
-          let v128 = mul(i, w);
-          let v136 = add(j, 1u64);
-          let v141 = add(v128, v136);
-          let v142 = &T;
-          let v145 = rocq_array::get::<u64>(&v142, v141);
-          imax(v121, v145)
-        },
+      let tmp_1 = rocq_array::get::<u64>(&K, i);
+      let tmp_2 = rocq_array::get::<u64>(&B, j);
+      let c = if eqb(tmp_1, tmp_2) {
+        let tmp_3 = mul(add(i, 1u64), w);
+        let tmp_4 = add(j, 1u64);
+        let tmp_5 = rocq_array::get::<u64>(&T, add(tmp_3, tmp_4));
+        add(tmp_5, 1u64)
+      } else {
+        let tmp_6 = add(i, 1u64);
+        let tmp_7 = rocq_array::get::<u64>(&T, add(mul(tmp_6, w), j));
+        let tmp_8 = mul(i, w);
+        let tmp_9 = add(j, 1u64);
+        let tmp_10 = rocq_array::get::<u64>(&T, add(tmp_8, tmp_9));
+        imax(tmp_7, tmp_10)
       };
-      let v172 = rocq_array::set::<u64>(T, add(mul(i, w), j), c);
-      dp(K, B, m, w, q_, v172, ())
+      let tmp_11 = rocq_array::set::<u64>(T, add(mul(i, w), j), c);
+      dp(K, B, m, w, q_, tmp_11, ())
     },
     sumbool::right => {
       std::mem::drop(K);
@@ -433,24 +350,22 @@ pub fn dp(K: Rc<Array<u64>>, B: Rc<Array<u64>>, m: u64, w: u64, q: u64, T: Rc<Ar
 // Rocq: Cardhand.cardhand_implem.lcs_for
 // Variant: uncurried
 pub fn lcs_for(t: u64, SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64) -> u64 {
-  let v13 = rocq_array::make::<u64>(n, 0u64);
-  let v22 = rocq_array::make::<u64>(52u64, 0u64);
-  let v37 = keys_1(t, SU, RK, n, 0u64, v13, v22);
-  match v37 {
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(52u64, 0u64);
+  let tmp_2 = keys_1(t, SU, RK, n, 0u64, tmp, tmp_1);
+  match tmp_2 {
     (v39, v41) => {
-      let v54 = rocq_array::make::<u64>(52u64, 0u64);
-      let v65 = compact_1(v41, 0u64, v54, 0u64);
-      match v65 {
+      let tmp_3 = rocq_array::make::<u64>(52u64, 0u64);
+      let tmp_4 = compact_1(v41, 0u64, tmp_3, 0u64);
+      match tmp_4 {
         (v67, v69) => {
           let w = add(v69, 1u64);
-          let v85 = mul(n, v69);
-          let v106 = rocq_array::make::<u64>(mul(add(n, 1u64), w), 0u64);
-          let T = dp_1(v39, v67, v69, w, v85, v106);
-          let v121 = 0u64;
-          let v122 = &T;
-          let v125 = rocq_array::get::<u64>(&v122, v121);
+          let tmp_5 = mul(n, v69);
+          let tmp_6 = rocq_array::make::<u64>(mul(add(n, 1u64), w), 0u64);
+          let T = dp_1(v39, v67, v69, w, tmp_5, tmp_6);
+          let tmp_7 = rocq_array::get::<u64>(&T, 0u64);
           std::mem::drop(T);
-          v125
+          tmp_7
         },
       }
     },
@@ -466,21 +381,18 @@ pub fn search_1(SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64, t: u64, best: u6
 // Rocq: Cardhand.cardhand_implem.search (local: search)
 // Variant: uncurried, lifted
 pub fn search(SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64, t: u64, best: u64, _H: ()) -> u64 {
-  let v15 = ltb(t, 4096u64);
-  match bdec(v15) {
+  let tmp = ltb(t, 4096u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = add(t, 1u64);
-      let v31 = match inj_m(t) {
-        true => {
-          let v38 = Rc::clone(&SU);
-          let v41 = Rc::clone(&RK);
-          imax(best, lcs_for(t, v38, v41, n))
-        },
-        false => {
-          best
-        },
+      let tmp_1 = add(t, 1u64);
+      let tmp_2 = if inj_m(t) {
+        let SU_clone = Rc::clone(&SU);
+        let RK_clone = Rc::clone(&RK);
+        imax(best, lcs_for(t, SU_clone, RK_clone, n))
+      } else {
+        best
       };
-      search(SU, RK, n, v26, v31, ())
+      search(SU, RK, n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       std::mem::drop(SU);
@@ -492,15 +404,14 @@ pub fn search(SU: Rc<Array<u64>>, RK: Rc<Array<u64>>, n: u64, t: u64, best: u64,
 
 // Rocq: Cardhand.cardhand_implem.min_moves_impl
 pub fn min_moves_impl(x: Rc<Array<Rc<rocq_string::RocqString>>>) -> u64 {
-  let v1 = &x;
-  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&v1);
-  let v12 = rocq_array::make::<u64>(n, 0u64);
-  let v19 = rocq_array::make::<u64>(n, 0u64);
-  let v30 = prep_1(x, n, 0u64, v12, v19);
-  match v30 {
+  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&x);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = prep_1(x, n, 0u64, tmp, tmp_1);
+  match tmp_2 {
     (v32, v34) => {
-      let v52 = search_1(v32, v34, n, 0u64, 0u64);
-      sub(n, v52)
+      let tmp_3 = search_1(v32, v34, n, 0u64, 0u64);
+      sub(n, tmp_3)
     },
   }
 }
@@ -653,9 +564,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64> = __rocq_global_785.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_785: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> u64> = min_moves(); }

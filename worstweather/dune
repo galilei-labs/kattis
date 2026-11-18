@@ -6,9 +6,11 @@
  (rocq.theory
   (name Worstweather.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Worstweather)
  (modules worstweather_implem)
- (theories Worstweather.spec Stdlib stdpp StdGalilei))
+  (theories Worstweather.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

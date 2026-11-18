@@ -6,9 +6,11 @@
  (rocq.theory
   (name Closestpair2.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Closestpair2)
  (modules closestpair2_implem)
- (theories Closestpair2.spec Stdlib stdpp StdGalilei))
+  (theories Closestpair2.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

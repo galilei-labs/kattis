@@ -6,9 +6,11 @@
  (rocq.theory
   (name Oddmanout.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Oddmanout)
  (modules oddmanout_implem)
- (theories Oddmanout.spec Stdlib stdpp StdGalilei))
+  (theories Oddmanout.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

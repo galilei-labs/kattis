@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,13 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Canonical.canonical_implem.canonical
-pub fn canonical() -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-  let v0: fn(Rc<Array<u64>>) -> bool = canonical_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
@@ -690,16 +682,11 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Canonical.canonical_implem.bound
 pub fn bound(c: Rc<Array<u64>>) -> u64 {
-  let v1 = &c;
-  let n = rocq_array::length::<u64>(&v1);
-  let v11 = sub(n, 1u64);
-  let v12 = &c;
-  let v15 = rocq_array::get::<u64>(&v12, v11);
-  let v23 = sub(n, 2u64);
-  let v24 = &c;
-  let v27 = rocq_array::get::<u64>(&v24, v23);
+  let n = rocq_array::length::<u64>(&c);
+  let tmp = rocq_array::get::<u64>(&c, sub(n, 1u64));
+  let tmp_1 = rocq_array::get::<u64>(&c, sub(n, 2u64));
   std::mem::drop(c);
-  add(v15, v27)
+  add(tmp, tmp_1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
@@ -710,13 +697,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Canonical.canonical_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -729,27 +713,19 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Canonical.canonical_implem.kupd
 // Variant: uncurried
 pub fn kupd(c: Rc<Array<u64>>, n: u64, x: u64, k: u64) -> u64 {
-  let v13 = add(k, 1u64);
-  match ltb(v13, n) {
-    true => {
-      let v27 = add(k, 1u64);
-      let v28 = &c;
-      let v32 = rocq_array::get::<u64>(&v28, v27);
-      match leb(v32, x) {
-        true => {
-          std::mem::drop(c);
-          add(k, 1u64)
-        },
-        false => {
-          std::mem::drop(c);
-          k
-        },
-      }
-    },
-    false => {
+  let tmp = add(k, 1u64);
+  if ltb(tmp, n) {
+    let tmp_1 = rocq_array::get::<u64>(&c, add(k, 1u64));
+    if leb(tmp_1, x) {
+      std::mem::drop(c);
+      add(k, 1u64)
+    } else {
       std::mem::drop(c);
       k
-    },
+    }
+  } else {
+    std::mem::drop(c);
+    k
   }
 }
 
@@ -762,24 +738,18 @@ pub fn minloop_1(c: Rc<Array<u64>>, t: Rc<Array<u64>>, x: u64, hi: u64, j: u64, 
 // Rocq: Canonical.canonical_implem.minloop (local: minloop)
 // Variant: uncurried, lifted
 pub fn minloop(c: Rc<Array<u64>>, t: Rc<Array<u64>>, x: u64, hi: u64, j: u64, acc: u64, _H: ()) -> u64 {
-  let v14 = ltb(j, hi);
-  match bdec(v14) {
+  let tmp = ltb(j, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &c;
-      let v22 = rocq_array::get::<u64>(&v19, j);
-      let v27 = sub(x, v22);
-      let v28 = &t;
-      let v = rocq_array::get::<u64>(&v28, v27);
-      let v39 = add(j, 1u64);
-      let v46 = match ltb(v, acc) {
-        true => {
-          v
-        },
-        false => {
-          acc
-        },
+      let tmp_1 = rocq_array::get::<u64>(&c, j);
+      let v = rocq_array::get::<u64>(&t, sub(x, tmp_1));
+      let tmp_2 = add(j, 1u64);
+      let tmp_3 = if ltb(v, acc) {
+        v
+      } else {
+        acc
       };
-      minloop(c, t, x, hi, v39, v46, ())
+      minloop(c, t, x, hi, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(c);
@@ -798,37 +768,29 @@ pub fn outer_1(c: Rc<Array<u64>>, n: u64, B: u64, x: u64, k: u64, t: Rc<Array<u6
 // Rocq: Canonical.canonical_implem.outer (local: outer)
 // Variant: uncurried, lifted
 pub fn outer(c: Rc<Array<u64>>, n: u64, B: u64, x: u64, k: u64, t: Rc<Array<u64>>, g: Rc<Array<u64>>, _H: ()) -> bool {
-  let v15 = ltb(x, B);
-  match bdec(v15) {
+  let tmp = ltb(x, B);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = Rc::clone(&c);
-      let k_ = kupd(v22, n, x, k);
-      let v32 = &c;
-      let v35 = rocq_array::get::<u64>(&v32, k_);
-      let v40 = sub(x, v35);
-      let v41 = &g;
-      let v44 = rocq_array::get::<u64>(&v41, v40);
-      let gx = add(v44, 1u64);
-      let v61 = add(k_, 1u64);
-      let v71 = sub(x, 1u64);
-      let v72 = &t;
-      let v75 = rocq_array::get::<u64>(&v72, v71);
-      let v78 = Rc::clone(&c);
-      let v81 = Rc::clone(&t);
-      let tx = add(minloop_1(v78, v81, x, v61, 1u64, v75), 1u64);
-      match ltb(tx, gx) {
-        true => {
-          std::mem::drop(c);
-          std::mem::drop(t);
-          std::mem::drop(g);
-          false
-        },
-        false => {
-          let v116 = add(x, 1u64);
-          let v123 = rocq_array::set::<u64>(t, x, tx);
-          let v130 = rocq_array::set::<u64>(g, x, gx);
-          outer(c, n, B, v116, k_, v123, v130, ())
-        },
+      let c_clone = Rc::clone(&c);
+      let k_ = kupd(c_clone, n, x, k);
+      let tmp_1 = rocq_array::get::<u64>(&c, k_);
+      let tmp_2 = rocq_array::get::<u64>(&g, sub(x, tmp_1));
+      let gx = add(tmp_2, 1u64);
+      let tmp_3 = add(k_, 1u64);
+      let tmp_4 = rocq_array::get::<u64>(&t, sub(x, 1u64));
+      let c_clone_1 = Rc::clone(&c);
+      let t_clone = Rc::clone(&t);
+      let tx = add(minloop_1(c_clone_1, t_clone, x, tmp_3, 1u64, tmp_4), 1u64);
+      if ltb(tx, gx) {
+        std::mem::drop(c);
+        std::mem::drop(t);
+        std::mem::drop(g);
+        false
+      } else {
+        let tmp_5 = add(x, 1u64);
+        let tmp_6 = rocq_array::set::<u64>(t, x, tx);
+        let tmp_7 = rocq_array::set::<u64>(g, x, gx);
+        outer(c, n, B, tmp_5, k_, tmp_6, tmp_7, ())
       }
     },
     sumbool::right => {
@@ -842,13 +804,12 @@ pub fn outer(c: Rc<Array<u64>>, n: u64, B: u64, x: u64, k: u64, t: Rc<Array<u64>
 
 // Rocq: Canonical.canonical_implem.run
 pub fn run_1(c: Rc<Array<u64>>) -> bool {
-  let v4 = Rc::clone(&c);
-  let B = bound(v4);
-  let v7 = &c;
-  let v8 = rocq_array::length::<u64>(&v7);
-  let v19 = rocq_array::make::<u64>(B, 0u64);
-  let v26 = rocq_array::make::<u64>(B, 0u64);
-  outer_1(c, v8, B, 1u64, 0u64, v19, v26)
+  let c_clone = Rc::clone(&c);
+  let B = bound(c_clone);
+  let tmp = rocq_array::length::<u64>(&c);
+  let tmp_1 = rocq_array::make::<u64>(B, 0u64);
+  let tmp_2 = rocq_array::make::<u64>(B, 0u64);
+  outer_1(c, tmp, B, 1u64, 0u64, tmp_1, tmp_2)
 }
 
 // Rocq: Canonical.canonical_implem.canonical_impl
@@ -1005,11 +966,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = __rocq_global_285.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_285: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = canonical(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1086,6 +1042,6 @@ use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint();
-    if run()(t.uints(n)) { "canonical\n" } else { "non-canonical\n" }.into()
+    if canonical_impl(t.uints(n)) { "canonical\n" } else { "non-canonical\n" }.into()
 }
 fn main() { entry(solve); }

@@ -21,4 +21,4 @@ archive = "largesttriangle_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/largesttriangle.ml"
-Rust = "extraction/rust/submit/largesttriangle.rs"
+Rust = "extraction/rust/snapshots/largesttriangle_extracted.rs.interface.json"

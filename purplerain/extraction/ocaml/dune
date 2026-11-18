@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules purplerain_extracted_marray)
- (theories Purplerain Purplerain.spec Stdlib stdpp StdGalilei))
+ (theories Purplerain Purplerain.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name purplerain_extraction)

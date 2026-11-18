@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules palindromes_extracted_marray)
- (theories Palindromes Palindromes.spec Stdlib stdpp StdGalilei))
+ (theories Palindromes Palindromes.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name palindromes_extraction)

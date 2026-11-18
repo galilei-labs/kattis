@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,13 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Canvas.canvas_implem.canvas
-pub fn canvas() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = canvas_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -684,13 +676,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Canvas.canvas_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -709,13 +698,10 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -728,52 +714,42 @@ pub fn sift_1(h: Rc<Array<u64>>, sz: u64, i: u64) -> Rc<Array<u64>> {
 // Rocq: Canvas.canvas_implem.sift (local: sift)
 // Variant: uncurried, lifted
 pub fn sift(h: Rc<Array<u64>>, sz: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v4 = &h;
-  let x = rocq_array::get::<u64>(&v4, i);
+  let x = rocq_array::get::<u64>(&h, i);
   let l = add(mul(2u64, i), 1u64);
-  match ltb(l, sz) {
-    true => {
-      let v31 = &h;
-      let yl = rocq_array::get::<u64>(&v31, l);
-      let r = add(l, 1u64);
-      let v49 = ltb(r, sz);
-      let v51 = &h;
-      let v55 = rocq_array::get::<u64>(&v51, r);
-      let v59 = ltb(v55, yl);
-      match andb(v49, v59) {
-        true => {
-          let v66 = &h;
-          let yr = rocq_array::get::<u64>(&v66, r);
-          let v89 = andb(ltb(yr, x), ltb(i, r));
-          match bdec(v89) {
-            sumbool::left => {
-              let v100 = rocq_array::set::<u64>(h, i, yr);
-              let v106 = rocq_array::set::<u64>(v100, r, x);
-              sift(v106, sz, r, ())
-            },
-            sumbool::right => {
-              h
-            },
-          }
+  if ltb(l, sz) {
+    let yl = rocq_array::get::<u64>(&h, l);
+    let r = add(l, 1u64);
+    let tmp = ltb(r, sz);
+    let tmp_1 = rocq_array::get::<u64>(&h, r);
+    let tmp_2 = ltb(tmp_1, yl);
+    if andb(tmp, tmp_2) {
+      let yr = rocq_array::get::<u64>(&h, r);
+      let tmp_3 = andb(ltb(yr, x), ltb(i, r));
+      match bdec(tmp_3) {
+        sumbool::left => {
+          let tmp_4 = rocq_array::set::<u64>(h, i, yr);
+          let tmp_5 = rocq_array::set::<u64>(tmp_4, r, x);
+          sift(tmp_5, sz, r, ())
         },
-        false => {
-          let v145 = andb(ltb(yl, x), ltb(i, l));
-          match bdec(v145) {
-            sumbool::left => {
-              let v156 = rocq_array::set::<u64>(h, i, yl);
-              let v162 = rocq_array::set::<u64>(v156, l, x);
-              sift(v162, sz, l, ())
-            },
-            sumbool::right => {
-              h
-            },
-          }
+        sumbool::right => {
+          h
         },
       }
-    },
-    false => {
-      h
-    },
+    } else {
+      let tmp_6 = andb(ltb(yl, x), ltb(i, l));
+      match bdec(tmp_6) {
+        sumbool::left => {
+          let tmp_7 = rocq_array::set::<u64>(h, i, yl);
+          let tmp_8 = rocq_array::set::<u64>(tmp_7, l, x);
+          sift(tmp_8, sz, l, ())
+        },
+        sumbool::right => {
+          h
+        },
+      }
+    }
+  } else {
+    h
   }
 }
 
@@ -792,11 +768,11 @@ pub fn build_1(h: Rc<Array<u64>>, sz: u64, k: u64) -> Rc<Array<u64>> {
 // Rocq: Canvas.canvas_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(h: Rc<Array<u64>>, sz: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(0u64, k);
-  match bdec(v13) {
+  let tmp = ltb(0u64, k);
+  match bdec(tmp) {
     sumbool::left => {
-      let v32 = sift_1(h, sz, sub(k, 1u64));
-      build(v32, sz, sub(k, 1u64), ())
+      let tmp_1 = sift_1(h, sz, sub(k, 1u64));
+      build(tmp_1, sz, sub(k, 1u64), ())
     },
     sumbool::right => {
       h
@@ -819,24 +795,19 @@ pub fn huff_1(h: Rc<Array<u64>>, sz: u64, acc: u64) -> u64 {
 // Rocq: Canvas.canvas_implem.huff (local: huff)
 // Variant: uncurried, lifted
 pub fn huff(h: Rc<Array<u64>>, sz: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(1u64, sz);
-  match bdec(v13) {
+  let tmp = ltb(1u64, sz);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = 0u64;
-      let v19 = &h;
-      let a = rocq_array::get::<u64>(&v19, v18);
+      let a = rocq_array::get::<u64>(&h, 0u64);
       let sz1 = sub(sz, 1u64);
-      let v34 = &h;
-      let v37 = rocq_array::get::<u64>(&v34, sz1);
-      let v44 = rocq_array::set::<u64>(h, 0u64, v37);
-      let h1 = sift_1(v44, sz1, 0u64);
-      let v55 = 0u64;
-      let v56 = &h1;
-      let b = rocq_array::get::<u64>(&v56, v55);
-      let v75 = rocq_array::set::<u64>(h1, 0u64, add(a, b));
-      let h2 = sift_1(v75, sz1, 0u64);
-      let v91 = add(a, b);
-      huff(h2, sz1, add(acc, v91), ())
+      let tmp_1 = rocq_array::get::<u64>(&h, sz1);
+      let tmp_2 = rocq_array::set::<u64>(h, 0u64, tmp_1);
+      let h1 = sift_1(tmp_2, sz1, 0u64);
+      let b = rocq_array::get::<u64>(&h1, 0u64);
+      let tmp_3 = rocq_array::set::<u64>(h1, 0u64, add(a, b));
+      let h2 = sift_1(tmp_3, sz1, 0u64);
+      let tmp_4 = add(a, b);
+      huff(h2, sz1, add(acc, tmp_4), ())
     },
     sumbool::right => {
       std::mem::drop(h);
@@ -847,13 +818,11 @@ pub fn huff(h: Rc<Array<u64>>, sz: u64, acc: u64, _H: ()) -> u64 {
 
 // Rocq: Canvas.canvas_implem.canvas_impl
 pub fn canvas_impl(x: Rc<Array<u64>>) -> u64 {
-  let v1 = &x;
-  let sz = rocq_array::length::<u64>(&v1);
-  let v4 = &x;
-  let v5 = rocq_array::copy::<u64>(&v4);
+  let sz = rocq_array::length::<u64>(&x);
+  let tmp = rocq_array::copy::<u64>(&x);
   std::mem::drop(x);
-  let v13 = div(sz, 2u64);
-  let h = build_1(v5, sz, v13);
+  let tmp_1 = div(sz, 2u64);
+  let h = build_1(tmp, sz, tmp_1);
   huff_1(h, sz, 0u64)
 }
 
@@ -1006,11 +975,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_288.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_288: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = canvas(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1087,6 +1051,6 @@ use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let cases = t.uint();
-    lines((0..cases).map(|_| { let n = t.uint(); run()(t.uints(n)) }))
+    lines((0..cases).map(|_| { let n = t.uint(); canvas_impl(t.uints(n)) }))
 }
 fn main() { entry(solve); }

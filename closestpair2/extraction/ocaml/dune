@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules closestpair2_extracted_marray)
- (theories Closestpair2 Closestpair2.spec Stdlib stdpp StdGalilei))
+ (theories Closestpair2 Closestpair2.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name closestpair2_extraction)

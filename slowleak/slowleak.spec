@@ -2,9 +2,13 @@
 
 (** ** Description *)
 
-(** Find the shortest route in a weighted road network subject to a maximum
-    distance between refills at designated vertices. Start with a full
-    supply, or report that no route is possible.
+(** Ride a bicycle from school to home with a slowly leaking tire. A full
+    tire lets you travel at most the given distance before it goes flat.
+    Start with a full tire at school and refill it at any listed repair
+    station along the way. Roads connect intersections in either direction.
+    Find the shortest trip that reaches home without becoming stranded, or
+    report that none exists. Reaching a station or home exactly as the tire
+    goes flat is allowed.
 
     [@kattis slowleak]
     - Difficulty: 5.0
@@ -12,7 +16,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Vertex count: $2 \le n \le 500$; $1$ to $n(n-1)/2$ roads, with no repeated pair.
+    - Vertex count: $2 \le n \le 500$; road count: $1 \le m \le n(n-1)/2$, with no repeated pair.
     - Refill vertices are distinct and exclude the endpoints.
     - Positive road lengths, travel range and any feasible minimum total
       distance are below $2^{31}$. *)
@@ -51,24 +55,28 @@ Output:
                     tire_range; the tire is refilled at the school and at
                     the repair stations.  None ("stuck") when no such trip
                     exists.
+                    It runs in at most c1 * (n^3 + m + t^2 + 1) + c2 steps
+                    of the cost model on a valid input, m the number of
+                    roads, t of refill stations, for two constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. Intersections are numbered 1 to
+(* Intersections are numbered 1 to
    intersection_count as in the statement; the roads are
    the parallel lists road_starts, road_ends,
    road_lengths (the m lines "i j k"). *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The e-th element of l, e counted from 0. *)
+(** The entry at zero-based index [e] in [l], or zero beyond the end. *)
 Definition get (l : list N) (e : N) : N :=
   nth (N.to_nat e) l 0.
 
@@ -84,8 +92,9 @@ Definition road
      (get road_starts e = finish /\ get road_ends e = start)
        ).
 
-(** [walk start finish distance]: a [walk] along roads
-    from start to finish of total length distance. *)
+(** [walk road_starts road_ends road_lengths start finish distance] means that a
+    road walk from [start] to [finish] has total length [distance], using the
+    network given by the parallel road lists. *)
 Inductive walk (road_starts road_ends road_lengths : list N)
     : N -> N -> N -> Prop :=
   | walk_nil : forall start,
@@ -99,8 +108,8 @@ Inductive walk (road_starts road_ends road_lengths : list N)
       walk road_starts road_ends road_lengths start finish
         (step_length + rest_length).
 
-(** The tire can be refilled at intersection: the school
-    or a repair station. *)
+(** The tire can be refilled at [intersection]: either the school or a listed repair
+    station. *)
 Definition refill (stations : list N) (intersection : N) :
   Prop :=
   intersection = 1 \/ In intersection stations.
@@ -133,8 +142,7 @@ Inductive trip (intersection_count tire_range : N)
         road_starts road_ends
         road_lengths start (distance + distance').
 
-(** distance is the length of a [trip] from the school,
-    and no such [trip] is shorter. *)
+(** [distance] is the minimum length of a feasible trip from the school to home. *)
 Definition shortest (intersection_count tire_range : N)
     (stations road_starts road_ends road_lengths : list N)
       (distance : N)
@@ -196,8 +204,8 @@ Record valid_input (intersection_count tire_range : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the minimum length of a route satisfying the refill-distance
-    constraint, or None exactly when no feasible route exists. *)
+    The output is the shortest bicycle trip from school to home that respects
+    the tire's range between refills, or [None] exactly when no such trip exists. *)
 Definition slowleak_spec
   (intersection_count tire_range : N)
   (stations road_starts road_ends road_lengths : list N)
@@ -215,22 +223,40 @@ Definition slowleak_spec
             road_lengths 1 distance
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(V^3+E+S^2+1)$ steps, where $V$ is the intersection count, $E$ the road count, and $S$ the number of repair stations. *)
+Definition slowleak_time_spec (c1 c2 n_intersection_count n_road_starts n_stations steps : nat) : Prop :=
+  (steps <= c1 * (n_intersection_count * n_intersection_count * n_intersection_count + n_road_starts + n_stations * n_stations + 1) + c2)%nat.
+
 (** ** Interface *)
 
-(** Find the shortest route in a weighted road network subject to a maximum distance between
-    refills at designated vertices. Start with a full supply, or report that no route is
-    possible.
-    - Input [intersection_count]: Number of vertices in the road network.
-    - Input [tire_range]: Maximum distance that can be traveled between refills.
-    - Input [stations]: Vertices at which the supply can be refilled.
+(** Find the shortest bicycle trip from school (intersection one) to home
+    (the last intersection), refilling the leaking tire at repair stations.
+    Start with a full tire; each stretch between refills or to home must be
+    no longer than [tire_range].
+    - Input [intersection_count]: Number of road intersections, including school and home.
+    - Input [tire_range]: Distance a full tire lasts, with equality allowed.
+    - Input [stations]: Intersections with tire-refilling stations.
     - Input [road_starts]: First endpoint of each undirected road.
     - Input [road_ends]: Second endpoint of each undirected road.
     - Input [road_lengths]: Length of each corresponding road.
-    - Output [output]: The output is the minimum length of a route satisfying the refill-distance constraint, or None exactly when no feasible route exists. *)
+    - Output [output]: [Some] shortest feasible trip length, or [None] exactly when home cannot be reached without becoming stranded. *)
 Program slowleak :
   uint -> uint -> array uint -> array uint -> array uint ->
     array uint ->
   option uint.
+
+(** [@example slowleak]
+    - Sample: 1
+    - Input [intersection_count]: 6
+    - Input [tire_range]: 4
+    - Input [stations]: [2; 5]
+    - Input [road_starts]: [1; 1; 2; 3; 3; 4; 5]
+    - Input [road_ends]: [2; 3; 3; 4; 5; 6; 6]
+    - Input [road_lengths]: [4; 5; 3; 2; 1; 4; 4]
+    - Output [output]: Some 12
+*)
 
 (** ** Bridge *)
 
@@ -263,6 +289,28 @@ Specification slowleak_correct :
     slowleak_spec intersection_count tire_range stations
       road_starts road_ends
       road_lengths output.
+
+(** ** Complexity *)
+
+(** [@hide] [slowleak_cost] is the cost translation of [slowleak] (the judge
+    recomputes it and compares) ... *)
+Complexity slowleak_cost for slowleak.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n^3 + m + t^2 + 1) + c2 steps of the cost model on a valid input, m the number of roads, t of refill stations, for two constants
+    quantified before the inputs, on every valid input. [@requirement slowleak_time_spec] *)
+Specification slowleak_time : exists c1 c2 : nat,
+  forall (intersection_count tire_range : N)
+         (stations road_starts road_ends road_lengths : list N)
+         (intersection_count_int tire_range_int : uint)
+         (stations_arr road_starts_arr road_ends_arr road_lengths_arr
+            : array uint),
+  valid_input intersection_count tire_range stations road_starts road_ends
+    road_lengths ->
+  repr intersection_count_int intersection_count ->
+  repr tire_range_int tire_range -> repr stations_arr stations ->
+  repr road_starts_arr road_starts -> repr road_ends_arr road_ends ->
+  repr road_lengths_arr road_lengths ->
+  slowleak_time_spec c1 c2 (size intersection_count_int) (size road_starts_arr) (size stations_arr) (cost6 slowleak_cost intersection_count_int tire_range_int stations_arr road_starts_arr road_ends_arr road_lengths_arr).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

@@ -986,7 +986,7 @@ Lemma prod_map_mul : forall a l,
 Proof.
   intros a l. induction l as [| x l IH]; [simpl; ring|].
   replace (N.of_nat (length (x :: l))) with (N.succ (N.of_nat (length l))) by (simpl length; lia).
-  unfold prod in *. simpl map. simpl fold_right. rewrite IH, N.pow_succ_r'. ring.
+  cbn [map prod]. rewrite IH, N.pow_succ_r'. ring.
 Qed.
 
 Lemma prod_map_mod : forall a p l,

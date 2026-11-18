@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -36,66 +35,58 @@ pub type uint = u64;
 
 // Rocq: Bst.bst_implem.around
 pub fn around_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>>> {
-  let v0 = {
-    move |y: u64, t: Rc<rbt>| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> {
-      let v6: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = around_curried_owned(y);
-      let v7: &Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = &v6;
-      let v10: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = v7(t);
-      std::mem::drop(v6);
-      v10
-    }
-  };
-  let v13: Rc<dyn Fn(u64, Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new(v0);
-  let v17 = {
+  let callback: Rc<dyn Fn(u64, Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new(move |y: u64, t: Rc<rbt>| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> {
+    let tmp: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = around_curried_owned(y);
+    let tmp_1: &Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = &tmp;
+    let tmp_2: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = tmp_1(t);
+    std::mem::drop(tmp);
+    tmp_2
+  });
+  let callback_1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>>> = Rc::new({
     move |y: u64| -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> {
-      let v18 = &v13;
-      let v21: Rc<dyn Fn(u64, Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::clone(v18);
-      let v25 = {
+      let v18 = &callback;
+      let tmp_3: Rc<dyn Fn(u64, Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::clone(v18);
+      let callback_2: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new({
         move |t: Rc<rbt>| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> {
-          let v26 = &v21;
-          let v35: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = v26(Clone::clone(&y), t);
-          v35
+          let v26 = &tmp_3;
+          let tmp_4: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = v26(Clone::clone(&y), t);
+          tmp_4
         }
-      };
-      let v38: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new(v25);
-      v38
+      });
+      callback_2
     }
-  };
-  let v42: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>>> = Rc::new(v17);
-  v42
+  });
+  callback_1
 }
 
 // Rocq: Bst.bst_implem.around (local: around)
 // Variant: lifted
 pub fn around_curried_owned(y: u64) -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> {
-  let v3 = {
+  let callback: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new({
     move |t: Rc<rbt>| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> {
       let y = &y;
-      let v8 = Clone::clone(y);
-      let v11 = {
+      let y_clone = Clone::clone(y);
+      let callback_1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = Rc::new({
         move |p: u64| -> Rc<dyn Fn(u64) -> (u64, u64)> {
-          let y = &v8;
+          let y = &y_clone;
           let t = &t;
-          let v18 = Clone::clone(y);
-          let v20 = Rc::clone(t);
-          let v23 = {
+          let y_clone_1 = Clone::clone(y);
+          let t_clone = Rc::clone(t);
+          let callback_2: Rc<dyn Fn(u64) -> (u64, u64)> = Rc::new({
             move |s: u64| -> (u64, u64) {
-              let y = &v18;
-              let t = &v20;
-              let v39 = around(Clone::clone(y), t, Clone::clone(&p), s);
-              v39
+              let y = &y_clone_1;
+              let t = &t_clone;
+              let tmp = around(Clone::clone(y), t, Clone::clone(&p), s);
+              tmp
             }
-          };
-          let v42: Rc<dyn Fn(u64) -> (u64, u64)> = Rc::new(v23);
-          v42
+          });
+          callback_2
         }
-      };
-      let v46: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = Rc::new(v11);
-      v46
+      });
+      callback_1
     }
-  };
-  let v50: Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new(v3);
-  v50
+  });
+  callback
 }
 
 // Rocq: Bst.bst_implem.around (local: around)
@@ -108,15 +99,12 @@ pub fn around_owned(y: u64, t: Rc<rbt>, p: u64, s: u64) -> (u64, u64) {
       (p, s)
     },
     rbt::RN(_v21, v23, v25, v27) => {
-      match ltb(y, v25) {
-        true => {
-          std::mem::drop(v27);
-          around_owned(y, v23, p, v25)
-        },
-        false => {
-          std::mem::drop(v23);
-          around_owned(y, v27, v25, s)
-        },
+      if ltb(y, v25) {
+        std::mem::drop(v27);
+        around_owned(y, v23, p, v25)
+      } else {
+        std::mem::drop(v23);
+        around_owned(y, v27, v25, s)
       }
     },
   }
@@ -128,34 +116,24 @@ pub fn around(y: u64, t: &Rc<rbt>, p: u64, s: u64) -> (u64, u64) {
   let y_1 = y;
   let p_1 = p;
   let s_1 = s;
-  let v7 = t;
-  match &**v7 {
+  let tmp = t;
+  match &**tmp {
     rbt::RE => {
       (p_1, s_1)
     },
     rbt::RN(_r, k, l, c) => {
-      let v29 = Clone::clone(l);
-      match ltb(y_1, v29) {
-        true => {
-          let v36 = Rc::clone(k);
-          let v40 = Clone::clone(l);
-          around_owned(y_1, v36, p_1, v40)
-        },
-        false => {
-          let v48 = Rc::clone(c);
-          let v50 = Clone::clone(l);
-          around_owned(y_1, v48, v50, s_1)
-        },
+      let l_clone = Clone::clone(l);
+      if ltb(y_1, l_clone) {
+        let k_clone = Rc::clone(k);
+        let l_clone_1 = Clone::clone(l);
+        around_owned(y_1, k_clone, p_1, l_clone_1)
+      } else {
+        let c_clone = Rc::clone(c);
+        let l_clone_2 = Clone::clone(l);
+        around_owned(y_1, c_clone, l_clone_2, s_1)
       }
     },
   }
-}
-
-// Rocq: Bst.bst_implem.bst
-pub fn bst() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<Array<u64>> = bst_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
@@ -166,13 +144,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Bst.bst_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -192,15 +167,12 @@ pub fn around_1(y: u64, t: Rc<rbt>, p: u64, s: u64) -> (u64, u64) {
       (p, s)
     },
     rbt::RN(_v21, v23, v25, v27) => {
-      match ltb(y, v25) {
-        true => {
-          std::mem::drop(v27);
-          around_1(y, v23, p, v25)
-        },
-        false => {
-          std::mem::drop(v23);
-          around_1(y, v27, v25, s)
-        },
+      if ltb(y, v25) {
+        std::mem::drop(v27);
+        around_1(y, v23, p, v25)
+      } else {
+        std::mem::drop(v23);
+        around_1(y, v27, v25, s)
       }
     },
   }
@@ -215,28 +187,25 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 // Rocq: Bst.bst_implem.imax
 // Variant: uncurried
 pub fn imax(u: u64, v: u64) -> u64 {
-  match ltb(u, v) {
-    true => {
-      v
-    },
-    false => {
-      u
-    },
+  if ltb(u, v) {
+    v
+  } else {
+    u
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -277,11 +246,11 @@ pub fn lbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
                 rbt::RN(c_1, y, b, c1) => {
                   match c_1 {
                     color::Red => {
-                      let v69 = Rc::new(rbt::RN(color::Black, Rc::clone(x), Clone::clone(a), Rc::clone(y)));
-                      let v82 = Rc::new(rbt::RN(color::Black, Rc::clone(c1), k, r));
-                      let v87 = Clone::clone(b);
+                      let tmp = Rc::new(rbt::RN(color::Black, Rc::clone(x), Clone::clone(a), Rc::clone(y)));
+                      let tmp_1 = Rc::new(rbt::RN(color::Black, Rc::clone(c1), k, r));
+                      let b_clone = Clone::clone(b);
                       std::mem::drop(l);
-                      Rc::new(rbt::RN(color::Red, v69, v87, v82))
+                      Rc::new(rbt::RN(color::Red, tmp, b_clone, tmp_1))
                     },
                     color::Black => {
                       Rc::new(rbt::RN(color::Black, l, k, r))
@@ -293,14 +262,14 @@ pub fn lbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
             rbt::RN(b, x_1, a_1, c1) => {
               match b {
                 color::Red => {
-                  let v133 = Rc::clone(x_1);
-                  let v135 = Clone::clone(a_1);
-                  let v137 = Rc::clone(c1);
-                  let v140 = Rc::new(rbt::RN(color::Black, v133, v135, v137));
-                  let v153 = Rc::new(rbt::RN(color::Black, Rc::clone(c0), k, r));
-                  let v158 = Clone::clone(a);
+                  let x_clone = Rc::clone(x_1);
+                  let a_clone = Clone::clone(a_1);
+                  let c1_clone = Rc::clone(c1);
+                  let tmp_2 = Rc::new(rbt::RN(color::Black, x_clone, a_clone, c1_clone));
+                  let tmp_3 = Rc::new(rbt::RN(color::Black, Rc::clone(c0), k, r));
+                  let a_clone_1 = Clone::clone(a);
                   std::mem::drop(l);
-                  Rc::new(rbt::RN(color::Red, v140, v158, v153))
+                  Rc::new(rbt::RN(color::Red, tmp_2, a_clone_1, tmp_3))
                 },
                 color::Black => {
                   match &**c0 {
@@ -310,11 +279,11 @@ pub fn lbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
                     rbt::RN(c_1, y, b_1, c2) => {
                       match c_1 {
                         color::Red => {
-                          let v206 = Rc::new(rbt::RN(color::Black, Rc::clone(x), Clone::clone(a), Rc::clone(y)));
-                          let v219 = Rc::new(rbt::RN(color::Black, Rc::clone(c2), k, r));
-                          let v224 = Clone::clone(b_1);
+                          let tmp_4 = Rc::new(rbt::RN(color::Black, Rc::clone(x), Clone::clone(a), Rc::clone(y)));
+                          let tmp_5 = Rc::new(rbt::RN(color::Black, Rc::clone(c2), k, r));
+                          let b_clone_1 = Clone::clone(b_1);
                           std::mem::drop(l);
-                          Rc::new(rbt::RN(color::Red, v206, v224, v219))
+                          Rc::new(rbt::RN(color::Red, tmp_4, b_clone_1, tmp_5))
                         },
                         color::Black => {
                           Rc::new(rbt::RN(color::Black, l, k, r))
@@ -354,14 +323,14 @@ pub fn rbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
                 rbt::RN(d_1, z, c, c1) => {
                   match d_1 {
                     color::Red => {
-                      let v69 = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y)));
-                      let v75 = Rc::clone(z);
-                      let v77 = Clone::clone(c);
-                      let v79 = Rc::clone(c1);
-                      let v82 = Rc::new(rbt::RN(color::Black, v75, v77, v79));
-                      let v87 = Clone::clone(b);
+                      let tmp = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y)));
+                      let z_clone = Rc::clone(z);
+                      let c_clone = Clone::clone(c);
+                      let c1_clone = Rc::clone(c1);
+                      let tmp_1 = Rc::new(rbt::RN(color::Black, z_clone, c_clone, c1_clone));
+                      let b_clone = Clone::clone(b);
                       std::mem::drop(r);
-                      Rc::new(rbt::RN(color::Red, v69, v87, v82))
+                      Rc::new(rbt::RN(color::Red, tmp, b_clone, tmp_1))
                     },
                     color::Black => {
                       Rc::new(rbt::RN(color::Black, l, k, r))
@@ -373,11 +342,11 @@ pub fn rbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
             rbt::RN(c, y_1, b_1, c1) => {
               match c {
                 color::Red => {
-                  let v140 = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y_1)));
-                  let v153 = Rc::new(rbt::RN(color::Black, Rc::clone(c1), Clone::clone(b), Rc::clone(c0)));
-                  let v158 = Clone::clone(b_1);
+                  let tmp_2 = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y_1)));
+                  let tmp_3 = Rc::new(rbt::RN(color::Black, Rc::clone(c1), Clone::clone(b), Rc::clone(c0)));
+                  let b_clone_1 = Clone::clone(b_1);
                   std::mem::drop(r);
-                  Rc::new(rbt::RN(color::Red, v140, v158, v153))
+                  Rc::new(rbt::RN(color::Red, tmp_2, b_clone_1, tmp_3))
                 },
                 color::Black => {
                   match &**c0 {
@@ -387,14 +356,14 @@ pub fn rbal(l: Rc<rbt>, k: u64, r: Rc<rbt>) -> Rc<rbt> {
                     rbt::RN(d_1, z, c_1, c2) => {
                       match d_1 {
                         color::Red => {
-                          let v206 = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y)));
-                          let v212 = Rc::clone(z);
-                          let v214 = Clone::clone(c_1);
-                          let v216 = Rc::clone(c2);
-                          let v219 = Rc::new(rbt::RN(color::Black, v212, v214, v216));
-                          let v224 = Clone::clone(b);
+                          let tmp_4 = Rc::new(rbt::RN(color::Black, l, k, Rc::clone(y)));
+                          let z_clone_1 = Rc::clone(z);
+                          let c_clone_1 = Clone::clone(c_1);
+                          let c2_clone = Rc::clone(c2);
+                          let tmp_5 = Rc::new(rbt::RN(color::Black, z_clone_1, c_clone_1, c2_clone));
+                          let b_clone_2 = Clone::clone(b);
                           std::mem::drop(r);
-                          Rc::new(rbt::RN(color::Red, v206, v224, v219))
+                          Rc::new(rbt::RN(color::Red, tmp_4, b_clone_2, tmp_5))
                         },
                         color::Black => {
                           Rc::new(rbt::RN(color::Black, l, k, r))
@@ -427,57 +396,51 @@ pub fn rb_ins(y: u64, t: Rc<rbt>) -> Rc<rbt> {
   match &*t {
     rbt::RE => {
       std::mem::drop(t);
-      let v8 = Rc::new(rbt::RE);
-      let v11 = Rc::new(rbt::RE);
-      Rc::new(rbt::RN(color::Red, v8, y, v11))
+      let tmp = Rc::new(rbt::RE);
+      let tmp_1 = Rc::new(rbt::RE);
+      Rc::new(rbt::RN(color::Red, tmp, y, tmp_1))
     },
     rbt::RN(r, k, l, c) => {
-      let v37 = Clone::clone(l);
-      match ltb(y, v37) {
-        true => {
+      let l_clone = Clone::clone(l);
+      if ltb(y, l_clone) {
+        match r {
+          color::Red => {
+            let tmp_2 = rb_ins(y, Rc::clone(k));
+            let l_clone_1 = Clone::clone(l);
+            let c_clone = Rc::clone(c);
+            std::mem::drop(t);
+            Rc::new(rbt::RN(color::Red, tmp_2, l_clone_1, c_clone))
+          },
+          color::Black => {
+            let tmp_3 = rb_ins(y, Rc::clone(k));
+            let l_clone_2 = Clone::clone(l);
+            let c_clone_1 = Rc::clone(c);
+            std::mem::drop(t);
+            lbal(tmp_3, l_clone_2, c_clone_1)
+          },
+        }
+      } else {
+        let l_clone_3 = Clone::clone(l);
+        if ltb(l_clone_3, y) {
           match r {
             color::Red => {
-              let v48 = rb_ins(y, Rc::clone(k));
-              let v54 = Clone::clone(l);
-              let v55 = Rc::clone(c);
+              let tmp_4 = rb_ins(y, Rc::clone(c));
+              let k_clone = Rc::clone(k);
+              let l_clone_4 = Clone::clone(l);
               std::mem::drop(t);
-              Rc::new(rbt::RN(color::Red, v48, v54, v55))
+              Rc::new(rbt::RN(color::Red, k_clone, l_clone_4, tmp_4))
             },
             color::Black => {
-              let v69 = rb_ins(y, Rc::clone(k));
-              let v72 = Clone::clone(l);
-              let v73 = Rc::clone(c);
+              let tmp_5 = rb_ins(y, Rc::clone(c));
+              let k_clone_1 = Rc::clone(k);
+              let l_clone_5 = Clone::clone(l);
               std::mem::drop(t);
-              lbal(v69, v72, v73)
+              rbal(k_clone_1, l_clone_5, tmp_5)
             },
           }
-        },
-        false => {
-          let v83 = Clone::clone(l);
-          match ltb(v83, y) {
-            true => {
-              match r {
-                color::Red => {
-                  let v96 = rb_ins(y, Rc::clone(c));
-                  let v100 = Rc::clone(k);
-                  let v101 = Clone::clone(l);
-                  std::mem::drop(t);
-                  Rc::new(rbt::RN(color::Red, v100, v101, v96))
-                },
-                color::Black => {
-                  let v116 = rb_ins(y, Rc::clone(c));
-                  let v118 = Rc::clone(k);
-                  let v119 = Clone::clone(l);
-                  std::mem::drop(t);
-                  rbal(v118, v119, v116)
-                },
-              }
-            },
-            false => {
-              t
-            },
-          }
-        },
+        } else {
+          t
+        }
       }
     },
   }
@@ -498,28 +461,23 @@ pub fn loop__1(x: Rc<Array<u64>>, n: u64, j: u64, t: Rc<rbt>, d: Rc<Array<u64>>,
 // Rocq: Bst.bst_implem.loop (local: loop)
 // Variant: uncurried, lifted
 pub fn loop_(x: Rc<Array<u64>>, n: u64, j: u64, t: Rc<rbt>, d: Rc<Array<u64>>, c: u64, o: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(j, n);
-  match bdec(v15) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &x;
-      let y = rocq_array::get::<u64>(&v19, j);
-      let v33 = add(n, 1u64);
-      let v38 = Rc::clone(&t);
-      let ps = around_2(y, v38, 0u64, v33);
-      let v50 = Clone::clone(&ps);
-      let v52 = fst::<u64, u64>(v50);
-      let v53 = &d;
-      let v56 = rocq_array::get::<u64>(&v53, v52);
-      let v60 = snd::<u64, u64>(ps);
-      let v61 = &d;
-      let v64 = rocq_array::get::<u64>(&v61, v60);
-      let e = add(1u64, imax(v56, v64));
+      let y = rocq_array::get::<u64>(&x, j);
+      let tmp_1 = add(n, 1u64);
+      let t_clone = Rc::clone(&t);
+      let ps = around_2(y, t_clone, 0u64, tmp_1);
+      let ps_clone = Clone::clone(&ps);
+      let tmp_2 = rocq_array::get::<u64>(&d, fst::<u64, u64>(ps_clone));
+      let tmp_3 = rocq_array::get::<u64>(&d, snd::<u64, u64>(ps));
+      let e = add(1u64, imax(tmp_2, tmp_3));
       let c_ = sub(add(c, e), 1u64);
-      let v96 = add(j, 1u64);
-      let v102 = rb_insert(y, t);
-      let v109 = rocq_array::set::<u64>(d, y, e);
-      let v116 = rocq_array::set::<u64>(o, j, c_);
-      loop_(x, n, v96, v102, v109, c_, v116, ())
+      let tmp_4 = add(j, 1u64);
+      let tmp_5 = rb_insert(y, t);
+      let tmp_6 = rocq_array::set::<u64>(d, y, e);
+      let tmp_7 = rocq_array::set::<u64>(o, j, c_);
+      loop_(x, n, tmp_4, tmp_5, tmp_6, c_, tmp_7, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -532,12 +490,11 @@ pub fn loop_(x: Rc<Array<u64>>, n: u64, j: u64, t: Rc<rbt>, d: Rc<Array<u64>>, c
 
 // Rocq: Bst.bst_implem.bst_impl
 pub fn bst_impl(x: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
-  let v8 = Rc::new(rbt::RE);
-  let v23 = rocq_array::make::<u64>(add(n, 2u64), 0u64);
-  let v32 = rocq_array::make::<u64>(n, 0u64);
-  loop__1(x, n, 0u64, v8, v23, 0u64, v32)
+  let n = rocq_array::length::<u64>(&x);
+  let tmp = Rc::new(rbt::RE);
+  let tmp_1 = rocq_array::make::<u64>(add(n, 2u64), 0u64);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  loop__1(x, n, 0u64, tmp, tmp_1, 0u64, tmp_2)
 }
 
 mod __rocq_reuse {
@@ -688,10 +645,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_448.with(Clone::clone);
-  v0
-}
 std::thread_local! { static __rocq_global_55: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<rbt>) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>>> = around_curried(); }
-std::thread_local! { static __rocq_global_448: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = bst(); }

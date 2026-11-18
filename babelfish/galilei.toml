@@ -21,4 +21,4 @@ archive = "babelfish_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/babelfish.ml"
-Rust = "extraction/rust/submit/babelfish.rs"
+Rust = "extraction/rust/snapshots/babelfish_extracted.rs.interface.json"

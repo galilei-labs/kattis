@@ -6,9 +6,11 @@
  (rocq.theory
   (name Allpairspath.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Allpairspath)
  (modules allpairspath_implem)
- (theories Allpairspath.spec Stdlib stdpp StdGalilei))
+  (theories Allpairspath.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

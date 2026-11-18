@@ -6,9 +6,11 @@
  (rocq.theory
   (name Intersectingrectangles.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Intersectingrectangles)
  (modules intersectingrectangles_implem)
- (theories Intersectingrectangles.spec Stdlib stdpp StdGalilei))
+  (theories Intersectingrectangles.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

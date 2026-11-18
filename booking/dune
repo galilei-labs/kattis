@@ -6,9 +6,11 @@
  (rocq.theory
   (name Booking.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Booking)
  (modules booking_implem)
- (theories Booking.spec Stdlib stdpp StdGalilei))
+  (theories Booking.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

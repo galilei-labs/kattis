@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules knapsack2_extracted_marray)
- (theories Knapsack2 Knapsack2.spec Stdlib stdpp StdGalilei))
+ (theories Knapsack2 Knapsack2.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name knapsack2_extraction)

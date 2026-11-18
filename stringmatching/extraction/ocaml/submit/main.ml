@@ -46,16 +46,22 @@ let () =
     | None -> ()
     | Some pat ->
       let txt = match next_line () with Some t -> t | None -> "" in
-      let r =
+      let first, second =
         find_all
           (Pstring.unsafe_of_string pat) (Pstring.unsafe_of_string txt)
       in
-      let k = Arr.length_to_int (Arr.length r) in
-      for i = 0 to k - 1 do
-        if i > 0 then Buffer.add_char out ' ';
-        Buffer.add_string out
-          (string_of_int (snd (Uint63.to_int2 (Arr.get r (Uint63.of_int i)))))
-      done;
+      let needs_space = ref false in
+      let emit r =
+        let k = Arr.length_to_int (Arr.length r) in
+        for i = 0 to k - 1 do
+          if !needs_space then Buffer.add_char out ' ';
+          needs_space := true;
+          Buffer.add_string out
+            (string_of_int (snd (Uint63.to_int2 (Arr.get r (Uint63.of_int i)))))
+        done
+      in
+      emit first;
+      emit second;
       Buffer.add_char out '\n';
       loop ()
   in

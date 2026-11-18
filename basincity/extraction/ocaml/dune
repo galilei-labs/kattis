@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules basincity_extracted_marray)
- (theories Basincity Basincity.spec Stdlib stdpp StdGalilei))
+ (theories Basincity Basincity.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name basincity_extraction)

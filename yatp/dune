@@ -6,9 +6,11 @@
  (rocq.theory
   (name Yatp.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Yatp)
  (modules yatp_implem)
- (theories Yatp.spec Stdlib stdpp StdGalilei))
+  (theories Yatp.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

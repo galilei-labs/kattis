@@ -6,9 +6,11 @@
  (rocq.theory
   (name Antiarithmetic.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Antiarithmetic)
  (modules antiarithmetic_implem)
- (theories Antiarithmetic.spec Stdlib stdpp StdGalilei))
+  (theories Antiarithmetic.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

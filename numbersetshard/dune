@@ -6,9 +6,11 @@
  (rocq.theory
   (name Numbersetshard.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Numbersetshard)
  (modules numbersetshard_implem)
- (theories Numbersetshard.spec Stdlib stdpp StdGalilei))
+  (theories Numbersetshard.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

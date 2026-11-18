@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -667,13 +666,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Pascal.pascal_implem.pascal
-pub fn pascal() -> Rc<dyn Fn(u64) -> u64> {
-  let v0: fn(u64) -> u64 = pascal_impl;
-  let v1: Rc<dyn Fn(u64) -> u64> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
 // Variant: uncurried
@@ -696,13 +688,10 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -726,13 +715,10 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Pascal.pascal_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -757,17 +743,14 @@ pub fn sd_loop_1(n: u64, p: u64) -> u64 {
 // Rocq: Pascal.pascal_implem.sd_loop (local: sd_loop)
 // Variant: uncurried, lifted
 pub fn sd_loop(n: u64, p: u64, _H: ()) -> u64 {
-  let v28 = andb(ltb(p, n), leb(mul(p, p), n));
-  match bdec(v28) {
+  let tmp = andb(ltb(p, n), leb(mul(p, p), n));
+  match bdec(tmp) {
     sumbool::left => {
-      let v38 = mod_(n, p);
-      match eqb(v38, 0u64) {
-        true => {
-          p
-        },
-        false => {
-          sd_loop(n, add(p, 1u64), ())
-        },
+      let tmp_1 = mod_(n, p);
+      if eqb(tmp_1, 0u64) {
+        p
+      } else {
+        sd_loop(n, add(p, 1u64), ())
       }
     },
     sumbool::right => {
@@ -778,9 +761,9 @@ pub fn sd_loop(n: u64, p: u64, _H: ()) -> u64 {
 
 // Rocq: Pascal.pascal_implem.pascal_impl
 pub fn pascal_impl(n: u64) -> u64 {
-  let v10 = sd_loop_1(n, 2u64);
-  let v15 = div(n, v10);
-  sub(n, v15)
+  let tmp = sd_loop_1(n, 2u64);
+  let tmp_1 = div(n, tmp);
+  sub(n, tmp_1)
 }
 
 mod __rocq_reuse {
@@ -932,11 +915,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64) -> u64> {
-  let v0: Rc<dyn Fn(u64) -> u64> = __rocq_global_182.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_182: Rc<dyn Fn(u64) -> u64> = pascal(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1011,5 +989,5 @@ use kattis_io as submission_io;
 const STACK_MIB: usize = 256;
 use kattis_io::*;
 
-fn solve(input: &str) -> String { format!("{}\n", run()(Tokens::new(input).uint())) }
+fn solve(input: &str) -> String { format!("{}\n", pascal_impl(Tokens::new(input).uint())) }
 fn main() { entry(solve); }

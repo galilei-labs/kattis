@@ -6,9 +6,11 @@
  (rocq.theory
   (name Water.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Water)
  (modules water_implem)
- (theories Water.spec Stdlib stdpp StdGalilei))
+  (theories Water.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

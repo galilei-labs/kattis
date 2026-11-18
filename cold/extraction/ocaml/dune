@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules cold_extracted_marray)
- (theories Cold Cold.spec Stdlib stdpp StdGalilei))
+ (theories Cold Cold.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name cold_extraction)

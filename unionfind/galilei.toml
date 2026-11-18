@@ -21,4 +21,4 @@ archive = "unionfind_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/unionfind.ml"
-Rust = "extraction/rust/submit/unionfind.rs"
+Rust = "extraction/rust/snapshots/unionfind_extracted.rs.interface.json"

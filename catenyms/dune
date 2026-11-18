@@ -6,9 +6,11 @@
  (rocq.theory
   (name Catenyms.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Catenyms)
  (modules catenyms_implem)
- (theories Catenyms.spec Stdlib stdpp StdGalilei))
+  (theories Catenyms.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

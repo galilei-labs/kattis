@@ -2,8 +2,14 @@
 
 (** ** Description *)
 
-(** Add the fewest edges to a tree so the graph remains connected after any
-    single edge is removed.
+(** A network of secret passageways connects a kingpin's hideouts. Initially
+    there is exactly one route between every pair of hideouts. One hideout
+    is the headquarters, where the kingpin is safe.
+
+    Add as few passageways as possible so that, even if the police block any
+    one passageway, the kingpin can still reach headquarters from every
+    hideout. Report which passageways to add. Passageways can be used in
+    either direction, and the blocked passageway may be an original or a new one.
 
     [@kattis kingpinescape]
     - Difficulty: 7.0
@@ -42,37 +48,37 @@ Output:
                     hideout still reaches the headquarters when any one
                     passageway is blocked, and no smaller set of new
                     passageways does so.
+                    It runs in at most c1 * (n + e + 1) + c2 steps of the
+                    cost model on a valid input, n the number of hideouts
+                    and e of passageways (one depth-first traversal and the
+                    leaf pairing), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. A hideout is an N; a set of passageways is a list of
-    pairs, one entry per passageway (a passageway may be listed
-    twice). The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The passageways given by two parallel lists (the input's two
-    columns, or the output's): the pairs (first_ends_k,
-    second_ends_k). *)
+(** Pair corresponding entries of [first_ends] and [second_ends] to form
+    passageways, preserving their order. *)
 Definition passageways
   (first_ends second_ends : list N) : list (N * N) :=
   combine first_ends second_ends.
 
-(** A passageway of network joins hideout and hideout' (in either
-    direction). *)
+(** An undirected passageway in [network] joins [hideout] and [hideout']. *)
 Definition joined (network : list (N * N))
   (hideout hideout' : N) : Prop :=
   In (hideout, hideout') network \/ In (hideout', hideout)
     network.
 
-(** Each hideout of hideouts is joined to the next one by a passageway
-    of network. *)
+(** Every consecutive pair in [hideouts] is joined by a passageway in [network]. *)
 Fixpoint linked (network : list (N * N))
   (hideouts : list N) : Prop :=
   match hideouts with
@@ -81,9 +87,8 @@ Fixpoint linked (network : list (N * N))
   | _ => True
   end.
 
-(** A route from origin to destination: hideouts, none visited twice,
-    from origin to destination, each joined to the next by a
-    passageway of network. *)
+(** [hideouts] is a simple route in [network] from [origin] to [destination], with
+    no repeated hideout. *)
 Definition route (network : list (N * N))
   (origin destination : N)
     (hideouts : list N) : Prop :=
@@ -91,7 +96,7 @@ Definition route (network : list (N * N))
   hd_error hideouts = Some origin /\ hd_error (rev hideouts)
     = Some destination.
 
-(** The [reaches] definition. *)
+(** Some simple route in [network] leads from [origin] to [destination]. *)
 Definition reaches (network : list (N * N))
   (origin destination : N) : Prop :=
   exists hideouts, route network origin destination
@@ -106,7 +111,7 @@ Definition is_tree (hideout_count : N)
     exists! hideouts, route network origin destination
       hideouts.
 
-(** network with its k-th passageway blocked. *)
+(** Remove the passageway at zero-based index [k] from [network]. *)
 Definition block (network : list (N * N))
   (k : nat) : list (N * N) :=
   firstn k network ++ skipn (S k) network.
@@ -153,8 +158,8 @@ Record valid_input (hideout_count headquarters : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is a minimum set of added edges that preserves connectivity after removal
-    of any single edge. *)
+    The output adds as few passageways as possible while ensuring that every
+    hideout can reach headquarters when any one passageway is blocked. *)
 Definition kingpin_escape_spec
   (hideout_count headquarters : N)
     (first_ends second_ends : list N) (output : list N *
@@ -175,18 +180,33 @@ Definition kingpin_escape_spec
          len added_firsts <= len additions)
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(V+E+1)$ steps, where $V$ is the hideout count and $E$ the number of connections. *)
+Definition kingpin_escape_time_spec (c1 c2 n_hideout_count n_first_ends steps : nat) : Prop :=
+  (steps <= c1 * (n_hideout_count + n_first_ends + 1) + c2)%nat.
+
 (** ** Interface *)
 
-(** Add the fewest edges to a tree so the graph remains connected after any single edge is
-    removed.
-    - Input [hideout_count]: Number of vertices in the initial tree.
-    - Input [headquarters]: Designated root vertex.
-    - Input [first_ends]: First endpoint of each tree edge.
-    - Input [second_ends]: Second endpoint of each tree edge.
-    - Output [output]: The output is a minimum set of added edges that preserves connectivity after removal of any single edge. *)
+(** Add the fewest secret passageways so every hideout can still reach
+    headquarters when any one passageway is blocked.
+    - Input [hideout_count]: Number of hideouts, numbered from zero.
+    - Input [headquarters]: Hideout containing the safe headquarters.
+    - Input [first_ends]: First hideout of each original passageway.
+    - Input [second_ends]: Second hideout of each corresponding passageway.
+    - Output [output]: Two parallel arrays of endpoint hideouts describing a minimum-size collection of new passageways. *)
 Program kingpin_escape :
   uint -> uint -> array uint -> array uint ->
     array uint * array uint.
+
+(** [@example kingpin_escape]
+    - Sample: 1
+    - Input [hideout_count]: 4
+    - Input [headquarters]: 0
+    - Input [first_ends]: [0; 0; 0]
+    - Input [second_ends]: [1; 2; 3]
+    - Output [output]: ([3; 3], [2; 1])
+*)
 
 (** ** Bridge *)
 
@@ -211,6 +231,27 @@ Specification kingpin_escape_correct :
     kingpin_escape_spec hideout_count headquarters
       first_ends second_ends
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [kingpin_escape_cost] is the cost translation of [kingpin_escape] (the judge
+    recomputes it and compares) ... *)
+Complexity kingpin_escape_cost for kingpin_escape.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + e + 1) + c2 steps of the cost model on a valid input, n the number of hideouts and e of passageways (one depth-first traversal and the leaf pairing), for two constants
+    quantified before the inputs, on every valid input. [@requirement kingpin_escape_time_spec] *)
+Specification kingpin_escape_time : exists c1 c2 : nat,
+  forall (hideout_count headquarters : N) (first_ends
+  second_ends : list N)
+  (hideout_count_int headquarters_int : uint)
+  (first_ends_arr second_ends_arr : array uint),
+  valid_input hideout_count headquarters first_ends
+  second_ends ->
+  repr hideout_count_int hideout_count ->
+  repr headquarters_int headquarters ->
+  repr first_ends_arr first_ends ->
+  repr second_ends_arr second_ends ->
+  kingpin_escape_time_spec c1 c2 (size hideout_count_int) (size first_ends_arr) (cost4 kingpin_escape_cost hideout_count_int headquarters_int first_ends_arr second_ends_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Dirtydriving.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Dirtydriving)
  (modules dirtydriving_implem)
- (theories Dirtydriving.spec Stdlib stdpp StdGalilei))
+  (theories Dirtydriving.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

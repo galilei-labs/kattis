@@ -12,7 +12,7 @@
 
     **Kattis Bounds**
     - Rectangle count: $1 \le n \le 10^{5}$.
-    - Integer coordinates in $[-10^{9}, 10^{9}]$; each rectangle has positive
+    - Integer coordinates: $-10^{9} \le x \le 10^{9}$; each rectangle has positive
       width and height.
     - All horizontal coordinates are distinct, as are all vertical
       coordinates. *)
@@ -40,11 +40,18 @@ Output:
                     boundaries with a common point of the real plane (a
                     rectangle nested strictly inside another does not
                     count).
+                    It runs in at most c1 * (n + 1) * (log2 n + 1) + c2
+                    steps of the cost model on a valid input, n the number
+                    of rectangles (the sort of the events, then one
+                    balanced-tree operation per event, each within its
+                    depth, logarithmic by the balance invariant), for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Reals.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Z_scope.
 
@@ -54,16 +61,16 @@ Open Scope Z_scope.
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The i-th entry of a column (rectangle i's coordinate), and the same
-    as a real number. *)
+(** The integer coordinate at zero-based rectangle index [i] in [column], or zero
+    beyond the end. *)
 Definition entry (column : list Z) (i : N) : Z :=
   nth (N.to_nat i) column 0.
-(** The [coord] definition. *)
+(** The coordinate at index [i] in [column], embedded in the real numbers. *)
 Definition coord (column : list Z) (i : N) : R :=
   IZR (entry column i).
 
-(** The point (point_x, point_y) lies on the boundary of rectangle i :
-    in the closed rectangle, and on one of its four sides. *)
+(** The point [(point_x, point_y)] lies in the closed rectangle at index [i]
+    and on at least one of its four sides. *)
 Definition on_boundary
   (lefts bottoms rights tops : list Z) (i : N)
     (point_x point_y : R) : Prop :=
@@ -72,7 +79,7 @@ Definition on_boundary
   (point_x = coord lefts i \/ point_x = coord rights i \/
    point_y = coord bottoms i \/ point_y = coord tops i).
 
-(** The boundaries of rectangles i and j have a common point. *)
+(** The boundaries of rectangles [i] and [j] have a common point. *)
 Definition intersect
   (lefts bottoms rights tops : list Z) (i j : N)
     : Prop :=
@@ -81,7 +88,7 @@ Definition intersect
       /\
     on_boundary lefts bottoms rights tops j point_x point_y.
 
-(** Some pair of distinct rectangles intersect. *)
+(** The boundaries of some two distinct input rectangles have a common point. *)
 Definition some_pair_intersects
   (lefts bottoms rights tops : list Z)
     : Prop :=
@@ -128,15 +135,18 @@ Record valid_input
 Definition intersecting_rectangles_spec
   (lefts bottoms rights tops : list Z)
     (output : bool) : Prop :=
-  match output with
-  | true => some_pair_intersects lefts bottoms rights tops
-  | false => ~ some_pair_intersects lefts bottoms rights
-    tops
-  end.
+  output = true <-> some_pair_intersects lefts bottoms rights tops.
+
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n \log(n+1))$ steps, where $n$ is the number of rectangles. *)
+Definition intersecting_rectangles_time_spec (c1 c2 n_lefts steps : nat) : Prop :=
+  (steps <= c1 * ((n_lefts + 1) * (Nat.log2 (n_lefts) + 1)) + c2)%nat.
 
 (** ** Interface *)
 
-(** The [intersecting_rectangles] program on machine values.
+(** Test whether two distinct rectangles have a point in common on their
+    boundaries. Containment alone, without boundary contact, does not count.
     - Input [lefts]: Left horizontal coordinate of each rectangle.
     - Input [bottoms]: Bottom vertical coordinate of each rectangle.
     - Input [rights]: Right horizontal coordinate of each rectangle.
@@ -145,6 +155,15 @@ Definition intersecting_rectangles_spec
 Program intersecting_rectangles :
   array sint -> array sint -> array sint -> array sint ->
     bool.
+
+(** [@example intersecting_rectangles]
+    - Sample: 1
+    - Input [lefts]: [0; 1; 5]%Z
+    - Input [bottoms]: [0; 1; 7]%Z
+    - Input [rights]: [2; 3; 6]%Z
+    - Input [tops]: [2; 4; 8]%Z
+    - Output [output]: true
+*)
 
 (** ** Bridge *)
 
@@ -165,6 +184,23 @@ Specification intersecting_rectangles_correct :
       output /\
     intersecting_rectangles_spec lefts bottoms rights tops
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [intersecting_rectangles_cost] is the cost translation of [intersecting_rectangles] (the judge
+    recomputes it and compares) ... *)
+Complexity intersecting_rectangles_cost for intersecting_rectangles.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) * (log2 n + 1) + c2 steps of the cost model on a valid input, n the number of rectangles (the sort of the events, then one balanced-tree operation per event, each within its depth, logarithmic by the balance invariant), for two constants
+    quantified before the inputs, on every valid input. [@requirement intersecting_rectangles_time_spec] *)
+Specification intersecting_rectangles_time : exists c1 c2 : nat,
+  forall (lefts bottoms rights tops : list Z)
+  (lefts_arr bottoms_arr rights_arr tops_arr : array
+  sint),
+  valid_input lefts bottoms rights tops ->
+  repr lefts_arr lefts -> repr bottoms_arr bottoms ->
+  repr rights_arr rights -> repr tops_arr tops ->
+  intersecting_rectangles_time_spec c1 c2 (size lefts_arr) (cost4 intersecting_rectangles_cost lefts_arr bottoms_arr rights_arr tops_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

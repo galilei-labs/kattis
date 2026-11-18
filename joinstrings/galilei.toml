@@ -21,4 +21,4 @@ archive = "joinstrings_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/joinstrings.ml"
-Rust = "extraction/rust/submit/joinstrings.rs"
+Rust = "extraction/rust/snapshots/joinstrings_extracted.rs.interface.json"

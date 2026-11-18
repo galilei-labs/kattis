@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Entry count: $1 \le n \le 300{,}000$, forming a permutation of $1$ through N. *)
+    - Entry count: $1 \le n \le 3 \times 10^{5}$, forming a permutation of the integers $1 \le x \le n$. *)
 
 (** ** Examples *)
 
@@ -43,23 +43,27 @@ Output:
                     the counter C after the (k+1)-th insertion: the sum of
                     the depths at which sequence_0, ..., sequence_k were
                     placed.
+                    It runs in at most c1 * (N + 1) * (log2 N + 1) + c2
+                    steps of the cost model on a valid input, N the number
+                    of keys (one red-black insertion and one predecessor and
+                    successor search per key, each within the tree's depth,
+                    logarithmic by the red-black invariant), for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. *)
-
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The j-th element of numbers (0-based); 0 beyond the
-    end. *)
+(** The entry at zero-based index [j] in [numbers], or zero beyond the end. *)
 Definition get (numbers : list N) (j : N) : N :=
   nth (N.to_nat j) numbers 0.
 
@@ -69,10 +73,8 @@ Inductive tree : Type :=
 | Leaf : tree
 | Node : tree -> N -> tree -> tree.
 
-(** Inserting number: traverse the tree as if searching
-    for number, and put number as a new leaf, left of
-    key if number < key, right of key if key < number,
-    where the search cannot continue. *)
+(** Insert [number] as a leaf at the end of its binary-search path: smaller keys go
+    left and larger keys go right. An existing equal key is unchanged. *)
 Fixpoint insert (number : N) (subtree : tree) : tree :=
   match subtree with
   | Leaf => Node Leaf number Leaf
@@ -84,9 +86,7 @@ Fixpoint insert (number : N) (subtree : tree) : tree :=
       else subtree
   end.
 
-(** The depth of the node holding number: the number of
-    edges from the root down to it along the search path
-    of number. *)
+(** The number of edges from the root to [number] along its binary-search path. *)
 Fixpoint depth (number : N) (subtree : tree) : N :=
   match subtree with
   | Leaf => 0
@@ -97,22 +97,25 @@ Fixpoint depth (number : N) (subtree : tree) : N :=
       else 0
   end.
 
+(** Insert the remaining numbers into [built], in input order. *)
+Fixpoint tree_from (sequence : list N) (built : tree) : tree :=
+  match sequence with
+  | [] => built
+  | number :: rest => tree_from rest (insert number built)
+  end.
+
 (** The tree built from sequence: the first number at
     the root, every other number inserted in order. *)
 Definition tree_of (sequence : list N) : tree :=
-  fold_left
-    (fun built number => insert number built) sequence Leaf.
+  tree_from sequence Leaf.
 
-(** The depth of sequence_j in the tree right after its
-    insertion. *)
+(** The depth of the entry at index [j], immediately after that entry is inserted. *)
 Definition placed_depth (sequence : list N) (j : N) : N :=
   depth (get sequence j) (tree_of (firstn
     (N.to_nat j + 1) sequence)).
 
-(** The counter C after the first insertion_count
-    insertions: the sum of the depths of sequence_0,
-    ..., sequence_(insertion_count-1); C is 0 before any
-    insertion. *)
+(** The sum of insertion depths for the first [insertion_count] entries, with value
+    zero before any insertion. *)
 Fixpoint counter (sequence : list N)
   (insertion_count : nat) : N :=
   match insertion_count with
@@ -123,7 +126,7 @@ Fixpoint counter (sequence : list N)
 
 (** [@inside bst_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (sequence : list N) : Prop := {
-  (* 1 <= N <= 300 000, N the length of the sequence *)
+  (* 1 <= N <= 3 * 10^5, N the length of the sequence *)
   vi_n : 1 <= len sequence <= 300000;
   (* the numbers of the sequence are integers in the
     interval [1, N] *)
@@ -144,6 +147,12 @@ Definition bst_spec (sequence : list N)
   forall k, k < len output ->
     get output k = counter sequence (N.to_nat k + 1).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n \log(n+1))$ steps, where $n$ is the sequence length. *)
+Definition bst_time_spec (c1 c2 n_sequence steps : nat) : Prop :=
+  (steps <= c1 * ((n_sequence + 1) * (Nat.log2 (n_sequence) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Insert a permutation into an initially empty binary search tree. After each insertion,
@@ -151,6 +160,12 @@ Definition bst_spec (sequence : list N)
     - Input [sequence]: Distinct values in binary-search-tree insertion order.
     - Output [output]: Each output entry is the sum of node depths after the corresponding insertion into an initially empty binary search tree; the root has depth zero. *)
 Program bst : array uint -> array uint.
+
+(** [@example bst]
+    - Sample: 1
+    - Input [sequence]: [1; 2; 3; 4]
+    - Output [output]: [0; 1; 3; 6]
+*)
 
 (** ** Bridge *)
 
@@ -163,6 +178,19 @@ Specification bst_correct :
   exists output : list N,
     repr (bst sequence_arr) output
       /\ bst_spec sequence output.
+
+(** ** Complexity *)
+
+(** [@hide] [bst_cost] is the cost translation of [bst] (the judge
+    recomputes it and compares) ... *)
+Complexity bst_cost for bst.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (N + 1) * (log2 N + 1) + c2 steps of the cost model on a valid input, N the number of keys (one red-black insertion and one predecessor and successor search per key, each within the tree's depth, logarithmic by the red-black invariant), for two constants
+    quantified before the inputs, on every valid input. [@requirement bst_time_spec] *)
+Specification bst_time : exists c1 c2 : nat,
+  forall (sequence : list N) (sequence_arr : array uint),
+  valid_input sequence -> repr sequence_arr sequence ->
+  bst_time_spec c1 c2 (size sequence_arr) (cost1 bst_cost sequence_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

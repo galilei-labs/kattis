@@ -26,7 +26,13 @@
    [0, n); every union among the first k operations joined its two
    elements (they have the same root); two elements with the same root are
    connected by the first k operations.  The converse direction of the
-   query answer is an induction on [connected]. *)
+    query answer is an induction on [connected].
+
+    Query-only output. The scan's Q-cell array is internal. Two additional
+    tail-recursive linear passes count the queries and pack their answers
+    into an exactly sized array, preserving query order. [Packed] connects
+    each original query position to its prefix-count output position; the
+    final theorem establishes the revised [run_ops_spec]. *)
 
 From Unionfind.spec Require Import Prelude.
 From StdGalilei Require Import repr.
@@ -532,11 +538,72 @@ Lemma scan_eq : forall xu xa xb q k par rk out W H,
   end.
 Proof. intros. destruct H. reflexivity. Qed.
 
-Definition run_ops_impl (xn : uint) (xu : array bool) (xa xb : array uint)
+Definition run_ops_raw (xn : uint) (xu : array bool) (xa xb : array uint)
     : array bool :=
   let q := PArray.length xu in
   scan xu xa xb q 0 (init_par xn) (PArray.make xn 0) (PArray.make q false)
     (init_wf xn) (Zwf_well_founded 0 (gap q 0)).
+
+(* Two tail-recursive passes: count queries, then copy only their answers.
+   Counters are Uint63; termination proofs erase during extraction. *)
+Fixpoint count_queries (xu : array bool) (q k c : int)
+    (H : Acc (Zwf 0) (gap q k)) {struct H} : int :=
+  match bdec (k <? q) with
+  | left Hk => count_queries xu q (k + 1) (if xu.[k] then c else c + 1)
+      (Acc_inv H (dec_step q k Hk))
+  | right _ => c
+  end.
+
+Lemma count_queries_eq : forall xu q k c H,
+  count_queries xu q k c H =
+  match bdec (k <? q) with
+  | left Hk => count_queries xu q (k + 1) (if xu.[k] then c else c + 1)
+      (Acc_inv H (dec_step q k Hk))
+  | right _ => c
+  end.
+Proof. intros. destruct H. reflexivity. Qed.
+
+Fixpoint pack_queries (xu raw : array bool) (q k c : int) (out : array bool)
+    (H : Acc (Zwf 0) (gap q k)) {struct H} : array bool :=
+  match bdec (k <? q) with
+  | left Hk =>
+      if xu.[k] then pack_queries xu raw q (k + 1) c out (Acc_inv H (dec_step q k Hk))
+      else pack_queries xu raw q (k + 1) (c + 1) out.[c <- raw.[k]]
+        (Acc_inv H (dec_step q k Hk))
+  | right _ => out
+  end.
+
+Lemma pack_queries_eq : forall xu raw q k c out H,
+  pack_queries xu raw q k c out H =
+  match bdec (k <? q) with
+  | left Hk =>
+      if xu.[k] then pack_queries xu raw q (k + 1) c out (Acc_inv H (dec_step q k Hk))
+      else pack_queries xu raw q (k + 1) (c + 1) out.[c <- raw.[k]]
+        (Acc_inv H (dec_step q k Hk))
+  | right _ => out
+  end.
+Proof. intros. destruct H. reflexivity. Qed.
+
+Definition compact_queries (xu raw : array bool) : array bool :=
+  let q := PArray.length xu in
+  let count := count_queries xu q 0 0 (Zwf_well_founded 0 (gap q 0)) in
+  pack_queries xu raw q 0 0 (PArray.make count false)
+    (Zwf_well_founded 0 (gap q 0)).
+
+Definition run_ops_impl (xn : uint) (xu : array bool) (xa xb : array uint)
+    : array bool := compact_queries xu (run_ops_raw xn xu xa xb).
+
+(* Internal scan contract; union cells are discarded by compact_queries. *)
+Definition raw_answers_query (is_union : list bool)
+    (elt_a elt_b : list N) (out : list bool) (k : N) : Prop :=
+  get_list_bool out k = true <->
+  connected is_union elt_a elt_b k (get_list_N elt_a k) (get_list_N elt_b k).
+
+Definition raw_spec (n : N) (is_union : list bool)
+    (elt_a elt_b : list N) (out : list bool) : Prop :=
+  len out = len is_union /\
+  forall k, (k < len is_union)%N -> query_op is_union k ->
+    raw_answers_query is_union elt_a elt_b out k.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: linking two roots                                        *)
@@ -975,10 +1042,10 @@ Proof.
       rewrite <- (path_of_root _ y x (P y Hy) P2). apply conn_refl.
 Qed.
 
-Lemma run_ops_main : exists out : list bool,
-  repr (run_ops_impl xn xu xa xb) out /\ run_ops_spec n is_union elt_a elt_b out.
+Lemma run_ops_raw_main : exists out : list bool,
+  repr (run_ops_raw xn xu xa xb) out /\ raw_spec n is_union elt_a elt_b out.
 Proof.
-  unfold run_ops_impl. cbv zeta.
+  unfold run_ops_raw. cbv zeta.
   pose proof q_bound as Bq.
   assert (O0 : OutInv 0 (PArray.make q false)).
   { split.
@@ -1012,7 +1079,7 @@ Proof.
       { unfold j. rewrite of_Z_spec. rewrite N_nat_Z. apply Z.mod_small. pose proof q_val. lia. }
       assert (Hjq : ((φ j) < (φ q))%Z) by (rewrite q_val; lia).
       assert (Tj : toN j = k) by (unfold toN; rewrite Hj; lia).
-      unfold answers_query, get_list_bool at 1.
+       unfold raw_answers_query, get_list_bool at 1.
       erewrite nth_error_nth; [| apply Hnth; lia].
       fold j. rewrite <- Tj.
       assert (Uj : xu.[j] = false) by (rewrite <- (getU j Hjq), Tj; exact Hq).
@@ -1021,21 +1088,251 @@ Qed.
 
 End Correct.
 
-Theorem run_ops_impl_correct :
+Theorem run_ops_raw_correct :
   forall (n : N) (is_union : list bool) (elt_a elt_b : list N)
          (xn : uint) (xu : array bool) (xa xb : array uint),
   valid_input n is_union elt_a elt_b ->
   repr xn n -> repr xu is_union -> repr xa elt_a -> repr xb elt_b ->
   exists out : list bool,
-    repr (run_ops_impl xn xu xa xb) out /\ run_ops_spec n is_union elt_a elt_b out.
+    repr (run_ops_raw xn xu xa xb) out /\ raw_spec n is_union elt_a elt_b out.
 Proof.
   intros n is_union elt_a elt_b xn xu xa xb Hv Hn Hu Ha Hb.
-  exact (run_ops_main n is_union elt_a elt_b xn xu xa xb Hv Hn Hu Ha Hb).
+  exact (run_ops_raw_main n is_union elt_a elt_b xn xu xa xb Hv Hn Hu Ha Hb).
 Qed.
 
 (* ------------------------------------------------------------------ *)
 (* The spec's items, at top level                                      *)
 (* ------------------------------------------------------------------ *)
+
+(* Prefix counts are proof-only: no lists or unary counters are extracted. *)
+Definition prefix_queries (ops : list bool) (k : nat) : nat :=
+  List.length (filter negb (firstn k ops)).
+
+Lemma prefix_queries_bound : forall ops k, (prefix_queries ops k <= k)%nat.
+Proof.
+  induction ops as [|b ops IH]; intros [|k]; unfold prefix_queries in *; simpl; try lia.
+  specialize (IH k). destruct b; simpl in *; lia.
+Qed.
+
+Lemma prefix_queries_step : forall ops k, (k < List.length ops)%nat ->
+  prefix_queries ops (S k) =
+    if nth k ops false then prefix_queries ops k else S (prefix_queries ops k).
+Proof.
+  induction ops as [|b ops IH]; intros [|k] H; simpl in H; try lia.
+  - unfold prefix_queries. simpl. destruct b; reflexivity.
+  - unfold prefix_queries in *. simpl. specialize (IH k ltac:(lia)).
+    destruct b; simpl in *; rewrite IH; destruct (nth k ops false); reflexivity.
+Qed.
+
+Lemma prefix_queries_mono : forall ops i j,
+  (i <= j)%nat -> (prefix_queries ops i <= prefix_queries ops j)%nat.
+Proof.
+  induction ops as [|b ops IH]; intros [|i] [|j] H;
+    unfold prefix_queries in *; simpl in *; try lia.
+  specialize (IH i j ltac:(lia)). destruct b; simpl in *; lia.
+Qed.
+
+Section CompactCorrect.
+Variables (ops : list bool) (xu : array bool).
+Hypothesis Hu : repr xu ops.
+Hypothesis Bq : ((φ (PArray.length xu)) <= 1000000)%Z.
+Local Notation q := (PArray.length xu).
+Local Notation total := (List.length (filter negb ops)).
+Local Notation pref k := (prefix_queries ops (Z.to_nat (φ k))).
+
+Lemma compact_q_val : (φ q) = Z.of_nat (List.length ops).
+Proof. destruct Hu as [L _]. symmetry. exact L. Qed.
+
+Lemma compact_get : forall k, ((φ k) < (φ q))%Z ->
+  nth (Z.to_nat (φ k)) ops false = xu.[k].
+Proof.
+  intros k Hk. pose proof (to_Z_bounded k).
+  destruct Hu as [_ Hcells].
+  destruct (Hcells (Z.to_nat (φ k)) ltac:(rewrite compact_q_val in Hk; lia)) as (m & Hm & Hr).
+  unfold repr, repr_bool in Hr.
+  rewrite Z2Nat.id in Hr by lia. rewrite of_to_Z in Hr.
+  erewrite nth_error_nth; [exact (eq_sym Hr)|exact Hm].
+Qed.
+
+Lemma compact_next : forall k, ((φ k) < (φ q))%Z ->
+  pref (k + 1) = if xu.[k] then pref k else S (pref k).
+Proof.
+  intros k Hk. pose proof (to_Z_bounded k).
+  assert (E : (φ (k + 1)) = ((φ k) + 1)%Z) by sia.
+  rewrite E, Z2Nat.inj_add by lia. change (Z.to_nat 1) with 1%nat.
+  rewrite Nat.add_1_r, prefix_queries_step.
+  - rewrite compact_get by exact Hk. reflexivity.
+  - rewrite compact_q_val in Hk. lia.
+Qed.
+
+Lemma compact_total : pref q = total.
+Proof. rewrite compact_q_val, Nat2Z.id. unfold prefix_queries. rewrite firstn_all. reflexivity. Qed.
+
+Lemma compact_prefix_bound : forall k, ((φ k) <= (φ q))%Z ->
+  (Z.of_nat (pref k) <= (φ k))%Z.
+Proof. intros k H. pose proof (prefix_queries_bound ops (Z.to_nat (φ k))). pose proof (to_Z_bounded k). lia. Qed.
+
+Lemma count_queries_spec : forall z k c H,
+  gap q k = z -> ((φ k) <= (φ q))%Z ->
+  (φ c) = Z.of_nat (pref k) ->
+  (φ (count_queries xu q k c H)) = Z.of_nat total.
+Proof.
+  intros z. induction z as [z IH] using (well_founded_ind (Zwf_well_founded 0)).
+  intros k c H Hz Hk Hc. rewrite count_queries_eq.
+  destruct (bdec (k <? q)) as [Hlt|Hlt].
+  - pose proof Hlt as L. rewrite ltb_spec in L.
+    pose proof (compact_prefix_bound k Hk) as C.
+    pose proof (to_Z_bounded k).
+    assert (E : (φ (k + 1)) = ((φ k) + 1)%Z) by sia.
+    eapply IH; [rewrite <- Hz; apply dec_step; exact Hlt|reflexivity|lia|].
+    rewrite compact_next by exact L. destruct (xu.[k]); [exact Hc|].
+    assert (Ec : (φ (c + 1)) = ((φ c) + 1)%Z) by sia.
+    rewrite Ec, Nat2Z.inj_succ. lia.
+  - rewrite <- Bool.not_true_iff_false, ltb_spec in Hlt.
+    assert (k = q) by (apply to_Z_inj; lia). subst k.
+    rewrite compact_total in Hc. exact Hc.
+Qed.
+
+Definition query_slot (k : int) : int := of_Z (Z.of_nat (pref k)).
+
+Lemma query_slot_val : forall k, ((φ k) <= (φ q))%Z ->
+  (φ (query_slot k)) = Z.of_nat (pref k).
+Proof.
+  intros k Hk. unfold query_slot. rewrite of_Z_spec. apply Z.mod_small.
+  pose proof (compact_prefix_bound k Hk). split; [lia|].
+  change wB with 9223372036854775808%Z. lia.
+Qed.
+
+Definition Packed (raw : array bool) (k : int) (out : array bool) : Prop :=
+  (φ (PArray.length out)) = Z.of_nat total /\
+  forall j, ((φ j) < (φ k))%Z -> xu.[j] = false ->
+    out.[query_slot j] = raw.[j].
+
+Lemma pack_queries_spec : forall raw z k c out H,
+  gap q k = z -> ((φ k) <= (φ q))%Z ->
+  (φ c) = Z.of_nat (pref k) -> Packed raw k out ->
+  Packed raw q (pack_queries xu raw q k c out H).
+Proof.
+  intros raw z. induction z as [z IH] using (well_founded_ind (Zwf_well_founded 0)).
+  intros k c out H Hz Hk Hc [Lout O]. rewrite pack_queries_eq.
+  destruct (bdec (k <? q)) as [Hlt|Hlt].
+  - pose proof Hlt as L. rewrite ltb_spec in L.
+    pose proof (compact_prefix_bound k Hk) as C.
+    pose proof (to_Z_bounded k).
+    assert (E : (φ (k + 1)) = ((φ k) + 1)%Z) by sia.
+    pose proof (compact_next k L) as Next.
+    destruct (xu.[k]) eqn:U.
+    + eapply IH; [rewrite <- Hz; apply dec_step; exact Hlt|reflexivity|lia|rewrite Next; exact Hc|].
+      split; [exact Lout|]. intros j Hj Uj.
+      destruct (Z.eq_dec (φ j) (φ k)) as [Ej|Ej].
+      * assert (j = k) by (apply to_Z_inj; exact Ej). subst j. congruence.
+      * apply O; [lia|exact Uj].
+    + assert (Ec : (φ (c + 1)) = ((φ c) + 1)%Z) by sia.
+      eapply IH; [rewrite <- Hz; apply dec_step; exact Hlt|reflexivity|lia|rewrite Next, Ec, Nat2Z.inj_succ; lia|].
+      split; [rewrite blength_set; exact Lout|]. intros j Hj Uj.
+      destruct (Z.eq_dec (φ j) (φ k)) as [Ej|Ej].
+      * assert (j = k) by (apply to_Z_inj; exact Ej). subst j.
+        assert (Slot : query_slot k = c) by (apply to_Z_inj; rewrite query_slot_val by exact Hk; lia).
+        rewrite Slot. apply bget_set_same. rewrite ltb_spec, Lout.
+        pose proof (prefix_queries_mono ops (Z.to_nat (φ (k + 1))) (Z.to_nat (φ q)) ltac:(lia)) as M.
+        rewrite compact_total, Next in M. lia.
+      * assert (Jk : ((φ j) < (φ k))%Z) by lia.
+        rewrite bget_set_other; [apply O; assumption|].
+        intro Eq. apply (f_equal to_Z) in Eq.
+        rewrite query_slot_val in Eq by lia.
+        pose proof (compact_next j ltac:(lia)) as Jnext. rewrite Uj in Jnext.
+        assert (Ejnext : (φ (j + 1)) = ((φ j) + 1)%Z) by sia.
+        pose proof (prefix_queries_mono ops (Z.to_nat (φ (j + 1))) (Z.to_nat (φ k)) ltac:(lia)) as M.
+        rewrite Jnext in M. lia.
+  - rewrite <- Bool.not_true_iff_false, ltb_spec in Hlt.
+    assert (k = q) by (apply to_Z_inj; lia). subst k. split; assumption.
+Qed.
+
+Lemma compact_queries_spec : forall raw,
+  Packed raw q (compact_queries xu raw).
+Proof.
+  intros raw. unfold compact_queries.
+  pose proof (to_Z_bounded q).
+  pose proof (count_queries_spec _ 0 0 (Zwf_well_founded 0 (gap q 0)) eq_refl
+    ltac:(change (φ 0) with 0%Z; lia) eq_refl) as Count.
+  eapply pack_queries_spec; [reflexivity|change (φ 0) with 0%Z; lia|reflexivity|].
+  split.
+  - rewrite blength_make.
+    replace (count_queries xu q 0 0 (Zwf_well_founded 0 (gap q 0)) <=? PArray.max_length) with true.
+    + exact Count.
+    + symmetry. rewrite leb_spec, max_length_val, Count.
+      pose proof (compact_prefix_bound q ltac:(lia)) as Bound. rewrite compact_total in Bound. lia.
+  - intros j Hj. change (φ 0) with 0%Z in Hj. pose proof (to_Z_bounded j). lia.
+Qed.
+End CompactCorrect.
+
+Lemma bool_repr_nth : forall (a : array bool) (l : list bool) i,
+  repr a l -> (i < List.length l)%nat -> a.[of_nat i] = nth i l false.
+Proof.
+  intros a l i [_ Cells] Hi.
+  destruct (Cells i Hi) as (v & Hv & Hr).
+  unfold repr, repr_bool in Hr.
+  erewrite nth_error_nth; [exact Hr|exact Hv].
+Qed.
+
+Theorem run_ops_impl_correct :
+  forall (n : N) (ops : list bool) (elt_a elt_b : list N)
+         (xn : uint) (xu : array bool) (xa xb : array uint),
+  valid_input n ops elt_a elt_b ->
+  repr xn n -> repr xu ops -> repr xa elt_a -> repr xb elt_b ->
+  exists out : list bool,
+    repr (run_ops_impl xn xu xa xb) out /\ run_ops_spec n ops elt_a elt_b out.
+Proof.
+  intros n ops elt_a elt_b xn xu xa xb Hv Hn Hu Ha Hb.
+  destruct (run_ops_raw_correct n ops elt_a elt_b xn xu xa xb Hv Hn Hu Ha Hb)
+    as (raw & Hraw & RawLen & RawAnswers).
+  assert (Qval : (φ (PArray.length xu)) = Z.of_nat (List.length ops)).
+  { destruct Hu as [L _]. symmetry. exact L. }
+  assert (Qbound : ((φ (PArray.length xu)) <= 1000000)%Z).
+  { pose proof (vi_q _ _ _ _ Hv). unfold len in H. rewrite Qval. lia. }
+  pose proof (compact_queries_spec ops xu Hu Qbound (run_ops_raw xn xu xa xb)) as [Lr Pr].
+  set (r := compact_queries xu (run_ops_raw xn xu xa xb)) in *.
+  set (total := List.length (filter negb ops)) in *.
+  exists (map (fun i => r.[of_nat i]) (seq 0 total)).
+  assert (Hnth : forall i, (i < total)%nat ->
+    nth_error (map (fun i => r.[of_nat i]) (seq 0 total)) i = Some (r.[of_nat i])).
+  { intros i Hi. rewrite nth_error_map, nth_error_seq.
+    destruct (Nat.ltb_spec i total); [reflexivity|lia]. }
+  split.
+  - change (repr r (map (fun i => r.[of_nat i]) (seq 0 total))). split.
+    + rewrite length_map, length_seq. symmetry. exact Lr.
+    + intros i Hi. rewrite length_map, length_seq in Hi.
+      exists (r.[of_nat i]). split; [apply Hnth; exact Hi|reflexivity].
+  - split.
+    + unfold len, query_count. rewrite length_map, length_seq. reflexivity.
+    + intros k Hk Hquery.
+      set (i := N.to_nat k).
+      assert (Hi : (i < List.length ops)%nat) by (unfold i, len in *; lia).
+      assert (Ui : nth i ops false = false) by exact Hquery.
+      assert (Pi : (prefix_queries ops i < total)%nat).
+      { pose proof (prefix_queries_step ops i Hi) as Step. rewrite Ui in Step.
+        pose proof (prefix_queries_mono ops (S i) (List.length ops) ltac:(lia)) as Mono.
+        unfold prefix_queries at 2 in Mono. rewrite firstn_all in Mono. fold total in Mono. lia. }
+      set (j := of_nat i).
+      assert (Jval : (φ j) = Z.of_nat i).
+      { unfold j. rewrite of_Z_spec. apply Z.mod_small.
+        change wB with 9223372036854775808%Z. rewrite Qval in Qbound. lia. }
+      assert (Jq : ((φ j) < (φ (PArray.length xu)))%Z) by (rewrite Jval, Qval; lia).
+      assert (Jnat : Z.to_nat (φ j) = i) by (rewrite Jval, Nat2Z.id; reflexivity).
+      assert (Uj : xu.[j] = false).
+      { unfold j. rewrite (bool_repr_nth xu ops i Hu Hi). exact Ui. }
+      unfold answers_query, get_list_bool at 1.
+      assert (Index : N.to_nat (query_index ops k) = prefix_queries ops i).
+      { unfold query_index, query_count, len, prefix_queries, i. rewrite Nat2N.id. reflexivity. }
+      rewrite Index. erewrite nth_error_nth; [|apply Hnth; exact Pi].
+      replace (of_nat (prefix_queries ops i)) with (query_slot ops j)
+        by (unfold query_slot; rewrite Jnat; reflexivity).
+      rewrite (Pr j Jq Uj) at 1.
+      unfold j.
+      rewrite (bool_repr_nth (run_ops_raw xn xu xa xb) raw i Hraw) at 1.
+      * exact (RawAnswers k Hk Hquery).
+      * unfold len in RawLen. lia.
+Qed.
 
 Definition run_ops : uint -> array bool -> array uint -> array uint ->
                      array bool := run_ops_impl.

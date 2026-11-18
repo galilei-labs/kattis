@@ -21,4 +21,4 @@ archive = "cuboidslicinggame_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/cuboidslicinggame.ml"
-Rust = "extraction/rust/submit/cuboidslicinggame.rs"
+Rust = "extraction/rust/snapshots/cuboidslicinggame_extracted.rs.interface.json"

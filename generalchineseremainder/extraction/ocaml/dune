@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules generalchineseremainder_extracted_marray)
- (theories Generalchineseremainder Generalchineseremainder.spec Stdlib stdpp StdGalilei))
+ (theories Generalchineseremainder Generalchineseremainder.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name generalchineseremainder_extraction)

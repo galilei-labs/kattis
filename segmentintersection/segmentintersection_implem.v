@@ -23,12 +23,21 @@
    case: [line_seg], on a common line a segment is the lexicographic
    interval of its ends; degenerate and parallel cases directly), and
    [isect_m_repr] proves that the machine function computes it word for
-   word (Sint63.to_Z_add/sub/mul under the bounds of valid_input). *)
+   word (Sint63.to_Z_add/sub/mul under the bounds of valid_input).
+
+   Cost.  [Elpi complexity] translates andb, orb and every machine
+   function (callee first), then intersect.  No loop: one constant bound
+   per function, bottom-up (lexle_m/lexlt_m 30, finish_m 60, coll2_m 300,
+   coll1_m 400, coll_m 500, onseg_m 100, cross_fin_m 100, crossing_m 200,
+   isect_m 1500), each by cost_simpl, the callees' bounds generalized
+   ([call_bounds]) and a case split on every boolean ([bsplit]);
+   intersect_time with c = 1500. *)
 
 From Segmentintersection.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith Lia Bool Uint63.
 From Stdlib Require Sint63.
+From KattisLib Require Import Cost.
 Open Scope Z_scope.
 
 (* ------------------------------------------------------------------ *)
@@ -659,46 +668,67 @@ Qed.
 (* The program: the same algorithm on 63-bit words read through Sint63 *)
 (* ------------------------------------------------------------------ *)
 
+Elpi complexity andb.
+Elpi complexity orb.
+
 Section Machine.
   Local Open Scope uint63_scope.
 
   Definition lexle_m (ux uy vx vy : sint) : bool :=
     Sint63.ltb ux vx || ((ux =? vx) && Sint63.leb uy vy).
+  Elpi complexity lexle_m.
+  #[global] Arguments lexle_m_cost : simpl never.
   Definition lexlt_m (ux uy vx vy : sint) : bool :=
     Sint63.ltb ux vx || ((ux =? vx) && Sint63.ltb uy vy).
+  Elpi complexity lexlt_m.
+  #[global] Arguments lexlt_m_cost : simpl never.
 
   Definition finish_m (lox loy hix hiy : sint) : inter sint :=
     if lexlt_m lox loy hix hiy then Segment lox loy hix hiy
     else if (lox =? hix) && (loy =? hiy) then Point lox loy 1
     else Empty.
+  Elpi complexity finish_m.
+  #[global] Arguments finish_m_cost : simpl never.
 
   Definition coll2_m (p1x p1y p2x p2y p3x p3y p4x p4y : sint) : inter sint :=
     if lexle_m p1x p1y p3x p3y then
       (if lexle_m p2x p2y p4x p4y then finish_m p3x p3y p2x p2y else finish_m p3x p3y p4x p4y)
     else
       (if lexle_m p2x p2y p4x p4y then finish_m p1x p1y p2x p2y else finish_m p1x p1y p4x p4y).
+  Elpi complexity coll2_m.
+  #[global] Arguments coll2_m_cost : simpl never.
 
   Definition coll1_m (p1x p1y p2x p2y x3 y3 x4 y4 : sint) : inter sint :=
     if lexle_m x3 y3 x4 y4 then coll2_m p1x p1y p2x p2y x3 y3 x4 y4
     else coll2_m p1x p1y p2x p2y x4 y4 x3 y3.
+  Elpi complexity coll1_m.
+  #[global] Arguments coll1_m_cost : simpl never.
 
   Definition coll_m (x1 y1 x2 y2 x3 y3 x4 y4 : sint) : inter sint :=
     if lexle_m x1 y1 x2 y2 then coll1_m x1 y1 x2 y2 x3 y3 x4 y4
     else coll1_m x2 y2 x1 y1 x3 y3 x4 y4.
+  Elpi complexity coll_m.
+  #[global] Arguments coll_m_cost : simpl never.
 
   Definition onseg_m (ax ay bx by_ px py : sint) : bool :=
     ((bx - ax) * (py - ay) =? (by_ - ay) * (px - ax))
     && ((Sint63.leb ax px && Sint63.leb px bx) || (Sint63.leb bx px && Sint63.leb px ax))
     && ((Sint63.leb ay py && Sint63.leb py by_) || (Sint63.leb by_ py && Sint63.leb py ay)).
+  Elpi complexity onseg_m.
+  #[global] Arguments onseg_m_cost : simpl never.
 
   Definition cross_fin_m (x1 y1 rx ry den tn un : sint) : inter sint :=
     if Sint63.leb 0 tn && Sint63.leb tn den && Sint63.leb 0 un && Sint63.leb un den
     then Point (x1 * den + tn * rx) (y1 * den + tn * ry) den
     else Empty.
+  Elpi complexity cross_fin_m.
+  #[global] Arguments cross_fin_m_cost : simpl never.
 
   Definition crossing_m (x1 y1 rx ry den tn un : sint) : inter sint :=
     if Sint63.ltb den 0 then cross_fin_m x1 y1 rx ry (0 - den) (0 - tn) (0 - un)
     else cross_fin_m x1 y1 rx ry den tn un.
+  Elpi complexity crossing_m.
+  #[global] Arguments crossing_m_cost : simpl never.
 
   Definition isect_m (x1 y1 x2 y2 x3 y3 x4 y4 : sint) : inter sint :=
     let rx := x2 - x1 in let ry := y2 - y1 in
@@ -714,6 +744,8 @@ Section Machine.
       else if un =? 0 then coll_m x1 y1 x2 y2 x3 y3 x4 y4
       else Empty
     else crossing_m x1 y1 rx ry den (qx * sy - qy * sx) un.
+  Elpi complexity isect_m.
+  #[global] Arguments isect_m_cost : simpl never.
 End Machine.
 
 (* ------------------------------------------------------------------ *)
@@ -951,6 +983,8 @@ Qed.
 
 Definition intersect : sint -> sint -> sint -> sint -> sint -> sint -> sint -> sint
                        -> inter sint := isect_m.
+Elpi complexity intersect.
+Arguments intersect_cost : simpl never.
 
 Definition intersect_correct :
   forall (x1 y1 x2 y2 x3 y3 x4 y4 : Z)
@@ -962,3 +996,221 @@ Definition intersect_correct :
     repr (intersect a1 b1 a2 b2 a3 b3 a4 b4) r /\
     intersect_spec x1 y1 x2 y2 x3 y3 x4 y4 r
   := intersect_m_correct.
+
+(* ------------------------------------------------------------------ *)
+(* The cost bound                                                       *)
+(* ------------------------------------------------------------------ *)
+
+Ltac bsplit :=
+  repeat (cbn; match goal with
+  | |- context [match ?t with true => _ | false => _ end] => cost_destruct t
+  end); cbn; lia.
+
+Ltac zero_partials :=
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch T with forall _, _ => change (@cost T X) with 0%nat end end.
+Ltac gen_bound T X L :=
+  let H := fresh "Hk" in
+  pose proof (L : (@cost T X <= _)%nat) as H;
+  revert H; generalize (@cost T X); intros ? H.
+Ltac call_lemmas T X := fail.
+Ltac call_bounds :=
+  zero_partials;
+  repeat match goal with |- context [@cost ?T ?X] => call_lemmas T X end.
+
+Lemma andb_time a aC b bC : (cost (extract (andb_cost stepsCM a aC) b bC) <= 2)%nat.
+Proof. destruct aC; cbn; lia. Qed.
+Lemma orb_time a aC b bC : (cost (extract (orb_cost stepsCM a aC) b bC) <= 2)%nat.
+Proof. destruct aC; cbn; lia. Qed.
+
+Lemma lexle_m_time a aC b bC c cC d dC :
+  (cost (extract (extract (extract (lexle_m_cost stepsCM a aC) b bC) c cC) d dC) <= 30)%nat.
+Proof. unfold lexle_m_cost. cost_simpl. bsplit. Qed.
+
+
+Lemma lexlt_m_time a aC b bC c cC d dC :
+  (cost (extract (extract (extract (lexlt_m_cost stepsCM a aC) b bC) c cC) d dC) <= 30)%nat.
+Proof. unfold lexlt_m_cost. cost_simpl. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  end.
+
+Lemma finish_m_time a aC b bC c cC d dC :
+  (cost (extract (extract (extract (finish_m_cost stepsCM a aC) b bC) c cC) d dC) <= 60)%nat.
+Proof. unfold finish_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  end.
+
+
+Lemma coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) h hC) <= 300)%nat.
+Proof. unfold coll2_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  end.
+
+Lemma coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) h hC) <= 400)%nat.
+Proof. unfold coll1_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  end.
+
+Lemma coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) h hC) <= 500)%nat.
+Proof. unfold coll_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  end.
+
+Lemma onseg_m_time a aC b bC c cC d dC e eC f fC :
+  (cost (extract (extract (extract (extract (extract (onseg_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) <= 100)%nat.
+Proof. unfold onseg_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (onseg_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+      gen_bound T X (onseg_m_time a aC b bC c cC d dC e eC f fC)
+  end.
+
+Lemma cross_fin_m_time a aC b bC c cC d dC e eC f fC g gC :
+  (cost (extract (extract (extract (extract (extract (extract (cross_fin_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) <= 100)%nat.
+Proof. unfold cross_fin_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (onseg_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+      gen_bound T X (onseg_m_time a aC b bC c cC d dC e eC f fC)
+  | extract (extract (extract (extract (extract (extract (cross_fin_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+      gen_bound T X (cross_fin_m_time a aC b bC c cC d dC e eC f fC g gC)
+  end.
+
+Lemma crossing_m_time a aC b bC c cC d dC e eC f fC g gC :
+  (cost (extract (extract (extract (extract (extract (extract (crossing_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) <= 200)%nat.
+Proof. unfold crossing_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (onseg_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+      gen_bound T X (onseg_m_time a aC b bC c cC d dC e eC f fC)
+  | extract (extract (extract (extract (extract (extract (cross_fin_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+      gen_bound T X (cross_fin_m_time a aC b bC c cC d dC e eC f fC g gC)
+  | extract (extract (extract (extract (extract (extract (crossing_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+      gen_bound T X (crossing_m_time a aC b bC c cC d dC e eC f fC g gC)
+  end.
+
+Lemma isect_m_time a aC b bC c cC d dC e eC f fC g gC h hC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (isect_m_cost stepsCM a aC) b bC) c cC) d dC) e eC) f fC) g gC) h hC) <= 1500)%nat.
+Proof. unfold isect_m_cost. cost_simpl. call_bounds. bsplit. Qed.
+
+Ltac call_lemmas T X ::=
+  match X with
+  | extract (extract (extract (lexle_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexle_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (lexlt_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (lexlt_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (finish_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC =>
+      gen_bound T X (finish_m_time a aC b bC c cC d dC)
+  | extract (extract (extract (extract (extract (extract (extract (coll2_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll2_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll1_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll1_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (extract (extract (coll_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (coll_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  | extract (extract (extract (extract (extract (onseg_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+      gen_bound T X (onseg_m_time a aC b bC c cC d dC e eC f fC)
+  | extract (extract (extract (extract (extract (extract (cross_fin_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+      gen_bound T X (cross_fin_m_time a aC b bC c cC d dC e eC f fC g gC)
+  | extract (extract (extract (extract (extract (extract (crossing_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC =>
+      gen_bound T X (crossing_m_time a aC b bC c cC d dC e eC f fC g gC)
+  | extract (extract (extract (extract (extract (extract (extract (isect_m_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+      gen_bound T X (isect_m_time a aC b bC c cC d dC e eC f fC g gC h hC)
+  end.
+
+Theorem intersect_time : exists c : nat, forall x1_int y1_int x2_int y2_int x3_int y3_int x4_int y4_int : sint,
+  (cost8 intersect_cost x1_int y1_int x2_int y2_int x3_int y3_int x4_int y4_int <= c)%nat.
+Proof.
+  exists 1500%nat. intros. unfold cost8, intersect_cost. cost_simpl. call_bounds. lia.
+Qed.

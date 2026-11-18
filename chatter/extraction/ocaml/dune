@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules chatter_extracted_marray)
- (theories Chatter Chatter.spec Stdlib stdpp StdGalilei))
+ (theories Chatter Chatter.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name chatter_extraction)

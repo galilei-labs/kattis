@@ -6,9 +6,11 @@
  (rocq.theory
   (name Satisfiability.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Satisfiability)
  (modules satisfiability_implem)
- (theories Satisfiability.spec Stdlib stdpp StdGalilei))
+  (theories Satisfiability.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

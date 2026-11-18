@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Section count $k$ and sequence length $n$: $1 \le k \le n \le 500{,}000$.
-    - Entries in $[0, 10^{9}]$. *)
+    - Section count $k$ and sequence length $n$: $1 \le k \le n \le 5 \times 10^{5}$.
+    - Entries: $0 \le a_i \le 10^{9}$. *)
 
 (** ** Examples *)
 
@@ -35,49 +35,60 @@ Output:
                     bitwise AND of the bitwise ORs of the sections, over the
                     divisions of the circle integers into section_count
                     contiguous non-empty sections
+                    It runs in at most c1 * (n + 1) + c2 steps of the cost
+                    model on a valid input, n the number of integers (a
+                    fixed number of candidate bits, each tested by a
+                    constant number of passes over the unrolled circle), for
+                    two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side *)
-
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The circle integers read from position start :
-    integers[start], ..., integers[n-1], integers[0],
-    ..., integers[start-1]. *)
+(** Read the circular list [integers] beginning at the zero-based index [start],
+    wrapping at the end. *)
 Definition rotate (start : nat)
   (integers : list N) : list N :=
   skipn start integers ++ firstn start integers.
 
-(** The power of a section : the bitwise OR of its
-    integers. *)
-Definition power (section : list N) : N :=
-  fold_left N.lor section 0.
+(** Extend [accumulated] by taking the bitwise OR with each remaining integer. *)
+Fixpoint power_from (section : list N) (accumulated : N) : N :=
+  match section with
+  | [] => accumulated
+  | integer :: rest => power_from rest (N.lor accumulated integer)
+  end.
 
-(** The bitwise AND of the powers of the sections (0 for
-    no section, never relied on : there is at least
-    one). *)
+(** The bitwise OR of the integers in [section]. *)
+Definition power (section : list N) : N :=
+  power_from section 0.
+
+(** Extend [accumulated] by taking the bitwise AND with each remaining section's power. *)
+Fixpoint and_powers_from (sections : list (list N)) (accumulated : N) : N :=
+  match sections with
+  | [] => accumulated
+  | section :: rest => and_powers_from rest (N.land accumulated (power section))
+  end.
+
+(** The bitwise AND of the section powers. The empty list yields zero; valid
+    divisions always contain at least one section. *)
 Definition and_powers (sections : list (list N)) : N :=
   match sections with
   | [] => 0
   | first :: rest =>
-      fold_left
-        (fun accumulated section => N.land accumulated
-        (power section))
-        rest (power first)
+      and_powers_from rest (power first)
   end.
 
-(** sections divides the circle integers into
-    section_count contiguous non-empty sections : laid
-    end to end, they read the circle from some position. *)
+(** [sections] partitions the circular list [integers] into [section_count] nonempty
+    contiguous sections, beginning at some position on the circle. *)
 Definition division (integers : list N) (section_count : N)
   (sections : list (list N)) : Prop :=
   len sections = section_count /\
@@ -111,6 +122,12 @@ Definition best_and_spec (section_count : N)
     ->
     and_powers sections <= output.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n)$ steps, where $n$ is the number of input integers. *)
+Definition best_and_time_spec (c1 c2 n_integers steps : nat) : Prop :=
+  (steps <= c1 * (n_integers + 1) + c2)%nat.
+
 (** ** Interface *)
 
 (** Partition a circular sequence into a specified number of nonempty contiguous sections.
@@ -119,6 +136,13 @@ Definition best_and_spec (section_count : N)
     - Input [integers]: Values around the circle, in order.
     - Output [output]: The output is the maximum bitwise AND of section ORs over all partitions into the requested number of nonempty circular sections. *)
 Program best_and : uint -> array uint -> uint.
+
+(** [@example best_and]
+    - Sample: 1
+    - Input [section_count]: 2
+    - Input [integers]: [2; 3; 4; 1]
+    - Output [output]: 3
+*)
 
 (** ** Bridge *)
 
@@ -136,6 +160,23 @@ Specification best_and_correct :
   exists output : N,
     repr (best_and section_count_int integers_arr) output /\
     best_and_spec section_count integers output.
+
+(** ** Complexity *)
+
+(** [@hide] [best_and_cost] is the cost translation of [best_and] (the judge
+    recomputes it and compares) ... *)
+Complexity best_and_cost for best_and.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) + c2 steps of the cost model on a valid input, n the number of integers (a fixed number of candidate bits, each tested by a constant number of passes over the unrolled circle), for two constants
+    quantified before the inputs, on every valid input. [@requirement best_and_time_spec] *)
+Specification best_and_time : exists c1 c2 : nat,
+  forall (section_count : N) (integers : list N)
+  (section_count_int : uint)
+  (integers_arr : array uint),
+  valid_input section_count integers ->
+  repr section_count_int section_count
+  -> repr integers_arr integers ->
+  best_and_time_spec c1 c2 (size integers_arr) (cost2 best_and_cost section_count_int integers_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

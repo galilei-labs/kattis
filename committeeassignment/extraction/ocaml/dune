@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules committeeassignment_extracted_marray)
- (theories Committeeassignment Committeeassignment.spec Stdlib stdpp StdGalilei))
+ (theories Committeeassignment Committeeassignment.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name committeeassignment_extraction)

@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -17,21 +16,6 @@ pub type uint = u64;
 // Rocq: Primepower.primepower_implem.M
 pub fn M() -> u64 {
   1000000007u64
-}
-
-// Rocq: Primepower.primepower_implem.primepower
-// Variant: uncurried
-pub fn primepower() -> Rc<dyn Fn(u64, u64, u64) -> u64> {
-  let v0: fn(u64, u64, u64) -> u64 = primepower_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Primepower.primepower_implem.primepower
-pub fn primepower_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = primepower_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> = Rc::new(v0);
-  v1
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
@@ -82,13 +66,10 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Primepower.primepower_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -101,20 +82,17 @@ pub fn pow_loop_1(b: u64, e: u64, acc: u64) -> u64 {
 // Rocq: Primepower.primepower_implem.pow_loop (local: pow_loop)
 // Variant: uncurried, lifted
 pub fn pow_loop(b: u64, e: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(0u64, e);
-  match bdec(v13) {
+  let tmp = ltb(0u64, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v29 = mod_(mul(b, b), __rocq_global_104);
-      let v37 = lsr(e, 1u64);
-      let v42 = match is_even(e) {
-        true => {
-          acc
-        },
-        false => {
-          mod_(mul(acc, b), __rocq_global_104)
-        },
+      let tmp_1 = mod_(mul(b, b), __rocq_global_104);
+      let tmp_2 = lsr(e, 1u64);
+      let tmp_3 = if is_even(e) {
+        acc
+      } else {
+        mod_(mul(acc, b), __rocq_global_104)
       };
-      pow_loop(v29, v37, v42, ())
+      pow_loop(tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       acc
@@ -143,19 +121,15 @@ pub fn prod_loop_1(s: Rc<Array<u64>>, E: u64, L: u64, p: u64, acc: u64) -> u64 {
 // Rocq: Primepower.primepower_implem.prod_loop (local: prod_loop)
 // Variant: uncurried, lifted
 pub fn prod_loop(s: Rc<Array<u64>>, E: u64, L: u64, p: u64, acc: u64, _H: ()) -> u64 {
-  let v7 = &s;
-  let v10 = rocq_array::get::<u64>(&v7, p);
-  let v12 = 0u64;
-  let acc_ = match eqb(v10, v12) {
-    true => {
-      acc
-    },
-    false => {
-      mod_(mul(powmod(p, E), acc), __rocq_global_104)
-    },
+  let tmp = rocq_array::get::<u64>(&s, p);
+  let tmp_1 = 0u64;
+  let acc_ = if eqb(tmp, tmp_1) {
+    acc
+  } else {
+    mod_(mul(powmod(p, E), acc), __rocq_global_104)
   };
-  let v50 = ltb(L, p);
-  match bdec(v50) {
+  let tmp_2 = ltb(L, p);
+  match bdec(tmp_2) {
     sumbool::left => {
       prod_loop(s, E, L, sub(p, 1u64), acc_, ())
     },
@@ -187,15 +161,15 @@ pub fn cross_loop_1(i: u64, R: u64, j: u64, s: Rc<Array<u64>>) -> Rc<Array<u64>>
 // Rocq: Primepower.primepower_implem.cross_loop (local: cross_loop)
 // Variant: uncurried, lifted
 pub fn cross_loop(i: u64, R: u64, j: u64, s: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = leb(j, R);
-  match bdec(v12) {
+  let tmp = leb(j, R);
+  match bdec(tmp) {
     sumbool::left => {
       let j_ = add(j, i);
-      let v29 = ltb(j, j_);
-      match bdec(v29) {
+      let tmp_1 = ltb(j, j_);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v41 = rocq_array::set::<u64>(s, j, 0u64);
-          cross_loop(i, R, j_, v41, ())
+          let tmp_2 = rocq_array::set::<u64>(s, j, 0u64);
+          cross_loop(i, R, j_, tmp_2, ())
         },
         sumbool::right => {
           rocq_array::set::<u64>(s, j, 0u64)
@@ -217,24 +191,20 @@ pub fn sieve_loop_1(R: u64, i: u64, s: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Primepower.primepower_implem.sieve_loop (local: sieve_loop)
 // Variant: uncurried, lifted
 pub fn sieve_loop(R: u64, i: u64, s: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v17 = leb(mul(i, i), R);
-  match bdec(v17) {
+  let tmp = leb(mul(i, i), R);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = &s;
-      let v25 = rocq_array::get::<u64>(&v22, i);
-      let v27 = 0u64;
-      let s_ = match eqb(v25, v27) {
-        true => {
-          s
-        },
-        false => {
-          let v42 = mul(i, i);
-          cross_loop_1(i, R, v42, s)
-        },
+      let tmp_1 = rocq_array::get::<u64>(&s, i);
+      let tmp_2 = 0u64;
+      let s_ = if eqb(tmp_1, tmp_2) {
+        s
+      } else {
+        let tmp_3 = mul(i, i);
+        cross_loop_1(i, R, tmp_3, s)
       };
-      let v64 = add(i, 1u64);
-      let v70 = ltb(i, v64);
-      match bdec(v70) {
+      let tmp_4 = add(i, 1u64);
+      let tmp_5 = ltb(i, tmp_4);
+      match bdec(tmp_5) {
         sumbool::left => {
           sieve_loop(R, add(i, 1u64), s_, ())
         },
@@ -251,45 +221,21 @@ pub fn sieve_loop(R: u64, i: u64, s: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Primepower.primepower_implem.sieve
 pub fn sieve(R: u64) -> Rc<Array<u64>> {
-  let v18 = rocq_array::make::<u64>(add(R, 1u64), 1u64);
-  let v29 = rocq_array::set::<u64>(v18, 0u64, 0u64);
-  let v40 = rocq_array::set::<u64>(v29, 1u64, 0u64);
-  sieve_loop_1(R, 2u64, v40)
+  let tmp = rocq_array::make::<u64>(add(R, 1u64), 1u64);
+  let tmp_1 = rocq_array::set::<u64>(tmp, 0u64, 0u64);
+  let tmp_2 = rocq_array::set::<u64>(tmp_1, 1u64, 0u64);
+  sieve_loop_1(R, 2u64, tmp_2)
 }
 
 // Rocq: Primepower.primepower_implem.primepower_impl
 // Variant: uncurried
 pub fn primepower_impl(E: u64, L: u64, R: u64) -> u64 {
-  match ltb(R, L) {
-    true => {
-      1u64
-    },
-    false => {
-      let v18 = sieve(R);
-      prod_loop_1(v18, E, L, R, 1u64)
-    },
+  if ltb(R, L) {
+    1u64
+  } else {
+    let tmp = sieve(R);
+    prod_loop_1(tmp, E, L, R, 1u64)
   }
-}
-
-// Rocq: Primepower.primepower_implem.primepower_impl
-pub fn primepower_impl_curried(E: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> {
-  let v3 = {
-    move |L: u64| -> Rc<dyn Fn(u64) -> u64> {
-      let E = &E;
-      let v8 = Clone::clone(E);
-      let v11 = {
-        move |R: u64| -> u64 {
-          let v19 = Clone::clone(&v8);
-          let v21 = Clone::clone(&L);
-          primepower_impl(v19, v21, R)
-        }
-      };
-      let v27: Rc<dyn Fn(u64) -> u64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -440,11 +386,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64) -> u64> {
-  let v0: Rc<dyn Fn(u64, u64, u64) -> u64> = __rocq_global_428.with(Clone::clone);
-  v0
-}
 const __rocq_global_104: u64 = 1000000007u64;
-std::thread_local! { static __rocq_global_428: Rc<dyn Fn(u64, u64, u64) -> u64> = primepower(); }
-std::thread_local! { static __rocq_global_431: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> = primepower_curried(); }

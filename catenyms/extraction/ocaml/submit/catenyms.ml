@@ -936,10 +936,6 @@ type char63 = Uint63.t
 
 type string = Pstring.t
 
-(** val make0 : Uint63.t -> char63 -> string **)
-
-let make0 = Pstring.make
-
 (** val length0 : string -> Uint63.t **)
 
 let length0 = Pstring.length
@@ -1139,7 +1135,7 @@ let catenyms_impl x =
                  let (res, cnt) =
                    hier_loop x nxt n s head (make n (Uint63.of_int (0)))
                      (Uint63.of_int (0)) (Uint63.of_int (0))
-                     (make n (make0 (Uint63.of_int (0)) (Uint63.of_int (0))))
+                     (make n (Pstring.unsafe_of_string ""))
                      (Uint63.of_int (0))
                  in
                  if eqb cnt n then Some res else None

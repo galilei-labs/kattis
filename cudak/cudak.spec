@@ -12,7 +12,7 @@
 
     **Kattis Bounds**
     - Interval endpoints $a,b$: $1 \le a \le b < 10^{15}$.
-    - Target digit sum in $[1, 135]$; at least one matching integer exists. *)
+    - Target digit sum: $1 \le S \le 135$; at least one matching integer exists. *)
 
 (** ** Examples *)
 
@@ -37,41 +37,42 @@ Output:
                     target_sum, and which is the smallest of them.  The
                     answer is the pair (count, smallest); the input
                     guarantees that at least one such integer exists.
+                    It runs in at most c1 * (log2 B + 1) * (S + 1) + c2
+                    steps of the cost model on a valid input, B the upper
+                    bound and S the target digit sum (the digit table over
+                    the digits of B and the sums up to S, then two digit
+                    walks), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. *)
-
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** [digit_sum number total]: the decimal digits of
-    number add up to total (the last digit is number mod
-    10, the others are those of number / 10; 0 has digit
-    sum 0). *)
+(** [digit_sum number total] means that the decimal digits of [number] sum to
+    [total]. Zero has digit sum zero. *)
 Inductive digit_sum : N -> N -> Prop :=
 | digit_sum_zero : digit_sum 0 0
 | digit_sum_step : forall number total,
     0 < number -> digit_sum (number / 10) total ->
     digit_sum number (number mod 10 + total).
 
-(** candidate is one of the integers Bozo asks about: in
-    [lower_bound, upper_bound], digit sum target_sum. *)
+(** [candidate] lies in the inclusive interval from [lower_bound] to [upper_bound]
+    and has decimal digit sum [target_sum]. *)
 Definition qualifies
   (lower_bound upper_bound target_sum candidate : N)
     : Prop :=
   lower_bound <= candidate <= upper_bound
     /\ digit_sum candidate target_sum.
 
-(** Exactly amount integers satisfy property: they form
-    a duplicate-free list of length amount. *)
+(** Exactly [amount] distinct integers satisfy [property]. *)
 Definition count_is (property : N -> Prop)
   (amount : N) : Prop :=
   exists witnesses : list N, NoDup witnesses /\
@@ -113,6 +114,12 @@ Definition cudak_spec
          smallest <= candidate)
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((S+1)\log(U+2))$ steps, where $U$ is the upper bound and $S$ the target digit sum. *)
+Definition cudak_time_spec (c1 c2 n_upper_bound n_target_sum steps : nat) : Prop :=
+  (steps <= c1 * ((Nat.log2 (n_upper_bound) + 1) * (n_target_sum + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Count integers in an inclusive interval with a specified decimal digit sum, and return
@@ -122,6 +129,14 @@ Definition cudak_spec
     - Input [target_sum]: Required sum of decimal digits.
     - Output [output]: The output gives the number of integers in the inclusive interval with the required digit sum and the smallest such integer. *)
 Program cudak : uint -> uint -> uint -> uint * uint.
+
+(** [@example cudak]
+    - Sample: 1
+    - Input [lower_bound]: 1
+    - Input [upper_bound]: 9
+    - Input [target_sum]: 5
+    - Output [output]: (1, 5)
+*)
 
 (** ** Bridge *)
 
@@ -142,6 +157,24 @@ Specification cudak_correct :
       target_sum_int)
       output /\
     cudak_spec lower_bound upper_bound target_sum output.
+
+(** ** Complexity *)
+
+(** [@hide] [cudak_cost] is the cost translation of [cudak] (the judge
+    recomputes it and compares) ... *)
+Complexity cudak_cost for cudak.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (log2 B + 1) * (S + 1) + c2 steps of the cost model on a valid input, B the upper bound and S the target digit sum (the digit table over the digits of B and the sums up to S, then two digit walks), for two constants
+    quantified before the inputs, on every valid input. [@requirement cudak_time_spec] *)
+Specification cudak_time : exists c1 c2 : nat,
+  forall (lower_bound upper_bound target_sum : N)
+  (lower_bound_int upper_bound_int target_sum_int :
+  uint),
+  valid_input lower_bound upper_bound target_sum ->
+  repr lower_bound_int lower_bound
+  -> repr upper_bound_int upper_bound ->
+  repr target_sum_int target_sum ->
+  cudak_time_spec c1 c2 (size upper_bound_int) (size target_sum_int) (cost3 cudak_cost lower_bound_int upper_bound_int target_sum_int).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

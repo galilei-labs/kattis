@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules catenyms_extracted_marray)
- (theories Catenyms Catenyms.spec Stdlib stdpp StdGalilei))
+ (theories Catenyms Catenyms.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name catenyms_extraction)

@@ -3,9 +3,10 @@
 (** ** Description *)
 
 (** Count paths through a grid from a given bottom-row cell to a
-    destination. Each move goes north or follows the current cell's
-    horizontal arrow, avoiding obstacles. Return the count modulo 1000003,
-    distinguishing an unreachable destination.
+    castle. Each move goes north or follows the current cell's
+    horizontal arrow, avoiding obstacles. Return the count modulo $10^{6} + 3$,
+    distinguishing an unreachable castle. The map uses ~ for open water,
+    # for obstacles, @ for the castle, and > or < for horizontal currents.
 
     [@kattis helpfulcurrents]
     - Difficulty: 6.9
@@ -13,15 +14,15 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }300$ rows and $1\text{ to }50{,}000$ columns.
-    - Exactly one destination; the start is not an obstacle.
+    - Row count: $1 \le Y \le 300$; column count: $1 \le X \le 5 \times 10^{4}$.
+    - Exactly one castle; the start is not an obstacle.
     - Arrows stay within the grid and point to neither an obstacle nor an
       opposing arrow. *)
 
 (** ** Examples *)
 
 (** - Input convention: Grid dimensions and starting column, followed by rows using ~, #, @, > and <.
-    - Output convention: Path count modulo 1,000,003, or begin repairs if the destination is unreachable. *)
+    - Output convention: Path count modulo $10^{6} + 3$, or begin repairs if the castle is unreachable. *)
 (* Input:
 2 2 0
 >@
@@ -42,24 +43,28 @@ Output:
                     current ('>' east, '<' west) of the cell the ship is on.
                     It returns [Some (count mod 1000003)] when at least one
                     route exists and [None] ("begin repairs") when none does.
+                    It runs in at most c1 * (Y + 1) * (X + 1) + c2 steps of
+                    the cost model on a valid input, Y and X the dimensions
+                    of the map (one row of counts at a time, the chains
+                    propagated in two passes), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   String Ascii.
 From Stdlib Require PrimString.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The map is the list of its row_count rows, row 0 the
-    northernmost (the first line of the input), the ship starting on
-    row row_count - 1. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The character in column column of row row ('#' outside the map). *)
+(** The character at zero-based position [(row, column)] in [ocean_map], or the wall
+    marker outside the map. *)
 Definition cell (ocean_map : list string)
   (row column : N) : ascii :=
   match String.get (N.to_nat column)
@@ -68,7 +73,7 @@ Definition cell (ocean_map : list string)
   | None => "#"%char
   end.
 
-(** The [in_map] definition. *)
+(** The zero-based coordinates [row] and [column] are within the map dimensions. *)
 Definition in_map
   (row_count column_count row column : N) : Prop :=
   row < row_count /\ column < column_count.
@@ -76,10 +81,9 @@ Definition in_map
 (** A permitted step moves north or follows the current cell's horizontal arrow. *)
 Inductive move := North | Current.
 
-(** One move from (row, column): none from the castle, where the route
-    ends; north onto row row - 1 unless the ship is on row 0 or that
-    cell is '#'; along the current, east on '>' and west on '<',
-    none on any other cell. *)
+(** Apply one move from [(row, column)]. No move leaves the castle. North is allowed
+    only within the map and into a non-wall cell; horizontal movement follows the
+    current cell's arrow. *)
 Definition step (ocean_map : list string) (position : N * N)
     (direction : move) : option (N * N) :=
   let '(row, column) := position in
@@ -99,8 +103,8 @@ Definition step (ocean_map : list string) (position : N * N)
       else None
   end.
 
-(** The cell reached from position by the moves of moves, if every move
-    is possible. *)
+(** Follow [moves] from [position], returning the final cell if every move is
+    permitted. *)
 Fixpoint run (ocean_map : list string) (position : N * N)
     (moves : list move) : option (N * N) :=
   match moves with
@@ -112,8 +116,7 @@ Fixpoint run (ocean_map : list string) (position : N * N)
       end
   end.
 
-(** moves takes the ship from column start_column of the bottom row to
-    the castle. *)
+(** [moves] leads from [start_column] of the bottom row to the castle. *)
 Definition is_route (row_count start_column : N)
   (ocean_map : list string)
     (moves : list move) : Prop :=
@@ -123,7 +126,7 @@ Definition is_route (row_count start_column : N)
             cell ocean_map (fst arrival) (snd arrival) =
               "@"%char.
 
-(** There are exactly total routes. *)
+(** Exactly [total] distinct move sequences are valid routes to the castle. *)
 Definition route_count (row_count start_column : N)
     (ocean_map : list string) (total : N) : Prop :=
   exists routes, NoDup routes /\ len routes = total /\
@@ -136,7 +139,7 @@ Record valid_input (row_count column_count start_column : N)
     (ocean_map : list string) : Prop := {
   (* 0 < Y <= 300 (row_count) *)
   vi_Y : 0 < row_count <= 300;
-  (* 0 <= x_init < X <= 50 000 (start_column,
+  (* 0 <= x_init < X <= 5 * 10^4 (start_column,
      column_count) *)
   vi_X : start_column < column_count <= 50000;
   (* Then follow Y rows, each with X characters each *)
@@ -183,8 +186,8 @@ Record valid_input (row_count column_count start_column : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the number of permitted paths to the destination modulo 1,000,003, or
-    None exactly when no path exists. *)
+    The output is the number of permitted paths to the castle modulo $10^{6} + 3$,
+    or [None] exactly when no path exists. *)
 Definition helpfulcurrents_spec
   (row_count column_count start_column : N)
     (ocean_map : list string) (output : option N) : Prop :=
@@ -198,19 +201,34 @@ Definition helpfulcurrents_spec
         total_mod = total mod 1000003
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((r+1)(c+1))$ steps, where $r$ and $c$ are the map's row and column counts. *)
+Definition helpfulcurrents_time_spec (c1 c2 n_row_count n_column_count steps : nat) : Prop :=
+  (steps <= c1 * ((n_row_count + 1) * (n_column_count + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Count paths through a grid from a given bottom-row cell to a destination. Each move goes
+(** Count paths through a grid from a given bottom-row cell to the castle. Each move goes
     north or follows the current cell's horizontal arrow, avoiding obstacles. Return the
-    count modulo 1000003, distinguishing an unreachable destination.
+    count modulo $10^{6} + 3$, distinguishing an unreachable castle.
     - Input [row_count]: Number of grid rows.
     - Input [column_count]: Number of grid columns.
-    - Input [start_column]: Starting column on the bottom row.
-    - Input [ocean_map]: Grid containing open cells, obstacles, horizontal currents and the destination.
-    - Output [output]: The output is the number of permitted paths to the destination modulo 1,000,003, or None exactly when no path exists. *)
+    - Input [start_column]: Zero-based starting column on the bottom row.
+    - Input [ocean_map]: Rows from north to south; ~ is open water, # an obstacle, @ the castle, and > or < a horizontal current.
+    - Output [output]: Path count to the castle modulo $10^{6} + 3$, or [None] exactly when unreachable. *)
 Program helpfulcurrents :
   uint -> uint -> uint -> array PrimString.string ->
     option uint.
+
+(** [@example helpfulcurrents]
+    - Sample: 1
+    - Input [row_count]: 2
+    - Input [column_count]: 2
+    - Input [start_column]: 0
+    - Input [ocean_map]: [">@"; ">~"]%string
+    - Output [output]: Some 2
+*)
 
 (** ** Bridge *)
 
@@ -236,6 +254,28 @@ Specification helpfulcurrents_correct :
     helpfulcurrents_spec row_count column_count start_column
       ocean_map
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [helpfulcurrents_cost] is the cost translation of [helpfulcurrents] (the judge
+    recomputes it and compares) ... *)
+Complexity helpfulcurrents_cost for helpfulcurrents.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (Y + 1) * (X + 1) + c2 steps of the cost model on a valid input, Y and X the dimensions of the map (one row of counts at a time, the chains propagated in two passes), for two constants
+    quantified before the inputs, on every valid input. [@requirement helpfulcurrents_time_spec] *)
+Specification helpfulcurrents_time : exists c1 c2 : nat,
+  forall (row_count column_count start_column : N)
+  (ocean_map : list string)
+  (row_count_int column_count_int start_column_int :
+  uint)
+  (ocean_map_arr : array PrimString.string),
+  valid_input row_count column_count start_column ocean_map
+  ->
+  repr row_count_int row_count ->
+  repr column_count_int column_count ->
+  repr start_column_int start_column ->
+  repr ocean_map_arr ocean_map ->
+  helpfulcurrents_time_spec c1 c2 (size row_count_int) (size column_count_int) (cost4 helpfulcurrents_cost row_count_int column_count_int start_column_int ocean_map_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

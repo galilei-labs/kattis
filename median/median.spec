@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Sequence length: $1 \le n \le 10^{5}$, each in $[0, 10^{9}]$. *)
+    - Sequence length: $1 \le n \le 10^{5}$; each value: $0 \le a_i \le 10^{9}$. *)
 
 (** ** Examples *)
 
@@ -44,22 +44,17 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. The input is the list of the n integers, in input order.
-    The output is a float because the mean of two integers need not
-    be an integer (it is the real it denotes, exactly). The number
-    of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The element at 0-based position k of l, as a real (0 outside, never
-    relied on). *)
+(** The entry at zero-based index [k] in [l], embedded in the real numbers, or zero
+    beyond the end. *)
 Definition elem (l : list N) (k : N) : R :=
   IZR (Z.of_N (nth (N.to_nat k) l 0)).
 
-(** The median of a sorted list of value_count numbers: its element at
-    0-based position value_count / 2 when value_count is odd, the
-    mean of its elements at value_count / 2 - 1 and value_count / 2
-    when value_count is even. *)
+(** The median of [sorted_values]: the middle entry for an odd length, or the mean
+    of the two middle entries for an even length. *)
 Definition median_of_sorted (sorted_values : list N) : R :=
   let value_count := len sorted_values in
   if N.odd value_count then elem sorted_values (value_count
@@ -93,6 +88,12 @@ Definition median_spec (values : list N)
     - Input [values]: Integer values whose median is required.
     - Output [output]: The output is the exact median of the input values, averaging the two middle values when the sequence length is even. *)
 Program median : array uint -> float.
+
+(** [@example median]
+    - Sample: 1
+    - Input [values]: [5; 4; 3; 1; 6; 7; 2]
+    - Output [output]: 4%R
+*)
 
 (** ** Bridge *)
 

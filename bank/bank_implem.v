@@ -787,6 +787,14 @@ Definition cntb (l : list bool) : nat := List.length (filter (fun b => b) l).
 
 Definition sumN (l : list N) : N := fold_right N.add 0%N l.
 
+Lemma customer_cash_sum : forall c customers,
+  customer_cash c customers = sumN (map (Prelude.get c) customers).
+Proof.
+  intros c customers. induction customers as [|person rest IH];
+    cbn [customer_cash map sumN fold_right]; [reflexivity|].
+  rewrite IH. reflexivity.
+Qed.
+
 Fixpoint wsum (ws : list N) (bs : list bool) : N :=
   match ws, bs with
   | w :: ws', b :: bs' => ((if b then w else 0) + wsum ws' bs')%N
@@ -1590,7 +1598,7 @@ Proof.
       destruct (G2 _ _ Hk) as (A & B & C & _).
       split; [apply Hpin; exact C|].
       unfold Dl in B. lia.
-    + unfold value. fold (occ o 1 (Z.to_nat (Lz t c))). fold (sumN (map (Prelude.get c) (occ o 1 (Z.to_nat (Lz t c))))).
+    + unfold value. rewrite customer_cash_sum. fold (occ o 1 (Z.to_nat (Lz t c))).
       lia.
   - (* no schedule collects more *)
     intros s Hs.
@@ -1602,7 +1610,7 @@ Proof.
       apply In_served in Hi. destruct Hi as [k Hk]. destruct (Hsk k i Hk) as [Hic _].
       apply (Permutation_in _ (Permutation_sym Hperm)). apply in_map_iff.
       exists (N.to_nat i). split; [lia|]. apply in_seq. unfold len in Hic. lia. }
-    unfold value. fold (sumN (map (Prelude.get c) (served s))).
+    unfold value. rewrite customer_cash_sum.
     rewrite (sumN_perm _ _ (Permutation_map _ Hp)).
     rewrite <- wsum_filter.
     assert (Ab := abel (map (Prelude.get c) pl) (map (memS s) pl) bs 0 100000

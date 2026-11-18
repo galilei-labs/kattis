@@ -6,9 +6,11 @@
  (rocq.theory
   (name Roberthood.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Roberthood)
  (modules roberthood_implem)
- (theories Roberthood.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Roberthood.spec Stdlib stdpp StdGalilei Flocq KattisLib)
+  (generate_project_file))

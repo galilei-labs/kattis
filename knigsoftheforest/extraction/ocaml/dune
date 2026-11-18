@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules knigsoftheforest_extracted_marray)
- (theories Knigsoftheforest Knigsoftheforest.spec Stdlib stdpp StdGalilei))
+ (theories Knigsoftheforest Knigsoftheforest.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name knigsoftheforest_extraction)

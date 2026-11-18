@@ -148,6 +148,16 @@ val row_of :
   Marray.t -> Uint63.t Marray.t -> bool Marray.t -> bool Marray.t -> Uint63.t
   Marray.t -> Uint63.t -> Uint63.t answer Marray.t
 
+val apsp_rows :
+  Uint63.t -> Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t
+  Marray.t -> Uint63.t Marray.t -> bool Marray.t -> bool Marray.t -> Uint63.t
+  Marray.t -> Uint63.t answer Marray.t Marray.t
+
+val apsp_core :
+  Uint63.t -> Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t
+  Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t answer
+  Marray.t Marray.t
+
 val allpairspath_impl :
   Uint63.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t ->
   Uint63.t answer Marray.t Marray.t

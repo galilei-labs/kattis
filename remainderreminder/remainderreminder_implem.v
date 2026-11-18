@@ -16,11 +16,21 @@
    Everything is Uint63 [int]; no Z, no N, no list, no array.
 
    Termination: [scan] on an erased [Acc (Zwf 0) (gap m x)], [egcd] on an
-   erased [Acc (Zwf 0) (φ r1)] (the remainder decreases); no nat, no fuel. *)
+   erased [Acc (Zwf 0) (meas r1)], meas r1 = φ r1 (the remainder decreases); no nat, no fuel.
+
+   Cost: [Elpi complexity] on sumbool, bdec, vol, upd, scan,
+   egcd, merge, lift, rr_impl, remainderreminder (callee first).  vol and
+   upd cost at most 20 and 60 steps; scan from x at most
+   200 * (gap m x) + 10 (scan_time); egcd at most 100 * k + 200 when
+   r0 * r1 < 2^k (the product of consecutive remainders halves per step),
+   hence at most 128 * 100 on any two words (k = 126); merge at most
+   130 * 100; lift 20.  remainderreminder_time: c1 = 200, c2 = 30000
+   (the bound holds on every input, the premises are not used). *)
 
 From Remainderreminder.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith Uint63 ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 
 Open Scope uint63_scope.
 
@@ -38,6 +48,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -49,10 +61,14 @@ Proof.
   unfold Zwf, gap. lia.
 Qed.
 
+(* the termination measure of [egcd], named and opaque to cbn (cost proofs) *)
+Definition meas (r : int) : Z := φ r.
+Arguments meas : simpl never.
+
 Lemma mod_dec : forall r0 r1 : int,
-  (r1 =? 0) = false -> Zwf 0 (φ (r0 mod r1)) (φ r1).
+  (r1 =? 0) = false -> Zwf 0 (meas (r0 mod r1)) (meas r1).
 Proof.
-  intros r0 r1 H. rewrite eqb_false_spec in H.
+  intros r0 r1 H. unfold meas. rewrite eqb_false_spec in H.
   assert (H1 : (φ r1) <> 0%Z) by (intro E; apply H; apply to_Z_inj; exact E).
   pose proof (to_Z_bounded r0). pose proof (to_Z_bounded r1).
   unfold Zwf. rewrite mod_spec.
@@ -65,6 +81,7 @@ Qed.
 
 (* The volume of the box folded with x-by-x corner cuts. *)
 Definition vol (a b x : int) : int := x * (a - 2 * x) * (b - 2 * x).
+Elpi complexity vol.
 
 (* Insert volume v into the triple t1 > t2 > t3 of the largest distinct
    volumes (0 = absent). *)
@@ -76,6 +93,7 @@ Definition upd (t : int * int * int) (v : int) : int * int * int :=
   else if v =? t2 then t
   else if t3 <? v then (t1, t2, v)
   else t.
+Elpi complexity upd.
 
 (* Cuts x, x+1, ..., m-1. *)
 Fixpoint scan (a b m x : int) (t : int * int * int)
@@ -84,6 +102,7 @@ Fixpoint scan (a b m x : int) (t : int * int * int)
   | left Hx => scan a b m (x + 1) (upd t (vol a b x)) (Acc_inv H (dec_step m x Hx))
   | right _ => t
   end.
+Elpi complexity scan.
 
 Lemma scan_eq : forall a b m x t H,
   scan a b m x t H =
@@ -95,7 +114,7 @@ Proof. intros. destruct H. reflexivity. Qed.
 
 (* Extended Euclid on (r0, r1), the coefficients si with
    ri = si * m1 (mod m), kept in [0, m). *)
-Fixpoint egcd (m r0 s0 r1 s1 : int) (H : Acc (Zwf 0) (φ r1)) {struct H}
+Fixpoint egcd (m r0 s0 r1 s1 : int) (H : Acc (Zwf 0) (meas r1)) {struct H}
     : int * int :=
   match bdec (r1 =? 0) with
   | left _ => (r0, s0)
@@ -103,6 +122,7 @@ Fixpoint egcd (m r0 s0 r1 s1 : int) (H : Acc (Zwf 0) (φ r1)) {struct H}
       egcd m r1 s1 (r0 mod r1) ((s0 + m - (r0 / r1) mod m * s1 mod m) mod m)
         (Acc_inv H (mod_dec r0 r1 Hn))
   end.
+Elpi complexity egcd.
 
 Lemma egcd_eq : forall m r0 s0 r1 s1 H,
   egcd m r0 s0 r1 s1 H =
@@ -117,15 +137,17 @@ Proof. intros. destruct H. reflexivity. Qed.
 (* n = r1 (mod m1) and n = r2 (mod m2)  into  n = r (mod l);
    (0, 0) when the pair is incompatible. *)
 Definition merge (r1 m1 r2 m2 : int) : int * int :=
-  let '(g, s) := egcd m2 m1 (1 mod m2) m2 0 (Zwf_well_founded 0 (φ m2)) in
+  let '(g, s) := egcd m2 m1 (1 mod m2) m2 0 (Zwf_well_founded 0 (meas m2)) in
   let dd := (r2 + m2 - r1 mod m2) mod m2 in
   if dd mod g =? 0 then
     let m2' := m2 / g in
     (r1 + m1 * ((dd / g * s) mod m2'), m1 * m2')
   else (0, 0).
+Elpi complexity merge.
 
 (* The least n >= f with n = r (mod l). *)
 Definition lift (f r l : int) : int := f + (r + l - f mod l) mod l.
+Elpi complexity lift.
 
 Definition rr_impl (a b c d e f g : uint) : uint :=
   let m := (a + 1) / 2 in
@@ -133,6 +155,7 @@ Definition rr_impl (a b c d e f g : uint) : uint :=
   let '(r12, l12) := merge c v1 d v2 in
   let '(r, l) := merge r12 l12 e v3 in
   lift f r l.
+Elpi complexity rr_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Uint63 arithmetic                                                   *)
@@ -371,7 +394,7 @@ Proof.
 Qed.
 
 Lemma egcd_spec : forall (M1 : Z) (m : int), 0 < (φ m) < 2 ^ 30 ->
-  forall (z : Z) (r0 s0 r1 s1 : int) (H : Acc (Zwf 0) (φ r1)),
+  forall (z : Z) (r0 s0 r1 s1 : int) (H : Acc (Zwf 0) (meas r1)),
   (φ r1) = z -> (φ s0) < (φ m) -> (φ s1) < (φ m) ->
   ((φ m) | (φ r0) - (φ s0) * M1) -> ((φ m) | (φ r1) - (φ s1) * M1) ->
   (φ (fst (egcd m r0 s0 r1 s1 H))) = Z.gcd (φ r0) (φ r1) /\
@@ -560,10 +583,10 @@ Proof.
   assert (D1 : ((φ m2) | (φ m2) - (φ 0)%uint63 * (φ m1)))
     by (change ((φ 0)%uint63) with 0; exists 1; ring).
   destruct (egcd_spec (φ m1) m2 Hm2 _ m1 (1 mod m2)%uint63 m2 0%uint63
-              (Zwf_well_founded 0 (φ m2)) eq_refl B1 ltac:(change ((φ 0)%uint63) with 0; lia)
+              (Zwf_well_founded 0 (meas m2)) eq_refl B1 ltac:(change ((φ 0)%uint63) with 0; lia)
               D0 D1) as (G1 & G2 & G3).
   unfold merge in Em.
-  destruct (egcd m2 m1 (1 mod m2) m2 0 (Zwf_well_founded 0 (φ m2)))%uint63
+  destruct (egcd m2 m1 (1 mod m2) m2 0 (Zwf_well_founded 0 (meas m2)))%uint63
     as [g s] eqn:Eg.
   cbn [fst snd] in G1, G2, G3.
   pose proof (phi_ge0 s).
@@ -761,6 +784,7 @@ Qed.
 
 Definition remainderreminder :
   uint -> uint -> uint -> uint -> uint -> uint -> uint -> uint := rr_impl.
+Elpi complexity remainderreminder.
 
 Definition remainderreminder_correct :
   forall (a b c d e f g : N) (xa xb xc xd xe xf xg : uint),
@@ -770,3 +794,317 @@ Definition remainderreminder_correct :
   exists o : N, repr (remainderreminder xa xb xc xd xe xf xg) o /\
                 remainderreminder_spec a b c d e f g o
   := rr_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Complexity                                                          *)
+(* ------------------------------------------------------------------ *)
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+Arguments bdec_cost : simpl never.
+
+Lemma vol_time a aC b bC x xC :
+  (cost (extract (extract (vol_cost stepsCM a aC) b bC) x xC) <= 20)%nat.
+Proof. unfold vol_cost. cost_simpl. lia. Qed.
+Lemma vol_layers a aC b bC :
+  cost (vol_cost stepsCM a aC) = 0%nat /\ cost (extract (vol_cost stepsCM a aC) b bC) = 0%nat.
+Proof. split; reflexivity. Qed.
+Arguments vol_cost : simpl never.
+
+Lemma upd_time t tC v vC :
+  (cost (extract (upd_cost stepsCM t tC) v vC) <= 60)%nat.
+Proof.
+  destruct tC as [p pC t3 t3C]. destruct pC as [t1 t1C t2 t2C].
+  unfold upd_cost. cost_simpl.
+  cost_destruct (t1 <? v)%uint63; cost_simpl; [lia|].
+  cost_destruct (v =? t1)%uint63; cost_simpl; [lia|].
+  cost_destruct (t2 <? v)%uint63; cost_simpl; [lia|].
+  cost_destruct (v =? t2)%uint63; cost_simpl; [lia|].
+  cost_destruct (t3 <? v)%uint63; cost_simpl; lia.
+Qed.
+Lemma upd_layer t tC : cost (upd_cost stepsCM t tC) = 0%nat.
+Proof. reflexivity. Qed.
+Arguments upd_cost : simpl never.
+
+(* the costs of the callees in the goal, bounded *)
+Ltac callee_bounds :=
+  repeat match goal with
+  | |- context [cost (extract (extract (vol_cost stepsCM ?a ?aC) ?b ?bC) ?x ?xC)] =>
+      lazymatch goal with _ : (cost (extract (extract (vol_cost stepsCM a aC) b bC) x xC) <= _)%nat |- _ => fail | _ => idtac end;
+      let h := fresh "HV" in pose proof (vol_time a aC b bC x xC) as h; cost_align h;
+      change (cost (vol_cost stepsCM a aC)) with 0%nat;
+      change (cost (extract (vol_cost stepsCM a aC) b bC)) with 0%nat
+  | |- context [cost (extract (upd_cost stepsCM ?t ?tC) ?v ?vC)] =>
+      lazymatch goal with _ : (cost (extract (upd_cost stepsCM t tC) v vC) <= _)%nat |- _ => fail | _ => idtac end;
+      let h := fresh "HU" in pose proof (upd_time t tC v vC) as h; cost_align h;
+      change (cost (upd_cost stepsCM t tC)) with 0%nat
+  end.
+
+Lemma gap_pos m x : (x <? m)%uint63 = true -> (0 < gap m x)%Z.
+Proof. intros H. apply ltb_spec in H. unfold gap. lia. Qed.
+
+Arguments gap : simpl never.
+
+Lemma scan_time a aC b bC m mC x xC t tC H HC k :
+  (Z.to_nat (gap m x) <= k)%nat ->
+  (cost (extract (extract (extract (extract (extract
+     (scan_cost stepsCM a aC) b bC) m mC) x xC) t tC) H HC) <= k * 200 + 10)%nat.
+Proof.
+  unfold scan_cost. cbn.
+  match goal with |- context [@cost ?T (?G a aC b bC m mC x xC t tC H HC)] =>
+    assert (HG : forall j x xC t tC H HC,
+       (Z.to_nat (gap m x) <= j)%nat ->
+       (cost (G a aC b bC m mC x xC t tC H HC) <= j * 200 + 10)%nat) end.
+  { clear x xC t tC H HC. induction j as [|j IH]; intros x' xC' t' tC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (x' <? m)%uint63 (bool_w (x' <? m)%uint63)) as HB;
+      cost_destruct (bdec (x' <? m)%uint63); cost_simpl.
+    all: callee_bounds.
+    - exfalso. pose proof (gap_pos m x' e). lia.
+    - lia.
+    - pose proof (dec_step m x' e) as D. unfold Zwf in D. pose proof (gap_pos m x' e).
+      assert (Hk' : (Z.to_nat (gap m (x' + 1)) <= j)%nat) by lia.
+      match goal with |- context [@cost ?T (?G' a aC b bC m mC (x' + 1)%uint63 ?w1 ?t1 ?w2 ?h ?e)] =>
+        assert (HI : (@cost T (G' a aC b bC m mC (x' + 1)%uint63 w1 t1 w2 h e) <= j * 200 + 10)%nat)
+          by exact (IH (x' + 1)%uint63 w1 t1 w2 h e Hk') end.
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G a aC b bC m mC x xC t tC H HC)] =>
+    exact (HG _ x xC t tC H HC : _ -> (@cost T (G a aC b bC m mC x xC t tC H HC) <= _)%nat) end.
+Qed.
+
+Arguments scan_cost : simpl never.
+
+Lemma eqb0_false (r : int) : (r =? 0)%uint63 = false -> φ r <> 0%Z.
+Proof.
+  intros H E. assert (r = 0%uint63) by (apply to_Z_inj; exact E). subst. discriminate.
+Qed.
+
+Lemma mod_half (a b : Z) : (0 < b <= a -> 2 * (a mod b) <= a)%Z.
+Proof.
+  intros Hb. pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  pose proof (Z.div_mod a b ltac:(lia)).
+  assert (1 <= a / b)%Z by (apply Z.div_le_lower_bound; lia).
+  nia.
+Qed.
+
+Lemma halve (a b : Z) (k : nat) : (0 < b <= a)%Z ->
+  (a * b < 2 ^ Z.of_nat (S k))%Z -> (b * (a mod b) < 2 ^ Z.of_nat k)%Z.
+Proof.
+  intros Hb Hlt. pose proof (mod_half a b Hb). pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  rewrite Nat2Z.inj_succ, Z.pow_succ_r in Hlt by lia. nia.
+Qed.
+
+Lemma egcd_ord_time m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC k :
+  (φ r1 <= φ r0)%Z -> (φ r0 * φ r1 < 2 ^ Z.of_nat k)%Z ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_cost stepsCM m mC) r0 r0C) s0 s0C) r1 r1C) s1 s1C) H HC)
+     <= k * 100 + 100)%nat.
+Proof.
+  unfold egcd_cost. cbn.
+  match goal with |- context [@cost ?T (?G m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC)] =>
+    assert (HG : forall j r0 r0C s0 s0C r1 r1C s1 s1C H HC,
+       (φ r1 <= φ r0)%Z -> (φ r0 * φ r1 < 2 ^ Z.of_nat j)%Z ->
+       (cost (G m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC) <= j * 100 + 100)%nat) end.
+  { clear H HC. induction j as [|j IH]; intros r0' r0C' s0' s0C' r1' r1C' s1' s1C' [g] HC' Hle Hlt;
+      cost_simpl;
+      pose proof (bdec_time (r1' =? 0)%uint63 (bool_w (r1' =? 0)%uint63)) as HB;
+      cost_destruct (bdec (r1' =? 0)%uint63); cost_simpl.
+    - lia.
+    - exfalso. pose proof (to_Z_bounded r1'). pose proof (to_Z_bounded r0').
+      pose proof (eqb0_false r1' e).
+      change (2 ^ Z.of_nat 0)%Z with 1%Z in Hlt. nia.
+    - lia.
+    - pose proof (to_Z_bounded r1'). pose proof (to_Z_bounded r0').
+      pose proof (eqb0_false r1' e).
+      assert (Hle' : (φ (r0' mod r1') <= φ r1')%Z).
+      { rewrite Uint63.mod_spec. pose proof (Z.mod_pos_bound (φ r0') (φ r1')). lia. }
+      assert (Hlt' : (φ r1' * φ (r0' mod r1') < 2 ^ Z.of_nat j)%Z).
+      { rewrite Uint63.mod_spec. apply halve; [lia|exact Hlt]. }
+      match goal with |- context [@cost ?T (?G' m mC r1' ?w1 s1' ?w2 (r0' mod r1')%uint63 ?w3 ?s ?w4 ?h ?e)] =>
+        assert (HI : (@cost T (G' m mC r1' w1 s1' w2 (r0' mod r1')%uint63 w3 s w4 h e) <= j * 100 + 100)%nat)
+          by exact (IH r1' w1 s1' w2 (r0' mod r1')%uint63 w3 s w4 h e Hle' Hlt') end.
+      lia. }
+  match goal with |- context [@cost ?T (?G m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC)] =>
+    exact (HG _ r0 r0C s0 s0C r1 r1C s1 s1C H HC : _ -> _ -> (@cost T (G m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC) <= _)%nat) end.
+Qed.
+
+(* Any order: one step brings r1 <= r0 back (r0 mod r1 = r0 when r0 < r1). *)
+Lemma egcd_time m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC k :
+  (φ r0 * φ r1 < 2 ^ Z.of_nat k)%Z ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_cost stepsCM m mC) r0 r0C) s0 s0C) r1 r1C) s1 s1C) H HC)
+     <= k * 100 + 200)%nat.
+Proof.
+  intros Hlt. destruct (Z.le_gt_cases (φ r1) (φ r0)) as [Hle|Hgt].
+  { pose proof (egcd_ord_time m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC k Hle Hlt). lia. }
+  pose proof (to_Z_bounded r1). pose proof (to_Z_bounded r0).
+  assert (Hm : φ (r0 mod r1) = φ r0).
+  { rewrite Uint63.mod_spec. apply Z.mod_small. lia. }
+  destruct H as [g].
+  unfold egcd_cost. cost_simpl.
+  pose proof (bdec_time (r1 =? 0)%uint63 (bool_w (r1 =? 0)%uint63)) as HB.
+  cost_destruct (bdec (r1 =? 0)%uint63); cost_simpl.
+  - lia.
+  - assert (Hle' : (φ (r0 mod r1) <= φ r1)%Z) by lia.
+    assert (Hlt' : (φ r1 * φ (r0 mod r1) < 2 ^ Z.of_nat k)%Z) by (rewrite Hm; lia).
+    match goal with |- context [@cost ?T (?G' m mC r1 ?w1 s1 ?w2 (r0 mod r1)%uint63 ?w3 ?s ?w4 ?h ?e)] =>
+      assert (HI : (@cost T (G' m mC r1 w1 s1 w2 (r0 mod r1)%uint63 w3 s w4 h e) <= k * 100 + 100)%nat)
+        by exact (egcd_ord_time m mC r1 w1 s1 w2 (r0 mod r1)%uint63 w3 s w4 h e k Hle' Hlt') end.
+    lia.
+Qed.
+
+Lemma prod_wB (x y : int) : (φ x * φ y < 2 ^ Z.of_nat 126)%Z.
+Proof.
+  pose proof (to_Z_bounded x). pose proof (to_Z_bounded y).
+  change (2 ^ Z.of_nat 126)%Z with (wB * wB)%Z.
+  assert (0 < wB)%Z by (rewrite wB_val; lia). nia.
+Qed.
+
+(* every Euclid run on two words: at most 126 halvings of the product *)
+Lemma egcd_const m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC :
+  (cost (extract (extract (extract (extract (extract
+     (egcd_cost stepsCM m mC) r0 r0C) s0 s0C) r1 r1C) s1 s1C) H HC)
+     <= 128 * 100)%nat.
+Proof. pose proof (egcd_time m mC r0 r0C s0 s0C r1 r1C s1 s1C H HC 126 (prod_wB r0 r1)). lia. Qed.
+
+Arguments egcd_cost : simpl never.
+
+(* the layers of a call to egcd before the last cost nothing; the last is
+   bounded by egcd_const and named *)
+Ltac egcd_bound :=
+  repeat match goal with
+  | |- context [cost (egcd_cost stepsCM ?m ?mC)] =>
+      change (cost (egcd_cost stepsCM m mC)) with 0%nat
+  | |- context [cost (extract (egcd_cost stepsCM ?m ?mC) ?a ?aC)] =>
+      change (cost (extract (egcd_cost stepsCM m mC) a aC)) with 0%nat
+  | |- context [cost (extract (extract (egcd_cost stepsCM ?m ?mC) ?a ?aC) ?b ?bC)] =>
+      change (cost (extract (extract (egcd_cost stepsCM m mC) a aC) b bC)) with 0%nat
+  | |- context [cost (extract (extract (extract (egcd_cost stepsCM ?m ?mC) ?a ?aC) ?b ?bC) ?c ?cC)] =>
+      change (cost (extract (extract (extract (egcd_cost stepsCM m mC) a aC) b bC) c cC)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (egcd_cost stepsCM ?m ?mC) ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC)] =>
+      change (cost (extract (extract (extract (extract (egcd_cost stepsCM m mC) a aC) b bC) c cC) d dC)) with 0%nat
+  end;
+  match goal with |- context [@cost ?T (extract (extract (extract (extract (extract (egcd_cost stepsCM ?m ?mC) ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?h ?hC)] =>
+    let HE := fresh "HE" in
+    assert (HE : (@cost T (extract (extract (extract (extract (extract (egcd_cost stepsCM m mC) a aC) b bC) c cC) d dC) h hC) <= 128 * 100)%nat)
+      by exact (egcd_const m mC a aC b bC c cC d dC h hC);
+    let CE := fresh "CE" in
+    set (CE := @cost T (extract (extract (extract (extract (extract (egcd_cost stepsCM m mC) a aC) b bC) c cC) d dC) h hC)) in *;
+    clearbody CE
+  end.
+
+Lemma merge_time r1 r1C m1 m1C r2 r2C m2 m2C :
+  (cost (extract (extract (extract (merge_cost stepsCM r1 r1C) m1 m1C) r2 r2C) m2 m2C)
+     <= 130 * 100)%nat.
+Proof.
+  remember (130 * 100)%nat as K eqn:EK.
+  unfold merge_cost. cost_simpl.
+  egcd_bound.
+  cost_destruct_witness (egcd m2 m1 (1 mod m2) m2 0 (Zwf_well_founded 0 (meas m2))) as [g gC s sC] eqn:E.
+  cost_simpl.
+  cost_destruct ((((r2 + m2 - r1 mod m2) mod m2) mod g =? 0)%uint63); cost_simpl; lia.
+Qed.
+Lemma merge_layers r1 r1C m1 m1C r2 r2C :
+  cost (merge_cost stepsCM r1 r1C) = 0%nat /\ cost (extract (merge_cost stepsCM r1 r1C) m1 m1C) = 0%nat
+  /\ cost (extract (extract (merge_cost stepsCM r1 r1C) m1 m1C) r2 r2C) = 0%nat.
+Proof. repeat split. Qed.
+Arguments merge_cost : simpl never.
+
+Ltac merge_bound :=
+  repeat match goal with
+  | |- context [cost (merge_cost stepsCM ?a ?aC)] =>
+      change (cost (merge_cost stepsCM a aC)) with 0%nat
+  | |- context [cost (extract (merge_cost stepsCM ?a ?aC) ?b ?bC)] =>
+      change (cost (extract (merge_cost stepsCM a aC) b bC)) with 0%nat
+  | |- context [cost (extract (extract (merge_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC)] =>
+      change (cost (extract (extract (merge_cost stepsCM a aC) b bC) c cC)) with 0%nat
+  end;
+  match goal with |- context [@cost ?T (extract (extract (extract (merge_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC)] =>
+    let HM := fresh "HM" in
+    assert (HM : (@cost T (extract (extract (extract (merge_cost stepsCM a aC) b bC) c cC) d dC) <= 130 * 100)%nat)
+      by exact (merge_time a aC b bC c cC d dC);
+    let CM := fresh "CM" in
+    set (CM := @cost T (extract (extract (extract (merge_cost stepsCM a aC) b bC) c cC) d dC)) in *;
+    clearbody CM
+  end.
+
+Lemma lift_time f fC r rC l lC :
+  (cost (extract (extract (lift_cost stepsCM f fC) r rC) l lC) <= 20)%nat.
+Proof. unfold lift_cost. cost_simpl. lia. Qed.
+Arguments lift_cost : simpl never.
+
+Lemma half_le (a : int) : (Z.to_nat (gap ((a + 1) / 2) 1) <= Z.to_nat (φ a))%nat.
+Proof.
+  unfold gap. pose proof (to_Z_bounded a).
+  rewrite div_spec, add_spec. change (φ 1) with 1%Z. change (φ 2) with 2%Z.
+  destruct (Z.eq_dec (φ a + 1) wB) as [E|E].
+  - rewrite E, Z.mod_same by (rewrite wB_val; lia). cbn. lia.
+  - rewrite Z.mod_small by lia. Z.to_euclidean_division_equations; lia.
+Qed.
+
+Lemma rr_time a b c d e f g :
+  (cost7 remainderreminder_cost a b c d e f g <= size a * 200 + 300 * 100)%nat.
+Proof.
+  remember (size a * 200 + 300 * 100)%nat as R eqn:ER.
+  pose proof (half_le a) as Hh.
+  change (size a) with (Z.to_nat (φ a)) in ER.
+  unfold cost7, remainderreminder_cost. cbn. unfold rr_impl_cost. cost_simpl.
+  (* the scan *)
+  repeat match goal with
+  | |- context [cost (scan_cost stepsCM ?a ?aC)] =>
+      change (cost (scan_cost stepsCM a aC)) with 0%nat
+  | |- context [cost (extract (scan_cost stepsCM ?a ?aC) ?b ?bC)] =>
+      change (cost (extract (scan_cost stepsCM a aC) b bC)) with 0%nat
+  | |- context [cost (extract (extract (scan_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC)] =>
+      change (cost (extract (extract (scan_cost stepsCM a aC) b bC) c cC)) with 0%nat
+  | |- context [cost (extract (extract (extract (scan_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC)] =>
+      change (cost (extract (extract (extract (scan_cost stepsCM a aC) b bC) c cC) d dC)) with 0%nat
+  | |- context [cost (extract (extract (extract (extract (scan_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC)] =>
+      change (cost (extract (extract (extract (extract (scan_cost stepsCM a aC) b bC) c cC) d dC) e eC)) with 0%nat
+  end.
+  match goal with |- context [@cost ?T (extract (extract (extract (extract (extract (scan_cost stepsCM ?a ?aC) ?b ?bC) ?m ?mC) ?x ?xC) ?t ?tC) ?h ?hC)] =>
+    assert (HS : (@cost T (extract (extract (extract (extract (extract (scan_cost stepsCM a aC) b bC) m mC) x xC) t tC) h hC) <= Z.to_nat (φ a) * 200 + 10)%nat)
+      by exact (scan_time a aC b bC m mC x xC t tC h hC _ Hh);
+    set (CS := @cost T (extract (extract (extract (extract (extract (scan_cost stepsCM a aC) b bC) m mC) x xC) t tC) h hC)) in *;
+    clearbody CS
+  end.
+  cost_destruct_witness (scan a b ((a + 1) / 2) 1 (0, 0, 0) (Zwf_well_founded 0 (gap ((a + 1) / 2) 1)))%uint63
+    as [p pC v3 v3C] eqn:Es.
+  destruct pC as [v1 v1C v2 v2C].
+  cost_simpl. merge_bound.
+  cost_destruct_witness (merge c v1 d v2) as [r12 r12C l12 l12C] eqn:E1.
+  cost_simpl. merge_bound.
+  cost_destruct_witness (merge r12 l12 e v3) as [r rC l lC] eqn:E2.
+  cost_simpl.
+  change (cost (lift_cost stepsCM f (witness f))) with 0%nat.
+  change (cost (extract (lift_cost stepsCM f (witness f)) r rC)) with 0%nat.
+  pose proof (lift_time f (witness f) r rC l lC) as HL.
+  cost_align HL.
+  clear Es E1 E2 Hh. subst R. lia.
+Qed.
+
+Theorem remainderreminder_time : exists c1 c2 : nat,
+  forall (sheet_width sheet_length : N)
+  (left_largest left_second left_third min_books
+  max_books : N)
+  (sheet_width_int sheet_length_int : uint)
+  (left_largest_int left_second_int left_third_int :
+  uint)
+  (min_books_int max_books_int : uint),
+  valid_input sheet_width sheet_length
+  left_largest left_second left_third min_books max_books
+  ->
+  repr sheet_width_int sheet_width -> repr sheet_length_int
+  sheet_length ->
+  repr left_largest_int left_largest -> repr left_second_int
+  left_second ->
+  repr left_third_int left_third ->
+  repr min_books_int min_books -> repr max_books_int
+  max_books ->
+  (cost7 remainderreminder_cost sheet_width_int sheet_length_int left_largest_int left_second_int left_third_int min_books_int max_books_int <= c1 * (size sheet_width_int + Nat.log2 (size sheet_length_int) + 1) + c2)%nat.
+Proof.
+  exists 200%nat, (300 * 100)%nat.
+  intros _ _ _ _ _ _ _ a b c d e f g _ _ _ _ _ _ _ _.
+  pose proof (rr_time a b c d e f g). lia.
+Qed.

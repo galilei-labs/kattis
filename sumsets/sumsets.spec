@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $1\text{ to }4{,}000$ distinct integers.
-    - Values in $[-536{,}870{,}912, 536{,}870{,}911]$. *)
+    - Distinct integer count: $1 \le n \le 4 \times 10^{3}$.
+    - Values: $-2^{29} \le a_i \le 2^{29} - 1$. *)
 
 (** ** Examples *)
 
@@ -45,19 +45,18 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope Z_scope.
 
-(* Math side. S is the list elements of its elements, in
+(* S is the list elements of its elements, in
    input order. The elements are signed (the statement
    allows negatives) : sint / Z. *)
 
 (** ** Definitions *)
 
-(** The number of [elements] of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** target is first + second + third for [elements]
-    first, second, third of S, the four being distinct
-    [elements] of S. *)
+(** [target] and three pairwise distinct summands all belong to [elements], and
+    their sum is [target]. The summands are also distinct from [target]. *)
 Definition sum_of_three (elements : list Z) (target : Z) :
   Prop :=
   exists first second third,
@@ -71,11 +70,11 @@ Definition sum_of_three (elements : list Z) (target : Z) :
 
 (** [@inside sumsets_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (elements : list Z) : Prop := {
-  (* 1 <= N <= 4 000, the number of elements in S *)
+  (* 1 <= N <= 4 * 10^3, the number of elements in S *)
   vi_n : (1 <= len elements <= 4000)%N;
   (* each element of S is a distinct integer *)
   vi_distinct : NoDup elements;
-  (* ... between -536 870 912 and +536 870 911, inclusive *)
+  (* each element x satisfies -2^29 <= x <= 2^29 - 1 *)
   vi_range : Forall
     (fun element => -536870912 <= element <= 536870911)
                elements;
@@ -105,6 +104,12 @@ Definition sumsets_spec
     - Input [elements]: Distinct integers available for the sum relation.
     - Output [output]: The output is the greatest input value expressible as the sum of three other distinct input elements, or None if no such value exists. *)
 Program sumsets : array sint -> option sint.
+
+(** [@example sumsets]
+    - Sample: 1
+    - Input [elements]: [2; 3; 5; 7; 12]%Z
+    - Output [output]: Some 12%Z
+*)
 
 (** ** Bridge *)
 

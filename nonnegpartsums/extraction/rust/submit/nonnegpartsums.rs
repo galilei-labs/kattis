@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -671,13 +670,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Nonnegpartsums.nonnegpartsums_implem.count_good_shifts
-pub fn count_good_shifts() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = count_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -686,13 +678,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -711,17 +700,15 @@ pub fn prefix_loop_1(x: Rc<Array<u64>>, n: u64, i: u64, P: Rc<Array<u64>>) -> Rc
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.prefix_loop (local: prefix_loop)
 // Variant: uncurried, lifted
 pub fn prefix_loop(x: Rc<Array<u64>>, n: u64, i: u64, P: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v31 = add(i, 1u64);
-      let v33 = &P;
-      let v36 = rocq_array::get::<u64>(&v33, i);
-      let v37 = &x;
-      let v40 = rocq_array::get::<u64>(&v37, i);
-      let v52 = rocq_array::set::<u64>(P, v31, add(v36, v40));
-      prefix_loop(x, n, v23, v52, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&P, i);
+      let tmp_4 = rocq_array::get::<u64>(&x, i);
+      let tmp_5 = rocq_array::set::<u64>(P, tmp_2, add(tmp_3, tmp_4));
+      prefix_loop(x, n, tmp_1, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -751,21 +738,16 @@ pub fn pop_front_1(dq: Rc<Array<u64>>, n: u64, j: u64, h: u64, t: u64) -> u64 {
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.pop_front (local: pop_front)
 // Variant: uncurried, lifted
 pub fn pop_front(dq: Rc<Array<u64>>, n: u64, j: u64, h: u64, t: u64, _H: ()) -> u64 {
-  let v13 = ltb(h, t);
-  match bdec(v13) {
+  let tmp = ltb(h, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = mod_(h, n);
-      let v25 = &dq;
-      let v29 = rocq_array::get::<u64>(&v25, v24);
-      let v34 = add(v29, n);
-      match leb(v34, j) {
-        true => {
-          pop_front(dq, n, j, add(h, 1u64), t, ())
-        },
-        false => {
-          std::mem::drop(dq);
-          h
-        },
+      let tmp_1 = rocq_array::get::<u64>(&dq, mod_(h, n));
+      let tmp_2 = add(tmp_1, n);
+      if leb(tmp_2, j) {
+        pop_front(dq, n, j, add(h, 1u64), t, ())
+      } else {
+        std::mem::drop(dq);
+        h
       }
     },
     sumbool::right => {
@@ -784,20 +766,14 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.qv
 // Variant: uncurried
 pub fn qv(P: Rc<Array<u64>>, n: u64, tot: u64, j: u64) -> u64 {
-  match leb(j, n) {
-    true => {
-      let v11 = &P;
-      let v14 = rocq_array::get::<u64>(&v11, j);
-      std::mem::drop(P);
-      v14
-    },
-    false => {
-      let v23 = sub(j, n);
-      let v24 = &P;
-      let v27 = rocq_array::get::<u64>(&v24, v23);
-      std::mem::drop(P);
-      add(tot, v27)
-    },
+  if leb(j, n) {
+    let tmp = rocq_array::get::<u64>(&P, j);
+    std::mem::drop(P);
+    tmp
+  } else {
+    let tmp_1 = rocq_array::get::<u64>(&P, sub(j, n));
+    std::mem::drop(P);
+    add(tot, tmp_1)
   }
 }
 
@@ -816,23 +792,18 @@ pub fn pop_back_1(dq: Rc<Array<u64>>, P: Rc<Array<u64>>, n: u64, tot: u64, qj: u
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.pop_back (local: pop_back)
 // Variant: uncurried, lifted
 pub fn pop_back(dq: Rc<Array<u64>>, P: Rc<Array<u64>>, n: u64, tot: u64, qj: u64, h: u64, t: u64, _H: ()) -> u64 {
-  let v15 = ltb(h, t);
-  match bdec(v15) {
+  let tmp = ltb(h, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v34 = mod_(sub(t, 1u64), n);
-      let v35 = &dq;
-      let v38 = rocq_array::get::<u64>(&v35, v34);
-      let v41 = Rc::clone(&P);
-      let v48 = qv(v41, n, tot, v38);
-      match lesb(qj, v48) {
-        true => {
-          pop_back(dq, P, n, tot, qj, h, sub(t, 1u64), ())
-        },
-        false => {
-          std::mem::drop(P);
-          std::mem::drop(dq);
-          t
-        },
+      let tmp_1 = rocq_array::get::<u64>(&dq, mod_(sub(t, 1u64), n));
+      let P_clone = Rc::clone(&P);
+      let tmp_2 = qv(P_clone, n, tot, tmp_1);
+      if lesb(qj, tmp_2) {
+        pop_back(dq, P, n, tot, qj, h, sub(t, 1u64), ())
+      } else {
+        std::mem::drop(P);
+        std::mem::drop(dq);
+        t
       }
     },
     sumbool::right => {
@@ -852,39 +823,31 @@ pub fn sweep_1(P: Rc<Array<u64>>, n: u64, tot: u64, m: u64, j: u64, h: u64, t: u
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.sweep (local: sweep)
 // Variant: uncurried, lifted
 pub fn sweep(P: Rc<Array<u64>>, n: u64, tot: u64, m: u64, j: u64, h: u64, t: u64, cnt: u64, dq: Rc<Array<u64>>, _H: ()) -> u64 {
-  let v17 = ltb(j, m);
-  match bdec(v17) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = Rc::clone(&dq);
-      let h1 = pop_front_1(v24, n, j, h, t);
-      let v37 = Rc::clone(&P);
-      let qj = qv(v37, n, tot, j);
-      let v48 = Rc::clone(&dq);
-      let v51 = Rc::clone(&P);
-      let t1 = pop_back_1(v48, v51, n, tot, qj, h1, t);
+      let dq_clone = Rc::clone(&dq);
+      let h1 = pop_front_1(dq_clone, n, j, h, t);
+      let P_clone = Rc::clone(&P);
+      let qj = qv(P_clone, n, tot, j);
+      let dq_clone_1 = Rc::clone(&dq);
+      let P_clone_1 = Rc::clone(&P);
+      let t1 = pop_back_1(dq_clone_1, P_clone_1, n, tot, qj, h1, t);
       let dq1 = rocq_array::set::<u64>(dq, mod_(t1, n), j);
-      let cnt1 = match leb(n, j) {
-        true => {
-          let v90 = sub(j, n);
-          let v93 = Rc::clone(&P);
-          let v100 = qv(v93, n, tot, v90);
-          let v107 = mod_(h1, n);
-          let v108 = &dq1;
-          let v111 = rocq_array::get::<u64>(&v108, v107);
-          let v114 = Rc::clone(&P);
-          let v121 = qv(v114, n, tot, v111);
-          match lesb(v100, v121) {
-            true => {
-              add(cnt, 1u64)
-            },
-            false => {
-              cnt
-            },
-          }
-        },
-        false => {
+      let cnt1 = if leb(n, j) {
+        let tmp_1 = sub(j, n);
+        let P_clone_2 = Rc::clone(&P);
+        let tmp_2 = qv(P_clone_2, n, tot, tmp_1);
+        let tmp_3 = rocq_array::get::<u64>(&dq1, mod_(h1, n));
+        let P_clone_3 = Rc::clone(&P);
+        let tmp_4 = qv(P_clone_3, n, tot, tmp_3);
+        if lesb(tmp_2, tmp_4) {
+          add(cnt, 1u64)
+        } else {
           cnt
-        },
+        }
+      } else {
+        cnt
       };
       sweep(P, n, tot, m, add(j, 1u64), h1, add(t1, 1u64), cnt1, dq1, ())
     },
@@ -898,15 +861,13 @@ pub fn sweep(P: Rc<Array<u64>>, n: u64, tot: u64, m: u64, j: u64, h: u64, t: u64
 
 // Rocq: Nonnegpartsums.nonnegpartsums_implem.count_impl
 pub fn count_impl(x: Rc<Array<u64>>) -> u64 {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
-  let v20 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let P = prefix_loop_1(x, n, 0u64, v20);
-  let v30 = &P;
-  let tot = rocq_array::get::<u64>(&v30, n);
-  let v40 = add(n, n);
-  let v55 = rocq_array::make::<u64>(n, 0u64);
-  sweep_1(P, n, tot, v40, 1u64, 0u64, 0u64, 0u64, v55)
+  let n = rocq_array::length::<u64>(&x);
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  let P = prefix_loop_1(x, n, 0u64, tmp);
+  let tot = rocq_array::get::<u64>(&P, n);
+  let tmp_1 = add(n, n);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  sweep_1(P, n, tot, tmp_1, 1u64, 0u64, 0u64, 0u64, tmp_2)
 }
 
 mod __rocq_reuse {
@@ -1058,11 +1019,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_431.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_431: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = count_good_shifts(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1141,7 +1097,7 @@ fn main() { submission_io::entry(|input| {
     use std::fmt::Write;
     let mut t = submission_io::Tokens::new(input); let mut out = String::new();
     loop { let n = t.uint(); if n == 0 { break; }
-        writeln!(out, "{}", run()(t.signed_ints(n))).unwrap();
+        writeln!(out, "{}", count_impl(t.signed_ints(n))).unwrap();
     }
     out
 }); }

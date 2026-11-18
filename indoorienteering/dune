@@ -6,9 +6,11 @@
  (rocq.theory
   (name Indoorienteering.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Indoorienteering)
  (modules indoorienteering_implem)
- (theories Indoorienteering.spec Stdlib stdpp StdGalilei))
+  (theories Indoorienteering.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

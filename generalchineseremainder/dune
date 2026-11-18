@@ -6,9 +6,11 @@
  (rocq.theory
   (name Generalchineseremainder.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Generalchineseremainder)
  (modules generalchineseremainder_implem)
- (theories Generalchineseremainder.spec Stdlib stdpp StdGalilei))
+  (theories Generalchineseremainder.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

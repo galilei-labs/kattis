@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules water_extracted_marray)
- (theories Water Water.spec Stdlib stdpp StdGalilei))
+ (theories Water Water.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name water_extraction)

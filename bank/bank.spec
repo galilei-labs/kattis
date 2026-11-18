@@ -2,9 +2,11 @@
 
 (** ** Description *)
 
-(** Choose unit-duration jobs to maximize total reward before a closing
-    time. Each job must start no later than its deadline, and only one job
-    can run at a time.
+(** A bank is about to close, and customers are waiting to deposit cash.
+    Only one counter is open, serving one customer per minute. Each customer
+    has a departure deadline: service must start no later than that minute.
+    Choose which customers to serve, and in what order, to collect the most
+    cash before closing. Each customer can be served at most once.
 
     [@kattis bank]
     - Difficulty: 2.3
@@ -12,8 +14,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Job count: $1 \le n \le 10{,}000$; closing time in $[1, 47]$.
-    - Rewards in $[1, 100{,}000]$; deadlines from $0$ to closing time - $1$. *)
+    - Job count: $1 \le n \le 10^{4}$; closing time: $1 \le T \le 47$.
+    - Rewards: $1 \le c_i \le 10^{5}$; deadlines: $0 \le t_i < T$. *)
 
 (** ** Examples *)
 
@@ -47,7 +49,7 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  Person i of the queue is the i-th line of the
+(* Person i of the queue is the i-th line of the
   input : c_i
    is the i-th element of cash_amounts, t_i the i-th element
      of deadlines
@@ -55,11 +57,11 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The i-th element of l (0 beyond the end). *)
+(** The entry at zero-based index [i] in [l], or zero beyond the end. *)
 Definition get (l : list N) (i : N) : N :=
   nth (N.to_nat i) l 0.
 
@@ -75,9 +77,9 @@ Definition served (plan : schedule) : list N :=
       None => [] end)
     plan.
 
-(** plan ends before the bank closes, serves each person
-    at most once, and serves only persons of the queue,
-    each at a minute minute <= its t_i. *)
+(** [plan] finishes by [closing_time], serves only valid queue entries, serves each
+    person at most once, and serves each person no later than their departure
+    deadline. *)
 Definition valid_schedule (closing_time : N)
   (cash_amounts deadlines : list N)
     (plan : schedule) : Prop :=
@@ -88,10 +90,17 @@ Definition valid_schedule (closing_time : N)
      person < len cash_amounts
        /\ N.of_nat minute <= get deadlines person).
 
+(** The total cash deposited by the listed customers. *)
+Fixpoint customer_cash (cash_amounts customers : list N) : N :=
+  match customers with
+  | [] => 0
+  | person :: rest => get cash_amounts person + customer_cash cash_amounts rest
+  end.
+
 (** The cash a schedule collects. *)
 Definition value (cash_amounts : list N)
   (plan : schedule) : N :=
-  fold_right N.add 0 (map (get cash_amounts) (served plan)).
+  customer_cash cash_amounts (served plan).
 
 (** [@inside bank_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (closing_time : N)
@@ -99,11 +108,11 @@ Record valid_input (closing_time : N)
     : Prop := {
   (* N lines, each with c_i and t_i *)
   vi_columns : len deadlines = len cash_amounts;
-  (* 1 <= N <= 10 000 *)
+  (* 1 <= N <= 10^4 *)
   vi_n : 1 <= len cash_amounts <= 10000;
   (* 1 <= T <= 47, T the closing time *)
   vi_t : 1 <= closing_time <= 47;
-  (* 1 <= c_i <= 100 000 *)
+  (* 1 <= c_i <= 10^5 *)
   vi_cash : Forall
     (fun amount => 1 <= amount <= 100000) cash_amounts;
   (* 0 <= t_i < T *)
@@ -114,8 +123,9 @@ Record valid_input (closing_time : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the maximum total reward achievable by scheduling unit-duration jobs
-    within their deadlines and the closing time. *)
+    The output is the maximum cash that can be collected before the bank
+    closes, serving at most one customer per minute and starting each
+    customer's service no later than their departure deadline. *)
 Definition bank_spec (closing_time : N)
   (cash_amounts deadlines : list N)
     (output : N) : Prop :=
@@ -128,13 +138,21 @@ Definition bank_spec (closing_time : N)
 
 (** ** Interface *)
 
-(** Choose unit-duration jobs to maximize total reward before a closing time. Each job must
-    start no later than its deadline, and only one job can run at a time.
-    - Input [closing_time]: Number of available unit-time service slots.
-    - Input [cash_amounts]: Reward earned by completing each job.
-    - Input [deadlines]: Latest permitted start time for each job.
-    - Output [output]: The output is the maximum total reward achievable by scheduling unit-duration jobs within their deadlines and the closing time. *)
+(** Serve at most one waiting customer per minute to maximize cash deposited
+    before the bank closes, respecting each customer's departure deadline.
+    - Input [closing_time]: Number of service minutes available, starting at minute zero.
+    - Input [cash_amounts]: Cash each customer will deposit.
+    - Input [deadlines]: Latest minute at which service may start for each customer.
+    - Output [output]: Maximum total cash collected from customers served before closing. *)
 Program bank : uint -> array uint -> array uint -> uint.
+
+(** [@example bank]
+    - Sample: 1
+    - Input [closing_time]: 4
+    - Input [cash_amounts]: [1000; 2000; 500; 1200]
+    - Input [deadlines]: [1; 2; 2; 0]
+    - Output [output]: 4200
+*)
 
 (** ** Bridge *)
 

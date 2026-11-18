@@ -21,4 +21,4 @@ archive = "catenyms_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/catenyms.ml"
-Rust = "extraction/rust/submit/catenyms.rs"
+Rust = "extraction/rust/snapshots/catenyms_extracted.rs.interface.json"

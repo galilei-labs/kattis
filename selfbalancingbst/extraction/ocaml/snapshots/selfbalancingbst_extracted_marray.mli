@@ -21,6 +21,30 @@ type uint = Uint63.t
 
 type sint = Uint63.t
 
+type ('u, 's) operation =
+| CopyFrom of 'u
+| FindKey of 's
+| LowerBound of 's
+| UpperBound of 's
+| Insert of 's * 's
+| Erase
+| First
+| Last
+| NextKey
+| PreviousKey
+| SelectRank of 's
+| GetRank
+| GetValue
+| SetValue of 's
+| GetSize
+
+type machine_command = uint * (uint, sint) operation
+
+val encode_operation :
+  'a2 -> ('a1 -> 'a2) -> ('a1, 'a2) operation -> (uint * 'a2) * 'a2
+
+val encode_machine : machine_command -> ((uint * uint) * sint) * sint
+
 type color =
 | Red
 | Black
@@ -81,10 +105,10 @@ val setv_t : Uint63.t -> Uint63.t -> tree -> tree
 
 val bdec : bool -> bool
 
-val is_out : Uint63.t -> bool
+val output_command : machine_command -> bool
 
 val count_loop :
-  Uint63.t Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t
+  machine_command Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t
 
 val on_cur :
   Uint63.t option -> (Uint63.t -> Uint63.t option) -> Uint63.t option
@@ -95,14 +119,10 @@ val exec :
   Marray.t * Uint63.t option Marray.t) * Uint63.t option Marray.t) * Uint63.t
 
 val run_loop :
-  Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t
-  Marray.t -> Uint63.t -> Uint63.t -> tree Marray.t -> Uint63.t option
-  Marray.t -> Uint63.t option Marray.t -> Uint63.t -> Uint63.t option Marray.t
+  machine_command Marray.t -> Uint63.t -> Uint63.t -> tree Marray.t ->
+  Uint63.t option Marray.t -> Uint63.t option Marray.t -> Uint63.t ->
+  Uint63.t option Marray.t
 
-val run_impl :
-  uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t -> sint
-  option Marray.t
+val run_impl : machine_command Marray.t -> sint option Marray.t
 
-val run_commands :
-  uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t -> sint
-  option Marray.t
+val run_commands : machine_command Marray.t -> sint option Marray.t

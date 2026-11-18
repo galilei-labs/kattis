@@ -6,9 +6,11 @@
  (rocq.theory
   (name Shortestpath1.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Shortestpath1)
  (modules shortestpath1_implem)
- (theories Shortestpath1.spec Stdlib stdpp StdGalilei))
+  (theories Shortestpath1.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

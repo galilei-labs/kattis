@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -676,18 +675,11 @@ pub fn MOD() -> u64 {
   100000u64
 }
 
-// Rocq: Zapis.zapis_implem.zapis
-pub fn zapis() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, bool)> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> (u64, bool) = zapis_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, bool)> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
@@ -710,13 +702,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Zapis.zapis_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -729,26 +718,20 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -761,53 +744,44 @@ pub fn okp(a: u64, b: u64, o: u64, c: u64) -> bool {
 // Rocq: Zapis.zapis_implem.pcode
 // Variant: uncurried
 pub fn pcode(a: u64, b: u64) -> u64 {
-  let v6 = 40u64;
-  let v8 = 41u64;
-  let v18 = match okp(a, b, v6, v8) {
-    true => {
-      1u64
-    },
-    false => {
-      0u64
-    },
+  let tmp = 40u64;
+  let tmp_1 = 41u64;
+  let tmp_2 = if okp(a, b, tmp, tmp_1) {
+    1u64
+  } else {
+    0u64
   };
-  let v30 = 91u64;
-  let v32 = 93u64;
-  let v42 = match okp(a, b, v30, v32) {
-    true => {
-      1u64
-    },
-    false => {
-      0u64
-    },
+  let tmp_3 = 91u64;
+  let tmp_4 = 93u64;
+  let tmp_5 = if okp(a, b, tmp_3, tmp_4) {
+    1u64
+  } else {
+    0u64
   };
-  let v56 = add(v18, v42);
-  let v59 = 123u64;
-  let v61 = 125u64;
-  let v71 = match okp(a, b, v59, v61) {
-    true => {
-      1u64
-    },
-    false => {
-      0u64
-    },
+  let tmp_6 = add(tmp_2, tmp_5);
+  let tmp_7 = 123u64;
+  let tmp_8 = 125u64;
+  let tmp_9 = if okp(a, b, tmp_7, tmp_8) {
+    1u64
+  } else {
+    0u64
   };
-  add(v56, v71)
+  add(tmp_6, tmp_9)
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Zapis.zapis_implem.ixi
 // Variant: uncurried
 pub fn ixi(W: u64, a: u64, b: u64) -> u64 {
-  let v13 = mul(a, W);
-  mul(2u64, add(v13, b))
+  let tmp = mul(a, W);
+  mul(2u64, add(tmp, b))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -824,13 +798,10 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Zapis.zapis_implem.capm
 pub fn capm(v: u64) -> u64 {
-  match ltb(v, __rocq_global_216) {
-    true => {
-      v
-    },
-    false => {
-      __rocq_global_216
-    },
+  if ltb(v, __rocq_global_216) {
+    v
+  } else {
+    __rocq_global_216
   }
 }
 
@@ -843,30 +814,24 @@ pub fn inner_1(x: Rc<rocq_string::RocqString>, tb: Rc<Array<u64>>, W: u64, ci: u
 // Rocq: Zapis.zapis_implem.inner (local: inner)
 // Variant: uncurried, lifted
 pub fn inner(x: Rc<rocq_string::RocqString>, tb: Rc<Array<u64>>, W: u64, ci: u64, ii: u64, j: u64, kk: u64, t: u64, r: u64, c: u64, _H: ()) -> (u64, u64) {
-  let v20 = ltb(0u64, t);
-  match bdec(v20) {
+  let tmp = ltb(0u64, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = Rc::clone(&x);
-      let p = pcode(ci, get(v28, kk));
+      let x_clone = Rc::clone(&x);
+      let p = pcode(ci, get(x_clone, kk));
       let ia = ixi(W, add(ii, 1u64), kk);
       let ib = ixi(W, add(kk, 1u64), j);
-      let v69 = &tb;
-      let ra = rocq_array::get::<u64>(&v69, ia);
-      let v80 = add(ia, 1u64);
-      let v81 = &tb;
-      let ca = rocq_array::get::<u64>(&v81, v80);
-      let v85 = &tb;
-      let rb = rocq_array::get::<u64>(&v85, ib);
-      let v96 = add(ib, 1u64);
-      let v97 = &tb;
-      let cb = rocq_array::get::<u64>(&v97, v96);
-      let v108 = add(kk, 2u64);
-      let v116 = sub(t, 1u64);
-      let v133 = mod_(mul(p, ra), __rocq_global_216);
-      let v148 = mod_(add(r, mul(v133, rb)), __rocq_global_216);
-      let v163 = capm(mul(p, ca));
-      let v170 = capm(mul(v163, cb));
-      inner(x, tb, W, ci, ii, j, v108, v116, v148, capm(add(c, v170)), ())
+      let ra = rocq_array::get::<u64>(&tb, ia);
+      let ca = rocq_array::get::<u64>(&tb, add(ia, 1u64));
+      let rb = rocq_array::get::<u64>(&tb, ib);
+      let cb = rocq_array::get::<u64>(&tb, add(ib, 1u64));
+      let tmp_1 = add(kk, 2u64);
+      let tmp_2 = sub(t, 1u64);
+      let tmp_3 = mod_(mul(p, ra), __rocq_global_216);
+      let tmp_4 = mod_(add(r, mul(tmp_3, rb)), __rocq_global_216);
+      let tmp_5 = capm(mul(p, ca));
+      let tmp_6 = capm(mul(tmp_5, cb));
+      inner(x, tb, W, ci, ii, j, tmp_1, tmp_2, tmp_4, capm(add(c, tmp_6)), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -878,16 +843,16 @@ pub fn inner(x: Rc<rocq_string::RocqString>, tb: Rc<Array<u64>>, W: u64, ci: u64
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Zapis.zapis_implem.middle
@@ -899,31 +864,28 @@ pub fn middle_1(x: Rc<rocq_string::RocqString>, W: u64, h: u64, L: u64, m: u64, 
 // Rocq: Zapis.zapis_implem.middle (local: middle)
 // Variant: uncurried, lifted
 pub fn middle(x: Rc<rocq_string::RocqString>, W: u64, h: u64, L: u64, m: u64, ii: u64, tb: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(ii, m);
-  match bdec(v15) {
+  let tmp = ltb(ii, m);
+  match bdec(tmp) {
     sumbool::left => {
       let j = add(ii, L);
-      let v27 = 0u64;
-      let b0 = match eqb(h, v27) {
-        true => {
-          1u64
-        },
-        false => {
-          0u64
-        },
+      let tmp_1 = 0u64;
+      let b0 = if eqb(h, tmp_1) {
+        1u64
+      } else {
+        0u64
       };
-      let v47 = Rc::clone(&x);
-      let v50 = get(v47, ii);
-      let v58 = add(ii, 1u64);
-      let v61 = Rc::clone(&x);
-      let v64 = Rc::clone(&tb);
-      let rc = inner_1(v61, v64, W, v50, ii, j, v58, h, b0, b0);
+      let x_clone = Rc::clone(&x);
+      let tmp_2 = get(x_clone, ii);
+      let tmp_3 = add(ii, 1u64);
+      let x_clone_1 = Rc::clone(&x);
+      let tb_clone = Rc::clone(&tb);
+      let rc = inner_1(x_clone_1, tb_clone, W, tmp_2, ii, j, tmp_3, h, b0, b0);
       let p = ixi(W, ii, j);
-      let v97 = add(ii, 1u64);
-      let v100 = Clone::clone(&rc);
-      let v109 = rocq_array::set::<u64>(tb, p, fst::<u64, u64>(v100));
-      let v128 = rocq_array::set::<u64>(v109, add(p, 1u64), snd::<u64, u64>(rc));
-      middle(x, W, h, L, m, v97, v128, ())
+      let tmp_4 = add(ii, 1u64);
+      let rc_clone = Clone::clone(&rc);
+      let tmp_5 = rocq_array::set::<u64>(tb, p, fst::<u64, u64>(rc_clone));
+      let tmp_6 = rocq_array::set::<u64>(tmp_5, add(p, 1u64), snd::<u64, u64>(rc));
+      middle(x, W, h, L, m, tmp_4, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -941,15 +903,15 @@ pub fn outer_1(x: Rc<rocq_string::RocqString>, n: u64, W: u64, hm: u64, h: u64, 
 // Rocq: Zapis.zapis_implem.outer (local: outer)
 // Variant: uncurried, lifted
 pub fn outer(x: Rc<rocq_string::RocqString>, n: u64, W: u64, hm: u64, h: u64, tb: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(h, hm);
-  match bdec(v14) {
+  let tmp = ltb(h, hm);
+  match bdec(tmp) {
     sumbool::left => {
       let L = mul(2u64, h);
-      let v33 = add(h, 1u64);
-      let v48 = add(sub(n, L), 1u64);
-      let v53 = Rc::clone(&x);
-      let v66 = middle_1(v53, W, h, L, v48, 0u64, tb);
-      outer(x, n, W, hm, v33, v66, ())
+      let tmp_1 = add(h, 1u64);
+      let tmp_2 = add(sub(n, L), 1u64);
+      let x_clone = Rc::clone(&x);
+      let tmp_3 = middle_1(x_clone, W, h, L, tmp_2, 0u64, tb);
+      outer(x, n, W, hm, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -972,22 +934,19 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Zapis.zapis_implem.zapis_impl
 pub fn zapis_impl(x: Rc<rocq_string::RocqString>) -> (u64, bool) {
-  let v4 = Rc::clone(&x);
-  let n = length(v4);
+  let x_clone = Rc::clone(&x);
+  let n = length(x_clone);
   let W = add(n, 1u64);
-  let v30 = add(div(n, 2u64), 1u64);
-  let v41 = mul(W, W);
-  let v53 = rocq_array::make::<u64>(mul(2u64, v41), 0u64);
-  let tb = outer_1(x, n, W, v30, 0u64, v53);
+  let tmp = add(div(n, 2u64), 1u64);
+  let tmp_1 = mul(W, W);
+  let tmp_2 = rocq_array::make::<u64>(mul(2u64, tmp_1), 0u64);
+  let tb = outer_1(x, n, W, tmp, 0u64, tmp_2);
   let p = ixi(W, 0u64, n);
-  let v77 = &tb;
-  let v80 = rocq_array::get::<u64>(&v77, p);
-  let v82 = __rocq_global_216;
-  let v90 = add(p, 1u64);
-  let v91 = &tb;
-  let v94 = rocq_array::get::<u64>(&v91, v90);
+  let tmp_3 = rocq_array::get::<u64>(&tb, p);
+  let tmp_4 = __rocq_global_216;
+  let tmp_5 = rocq_array::get::<u64>(&tb, add(p, 1u64));
   std::mem::drop(tb);
-  (v80, leb(v82, v94))
+  (tmp_3, leb(tmp_4, tmp_5))
 }
 
 mod __rocq_reuse {
@@ -1138,13 +1097,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, bool)> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, bool)> = __rocq_global_587.with(Clone::clone);
-  v0
-}
 const __rocq_global_216: u64 = 100000u64;
-std::thread_local! { static __rocq_global_587: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, bool)> = zapis(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1220,7 +1173,7 @@ const STACK_MIB: usize = 256;
 use kattis_io::*;
 
 fn solve(input: &str) -> String {
-    let mut t = Tokens::new(input); let _n = t.uint(); let result = run()(string(t.next()));
+    let mut t = Tokens::new(input); let _n = t.uint(); let result = zapis_impl(string(t.next()));
     let (r, big) = &result; if *big { format!("{r:05}\n") } else { format!("{r}\n") }
 }
 fn main() { entry(solve); }

@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -668,21 +667,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Bitwise.bitwise_implem.best_and
-// Variant: uncurried
-pub fn best_and() -> Rc<dyn Fn(u64, Rc<Array<u64>>) -> u64> {
-  let v0: fn(u64, Rc<Array<u64>>) -> u64 = best_and_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Bitwise.bitwise_implem.best_and
-pub fn best_and_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> = best_and_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
 // Variant: uncurried
@@ -716,13 +700,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Bitwise.bitwise_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -741,13 +722,13 @@ pub fn init_ptr_1(m: u64, x: u64, P: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Bitwise.bitwise_implem.init_ptr (local: init_ptr)
 // Variant: uncurried, lifted
 pub fn init_ptr(m: u64, x: u64, P: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(x, m);
-  match bdec(v11) {
+  let tmp = ltb(x, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(x, 1u64);
-      let v30 = add(x, 1u64);
-      let v37 = rocq_array::set::<u64>(P, x, v30);
-      init_ptr(m, v22, v37, ())
+      let tmp_1 = add(x, 1u64);
+      let tmp_2 = add(x, 1u64);
+      let tmp_3 = rocq_array::set::<u64>(P, x, tmp_2);
+      init_ptr(m, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       P
@@ -770,20 +751,14 @@ pub fn hasbit(v: u64, b: u64) -> bool {
 // Rocq: Bitwise.bitwise_implem.cell
 // Variant: uncurried
 pub fn cell(a: Rc<Array<u64>>, n: u64, x: u64) -> u64 {
-  match ltb(x, n) {
-    true => {
-      let v10 = &a;
-      let v13 = rocq_array::get::<u64>(&v10, x);
-      std::mem::drop(a);
-      v13
-    },
-    false => {
-      let v21 = sub(x, n);
-      let v22 = &a;
-      let v25 = rocq_array::get::<u64>(&v22, v21);
-      std::mem::drop(a);
-      v25
-    },
+  if ltb(x, n) {
+    let tmp = rocq_array::get::<u64>(&a, x);
+    std::mem::drop(a);
+    tmp
+  } else {
+    let tmp_1 = rocq_array::get::<u64>(&a, sub(x, n));
+    std::mem::drop(a);
+    tmp_1
   }
 }
 
@@ -796,32 +771,25 @@ pub fn scan_1(a: Rc<Array<u64>>, P: Rc<Array<u64>>, n: u64, b: u64, i: u64, nb: 
 // Rocq: Bitwise.bitwise_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(a: Rc<Array<u64>>, P: Rc<Array<u64>>, n: u64, b: u64, i: u64, nb: u64, Q: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v17 = ltb(0u64, i);
-  match bdec(v17) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
       let x = sub(i, 1u64);
-      let v33 = Rc::clone(&a);
-      let v39 = cell(v33, n, x);
-      let nb_ = match hasbit(v39, b) {
-        true => {
-          i
-        },
-        false => {
-          nb
-        },
+      let a_clone = Rc::clone(&a);
+      let tmp_1 = cell(a_clone, n, x);
+      let nb_ = if hasbit(tmp_1, b) {
+        i
+      } else {
+        nb
       };
-      let v50 = &P;
-      let p = rocq_array::get::<u64>(&v50, x);
-      let v60 = match ltb(p, nb_) {
-        true => {
-          nb_
-        },
-        false => {
-          p
-        },
+      let p = rocq_array::get::<u64>(&P, x);
+      let tmp_2 = if ltb(p, nb_) {
+        nb_
+      } else {
+        p
       };
-      let v72 = rocq_array::set::<u64>(Q, x, v60);
-      scan(a, P, n, b, x, nb_, v72, ())
+      let tmp_3 = rocq_array::set::<u64>(Q, x, tmp_2);
+      scan(a, P, n, b, x, nb_, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(a);
@@ -835,11 +803,11 @@ pub fn scan(a: Rc<Array<u64>>, P: Rc<Array<u64>>, n: u64, b: u64, i: u64, nb: u6
 // Variant: uncurried
 pub fn newptr(a: Rc<Array<u64>>, P: Rc<Array<u64>>, Q: Rc<Array<u64>>, n: u64, b: u64) -> Rc<Array<u64>> {
   let n2 = mul(2u64, n);
-  let v21 = add(n2, 1u64);
-  let v29 = add(n2, 1u64);
-  let v36 = rocq_array::set::<u64>(Q, n2, v29);
-  let v59 = rocq_array::set::<u64>(v36, add(n2, 1u64), add(n2, 1u64));
-  scan_1(a, P, n, b, n2, v21, v59)
+  let tmp = add(n2, 1u64);
+  let tmp_1 = add(n2, 1u64);
+  let tmp_2 = rocq_array::set::<u64>(Q, n2, tmp_1);
+  let tmp_3 = rocq_array::set::<u64>(tmp_2, add(n2, 1u64), add(n2, 1u64));
+  scan_1(a, P, n, b, n2, tmp, tmp_3)
 }
 
 // Rocq: Bitwise.bitwise_implem.init
@@ -851,13 +819,13 @@ pub fn init_1(L: u64, j: u64, V: Rc<Array<u64>>, S: Rc<Array<u64>>) -> (Rc<Array
 // Rocq: Bitwise.bitwise_implem.init (local: init)
 // Variant: uncurried, lifted
 pub fn init(L: u64, j: u64, V: Rc<Array<u64>>, S: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v12 = ltb(j, L);
-  match bdec(v12) {
+  let tmp = ltb(j, L);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(j, 1u64);
-      let v30 = rocq_array::set::<u64>(V, j, j);
-      let v37 = rocq_array::set::<u64>(S, j, j);
-      init(L, v23, v30, v37, ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(V, j, j);
+      let tmp_3 = rocq_array::set::<u64>(S, j, j);
+      init(L, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       (V, S)
@@ -868,13 +836,10 @@ pub fn init(L: u64, j: u64, V: Rc<Array<u64>>, S: Rc<Array<u64>>, _H: ()) -> (Rc
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -887,33 +852,25 @@ pub fn dedup_1(Q: Rc<Array<u64>>, V: Rc<Array<u64>>, S: Rc<Array<u64>>, w: u64, 
 // Rocq: Bitwise.bitwise_implem.dedup (local: dedup)
 // Variant: uncurried, lifted
 pub fn dedup(Q: Rc<Array<u64>>, V: Rc<Array<u64>>, S: Rc<Array<u64>>, w: u64, i: u64, w_: u64, V_: Rc<Array<u64>>, S_: Rc<Array<u64>>, _H: ()) -> ((u64, Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v16 = ltb(i, w);
-  match bdec(v16) {
+  let tmp = ltb(i, w);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &V;
-      let v23 = rocq_array::get::<u64>(&v20, i);
-      let v24 = &Q;
-      let v = rocq_array::get::<u64>(&v24, v23);
-      let v28 = &S;
-      let s = rocq_array::get::<u64>(&v28, i);
-      let v40 = ltb(0u64, w_);
-      let v49 = sub(w_, 1u64);
-      let v50 = &V_;
-      let v54 = rocq_array::get::<u64>(&v50, v49);
-      let v58 = eqb(v54, v);
-      match andb(v40, v58) {
-        true => {
-          let v72 = add(i, 1u64);
-          let v87 = rocq_array::set::<u64>(S_, sub(w_, 1u64), s);
-          dedup(Q, V, S, w, v72, w_, V_, v87, ())
-        },
-        false => {
-          let v119 = add(i, 1u64);
-          let v127 = add(w_, 1u64);
-          let v134 = rocq_array::set::<u64>(V_, w_, v);
-          let v141 = rocq_array::set::<u64>(S_, w_, s);
-          dedup(Q, V, S, w, v119, v127, v134, v141, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&V, i);
+      let v = rocq_array::get::<u64>(&Q, tmp_1);
+      let s = rocq_array::get::<u64>(&S, i);
+      let tmp_2 = ltb(0u64, w_);
+      let tmp_3 = rocq_array::get::<u64>(&V_, sub(w_, 1u64));
+      let tmp_4 = eqb(tmp_3, v);
+      if andb(tmp_2, tmp_4) {
+        let tmp_5 = add(i, 1u64);
+        let tmp_6 = rocq_array::set::<u64>(S_, sub(w_, 1u64), s);
+        dedup(Q, V, S, w, tmp_5, w_, V_, tmp_6, ())
+      } else {
+        let tmp_7 = add(i, 1u64);
+        let tmp_8 = add(w_, 1u64);
+        let tmp_9 = rocq_array::set::<u64>(V_, w_, v);
+        let tmp_10 = rocq_array::set::<u64>(S_, w_, s);
+        dedup(Q, V, S, w, tmp_7, tmp_8, tmp_9, tmp_10, ())
       }
     },
     sumbool::right => {
@@ -934,14 +891,14 @@ pub fn levels_1(Q: Rc<Array<u64>>, t: u64, w: u64, V: Rc<Array<u64>>, S: Rc<Arra
 // Rocq: Bitwise.bitwise_implem.levels (local: levels)
 // Variant: uncurried, lifted
 pub fn levels(Q: Rc<Array<u64>>, t: u64, w: u64, V: Rc<Array<u64>>, S: Rc<Array<u64>>, V_: Rc<Array<u64>>, S_: Rc<Array<u64>>, _H: ()) -> ((((u64, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v17 = ltb(0u64, t);
-  match bdec(v17) {
+  let tmp = ltb(0u64, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = Rc::clone(&Q);
-      let v31 = Rc::clone(&V);
-      let v34 = Rc::clone(&S);
-      let v45 = dedup_1(v28, v31, v34, w, 0u64, 0u64, V_, S_);
-      match v45 {
+      let Q_clone = Rc::clone(&Q);
+      let V_clone = Rc::clone(&V);
+      let S_clone = Rc::clone(&S);
+      let tmp_1 = dedup_1(Q_clone, V_clone, S_clone, w, 0u64, 0u64, V_, S_);
+      match tmp_1 {
         (v47, v49) => {
           match v47 {
             (v52, v54) => {
@@ -973,23 +930,18 @@ pub fn check_1(V: Rc<Array<u64>>, S: Rc<Array<u64>>, n: u64, w: u64, j: u64) -> 
 // Rocq: Bitwise.bitwise_implem.check (local: check)
 // Variant: uncurried, lifted
 pub fn check(V: Rc<Array<u64>>, S: Rc<Array<u64>>, n: u64, w: u64, j: u64, _H: ()) -> bool {
-  let v13 = ltb(j, w);
-  match bdec(v13) {
+  let tmp = ltb(j, w);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &V;
-      let v21 = rocq_array::get::<u64>(&v18, j);
-      let v23 = &S;
-      let v27 = rocq_array::get::<u64>(&v23, j);
-      let v31 = add(v27, n);
-      match leb(v21, v31) {
-        true => {
-          std::mem::drop(V);
-          std::mem::drop(S);
-          true
-        },
-        false => {
-          check(V, S, n, w, add(j, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&V, j);
+      let tmp_2 = rocq_array::get::<u64>(&S, j);
+      let tmp_3 = add(tmp_2, n);
+      if leb(tmp_1, tmp_3) {
+        std::mem::drop(V);
+        std::mem::drop(S);
+        true
+      } else {
+        check(V, S, n, w, add(j, 1u64), ())
       }
     },
     sumbool::right => {
@@ -1003,27 +955,22 @@ pub fn check(V: Rc<Array<u64>>, S: Rc<Array<u64>>, n: u64, w: u64, j: u64, _H: (
 // Rocq: Bitwise.bitwise_implem.test
 // Variant: uncurried
 pub fn test(Q: Rc<Array<u64>>, n: u64, k: u64, V: Rc<Array<u64>>, S: Rc<Array<u64>>, V_: Rc<Array<u64>>, S_: Rc<Array<u64>>) -> ((((bool, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v8 = 0u64;
-  let v9 = &Q;
-  let f0 = rocq_array::get::<u64>(&v9, v8);
-  let v22 = sub(n, 1u64);
-  let v28 = match ltb(f0, v22) {
-    true => {
-      f0
-    },
-    false => {
-      sub(n, 1u64)
-    },
+  let f0 = rocq_array::get::<u64>(&Q, 0u64);
+  let tmp = sub(n, 1u64);
+  let tmp_1 = if ltb(f0, tmp) {
+    f0
+  } else {
+    sub(n, 1u64)
   };
-  let L1 = add(v28, 1u64);
-  let v60 = init_1(L1, 0u64, V, S);
-  match &v60 {
+  let L1 = add(tmp_1, 1u64);
+  let tmp_2 = init_1(L1, 0u64, V, S);
+  match &tmp_2 {
     (S1, V1) => {
-      let v75 = Rc::clone(S1);
-      let v76 = Rc::clone(V1);
-      std::mem::drop(v60);
-      let v82 = levels_1(Q, k, L1, v75, v76, V_, S_);
-      match v82 {
+      let S1_clone = Rc::clone(S1);
+      let V1_clone = Rc::clone(V1);
+      std::mem::drop(tmp_2);
+      let tmp_3 = levels_1(Q, k, L1, S1_clone, V1_clone, V_, S_);
+      match tmp_3 {
         (v84, v86) => {
           match v84 {
             (v89, v91) => {
@@ -1033,9 +980,9 @@ pub fn test(Q: Rc<Array<u64>>, n: u64, k: u64, V: Rc<Array<u64>>, S: Rc<Array<u6
                   match v94 {
                     (v100, v102) => {
                       let w = &v102;
-                      let v109 = Rc::clone(w);
-                      let v111 = Rc::clone(p1);
-                      ((((check_1(v109, v111, n, v100, 0u64), v102), v96), v91), v86)
+                      let w_clone = Rc::clone(w);
+                      let p1_clone = Rc::clone(p1);
+                      ((((check_1(w_clone, p1_clone, n, v100, 0u64), v102), v96), v91), v86)
                     },
                   }
                 },
@@ -1069,16 +1016,16 @@ pub fn bits_1(a: Rc<Array<u64>>, n: u64, k: u64, b: u64, ans: u64, P: Rc<Array<u
 // Rocq: Bitwise.bitwise_implem.bits (local: bits)
 // Variant: uncurried, lifted
 pub fn bits(a: Rc<Array<u64>>, n: u64, k: u64, b: u64, ans: u64, P: Rc<Array<u64>>, Q: Rc<Array<u64>>, V: Rc<Array<u64>>, S: Rc<Array<u64>>, V_: Rc<Array<u64>>, S_: Rc<Array<u64>>, _H: ()) -> u64 {
-  let v21 = ltb(0u64, b);
-  match bdec(v21) {
+  let tmp = ltb(0u64, b);
+  match bdec(tmp) {
     sumbool::left => {
       let j = sub(b, 1u64);
-      let v36 = Rc::clone(&a);
-      let v39 = Rc::clone(&P);
-      let Q1 = newptr(v36, v39, Q, n, j);
-      let v50 = Rc::clone(&Q1);
-      let v63 = test(v50, n, k, V, S, V_, S_);
-      match v63 {
+      let a_clone = Rc::clone(&a);
+      let P_clone = Rc::clone(&P);
+      let Q1 = newptr(a_clone, P_clone, Q, n, j);
+      let Q1_clone = Rc::clone(&Q1);
+      let tmp_1 = test(Q1_clone, n, k, V, S, V_, S_);
+      match tmp_1 {
         (v65, v67) => {
           match v65 {
             (v70, v72) => {
@@ -1086,14 +1033,11 @@ pub fn bits(a: Rc<Array<u64>>, n: u64, k: u64, b: u64, ans: u64, P: Rc<Array<u64
                 (v75, v77) => {
                   match v75 {
                     (v80, v82) => {
-                      match v80 {
-                        true => {
-                          let v93 = lsl(1u64, j);
-                          bits(a, n, k, j, lor(ans, v93), Q1, P, v82, v77, v72, v67, ())
-                        },
-                        false => {
-                          bits(a, n, k, j, ans, P, Q1, v82, v77, v72, v67, ())
-                        },
+                      if v80 {
+                        let tmp_2 = lsl(1u64, j);
+                        bits(a, n, k, j, lor(ans, tmp_2), Q1, P, v82, v77, v72, v67, ())
+                      } else {
+                        bits(a, n, k, j, ans, P, Q1, v82, v77, v72, v67, ())
                       }
                     },
                   }
@@ -1120,31 +1064,18 @@ pub fn bits(a: Rc<Array<u64>>, n: u64, k: u64, b: u64, ans: u64, P: Rc<Array<u64
 // Rocq: Bitwise.bitwise_implem.best_and_impl
 // Variant: uncurried
 pub fn best_and_impl(k: u64, a: Rc<Array<u64>>) -> u64 {
-  let v2 = &a;
-  let n = rocq_array::length::<u64>(&v2);
+  let n = rocq_array::length::<u64>(&a);
   let n2 = mul(2u64, n);
-  let v20 = add(n2, 1u64);
-  let v37 = rocq_array::make::<u64>(add(n2, 2u64), 0u64);
-  let P0 = init_ptr_1(v20, 0u64, v37);
+  let tmp = add(n2, 1u64);
+  let tmp_1 = rocq_array::make::<u64>(add(n2, 2u64), 0u64);
+  let P0 = init_ptr_1(tmp, 0u64, tmp_1);
   let P = rocq_array::set::<u64>(P0, add(n2, 1u64), add(n2, 1u64));
-  let v87 = rocq_array::make::<u64>(add(n2, 2u64), 0u64);
-  let v94 = rocq_array::make::<u64>(n, 0u64);
-  let v101 = rocq_array::make::<u64>(n, 0u64);
-  let v108 = rocq_array::make::<u64>(n, 0u64);
-  let v115 = rocq_array::make::<u64>(n, 0u64);
-  bits_1(a, n, k, 30u64, 0u64, P, v87, v94, v101, v108, v115)
-}
-
-// Rocq: Bitwise.bitwise_implem.best_and_impl
-pub fn best_and_impl_curried(k: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v3 = {
-    move |a: Rc<Array<u64>>| -> u64 {
-      let v9 = Clone::clone(&k);
-      best_and_impl(v9, a)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v3);
-  v15
+  let tmp_2 = rocq_array::make::<u64>(add(n2, 2u64), 0u64);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_4 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_5 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_6 = rocq_array::make::<u64>(n, 0u64);
+  bits_1(a, n, k, 30u64, 0u64, P, tmp_2, tmp_3, tmp_4, tmp_5, tmp_6)
 }
 
 mod __rocq_reuse {
@@ -1296,12 +1227,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>) -> u64> = __rocq_global_859.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_859: Rc<dyn Fn(u64, Rc<Array<u64>>) -> u64> = best_and(); }
-std::thread_local! { static __rocq_global_862: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = best_and_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1379,5 +1304,5 @@ use kattis_io::*;
 fn main() { submission_io::entry(|input| {
     let mut t = submission_io::Tokens::new(input);
     let n = t.uint(); let k = t.uint();
-    format!("{}\n", run()(k, t.uints(n)))
+    format!("{}\n", best_and_impl(k, t.uints(n)))
 }); }

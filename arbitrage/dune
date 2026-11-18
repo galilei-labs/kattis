@@ -6,9 +6,11 @@
  (rocq.theory
   (name Arbitrage.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name Arbitrage)
  (modules arbitrage_implem)
- (theories Arbitrage.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Arbitrage.spec Stdlib stdpp StdGalilei Flocq)
+  (generate_project_file))

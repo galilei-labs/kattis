@@ -6,9 +6,11 @@
  (rocq.theory
   (name Gcpc.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Gcpc)
  (modules gcpc_implem)
- (theories Gcpc.spec Stdlib stdpp StdGalilei))
+  (theories Gcpc.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

@@ -21,4 +21,4 @@ archive = "bst_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/bst.ml"
-Rust = "extraction/rust/submit/bst.rs"
+Rust = "extraction/rust/snapshots/bst_extracted.rs.interface.json"

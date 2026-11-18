@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -30,21 +29,6 @@ pub fn K() -> u64 {
   65536u64
 }
 
-// Rocq: Magicsequence.magicsequence_implem.magic
-// Variant: uncurried
-pub fn magic() -> Rc<dyn Fn(u64, u64, u64, u64, u64, u64) -> u64> {
-  let v0: fn(u64, u64, u64, u64, u64, u64) -> u64 = magic_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64, u64, u64, u64) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Magicsequence.magicsequence_implem.magic
-pub fn magic_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>> = magic_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.land
 // Variant: uncurried
 pub fn land(v0: u64, v1: u64) -> u64 {
@@ -65,13 +49,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Magicsequence.magicsequence_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -102,31 +83,28 @@ pub fn gen_loop_1(a: u64, b: u64, c: u64, n: u64, i: u64, t: u64, m: u64, arr: R
 // Rocq: Magicsequence.magicsequence_implem.gen_loop (local: gen_loop)
 // Variant: uncurried, lifted
 pub fn gen_loop(a: u64, b: u64, c: u64, n: u64, i: u64, t: u64, m: u64, arr: Rc<Array<u64>>, lo: Rc<Array<u64>>, hi: Rc<Array<u64>>, _H: ()) -> (((Rc<Array<u64>>, u64), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v18 = ltb(i, n);
-  match bdec(v18) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
       let dl = land(t, __rocq_global_60);
       let dh = land(lsr(t, 16u64), __rocq_global_60);
-      let v44 = &lo;
-      let v46 = dl;
-      let kl = Clone::clone(&(v44)[v46]);
-      let v48 = &hi;
-      let v50 = dh;
-      let kh = Clone::clone(&(v48)[v50]);
-      let v59 = add(i, 1u64);
-      let v77 = mod_(add(mul(t, b), a), c);
-      let v84 = match ltb(m, t) {
-        true => {
-          t
-        },
-        false => {
-          m
-        },
+      let lo_ref = &lo;
+      let tmp_1 = dl;
+      let kl = Clone::clone(&(lo_ref)[tmp_1]);
+      let hi_ref = &hi;
+      let tmp_2 = dh;
+      let kh = Clone::clone(&(hi_ref)[tmp_2]);
+      let tmp_3 = add(i, 1u64);
+      let tmp_4 = mod_(add(mul(t, b), a), c);
+      let tmp_5 = if ltb(m, t) {
+        t
+      } else {
+        m
       };
-      let v96 = rocq_array::set::<u64>(arr, i, t);
-      let v111 = rocq_array::set::<u64>(lo, dl, add(kl, 1u64));
-      let v126 = rocq_array::set::<u64>(hi, dh, add(kh, 1u64));
-      gen_loop(a, b, c, n, v59, v77, v84, v96, v111, v126, ())
+      let tmp_6 = rocq_array::set::<u64>(arr, i, t);
+      let tmp_7 = rocq_array::set::<u64>(lo, dl, add(kl, 1u64));
+      let tmp_8 = rocq_array::set::<u64>(hi, dh, add(kh, 1u64));
+      gen_loop(a, b, c, n, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, ())
     },
     sumbool::right => {
       (((arr, m), lo), hi)
@@ -143,16 +121,16 @@ pub fn prefix_loop_1(e: u64, acc: u64, cnt: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Magicsequence.magicsequence_implem.prefix_loop (local: prefix_loop)
 // Variant: uncurried, lifted
 pub fn prefix_loop(e: u64, acc: u64, cnt: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(e, __rocq_global_223);
-  match bdec(v12) {
+  let tmp = ltb(e, __rocq_global_223);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &cnt;
-      let v18 = e;
-      let k = Clone::clone(&(v16)[v18]);
-      let v27 = add(e, 1u64);
-      let v33 = add(acc, k);
-      let v40 = rocq_array::set::<u64>(cnt, e, acc);
-      prefix_loop(v27, v33, v40, ())
+      let cnt_ref = &cnt;
+      let tmp_1 = e;
+      let k = Clone::clone(&(cnt_ref)[tmp_1]);
+      let tmp_2 = add(e, 1u64);
+      let tmp_3 = add(acc, k);
+      let tmp_4 = rocq_array::set::<u64>(cnt, e, acc);
+      prefix_loop(tmp_2, tmp_3, tmp_4, ())
     },
     sumbool::right => {
       cnt
@@ -169,20 +147,20 @@ pub fn place_loop_1(s: u64, n: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u
 // Rocq: Magicsequence.magicsequence_implem.place_loop (local: place_loop)
 // Variant: uncurried, lifted
 pub fn place_loop(s: u64, n: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u64>>, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &src;
-      let v20 = i;
-      let e = Clone::clone(&(v18)[v20]);
+      let src_ref = &src;
+      let tmp_1 = i;
+      let e = Clone::clone(&(src_ref)[tmp_1]);
       let d = land(lsr(e, s), __rocq_global_60);
-      let v35 = &cnt;
-      let v37 = d;
-      let p = Clone::clone(&(v35)[v37]);
-      let v46 = add(i, 1u64);
-      let v61 = rocq_array::set::<u64>(cnt, d, add(p, 1u64));
-      let v68 = rocq_array::set::<u64>(dst, p, e);
-      place_loop(s, n, src, v46, v61, v68, ())
+      let cnt_ref = &cnt;
+      let tmp_2 = d;
+      let p = Clone::clone(&(cnt_ref)[tmp_2]);
+      let tmp_3 = add(i, 1u64);
+      let tmp_4 = rocq_array::set::<u64>(cnt, d, add(p, 1u64));
+      let tmp_5 = rocq_array::set::<u64>(dst, p, e);
+      place_loop(s, n, src, tmp_3, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(src);
@@ -208,16 +186,16 @@ pub fn hash_loop_1(x: u64, y: u64, n: u64, i: u64, v: u64, r: Rc<Array<u64>>) ->
 // Rocq: Magicsequence.magicsequence_implem.hash_loop (local: hash_loop)
 // Variant: uncurried, lifted
 pub fn hash_loop(x: u64, y: u64, n: u64, i: u64, v: u64, r: Rc<Array<u64>>, _H: ()) -> u64 {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(i, 1u64);
-      let v33 = mul(v, x);
-      let v34 = &r;
-      let v36 = i;
-      let v37 = Clone::clone(&(v34)[v36]);
-      let v47 = mod_(add(v33, v37), y);
-      hash_loop(x, y, n, v25, v47, r, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = mul(v, x);
+      let r_ref = &r;
+      let tmp_3 = i;
+      let tmp_4 = Clone::clone(&(r_ref)[tmp_3]);
+      let tmp_5 = mod_(add(tmp_2, tmp_4), y);
+      hash_loop(x, y, n, tmp_1, tmp_5, r, ())
     },
     sumbool::right => {
       std::mem::drop(r);
@@ -229,30 +207,27 @@ pub fn hash_loop(x: u64, y: u64, n: u64, i: u64, v: u64, r: Rc<Array<u64>>, _H: 
 // Rocq: Magicsequence.magicsequence_implem.magic_impl
 // Variant: uncurried
 pub fn magic_impl(n: u64, a: u64, b: u64, c: u64, x: u64, y: u64) -> u64 {
-  let v17 = rocq_array::make::<u64>(n, 0u64);
-  let v25 = rocq_array::make::<u64>(__rocq_global_223, 0u64);
-  let v33 = rocq_array::make::<u64>(__rocq_global_223, 0u64);
-  let v54 = gen_loop_1(a, b, c, n, 0u64, a, 0u64, v17, v25, v33);
-  match v54 {
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(__rocq_global_223, 0u64);
+  let tmp_2 = rocq_array::make::<u64>(__rocq_global_223, 0u64);
+  let tmp_3 = gen_loop_1(a, b, c, n, 0u64, a, 0u64, tmp, tmp_1, tmp_2);
+  match tmp_3 {
     (v56, v58) => {
       match v56 {
         (v61, v63) => {
           match v61 {
             (v66, v68) => {
               let m = &v66;
-              let v80 = rocq_array::make::<u64>(n, 0u64);
-              let v86 = Rc::clone(m);
-              let r1 = pass(0u64, n, v86, v63, v80);
-              let v93 = __rocq_global_223;
-              let r = match ltb(v68, v93) {
-                true => {
-                  std::mem::drop(v66);
-                  std::mem::drop(v58);
-                  r1
-                },
-                false => {
-                  pass(16u64, n, r1, v58, v66)
-                },
+              let tmp_4 = rocq_array::make::<u64>(n, 0u64);
+              let m_clone = Rc::clone(m);
+              let r1 = pass(0u64, n, m_clone, v63, tmp_4);
+              let tmp_5 = __rocq_global_223;
+              let r = if ltb(v68, tmp_5) {
+                std::mem::drop(v66);
+                std::mem::drop(v58);
+                r1
+              } else {
+                pass(16u64, n, r1, v58, v66)
               };
               hash_loop_1(x, y, n, 0u64, 0u64, r)
             },
@@ -261,66 +236,6 @@ pub fn magic_impl(n: u64, a: u64, b: u64, c: u64, x: u64, y: u64) -> u64 {
       }
     },
   }
-}
-
-// Rocq: Magicsequence.magicsequence_implem.magic_impl
-pub fn magic_impl_curried(n: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>> {
-  let v3 = {
-    move |a: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |b: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> {
-          let n = &v8;
-          let a = &a;
-          let v18 = Clone::clone(n);
-          let v20 = Clone::clone(a);
-          let v23 = {
-            move |c: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> {
-              let n = &v18;
-              let a = &v20;
-              let b = &b;
-              let v32 = Clone::clone(n);
-              let v34 = Clone::clone(a);
-              let v36 = Clone::clone(b);
-              let v39 = {
-                move |x: u64| -> Rc<dyn Fn(u64) -> u64> {
-                  let n = &v32;
-                  let a = &v34;
-                  let b = &v36;
-                  let c = &c;
-                  let v50 = Clone::clone(n);
-                  let v52 = Clone::clone(a);
-                  let v54 = Clone::clone(b);
-                  let v56 = Clone::clone(c);
-                  let v59 = {
-                    move |y: u64| -> u64 {
-                      let v73 = Clone::clone(&v50);
-                      let v75 = Clone::clone(&v52);
-                      let v77 = Clone::clone(&v54);
-                      let v79 = Clone::clone(&v56);
-                      let v81 = Clone::clone(&x);
-                      magic_impl(v73, v75, v77, v79, v81, y)
-                    }
-                  };
-                  let v87: Rc<dyn Fn(u64) -> u64> = Rc::new(v59);
-                  v87
-                }
-              };
-              let v91: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = Rc::new(v39);
-              v91
-            }
-          };
-          let v95: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> = Rc::new(v23);
-          v95
-        }
-      };
-      let v99: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>> = Rc::new(v11);
-      v99
-    }
-  };
-  let v103: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>> = Rc::new(v3);
-  v103
 }
 
 mod __rocq_reuse {
@@ -471,12 +386,5 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, u64, u64, u64) -> u64> {
-  let v0: Rc<dyn Fn(u64, u64, u64, u64, u64, u64) -> u64> = __rocq_global_483.with(Clone::clone);
-  v0
-}
 const __rocq_global_60: u64 = 65535u64;
 const __rocq_global_223: u64 = 65536u64;
-std::thread_local! { static __rocq_global_483: Rc<dyn Fn(u64, u64, u64, u64, u64, u64) -> u64> = magic(); }
-std::thread_local! { static __rocq_global_486: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>>>>> = magic_curried(); }

@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -55,21 +54,6 @@ pub fn seed() -> u64 {
   88172645463325252u64
 }
 
-// Rocq: Babelfish.babelfish_implem.babelfish
-// Variant: uncurried
-pub fn babelfish() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>> = babelfish_impl;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Babelfish.babelfish_implem.babelfish
-pub fn babelfish_curried() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>> = babelfish_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -124,29 +108,26 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Babelfish.babelfish_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Babelfish.babelfish_implem.hash_loop
@@ -158,14 +139,14 @@ pub fn hash_loop_1(a: u64, s: Rc<rocq_string::RocqString>, len: u64, k: u64, acc
 // Rocq: Babelfish.babelfish_implem.hash_loop (local: hash_loop)
 // Variant: uncurried, lifted
 pub fn hash_loop(a: u64, s: Rc<rocq_string::RocqString>, len: u64, k: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(k, len);
-  match bdec(v13) {
+  let tmp = ltb(k, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(k, 1u64);
-      let v33 = mul(acc, a);
-      let v37 = Rc::clone(&s);
-      let v45 = add(v33, get(v37, k));
-      hash_loop(a, s, len, v24, mod_(add(v45, 1u64), __rocq_global_95), ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = mul(acc, a);
+      let s_clone = Rc::clone(&s);
+      let tmp_3 = add(tmp_2, get(s_clone, k));
+      hash_loop(a, s, len, tmp_1, mod_(add(tmp_3, 1u64), __rocq_global_95), ())
     },
     sumbool::right => {
       std::mem::drop(s);
@@ -177,8 +158,8 @@ pub fn hash_loop(a: u64, s: Rc<rocq_string::RocqString>, len: u64, k: u64, acc: 
 // Rocq: Babelfish.babelfish_implem.hash
 // Variant: uncurried
 pub fn hash(a: u64, s: Rc<rocq_string::RocqString>) -> u64 {
-  let v5 = Rc::clone(&s);
-  let len = length(v5);
+  let s_clone = Rc::clone(&s);
+  let len = length(s_clone);
   hash_loop_1(a, s, len, 0u64, 0u64)
 }
 
@@ -191,18 +172,16 @@ pub fn count_loop_1(a: u64, nb: u64, f: Rc<Array<Rc<rocq_string::RocqString>>>, 
 // Rocq: Babelfish.babelfish_implem.count_loop (local: count_loop)
 // Variant: uncurried, lifted
 pub fn count_loop(a: u64, nb: u64, f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, i: u64, cnt: Rc<Array<u64>>, bk: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &f;
-      let v24 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v21, i);
-      let b = mod_(hash(a, v24), nb);
-      let v42 = add(i, 1u64);
-      let v44 = &cnt;
-      let v47 = rocq_array::get::<u64>(&v44, b);
-      let v61 = rocq_array::set::<u64>(cnt, b, add(v47, 1u64));
-      let v68 = rocq_array::set::<u64>(bk, i, b);
-      count_loop(a, nb, f, n, v42, v61, v68, ())
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&f, i);
+      let b = mod_(hash(a, tmp_1), nb);
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&cnt, b);
+      let tmp_4 = rocq_array::set::<u64>(cnt, b, add(tmp_3, 1u64));
+      let tmp_5 = rocq_array::set::<u64>(bk, i, b);
+      count_loop(a, nb, f, n, tmp_2, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(f);
@@ -226,15 +205,13 @@ pub fn sumsq_loop_1(cnt: Rc<Array<u64>>, nb: u64, b: u64, acc: u64) -> u64 {
 // Rocq: Babelfish.babelfish_implem.sumsq_loop (local: sumsq_loop)
 // Variant: uncurried, lifted
 pub fn sumsq_loop(cnt: Rc<Array<u64>>, nb: u64, b: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(b, nb);
-  match bdec(v12) {
+  let tmp = ltb(b, nb);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(b, 1u64);
-      let v26 = &cnt;
-      let v29 = rocq_array::get::<u64>(&v26, b);
-      let v30 = &cnt;
-      let v33 = rocq_array::get::<u64>(&v30, b);
-      sumsq_loop(cnt, nb, v23, add(acc, mul(v29, v33)), ())
+      let tmp_1 = add(b, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&cnt, b);
+      let tmp_3 = rocq_array::get::<u64>(&cnt, b);
+      sumsq_loop(cnt, nb, tmp_1, add(acc, mul(tmp_2, tmp_3)), ())
     },
     sumbool::right => {
       std::mem::drop(cnt);
@@ -254,27 +231,24 @@ pub fn level1_1(f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, nb: u64, trie
 pub fn level1(f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, nb: u64, tries: u64, t: u64, st: u64, bk: Rc<Array<u64>>, _H: ()) -> (((u64, u64), Rc<Array<u64>>), Rc<Array<u64>>) {
   let st_ = rng_next(st);
   let a = rng_draw(st_);
-  let v25 = rocq_array::make::<u64>(nb, 0u64);
-  let v32 = Rc::clone(&f);
-  let v41 = count_loop_1(a, nb, v32, n, 0u64, v25, bk);
-  match v41 {
+  let tmp = rocq_array::make::<u64>(nb, 0u64);
+  let f_clone = Rc::clone(&f);
+  let tmp_1 = count_loop_1(a, nb, f_clone, n, 0u64, tmp, bk);
+  match tmp_1 {
     (v43, v45) => {
       let bk_ = &v43;
-      let v55 = ltb(t, tries);
-      match bdec(v55) {
+      let tmp_2 = ltb(t, tries);
+      match bdec(tmp_2) {
         sumbool::left => {
-          let v66 = Rc::clone(bk_);
-          let v73 = sumsq_loop_1(v66, nb, 0u64, 0u64);
-          let v81 = mul(4u64, n);
-          match leb(v73, v81) {
-            true => {
-              std::mem::drop(f);
-              (((a, st_), v43), v45)
-            },
-            false => {
-              std::mem::drop(v43);
-              level1(f, n, nb, tries, add(t, 1u64), st_, v45, ())
-            },
+          let bk__clone = Rc::clone(bk_);
+          let tmp_3 = sumsq_loop_1(bk__clone, nb, 0u64, 0u64);
+          let tmp_4 = mul(4u64, n);
+          if leb(tmp_3, tmp_4) {
+            std::mem::drop(f);
+            (((a, st_), v43), v45)
+          } else {
+            std::mem::drop(v43);
+            level1(f, n, nb, tries, add(t, 1u64), st_, v45, ())
           }
         },
         sumbool::right => {
@@ -295,18 +269,17 @@ pub fn layout_loop_1(cnt: Rc<Array<u64>>, nb: u64, b: u64, off: u64, st: u64, me
 // Rocq: Babelfish.babelfish_implem.layout_loop (local: layout_loop)
 // Variant: uncurried, lifted
 pub fn layout_loop(cnt: Rc<Array<u64>>, nb: u64, b: u64, off: u64, st: u64, meta: Rc<Array<u64>>, cur: Rc<Array<u64>>, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v15 = ltb(b, nb);
-  match bdec(v15) {
+  let tmp = ltb(b, nb);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &cnt;
-      let c = rocq_array::get::<u64>(&v19, b);
-      let v30 = add(b, 1u64);
-      let v42 = add(off, mul(c, c));
-      let v48 = add(st, c);
-      let v63 = rocq_array::set::<u64>(meta, mul(3u64, b), off);
-      let v92 = rocq_array::set::<u64>(v63, add(mul(3u64, b), 1u64), mul(c, c));
-      let v99 = rocq_array::set::<u64>(cur, b, st);
-      layout_loop(cnt, nb, v30, v42, v48, v92, v99, ())
+      let c = rocq_array::get::<u64>(&cnt, b);
+      let tmp_1 = add(b, 1u64);
+      let tmp_2 = add(off, mul(c, c));
+      let tmp_3 = add(st, c);
+      let tmp_4 = rocq_array::set::<u64>(meta, mul(3u64, b), off);
+      let tmp_5 = rocq_array::set::<u64>(tmp_4, add(mul(3u64, b), 1u64), mul(c, c));
+      let tmp_6 = rocq_array::set::<u64>(cur, b, st);
+      layout_loop(cnt, nb, tmp_1, tmp_2, tmp_3, tmp_5, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(cnt);
@@ -324,17 +297,15 @@ pub fn distribute_1(bk: Rc<Array<u64>>, n: u64, i: u64, cur: Rc<Array<u64>>, ord
 // Rocq: Babelfish.babelfish_implem.distribute (local: distribute)
 // Variant: uncurried, lifted
 pub fn distribute(bk: Rc<Array<u64>>, n: u64, i: u64, cur: Rc<Array<u64>>, order: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &bk;
-      let b = rocq_array::get::<u64>(&v17, i);
-      let v21 = &cur;
-      let p = rocq_array::get::<u64>(&v21, b);
-      let v32 = add(i, 1u64);
-      let v47 = rocq_array::set::<u64>(cur, b, add(p, 1u64));
-      let v54 = rocq_array::set::<u64>(order, p, i);
-      distribute(bk, n, v32, v47, v54, ())
+      let b = rocq_array::get::<u64>(&bk, i);
+      let p = rocq_array::get::<u64>(&cur, b);
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(cur, b, add(p, 1u64));
+      let tmp_3 = rocq_array::set::<u64>(order, p, i);
+      distribute(bk, n, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(bk);
@@ -353,27 +324,21 @@ pub fn place_loop_1(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u
 // Rocq: Babelfish.babelfish_implem.place_loop (local: place_loop)
 // Variant: uncurried, lifted
 pub fn place_loop(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u64>>, a: u64, off: u64, sz: u64, e: u64, i: u64, slot: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, bool) {
-  let v16 = ltb(i, e);
-  match bdec(v16) {
+  let tmp = ltb(i, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &order;
-      let k = rocq_array::get::<u64>(&v20, i);
-      let v27 = &f;
-      let v30 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v27, k);
-      let s = add(off, mod_(hash(a, v30), sz));
-      let v47 = &slot;
-      let v50 = rocq_array::get::<u64>(&v47, s);
-      match eqb(v50, 0u64) {
-        true => {
-          let v66 = add(i, 1u64);
-          let v81 = rocq_array::set::<u64>(slot, s, add(k, 1u64));
-          place_loop(f, order, a, off, sz, e, v66, v81, ())
-        },
-        false => {
-          std::mem::drop(order);
-          std::mem::drop(f);
-          (slot, false)
-        },
+      let k = rocq_array::get::<u64>(&order, i);
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&f, k);
+      let s = add(off, mod_(hash(a, tmp_1), sz));
+      let tmp_2 = rocq_array::get::<u64>(&slot, s);
+      if eqb(tmp_2, 0u64) {
+        let tmp_3 = add(i, 1u64);
+        let tmp_4 = rocq_array::set::<u64>(slot, s, add(k, 1u64));
+        place_loop(f, order, a, off, sz, e, tmp_3, tmp_4, ())
+      } else {
+        std::mem::drop(order);
+        std::mem::drop(f);
+        (slot, false)
       }
     },
     sumbool::right => {
@@ -393,12 +358,12 @@ pub fn clear_loop_1(e: u64, i: u64, slot: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Babelfish.babelfish_implem.clear_loop (local: clear_loop)
 // Variant: uncurried, lifted
 pub fn clear_loop(e: u64, i: u64, slot: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, e);
-  match bdec(v11) {
+  let tmp = ltb(i, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(i, 1u64);
-      let v31 = rocq_array::set::<u64>(slot, i, 0u64);
-      clear_loop(e, v22, v31, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(slot, i, 0u64);
+      clear_loop(e, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       slot
@@ -417,33 +382,30 @@ pub fn level2_1(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u64>>
 pub fn level2(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u64>>, st: u64, c: u64, off: u64, sz: u64, tries: u64, t: u64, rng: u64, slot: Rc<Array<u64>>, _H: ()) -> ((Rc<Array<u64>>, u64), u64) {
   let rng_ = rng_next(rng);
   let a = rng_draw(rng_);
-  let v25 = add(st, c);
-  let v28 = Rc::clone(&f);
-  let v31 = Rc::clone(&order);
-  let v44 = place_loop_1(v28, v31, a, off, sz, v25, st, slot);
-  match v44 {
+  let tmp = add(st, c);
+  let f_clone = Rc::clone(&f);
+  let order_clone = Rc::clone(&order);
+  let tmp_1 = place_loop_1(f_clone, order_clone, a, off, sz, tmp, st, slot);
+  match tmp_1 {
     (v46, v48) => {
-      match v48 {
-        true => {
-          std::mem::drop(f);
-          std::mem::drop(order);
-          ((v46, a), rng_)
-        },
-        false => {
-          let v72 = ltb(t, tries);
-          match bdec(v72) {
-            sumbool::left => {
-              let v83 = add(t, 1u64);
-              let v97 = clear_loop_1(add(off, sz), off, v46);
-              level2(f, order, st, c, off, sz, tries, v83, rng_, v97, ())
-            },
-            sumbool::right => {
-              std::mem::drop(f);
-              std::mem::drop(order);
-              ((v46, a), rng_)
-            },
-          }
-        },
+      if v48 {
+        std::mem::drop(f);
+        std::mem::drop(order);
+        ((v46, a), rng_)
+      } else {
+        let tmp_2 = ltb(t, tries);
+        match bdec(tmp_2) {
+          sumbool::left => {
+            let tmp_3 = add(t, 1u64);
+            let tmp_4 = clear_loop_1(add(off, sz), off, v46);
+            level2(f, order, st, c, off, sz, tries, tmp_3, rng_, tmp_4, ())
+          },
+          sumbool::right => {
+            std::mem::drop(f);
+            std::mem::drop(order);
+            ((v46, a), rng_)
+          },
+        }
       }
     },
   }
@@ -458,39 +420,30 @@ pub fn buckets_loop_1(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array
 // Rocq: Babelfish.babelfish_implem.buckets_loop (local: buckets_loop)
 // Variant: uncurried, lifted
 pub fn buckets_loop(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u64>>, cnt: Rc<Array<u64>>, nb: u64, b: u64, st: u64, rng: u64, meta: Rc<Array<u64>>, slot: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v17 = ltb(b, nb);
-  match bdec(v17) {
+  let tmp = ltb(b, nb);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &cnt;
-      let c = rocq_array::get::<u64>(&v21, b);
-      let v32 = eqb(c, 0u64);
-      match &v32 {
-        true => {
-          buckets_loop(f, order, cnt, nb, add(b, 1u64), st, rng, meta, slot, ())
-        },
-        false => {
-          let v76 = mul(3u64, b);
-          let v77 = &meta;
-          let off = rocq_array::get::<u64>(&v77, v76);
-          let v96 = add(mul(3u64, b), 1u64);
-          let v97 = &meta;
-          let sz = rocq_array::get::<u64>(&v97, v96);
-          let v108 = Rc::clone(&f);
-          let v111 = Rc::clone(&order);
-          let v128 = level2_1(v108, v111, st, c, off, sz, 64u64, 0u64, rng, slot);
-          match v128 {
-            (v130, v132) => {
-              match v130 {
-                (v135, v137) => {
-                  let v146 = add(b, 1u64);
-                  let v152 = add(st, c);
-                  let v175 = rocq_array::set::<u64>(meta, add(mul(3u64, b), 2u64), v137);
-                  buckets_loop(f, order, cnt, nb, v146, v152, v132, v175, v135, ())
-                },
-              }
-            },
-          }
-        },
+      let c = rocq_array::get::<u64>(&cnt, b);
+      if eqb(c, 0u64) {
+        buckets_loop(f, order, cnt, nb, add(b, 1u64), st, rng, meta, slot, ())
+      } else {
+        let off = rocq_array::get::<u64>(&meta, mul(3u64, b));
+        let sz = rocq_array::get::<u64>(&meta, add(mul(3u64, b), 1u64));
+        let f_clone = Rc::clone(&f);
+        let order_clone = Rc::clone(&order);
+        let tmp_1 = level2_1(f_clone, order_clone, st, c, off, sz, 64u64, 0u64, rng, slot);
+        match tmp_1 {
+          (v130, v132) => {
+            match v130 {
+              (v135, v137) => {
+                let tmp_2 = add(b, 1u64);
+                let tmp_3 = add(st, c);
+                let tmp_4 = rocq_array::set::<u64>(meta, add(mul(3u64, b), 2u64), v137);
+                buckets_loop(f, order, cnt, nb, tmp_2, tmp_3, v132, tmp_4, v135, ())
+              },
+            }
+          },
+        }
       }
     },
     sumbool::right => {
@@ -505,38 +458,35 @@ pub fn buckets_loop(f: Rc<Array<Rc<rocq_string::RocqString>>>, order: Rc<Array<u
 // Rocq: Babelfish.babelfish_implem.build
 // Variant: uncurried
 pub fn build(f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64) -> Rc<tables> {
-  let v4 = 0u64;
-  let nb = match eqb(n, v4) {
-    true => {
-      1u64
-    },
-    false => {
-      n
-    },
+  let tmp = 0u64;
+  let nb = if eqb(n, tmp) {
+    1u64
+  } else {
+    n
   };
-  let v30 = rocq_array::make::<u64>(n, 0u64);
-  let v33 = Rc::clone(&f);
-  let v46 = level1_1(v33, n, nb, 32u64, 0u64, __rocq_global_460, v30);
-  match v46 {
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let f_clone = Rc::clone(&f);
+  let tmp_2 = level1_1(f_clone, n, nb, 32u64, 0u64, __rocq_global_460, tmp_1);
+  match tmp_2 {
     (v48, v50) => {
       match v48 {
         (v53, v55) => {
           let p0 = &v55;
           match v53 {
             (v59, v61) => {
-              let v84 = rocq_array::make::<u64>(mul(3u64, nb), 0u64);
-              let v91 = rocq_array::make::<u64>(nb, 0u64);
-              let v93 = Rc::clone(p0);
-              let v106 = layout_loop_1(v93, nb, 0u64, 0u64, 0u64, v84, v91);
-              match v106 {
+              let tmp_3 = rocq_array::make::<u64>(mul(3u64, nb), 0u64);
+              let tmp_4 = rocq_array::make::<u64>(nb, 0u64);
+              let p0_clone = Rc::clone(p0);
+              let tmp_5 = layout_loop_1(p0_clone, nb, 0u64, 0u64, 0u64, tmp_3, tmp_4);
+              match tmp_5 {
                 (v108, v110) => {
                   match v108 {
                     (v113, v115) => {
-                      let v126 = rocq_array::make::<u64>(n, 0u64);
-                      let order = distribute_1(v50, n, 0u64, v115, v126);
-                      let v149 = rocq_array::make::<u64>(v110, 0u64);
-                      let v168 = buckets_loop_1(f, order, v55, nb, 0u64, 0u64, v61, v113, v149);
-                      match v168 {
+                      let tmp_6 = rocq_array::make::<u64>(n, 0u64);
+                      let order = distribute_1(v50, n, 0u64, v115, tmp_6);
+                      let tmp_7 = rocq_array::make::<u64>(v110, 0u64);
+                      let tmp_8 = buckets_loop_1(f, order, v55, nb, 0u64, 0u64, v61, v113, tmp_7);
+                      match tmp_8 {
                         (v170, v172) => {
                           Rc::new(tables { t_a1: v59, t_nb: nb, t_meta: v170, t_slot: v172 })
                         },
@@ -555,64 +505,54 @@ pub fn build(f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64) -> Rc<tables> {
 
 // Rocq: Babelfish.babelfish_implem.t_slot
 pub fn t_slot(t: Rc<tables>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&t).t_slot));
+  let t_t_slot_clone = Rc::clone(&t.t_slot);
   std::mem::drop(t);
-  v3
+  t_t_slot_clone
 }
 
 // Rocq: Babelfish.babelfish_implem.t_meta
 pub fn t_meta(t: Rc<tables>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&t).t_meta));
+  let t_t_meta_clone = Rc::clone(&t.t_meta);
   std::mem::drop(t);
-  v3
+  t_t_meta_clone
 }
 
 // Rocq: Babelfish.babelfish_implem.t_a1
 // Variant: borrowed
 pub fn t_a1(t: &Rc<tables>) -> u64 {
-  let v1 = t;
-  Clone::clone((&(&**v1).t_a1))
+  let tmp = t;
+  Clone::clone(&tmp.t_a1)
 }
 
 // Rocq: Babelfish.babelfish_implem.t_nb
 // Variant: borrowed
 pub fn t_nb(t: &Rc<tables>) -> u64 {
-  let v1 = t;
-  Clone::clone((&(&**v1).t_nb))
+  let tmp = t;
+  Clone::clone(&tmp.t_nb)
 }
 
 // Rocq: Babelfish.babelfish_implem.pos
 // Variant: uncurried
 pub fn pos(t: Rc<tables>, x: Rc<rocq_string::RocqString>) -> u64 {
-  let v5 = Rc::clone(&t);
-  let meta = t_meta(v5);
-  let v13 = t_a1(&t);
-  let v17 = Rc::clone(&x);
-  let b = mod_(hash(v13, v17), t_nb(&t));
-  let v43 = add(mul(3u64, b), 1u64);
-  let v44 = &meta;
-  let sz = rocq_array::get::<u64>(&v44, v43);
-  match eqb(sz, 0u64) {
-    true => {
-      std::mem::drop(x);
-      std::mem::drop(meta);
-      let v60 = t_slot(t);
-      let v61 = &v60;
-      let v62 = rocq_array::length::<u64>(&v61);
-      std::mem::drop(v60);
-      v62
-    },
-    false => {
-      std::mem::drop(t);
-      let v73 = mul(3u64, b);
-      let v74 = &meta;
-      let v77 = rocq_array::get::<u64>(&v74, v73);
-      let v95 = add(mul(3u64, b), 2u64);
-      let v96 = &meta;
-      let v99 = rocq_array::get::<u64>(&v96, v95);
-      std::mem::drop(meta);
-      add(v77, mod_(hash(v99, x), sz))
-    },
+  let t_clone = Rc::clone(&t);
+  let meta = t_meta(t_clone);
+  let tmp = t_a1(&t);
+  let x_clone = Rc::clone(&x);
+  let b = mod_(hash(tmp, x_clone), t_nb(&t));
+  let sz = rocq_array::get::<u64>(&meta, add(mul(3u64, b), 1u64));
+  if eqb(sz, 0u64) {
+    std::mem::drop(x);
+    std::mem::drop(meta);
+    let tmp_1 = t_slot(t);
+    let tmp_2 = rocq_array::length::<u64>(&tmp_1);
+    std::mem::drop(tmp_1);
+    tmp_2
+  } else {
+    std::mem::drop(t);
+    let tmp_3 = rocq_array::get::<u64>(&meta, mul(3u64, b));
+    let tmp_4 = rocq_array::get::<u64>(&meta, add(mul(3u64, b), 2u64));
+    std::mem::drop(meta);
+    add(tmp_3, mod_(hash(tmp_4, x), sz))
   }
 }
 
@@ -625,29 +565,23 @@ pub fn check_loop_1(t: Rc<tables>, f: Rc<Array<Rc<rocq_string::RocqString>>>, n:
 // Rocq: Babelfish.babelfish_implem.check_loop (local: check_loop)
 // Variant: uncurried, lifted
 pub fn check_loop(t: Rc<tables>, f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, i: u64, _H: ()) -> bool {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = Rc::clone(&t);
-      let v21 = t_slot(v20);
-      let v23 = &f;
-      let v26 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v23, i);
-      let v29 = Rc::clone(&t);
-      let v32 = pos(v29, v26);
-      let v33 = &v21;
-      let v36 = rocq_array::get::<u64>(&v33, v32);
-      let v44 = add(i, 1u64);
-      match eqb(v36, v44) {
-        true => {
-          std::mem::drop(v21);
-          check_loop(t, f, n, add(i, 1u64), ())
-        },
-        false => {
-          std::mem::drop(t);
-          std::mem::drop(f);
-          std::mem::drop(v21);
-          false
-        },
+      let t_clone = Rc::clone(&t);
+      let tmp_1 = t_slot(t_clone);
+      let tmp_2 = rocq_array::get::<Rc<rocq_string::RocqString>>(&f, i);
+      let t_clone_1 = Rc::clone(&t);
+      let tmp_3 = rocq_array::get::<u64>(&tmp_1, pos(t_clone_1, tmp_2));
+      let tmp_4 = add(i, 1u64);
+      if eqb(tmp_3, tmp_4) {
+        std::mem::drop(tmp_1);
+        check_loop(t, f, n, add(i, 1u64), ())
+      } else {
+        std::mem::drop(t);
+        std::mem::drop(f);
+        std::mem::drop(tmp_1);
+        false
       }
     },
     sumbool::right => {
@@ -661,10 +595,10 @@ pub fn check_loop(t: Rc<tables>, f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u
 // Rocq: Corelib.Strings.PrimString.compare
 // Variant: uncurried
 pub fn compare(v0: Rc<rocq_string::RocqString>, v1: Rc<rocq_string::RocqString>) -> std::cmp::Ordering {
-  let v4 = rocq_string::compare(&v0, &v1);
+  let tmp = rocq_string::compare(&v0, &v1);
   std::mem::drop(v1);
   std::mem::drop(v0);
-  v4
+  tmp
 }
 
 // Rocq: Babelfish.babelfish_implem.scan_loop
@@ -676,13 +610,12 @@ pub fn scan_loop_1(f: Rc<Array<Rc<rocq_string::RocqString>>>, x: Rc<rocq_string:
 // Rocq: Babelfish.babelfish_implem.scan_loop (local: scan_loop)
 // Variant: uncurried, lifted
 pub fn scan_loop(f: Rc<Array<Rc<rocq_string::RocqString>>>, x: Rc<rocq_string::RocqString>, n: u64, i: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &f;
-      let v21 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v17, i);
-      let v25 = Rc::clone(&x);
-      match compare(v21, v25) {
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&f, i);
+      let x_clone = Rc::clone(&x);
+      match compare(tmp_1, x_clone) {
         std::cmp::Ordering::Equal => {
           std::mem::drop(f);
           std::mem::drop(x);
@@ -707,54 +640,44 @@ pub fn scan_loop(f: Rc<Array<Rc<rocq_string::RocqString>>>, x: Rc<rocq_string::R
 // Rocq: Babelfish.babelfish_implem.query
 // Variant: uncurried
 pub fn query(e: Rc<Array<Rc<rocq_string::RocqString>>>, f: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, ok: bool, t: Rc<tables>, x: Rc<rocq_string::RocqString>) -> Rc<option<Rc<rocq_string::RocqString>>> {
-  let i = match ok {
-    true => {
-      let v11 = Rc::clone(&t);
-      let v12 = t_slot(v11);
-      let v18 = Rc::clone(&x);
-      let v19 = pos(t, v18);
-      let v20 = &v12;
-      let v23 = rocq_array::get::<u64>(&v20, v19);
-      std::mem::drop(v12);
-      sub(v23, 1u64)
-    },
-    false => {
-      std::mem::drop(t);
-      let v38 = Rc::clone(&f);
-      let v41 = Rc::clone(&x);
-      scan_loop_1(v38, v41, n, 0u64)
-    },
+  let i = if ok {
+    let t_clone = Rc::clone(&t);
+    let tmp = t_slot(t_clone);
+    let x_clone = Rc::clone(&x);
+    let tmp_1 = rocq_array::get::<u64>(&tmp, pos(t, x_clone));
+    std::mem::drop(tmp);
+    sub(tmp_1, 1u64)
+  } else {
+    std::mem::drop(t);
+    let f_clone = Rc::clone(&f);
+    let x_clone_1 = Rc::clone(&x);
+    scan_loop_1(f_clone, x_clone_1, n, 0u64)
   };
-  match ltb(i, n) {
-    true => {
-      let v58 = &f;
-      let v62 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v58, i);
-      match compare(v62, x) {
-        std::cmp::Ordering::Equal => {
-          std::mem::drop(f);
-          let v68 = &e;
-          let v71 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v68, i);
-          std::mem::drop(e);
-          Rc::new(option::<Rc<rocq_string::RocqString>>::Some(v71))
-        },
-        std::cmp::Ordering::Less => {
-          std::mem::drop(e);
-          std::mem::drop(f);
-          Rc::new(option::<Rc<rocq_string::RocqString>>::None)
-        },
-        std::cmp::Ordering::Greater => {
-          std::mem::drop(e);
-          std::mem::drop(f);
-          Rc::new(option::<Rc<rocq_string::RocqString>>::None)
-        },
-      }
-    },
-    false => {
-      std::mem::drop(e);
-      std::mem::drop(f);
-      std::mem::drop(x);
-      Rc::new(option::<Rc<rocq_string::RocqString>>::None)
-    },
+  if ltb(i, n) {
+    let tmp_2 = rocq_array::get::<Rc<rocq_string::RocqString>>(&f, i);
+    match compare(tmp_2, x) {
+      std::cmp::Ordering::Equal => {
+        std::mem::drop(f);
+        let tmp_3 = rocq_array::get::<Rc<rocq_string::RocqString>>(&e, i);
+        std::mem::drop(e);
+        Rc::new(option::<Rc<rocq_string::RocqString>>::Some(tmp_3))
+      },
+      std::cmp::Ordering::Less => {
+        std::mem::drop(e);
+        std::mem::drop(f);
+        Rc::new(option::<Rc<rocq_string::RocqString>>::None)
+      },
+      std::cmp::Ordering::Greater => {
+        std::mem::drop(e);
+        std::mem::drop(f);
+        Rc::new(option::<Rc<rocq_string::RocqString>>::None)
+      },
+    }
+  } else {
+    std::mem::drop(e);
+    std::mem::drop(f);
+    std::mem::drop(x);
+    Rc::new(option::<Rc<rocq_string::RocqString>>::None)
   }
 }
 
@@ -767,17 +690,16 @@ pub fn fill_loop_1(e: Rc<Array<Rc<rocq_string::RocqString>>>, f: Rc<Array<Rc<roc
 // Rocq: Babelfish.babelfish_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(e: Rc<Array<Rc<rocq_string::RocqString>>>, f: Rc<Array<Rc<rocq_string::RocqString>>>, m: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, ok: bool, t: Rc<tables>, L: u64, k: u64, out: Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>, _H: ()) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>> {
-  let v17 = ltb(k, L);
-  match bdec(v17) {
+  let tmp = ltb(k, L);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = add(k, 1u64);
-      let v30 = &m;
-      let v33 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v30, k);
-      let v36 = Rc::clone(&e);
-      let v39 = Rc::clone(&f);
-      let v46 = Rc::clone(&t);
-      let v56 = rocq_array::set::<Rc<option<Rc<rocq_string::RocqString>>>>(out, k, query(v36, v39, n, ok, v46, v33));
-      fill_loop(e, f, m, n, ok, t, L, v28, v56, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<Rc<rocq_string::RocqString>>(&m, k);
+      let e_clone = Rc::clone(&e);
+      let f_clone = Rc::clone(&f);
+      let t_clone = Rc::clone(&t);
+      let tmp_3 = rocq_array::set::<Rc<option<Rc<rocq_string::RocqString>>>>(out, k, query(e_clone, f_clone, n, ok, t_clone, tmp_2));
+      fill_loop(e, f, m, n, ok, t, L, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(e);
@@ -792,38 +714,15 @@ pub fn fill_loop(e: Rc<Array<Rc<rocq_string::RocqString>>>, f: Rc<Array<Rc<rocq_
 // Rocq: Babelfish.babelfish_implem.babelfish_impl
 // Variant: uncurried
 pub fn babelfish_impl(e: Rc<Array<Rc<rocq_string::RocqString>>>, f: Rc<Array<Rc<rocq_string::RocqString>>>, m: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>> {
-  let v3 = &f;
-  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&v3);
-  let v8 = Rc::clone(&f);
-  let t = build(v8, n);
-  let v17 = Rc::clone(&t);
-  let v20 = Rc::clone(&f);
-  let ok = check_loop_1(v17, v20, n, 0u64);
-  let v26 = &m;
-  let L = rocq_array::length::<Rc<rocq_string::RocqString>>(&v26);
-  let v38 = rocq_array::make::<Rc<option<Rc<rocq_string::RocqString>>>>(L, Rc::new(option::<Rc<rocq_string::RocqString>>::None));
-  fill_loop_1(e, f, m, n, ok, t, L, 0u64, v38)
-}
-
-// Rocq: Babelfish.babelfish_implem.babelfish_impl
-pub fn babelfish_impl_curried(e: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>> {
-  let v3 = {
-    move |f: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> {
-      let e = &e;
-      let v8 = Rc::clone(e);
-      let v11 = {
-        move |m: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>> {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&f);
-          babelfish_impl(v19, v21, m)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>> = Rc::new(v3);
-  v31
+  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&f);
+  let f_clone = Rc::clone(&f);
+  let t = build(f_clone, n);
+  let t_clone = Rc::clone(&t);
+  let f_clone_1 = Rc::clone(&f);
+  let ok = check_loop_1(t_clone, f_clone_1, n, 0u64);
+  let L = rocq_array::length::<Rc<rocq_string::RocqString>>(&m);
+  let tmp = rocq_array::make::<Rc<option<Rc<rocq_string::RocqString>>>>(L, Rc::new(option::<Rc<rocq_string::RocqString>>::None));
+  fill_loop_1(e, f, m, n, ok, t, L, 0u64, tmp)
 }
 
 mod __rocq_reuse {
@@ -974,12 +873,5 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> = __rocq_global_1345.with(Clone::clone);
-  v0
-}
 const __rocq_global_95: u64 = 2147483647u64;
 const __rocq_global_460: u64 = 88172645463325252u64;
-std::thread_local! { static __rocq_global_1345: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>> = babelfish(); }
-std::thread_local! { static __rocq_global_1348: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<Rc<option<Rc<rocq_string::RocqString>>>>>>>> = babelfish_curried(); }

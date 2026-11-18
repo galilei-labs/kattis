@@ -6,9 +6,11 @@
  (rocq.theory
   (name Atrivialpursuit.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Atrivialpursuit)
  (modules atrivialpursuit_implem)
- (theories Atrivialpursuit.spec Stdlib stdpp StdGalilei))
+  (theories Atrivialpursuit.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

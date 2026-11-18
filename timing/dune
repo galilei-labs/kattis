@@ -6,9 +6,11 @@
  (rocq.theory
   (name Timing.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name Timing)
  (modules timing_implem)
- (theories Timing.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Timing.spec Stdlib stdpp StdGalilei Flocq)
+  (generate_project_file))

@@ -478,10 +478,10 @@ Qed.
 
 Lemma in_product_divide : forall q l, In q l -> (q | product l).
 Proof.
-  intros q l. unfold product. induction l as [| x l IH]; simpl; [tauto|].
+  intros q l. induction l as [| x l IH]; cbn [product In]; [tauto|].
   intros [-> | H].
-  - exists (fold_right Z.mul 1 l). lia.
-  - destruct (IH H) as [k Hk]. exists (x * k). rewrite Hk. lia.
+  - exists (product l). ring.
+  - destruct (IH H) as [k Hk]. exists (x * k). rewrite Hk. ring.
 Qed.
 
 (* ------------------------------------------------------------------ *)

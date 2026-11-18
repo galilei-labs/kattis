@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -13,21 +12,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Cudak.cudak_implem.cudak
-// Variant: uncurried
-pub fn cudak() -> Rc<dyn Fn(u64, u64, u64) -> (u64, u64)> {
-  let v0: fn(u64, u64, u64) -> (u64, u64) = cudak_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Cudak.cudak_implem.cudak
-pub fn cudak_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = cudak_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
@@ -44,13 +28,10 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -74,13 +55,10 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Cudak.cudak_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -93,8 +71,8 @@ pub fn digits_1(b: u64, d: u64, q: u64) -> (u64, u64) {
 // Rocq: Cudak.cudak_implem.digits (local: digits)
 // Variant: uncurried, lifted
 pub fn digits(b: u64, d: u64, q: u64, _H: ()) -> (u64, u64) {
-  let v33 = andb(ltb(d, 15u64), leb(mul(q, 10u64), b));
-  match bdec(v33) {
+  let tmp = andb(ltb(d, 15u64), leb(mul(q, 10u64), b));
+  match bdec(tmp) {
     sumbool::left => {
       digits(b, add(d, 1u64), mul(q, 10u64), ())
     },
@@ -106,16 +84,16 @@ pub fn digits(b: u64, d: u64, q: u64, _H: ()) -> (u64, u64) {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -127,18 +105,13 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Cudak.cudak_implem.vcell
 // Variant: uncurried
 pub fn vcell(T: Rc<Array<u64>>, base: u64, t: u64, c: u64) -> u64 {
-  match leb(c, t) {
-    true => {
-      let v22 = add(base, sub(t, c));
-      let v23 = &T;
-      let v26 = rocq_array::get::<u64>(&v23, v22);
-      std::mem::drop(T);
-      v26
-    },
-    false => {
-      std::mem::drop(T);
-      0u64
-    },
+  if leb(c, t) {
+    let tmp = rocq_array::get::<u64>(&T, add(base, sub(t, c)));
+    std::mem::drop(T);
+    tmp
+  } else {
+    std::mem::drop(T);
+    0u64
   }
 }
 
@@ -151,13 +124,13 @@ pub fn rowsum_1(T: Rc<Array<u64>>, base: u64, t: u64, c: u64, d: u64, acc: u64) 
 // Rocq: Cudak.cudak_implem.rowsum (local: rowsum)
 // Variant: uncurried, lifted
 pub fn rowsum(T: Rc<Array<u64>>, base: u64, t: u64, c: u64, d: u64, acc: u64, _H: ()) -> u64 {
-  let v14 = ltb(d, c);
-  match bdec(v14) {
+  let tmp = ltb(d, c);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(d, 1u64);
-      let v30 = Rc::clone(&T);
-      let v37 = vcell(v30, base, t, d);
-      rowsum(T, base, t, c, v25, add(acc, v37), ())
+      let tmp_1 = add(d, 1u64);
+      let T_clone = Rc::clone(&T);
+      let tmp_2 = vcell(T_clone, base, t, d);
+      rowsum(T, base, t, c, tmp_1, add(acc, tmp_2), ())
     },
     sumbool::right => {
       std::mem::drop(T);
@@ -175,30 +148,24 @@ pub fn fill_1(T: Rc<Array<u64>>, s: u64, S1: u64, n: u64, idx: u64, k: u64, u: u
 // Rocq: Cudak.cudak_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(T: Rc<Array<u64>>, s: u64, S1: u64, n: u64, idx: u64, k: u64, u: u64, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(idx, n);
-  match bdec(v15) {
+  let tmp = ltb(idx, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v33 = mul(sub(k, 1u64), S1);
-      let v42 = Rc::clone(&T);
-      let v60 = rocq_array::set::<u64>(T, idx, rowsum_1(v42, v33, u, 10u64, 0u64, 0u64));
-      let v68 = add(idx, 1u64);
-      let v75 = match eqb(u, s) {
-        true => {
-          add(k, 1u64)
-        },
-        false => {
-          k
-        },
+      let tmp_1 = mul(sub(k, 1u64), S1);
+      let T_clone = Rc::clone(&T);
+      let tmp_2 = rocq_array::set::<u64>(T, idx, rowsum_1(T_clone, tmp_1, u, 10u64, 0u64, 0u64));
+      let tmp_3 = add(idx, 1u64);
+      let tmp_4 = if eqb(u, s) {
+        add(k, 1u64)
+      } else {
+        k
       };
-      let v95 = match eqb(u, s) {
-        true => {
-          0u64
-        },
-        false => {
-          add(u, 1u64)
-        },
+      let tmp_5 = if eqb(u, s) {
+        0u64
+      } else {
+        add(u, 1u64)
       };
-      fill(v60, s, S1, n, v68, v75, v95, ())
+      fill(tmp_2, s, S1, n, tmp_3, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       T
@@ -227,33 +194,27 @@ pub fn walk_1(T: Rc<Array<u64>>, S1: u64, j: u64, p: u64, R: u64, t: u64, acc: u
 // Rocq: Cudak.cudak_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(T: Rc<Array<u64>>, S1: u64, j: u64, p: u64, R: u64, t: u64, acc: u64, _H: ()) -> u64 {
-  let v17 = ltb(0u64, j);
-  match bdec(v17) {
+  let tmp = ltb(0u64, j);
+  match bdec(tmp) {
     sumbool::left => {
       let c = div(R, p);
-      let v41 = mul(sub(j, 1u64), S1);
-      let v46 = Rc::clone(&T);
-      let acc_ = rowsum_1(v46, v41, t, c, 0u64, acc);
-      match ltb(t, c) {
-        true => {
-          std::mem::drop(T);
-          acc_
-        },
-        false => {
-          walk(T, S1, sub(j, 1u64), div(p, 10u64), mod_(R, p), sub(t, c), acc_, ())
-        },
+      let tmp_1 = mul(sub(j, 1u64), S1);
+      let T_clone = Rc::clone(&T);
+      let acc_ = rowsum_1(T_clone, tmp_1, t, c, 0u64, acc);
+      if ltb(t, c) {
+        std::mem::drop(T);
+        acc_
+      } else {
+        walk(T, S1, sub(j, 1u64), div(p, 10u64), mod_(R, p), sub(t, c), acc_, ())
       }
     },
     sumbool::right => {
-      match eqb(t, 0u64) {
-        true => {
-          std::mem::drop(T);
-          add(acc, 1u64)
-        },
-        false => {
-          std::mem::drop(T);
-          acc
-        },
+      if eqb(t, 0u64) {
+        std::mem::drop(T);
+        add(acc, 1u64)
+      } else {
+        std::mem::drop(T);
+        acc
       }
     },
   }
@@ -268,15 +229,15 @@ pub fn pick_1(T: Rc<Array<u64>>, base: u64, t: u64, c: u64, r: u64) -> (u64, u64
 // Rocq: Cudak.cudak_implem.pick (local: pick)
 // Variant: uncurried, lifted
 pub fn pick(T: Rc<Array<u64>>, base: u64, t: u64, c: u64, r: u64, _H: ()) -> (u64, u64) {
-  let v15 = ltb(c, 9u64);
-  let v20 = Rc::clone(&T);
-  let v38 = andb(v15, ltb(vcell(v20, base, t, c), r));
-  match bdec(v38) {
+  let tmp = ltb(c, 9u64);
+  let T_clone = Rc::clone(&T);
+  let tmp_1 = andb(tmp, ltb(vcell(T_clone, base, t, c), r));
+  match bdec(tmp_1) {
     sumbool::left => {
-      let v49 = add(c, 1u64);
-      let v54 = Rc::clone(&T);
-      let v61 = vcell(v54, base, t, c);
-      pick(T, base, t, v49, sub(r, v61), ())
+      let tmp_2 = add(c, 1u64);
+      let T_clone_1 = Rc::clone(&T);
+      let tmp_3 = vcell(T_clone_1, base, t, c);
+      pick(T, base, t, tmp_2, sub(r, tmp_3), ())
     },
     sumbool::right => {
       std::mem::drop(T);
@@ -294,17 +255,17 @@ pub fn minwalk_1(T: Rc<Array<u64>>, S1: u64, j: u64, t: u64, r: u64, x: u64) -> 
 // Rocq: Cudak.cudak_implem.minwalk (local: minwalk)
 // Variant: uncurried, lifted
 pub fn minwalk(T: Rc<Array<u64>>, S1: u64, j: u64, t: u64, r: u64, x: u64, _H: ()) -> u64 {
-  let v16 = ltb(0u64, j);
-  match bdec(v16) {
+  let tmp = ltb(0u64, j);
+  match bdec(tmp) {
     sumbool::left => {
-      let v34 = mul(sub(j, 1u64), S1);
-      let v39 = Rc::clone(&T);
-      let cr = pick_1(v39, v34, t, 0u64, r);
-      let v56 = sub(j, 1u64);
-      let v60 = Clone::clone(&cr);
-      let v67 = sub(t, fst::<u64, u64>(v60));
-      let v70 = Clone::clone(&cr);
-      minwalk(T, S1, v56, v67, snd::<u64, u64>(v70), add(mul(x, 10u64), fst::<u64, u64>(cr)), ())
+      let tmp_1 = mul(sub(j, 1u64), S1);
+      let T_clone = Rc::clone(&T);
+      let cr = pick_1(T_clone, tmp_1, t, 0u64, r);
+      let tmp_2 = sub(j, 1u64);
+      let cr_clone = Clone::clone(&cr);
+      let tmp_3 = sub(t, fst::<u64, u64>(cr_clone));
+      let cr_clone_1 = Clone::clone(&cr);
+      minwalk(T, S1, tmp_2, tmp_3, snd::<u64, u64>(cr_clone_1), add(mul(x, 10u64), fst::<u64, u64>(cr)), ())
     },
     sumbool::right => {
       std::mem::drop(T);
@@ -318,40 +279,19 @@ pub fn minwalk(T: Rc<Array<u64>>, S1: u64, j: u64, t: u64, r: u64, x: u64, _H: (
 pub fn cudak_impl(a: u64, b: u64, s: u64) -> (u64, u64) {
   let S1 = add(s, 1u64);
   let dq = digits_1(b, 1u64, 1u64);
-  let v25 = Clone::clone(&dq);
-  let D = fst::<u64, u64>(v25);
+  let dq_clone = Clone::clone(&dq);
+  let D = fst::<u64, u64>(dq_clone);
   let q = snd::<u64, u64>(dq);
   let n = mul(D, S1);
-  let v45 = rocq_array::make::<u64>(n, 0u64);
-  let v56 = rocq_array::set::<u64>(v45, 0u64, 1u64);
-  let T = fill_1(v56, s, S1, n, S1, 1u64, 0u64);
-  let v81 = Rc::clone(&T);
-  let cb = walk_1(v81, S1, D, q, b, s, 0u64);
-  let v103 = sub(a, 1u64);
-  let v108 = Rc::clone(&T);
-  let ca = walk_1(v108, S1, D, q, v103, s, 0u64);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::set::<u64>(tmp, 0u64, 1u64);
+  let T = fill_1(tmp_1, s, S1, n, S1, 1u64, 0u64);
+  let T_clone = Rc::clone(&T);
+  let cb = walk_1(T_clone, S1, D, q, b, s, 0u64);
+  let tmp_2 = sub(a, 1u64);
+  let T_clone_1 = Rc::clone(&T);
+  let ca = walk_1(T_clone_1, S1, D, q, tmp_2, s, 0u64);
   (sub(cb, ca), minwalk_1(T, S1, D, s, add(ca, 1u64), 0u64))
-}
-
-// Rocq: Cudak.cudak_implem.cudak_impl
-pub fn cudak_impl_curried(a: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> {
-  let v3 = {
-    move |b: u64| -> Rc<dyn Fn(u64) -> (u64, u64)> {
-      let a = &a;
-      let v8 = Clone::clone(a);
-      let v11 = {
-        move |s: u64| -> (u64, u64) {
-          let v19 = Clone::clone(&v8);
-          let v21 = Clone::clone(&b);
-          cudak_impl(v19, v21, s)
-        }
-      };
-      let v27: Rc<dyn Fn(u64) -> (u64, u64)> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -502,10 +442,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64) -> (u64, u64)> {
-  let v0: Rc<dyn Fn(u64, u64, u64) -> (u64, u64)> = __rocq_global_643.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_643: Rc<dyn Fn(u64, u64, u64) -> (u64, u64)> = cudak(); }
-std::thread_local! { static __rocq_global_646: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, u64)>>> = cudak_curried(); }

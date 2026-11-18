@@ -2,7 +2,8 @@
 
 (** ** Description *)
 
-(** Count how many integers in a sequence are strictly below zero.
+(** Given daily temperatures in degrees Celsius, count the days on which
+    the temperature was below freezing: strictly less than zero.
 
     [@kattis cold]
     - Difficulty: 1.2
@@ -11,7 +12,7 @@
 
     **Kattis Bounds**
     - $1 \le n \le 100$.
-    - $-10^6 \le t_i \le 10^6$ for every value $t_i$. *)
+    - $-10^{6} \le t_i \le 10^{6}$ for every value $t_i$. *)
 
 (** ** Examples *)
 
@@ -26,10 +27,13 @@
    @math_signature  list Z -> N
    @summary         [count_negatives temperatures] returns the number of
                     elements of temperatures that are strictly below zero
+                    It runs in at most c1 * n + c2 steps of the cost model,
+                    n the length of the array, for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Z_scope.
 
@@ -57,24 +61,42 @@ Record valid_input (temperatures : list Z) : Prop := {
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the number of input integers strictly below zero. *)
+    The output is the number of days with a temperature strictly below zero
+    degrees Celsius. *)
 Definition count_negatives_spec
   (temperatures : list Z) (output : N) : Prop :=
   output = len (filter is_negative temperatures).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n)$ steps, where $n$ is the number of temperatures. *)
+Definition count_negatives_time_spec (c1 c2 n_temperatures steps : nat) : Prop :=
+  (steps <= c1 * n_temperatures + c2)%nat.
+
 (** ** Interface *)
 
-(** Count how many integers in a sequence are strictly below zero.
-    - Input [temperatures]: Integer temperatures to test for negativity.
-    - Output [output]: The output is the number of input integers strictly below zero. *)
+(** Count the days with a temperature strictly below zero degrees Celsius.
+    - Input [temperatures]: Daily integer temperatures in degrees Celsius.
+    - Output [output]: Number of days below freezing. *)
 Program count_negatives : array sint -> uint.
+
+(** [@example count_negatives]
+    - Sample: 1
+    - Input [temperatures]: [5; -10; 15]%Z
+    - Output [output]: 1
+*)
+
+(** [@example count_negatives]
+    - Sample: 2
+    - Input [temperatures]: [-14; -5; -39; -5; -7]%Z
+    - Output [output]: 5
+*)
 
 (** ** Bridge *)
 
 (** [@requirement count_negatives_spec] [@fold full correctness statement]
-    Every valid input is machine-representable and, on its machine
-    representation, the program returns a machine-representable output
-    satisfying the specification. *)
+    On a valid represented input, [count_negatives] returns a represented output
+    satisfying [count_negatives_spec]. *)
 Specification count_negatives_correct :
   forall (temperatures : list Z)
          (temperatures_arr : array sint),
@@ -83,6 +105,17 @@ Specification count_negatives_correct :
   exists output : N,
     repr (count_negatives temperatures_arr) output /\
     count_negatives_spec temperatures output.
+
+(** ** Complexity *)
+
+(** [@hide] [count_negatives_cost] is the cost translation of [count_negatives] (the judge
+    recomputes it and compares) ... *)
+Complexity count_negatives_cost for count_negatives.
+
+(** [@fold complexity bound] ... and runs in at most c1 * n + c2 steps of the cost model, n the length of the array, for two constants
+    quantified before the input. [@requirement count_negatives_time_spec] *)
+Specification count_negatives_time : exists c1 c2 : nat, forall temperatures_arr : array sint,
+  count_negatives_time_spec c1 c2 (size temperatures_arr) (cost1 count_negatives_cost temperatures_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their axioms. *)
 Allowed Primitive Axioms.

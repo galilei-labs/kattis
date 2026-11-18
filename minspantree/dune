@@ -6,9 +6,11 @@
  (rocq.theory
   (name Minspantree.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Minspantree)
  (modules minspantree_implem)
- (theories Minspantree.spec Stdlib stdpp StdGalilei))
+  (theories Minspantree.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

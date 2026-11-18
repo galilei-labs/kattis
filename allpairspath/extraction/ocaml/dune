@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules allpairspath_extracted_marray)
- (theories Allpairspath Allpairspath.spec Stdlib stdpp StdGalilei))
+ (theories Allpairspath Allpairspath.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name allpairspath_extraction)

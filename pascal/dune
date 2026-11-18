@@ -6,9 +6,11 @@
  (rocq.theory
   (name Pascal.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Pascal)
  (modules pascal_implem)
- (theories Pascal.spec Stdlib stdpp StdGalilei))
+  (theories Pascal.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

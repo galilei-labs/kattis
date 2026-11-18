@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -15,18 +14,11 @@ pub type uint = u64;
 
 pub type char63 = u64;
 
-// Rocq: Purplerain.purplerain_implem.purplerain
-pub fn purplerain() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, u64)> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> (u64, u64) = purplerain_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -43,22 +35,19 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Purplerain.purplerain_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
@@ -82,35 +71,26 @@ pub fn scan_1(x: Rc<rocq_string::RocqString>, n: u64, k: u64, p: u64, mx: u64, i
 // Rocq: Purplerain.purplerain_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(x: Rc<rocq_string::RocqString>, n: u64, k: u64, p: u64, mx: u64, imx: u64, mn: u64, imn: u64, _H: ()) -> (u64, u64) {
-  let v16 = ltb(k, n);
-  match bdec(v16) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = Rc::clone(&x);
-      let v27 = get(v24, k);
-      let v29 = 82u64;
-      let p_ = match eqb(v27, v29) {
-        true => {
-          add(p, 1u64)
-        },
-        false => {
-          sub(p, 1u64)
-        },
+      let x_clone = Rc::clone(&x);
+      let tmp_1 = get(x_clone, k);
+      let tmp_2 = 82u64;
+      let p_ = if eqb(tmp_1, tmp_2) {
+        add(p, 1u64)
+      } else {
+        sub(p, 1u64)
       };
       let k_ = add(k, 1u64);
-      match ltb(mx, p_) {
-        true => {
-          scan(x, n, k_, p_, p_, k_, mn, imn, ())
-        },
-        false => {
-          match ltb(p_, mn) {
-            true => {
-              scan(x, n, k_, p_, mx, imx, p_, k_, ())
-            },
-            false => {
-              scan(x, n, k_, p_, mx, imx, mn, imn, ())
-            },
-          }
-        },
+      if ltb(mx, p_) {
+        scan(x, n, k_, p_, p_, k_, mn, imn, ())
+      } else {
+        if ltb(p_, mn) {
+          scan(x, n, k_, p_, mx, imx, p_, k_, ())
+        } else {
+          scan(x, n, k_, p_, mx, imx, mn, imn, ())
+        }
       }
     },
     sumbool::right => {
@@ -122,18 +102,15 @@ pub fn scan(x: Rc<rocq_string::RocqString>, n: u64, k: u64, p: u64, mx: u64, imx
 
 // Rocq: Purplerain.purplerain_implem.purplerain_impl
 pub fn purplerain_impl(x: Rc<rocq_string::RocqString>) -> (u64, u64) {
-  let v4 = Rc::clone(&x);
-  let n = length(v4);
-  let v29 = scan_1(x, n, 0u64, n, n, 0u64, n, 0u64);
-  match v29 {
+  let x_clone = Rc::clone(&x);
+  let n = length(x_clone);
+  let tmp = scan_1(x, n, 0u64, n, n, 0u64, n, 0u64);
+  match tmp {
     (v31, v33) => {
-      match ltb(v31, v33) {
-        true => {
-          (add(v31, 1u64), v33)
-        },
-        false => {
-          (add(v33, 1u64), v31)
-        },
+      if ltb(v31, v33) {
+        (add(v31, 1u64), v33)
+      } else {
+        (add(v33, 1u64), v31)
       }
     },
   }
@@ -287,9 +264,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, u64)> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, u64)> = __rocq_global_194.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_194: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> (u64, u64)> = purplerain(); }

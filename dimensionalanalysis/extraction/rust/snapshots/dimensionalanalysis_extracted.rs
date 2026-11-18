@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 #[allow(unused_imports)] use rocq_bigint::BigInt;
@@ -23,39 +22,21 @@ pub type uint = u64;
 
 pub type sint = u64;
 
-// Rocq: Dimensionalanalysis.dimensionalanalysis_implem.valid
-// Variant: uncurried
-pub fn valid() -> Rc<dyn Fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool> {
-  let v0: fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool = valid_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Dimensionalanalysis.dimensionalanalysis_implem.valid
-pub fn valid_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool> = valid_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.BinNums.IntDef.Z.add
 // Variant: uncurried
 pub fn add(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::add(v0, v1);
-  v8
+  rocq_bigint::add(v0, v1)
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.opp
 pub fn opp(v0: Rc<BigInt>) -> Rc<BigInt> {
-  let v5 = rocq_bigint::neg(v0);
-  v5
+  rocq_bigint::neg(v0)
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.sub
 // Variant: uncurried
 pub fn sub(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::sub(v0, v1);
-  v8
+  rocq_bigint::sub(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -72,13 +53,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -97,13 +75,13 @@ pub fn loop__1<S: Clone + 'static>(f: Rc<dyn Fn(u64, S) -> S>, hi: u64, i: u64, 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.loop (local: loop)
 // Variant: uncurried, lifted
 pub fn loop_<S: Clone + 'static>(_S_1: (), f: Rc<dyn Fn(u64, S) -> S>, hi: u64, i: u64, s: S, _H: ()) -> S {
-  let v13 = ltb(i, hi);
-  match bdec(v13) {
+  let tmp = ltb(i, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = add_1(i, 1u64);
-      let v27: &Rc<dyn Fn(u64, S) -> S> = &f;
-      let v32 = v27(i, s);
-      loop_::<S>((), f, hi, v26, v32, ())
+      let tmp_1 = add_1(i, 1u64);
+      let f_ref: &Rc<dyn Fn(u64, S) -> S> = &f;
+      let tmp_2 = f_ref(i, s);
+      loop_::<S>((), f, hi, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       std::mem::drop(f);
@@ -127,8 +105,7 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.BinNums.IntDef.Z.mul
 // Variant: uncurried
 pub fn mul_1(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::mul(v0, v1);
-  v8
+  rocq_bigint::mul(v0, v1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -145,43 +122,34 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.uconv
 pub fn uconv_1(x: u64) -> Rc<BigInt> {
-  let v9 = uconv(x, ());
-  v9
+  uconv(x, ())
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.uconv (local: uconv)
 // Variant: uncurried, lifted
 pub fn uconv(x: u64, _H: ()) -> Rc<BigInt> {
-  let v11 = eqb(x, 0u64);
-  let v83 = match bdec(v11) {
+  let tmp = eqb(x, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = rocq_bigint::zero();
-      v16
+      rocq_bigint::zero()
     },
     sumbool::right => {
-      let v21 = rocq_bigint::one();
-      let v24 = rocq_bigint::twice(v21);
-      let v26 = rocq_bigint::identity(v24);
-      let v42 = uconv(div(x, 2u64), ());
-      let v47 = mul_1(v26, v42);
-      let v56 = mod_(x, 2u64);
-      let v58 = 0u64;
-      let v64 = match eqb(v56, v58) {
-        true => {
-          let v66 = rocq_bigint::zero();
-          v66
-        },
-        false => {
-          let v69 = rocq_bigint::one();
-          let v72 = rocq_bigint::identity(v69);
-          v72
-        },
+      let tmp_1 = rocq_bigint::one();
+      let tmp_2 = rocq_bigint::twice(tmp_1);
+      let tmp_3 = rocq_bigint::identity(tmp_2);
+      let tmp_4 = uconv(div(x, 2u64), ());
+      let tmp_5 = mul_1(tmp_3, tmp_4);
+      let tmp_6 = mod_(x, 2u64);
+      let tmp_7 = 0u64;
+      let tmp_8 = if eqb(tmp_6, tmp_7) {
+        rocq_bigint::zero()
+      } else {
+        let tmp_9 = rocq_bigint::one();
+        rocq_bigint::identity(tmp_9)
       };
-      let v80 = add(v47, v64);
-      v80
+      add(tmp_5, tmp_8)
     },
-  };
-  v83
+  }
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -192,71 +160,62 @@ pub fn sub_1(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.sconv
 pub fn sconv(x: u64) -> Rc<BigInt> {
-  let v3 = 4611686018427387904u64;
-  let v35 = match ltb(x, v3) {
-    true => {
-      let v14 = uconv_1(x);
-      v14
-    },
-    false => {
-      let v29 = uconv_1(sub_1(0u64, x));
-      let v32 = opp(v29);
-      v32
-    },
-  };
-  v35
+  if ltb(x, 4611686018427387904u64) {
+    uconv_1(x)
+  } else {
+    let tmp = uconv_1(sub_1(0u64, x));
+    opp(tmp)
+  }
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.ztab
 // Variant: uncurried
 pub fn ztab(n: u64, m: u64, xe: Rc<Array<Rc<Array<u64>>>>) -> Rc<Array<Rc<BigInt>>> {
-  let v5 = 0u64;
-  let v11 = mul(n, m);
-  let v12 = rocq_bigint::zero();
-  let v17 = rocq_array::make::<Rc<BigInt>>(v11, v12);
-  let v22 = {
+  let tmp = 0u64;
+  let tmp_1 = mul(n, m);
+  let tmp_2 = rocq_bigint::zero();
+  let tmp_3 = rocq_array::make::<Rc<BigInt>>(tmp_1, tmp_2);
+  let callback: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new({
     let __anf_capture_25 = m;
     move |i: u64, T: Rc<Array<Rc<BigInt>>>| -> Rc<Array<Rc<BigInt>>> {
       let xe = &xe;
       let m = &__anf_capture_25;
-      let v30 = Rc::clone(xe);
-      let row = rocq_array::get::<Rc<Array<u64>>>(&v30, i);
-      std::mem::drop(v30);
-      let v37 = 0u64;
-      let v41 = Clone::clone(m);
-      let v44 = {
+      let xe_clone = Rc::clone(xe);
+      let row = rocq_array::get::<Rc<Array<u64>>>(&xe_clone, i);
+      std::mem::drop(xe_clone);
+      let tmp_4 = 0u64;
+      let m_clone = Clone::clone(m);
+      let callback_1: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new({
         let __anf_capture_45 = i;
         move |j: u64, T: Rc<Array<Rc<BigInt>>>| -> Rc<Array<Rc<BigInt>>> {
           let i = &__anf_capture_45;
-          let m = &v41;
+          let m = &m_clone;
           let row = &row;
-          let v64 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-          let v69 = rocq_array::get::<u64>(&row, j);
-          let v71 = sconv(v69);
-          rocq_array::set::<Rc<BigInt>>(T, v64, v71)
+          let tmp_5 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
+          let tmp_6 = rocq_array::get::<u64>(row, j);
+          let tmp_7 = sconv(tmp_6);
+          rocq_array::set::<Rc<BigInt>>(T, tmp_5, tmp_7)
         }
-      };
-      let v81: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new(v44);
-      let v86 = Clone::clone(m);
-      for_::<Rc<Array<Rc<BigInt>>>>(v37, v86, T, v81)
+      });
+      let m_clone_1 = Clone::clone(m);
+      for_::<Rc<Array<Rc<BigInt>>>>(tmp_4, m_clone_1, T, callback_1)
     }
-  };
-  let v94: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new(v22);
-  for_::<Rc<Array<Rc<BigInt>>>>(v5, n, v17, v94)
+  });
+  for_::<Rc<Array<Rc<BigInt>>>>(tmp, n, tmp_3, callback)
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.eqb
@@ -268,8 +227,8 @@ pub fn eqb_1(v0: Rc<BigInt>, v1: Rc<BigInt>) -> bool {
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.find_piv
 // Variant: uncurried
 pub fn find_piv(n: u64, m: u64, c: u64, T: Rc<Array<Rc<BigInt>>>, U: Rc<Array<bool>>) -> u64 {
-  let v7 = 0u64;
-  let v18 = {
+  let tmp = 0u64;
+  let callback: Rc<dyn Fn(u64, u64) -> u64> = Rc::new({
     let __anf_capture_19 = n;
     move |i: u64, r: u64| -> u64 {
       let n = &__anf_capture_19;
@@ -277,36 +236,25 @@ pub fn find_piv(n: u64, m: u64, c: u64, T: Rc<Array<Rc<BigInt>>>, U: Rc<Array<bo
       let m = &m;
       let c = &c;
       let T = &T;
-      let v35 = Clone::clone(n);
-      match eqb(r, v35) {
-        true => {
-          match rocq_array::get::<bool>(&U, i) {
-            true => {
-              r
-            },
-            false => {
-              let v57 = add_1(mul(i, Clone::clone(m)), Clone::clone(c));
-              let v59 = rocq_array::get::<Rc<BigInt>>(&T, v57);
-              let v60 = rocq_bigint::zero();
-              match eqb_1(v59, v60) {
-                true => {
-                  r
-                },
-                false => {
-                  i
-                },
-              }
-            },
-          }
-        },
-        false => {
+      let n_clone = Clone::clone(n);
+      if eqb(r, n_clone) {
+        if rocq_array::get::<bool>(U, i) {
           r
-        },
+        } else {
+          let tmp_1 = rocq_array::get::<Rc<BigInt>>(T, add_1(mul(i, Clone::clone(m)), Clone::clone(c)));
+          let tmp_2 = rocq_bigint::zero();
+          if eqb_1(tmp_1, tmp_2) {
+            r
+          } else {
+            i
+          }
+        }
+      } else {
+        r
       }
     }
-  };
-  let v82: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v18);
-  for_::<u64>(v7, n, n, v82)
+  });
+  for_::<u64>(tmp, n, n, callback)
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.ltb
@@ -318,128 +266,107 @@ pub fn ltb_1(v0: Rc<BigInt>, v1: Rc<BigInt>) -> bool {
 // Rocq: Corelib.BinNums.IntDef.Z.modulo
 // Variant: uncurried
 pub fn modulo(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::modulo(v0, v1);
-  v8
+  rocq_bigint::modulo(v0, v1)
 }
 
 // Rocq: StdGalilei.bigint.zgcd_loop
 // Variant: uncurried
 pub fn zgcd_loop_1(a: Rc<BigInt>, b: Rc<BigInt>) -> Rc<BigInt> {
-  let v12 = zgcd_loop(a, b, ());
-  v12
+  zgcd_loop(a, b, ())
 }
 
 // Rocq: StdGalilei.bigint.zgcd_loop (local: zgcd_loop)
 // Variant: uncurried, lifted
 pub fn zgcd_loop(a: Rc<BigInt>, b: Rc<BigInt>, _H: ()) -> Rc<BigInt> {
-  let v5 = rocq_bigint::zero();
-  let v9 = Rc::clone(&b);
-  let v34 = match ltb_1(v5, v9) {
-    true => {
-      let v17 = Rc::clone(&b);
-      let v18 = modulo(a, v17);
-      let v29 = zgcd_loop(b, v18, ());
-      v29
-    },
-    false => {
-      std::mem::drop(b);
-      a
-    },
-  };
-  v34
+  let tmp = rocq_bigint::zero();
+  let b_clone = Rc::clone(&b);
+  if ltb_1(tmp, b_clone) {
+    let b_clone_1 = Rc::clone(&b);
+    let tmp_1 = modulo(a, b_clone_1);
+    zgcd_loop(b, tmp_1, ())
+  } else {
+    std::mem::drop(b);
+    a
+  }
 }
 
 // Rocq: Stdlib.ZArith.BinIntDef.Z.abs
 pub fn abs(v0: Rc<BigInt>) -> Rc<BigInt> {
-  let v5 = rocq_bigint::abs(v0);
-  v5
+  rocq_bigint::abs(v0)
 }
 
 // Rocq: StdGalilei.bigint.zgcd
 // Variant: uncurried
 pub fn zgcd(a: Rc<BigInt>, b: Rc<BigInt>) -> Rc<BigInt> {
-  let v6 = abs(a);
-  let v10 = abs(b);
-  let v16 = zgcd_loop_1(v6, v10);
-  v16
+  let tmp = abs(a);
+  let tmp_1 = abs(b);
+  zgcd_loop_1(tmp, tmp_1)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.row_gcd
 // Variant: uncurried
 pub fn row_gcd(m: u64, i: u64, T: Rc<Array<Rc<BigInt>>>) -> Rc<BigInt> {
-  let v5 = 0u64;
-  let v6 = rocq_bigint::zero();
-  let v13 = {
+  let tmp = 0u64;
+  let tmp_1 = rocq_bigint::zero();
+  let callback: Rc<dyn Fn(u64, Rc<BigInt>) -> Rc<BigInt>> = Rc::new({
     let __anf_capture_16 = m;
     move |j: u64, g: Rc<BigInt>| -> Rc<BigInt> {
       let i = &i;
       let m = &__anf_capture_16;
-      let T = &T;
-      let v35 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v37 = rocq_array::get::<Rc<BigInt>>(&T, v35);
-      let v43 = zgcd(g, v37);
-      v43
+      let tmp_2 = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(Clone::clone(i), Clone::clone(m)), j));
+      zgcd(g, tmp_2)
     }
-  };
-  let v45: Rc<dyn Fn(u64, Rc<BigInt>) -> Rc<BigInt>> = Rc::new(v13);
-  let v56 = for_::<Rc<BigInt>>(v5, m, v6, v45);
-  v56
+  });
+  for_::<Rc<BigInt>>(tmp, m, tmp_1, callback)
 }
 
 // Rocq: Corelib.BinNums.IntDef.Z.div
 // Variant: uncurried
 pub fn div_1(v0: Rc<BigInt>, v1: Rc<BigInt>) -> Rc<BigInt> {
-  let v8 = rocq_bigint::div(v0, v1);
-  v8
+  rocq_bigint::div(v0, v1)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.div_row
 // Variant: uncurried
 pub fn div_row(m: u64, i: u64, g: Rc<BigInt>, T: Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>> {
-  let v6 = 0u64;
-  let v13 = {
+  let tmp = 0u64;
+  let callback: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new({
     let __anf_capture_16 = m;
     move |j: u64, T: Rc<Array<Rc<BigInt>>>| -> Rc<Array<Rc<BigInt>>> {
       let i = &i;
       let m = &__anf_capture_16;
       let g = &g;
-      let v33 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v46 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v47 = &T;
-      let v51 = rocq_array::get::<Rc<BigInt>>(&v47, v46);
-      let v54 = Rc::clone(g);
-      let v55 = div_1(v51, v54);
-      rocq_array::set::<Rc<BigInt>>(T, v33, v55)
+      let tmp_1 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
+      let tmp_2 = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(Clone::clone(i), Clone::clone(m)), j));
+      let g_clone = Rc::clone(g);
+      let tmp_3 = div_1(tmp_2, g_clone);
+      rocq_array::set::<Rc<BigInt>>(T, tmp_1, tmp_3)
     }
-  };
-  let v65: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new(v13);
-  for_::<Rc<Array<Rc<BigInt>>>>(v6, m, T, v65)
+  });
+  for_::<Rc<Array<Rc<BigInt>>>>(tmp, m, T, callback)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.norm_row
 // Variant: uncurried
 pub fn norm_row(m: u64, i: u64, T: Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>> {
-  let v10 = Rc::clone(&T);
-  let g = row_gcd(m, i, v10);
-  let v14 = rocq_bigint::one();
-  let v17 = rocq_bigint::identity(v14);
-  let v21 = Rc::clone(&g);
-  match ltb_1(v17, v21) {
-    true => {
-      div_row(m, i, g, T)
-    },
-    false => {
-      std::mem::drop(g);
-      T
-    },
+  let T_clone = Rc::clone(&T);
+  let g = row_gcd(m, i, T_clone);
+  let tmp = rocq_bigint::one();
+  let tmp_1 = rocq_bigint::identity(tmp);
+  let g_clone = Rc::clone(&g);
+  if ltb_1(tmp_1, g_clone) {
+    div_row(m, i, g, T)
+  } else {
+    std::mem::drop(g);
+    T
   }
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.upd_row
 // Variant: uncurried
 pub fn upd_row(m: u64, i: u64, s: u64, p: Rc<BigInt>, f: Rc<BigInt>, T: Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>> {
-  let v8 = 0u64;
-  let v19 = {
+  let tmp = 0u64;
+  let callback: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new({
     let __anf_capture_26 = m;
     move |j: u64, T: Rc<Array<Rc<BigInt>>>| -> Rc<Array<Rc<BigInt>>> {
       let i = &i;
@@ -447,33 +374,26 @@ pub fn upd_row(m: u64, i: u64, s: u64, p: Rc<BigInt>, f: Rc<BigInt>, T: Rc<Array
       let s = &s;
       let m = &__anf_capture_26;
       let f = &f;
-      let v43 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v57 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v58 = &T;
-      let v61 = rocq_array::get::<Rc<BigInt>>(&v58, v57);
-      let v63 = Rc::clone(p);
-      let v66 = mul_1(v63, v61);
-      let v79 = add_1(mul(Clone::clone(s), Clone::clone(m)), j);
-      let v80 = &T;
-      let v83 = rocq_array::get::<Rc<BigInt>>(&v80, v79);
-      let v85 = Rc::clone(f);
-      let v88 = mul_1(v85, v83);
-      let v93 = sub(v66, v88);
-      rocq_array::set::<Rc<BigInt>>(T, v43, v93)
+      let tmp_1 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
+      let tmp_2 = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(Clone::clone(i), Clone::clone(m)), j));
+      let p_clone = Rc::clone(p);
+      let tmp_3 = mul_1(p_clone, tmp_2);
+      let tmp_4 = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(Clone::clone(s), Clone::clone(m)), j));
+      let f_clone = Rc::clone(f);
+      let tmp_5 = mul_1(f_clone, tmp_4);
+      let tmp_6 = sub(tmp_3, tmp_5);
+      rocq_array::set::<Rc<BigInt>>(T, tmp_1, tmp_6)
     }
-  };
-  let v103: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new(v19);
-  for_::<Rc<Array<Rc<BigInt>>>>(v8, m, T, v103)
+  });
+  for_::<Rc<Array<Rc<BigInt>>>>(tmp, m, T, callback)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.elim_rows
 // Variant: uncurried
 pub fn elim_rows(n: u64, m: u64, s: u64, c: u64, T: Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>> {
-  let v16 = add_1(mul(s, m), c);
-  let v17 = &T;
-  let p = rocq_array::get::<Rc<BigInt>>(&v17, v16);
-  let v23 = 0u64;
-  let v32 = {
+  let p = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(s, m), c));
+  let tmp = 0u64;
+  let callback: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new({
     let __anf_capture_33 = c;
     let __anf_capture_35 = s;
     let __anf_capture_39 = m;
@@ -482,158 +402,120 @@ pub fn elim_rows(n: u64, m: u64, s: u64, c: u64, T: Rc<Array<Rc<BigInt>>>) -> Rc
       let s = &__anf_capture_35;
       let p = &p;
       let m = &__anf_capture_39;
-      let v47 = Clone::clone(s);
-      match eqb(i, v47) {
-        true => {
+      let s_clone = Clone::clone(s);
+      if eqb(i, s_clone) {
+        T
+      } else {
+        let f = rocq_array::get::<Rc<BigInt>>(&T, add_1(mul(i, Clone::clone(m)), Clone::clone(c)));
+        let tmp_1 = rocq_bigint::zero();
+        let f_clone = Rc::clone(&f);
+        if eqb_1(f_clone, tmp_1) {
+          std::mem::drop(f);
           T
-        },
-        false => {
-          let v63 = add_1(mul(i, Clone::clone(m)), Clone::clone(c));
-          let v64 = &T;
-          let f = rocq_array::get::<Rc<BigInt>>(&v64, v63);
-          let v69 = rocq_bigint::zero();
-          let v72 = Rc::clone(&f);
-          match eqb_1(v72, v69) {
-            true => {
-              std::mem::drop(f);
-              T
-            },
-            false => {
-              let v82 = Clone::clone(m);
-              let v86 = Clone::clone(s);
-              let v88 = Rc::clone(p);
-              let v93 = upd_row(v82, i, v86, v88, f, T);
-              let v95 = Clone::clone(m);
-              norm_row(v95, i, v93)
-            },
-          }
-        },
+        } else {
+          let m_clone = Clone::clone(m);
+          let s_clone_1 = Clone::clone(s);
+          let p_clone = Rc::clone(p);
+          let tmp_2 = upd_row(m_clone, i, s_clone_1, p_clone, f, T);
+          let m_clone_1 = Clone::clone(m);
+          norm_row(m_clone_1, i, tmp_2)
+        }
       }
     }
-  };
-  let v109: Rc<dyn Fn(u64, Rc<Array<Rc<BigInt>>>) -> Rc<Array<Rc<BigInt>>>> = Rc::new(v32);
-  for_::<Rc<Array<Rc<BigInt>>>>(v23, n, T, v109)
+  });
+  for_::<Rc<Array<Rc<BigInt>>>>(tmp, n, T, callback)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.col_step
 // Variant: uncurried
 pub fn col_step(n: u64, m: u64, c: u64, st: (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)) -> (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>) {
-  let v6 = Clone::clone(&st);
-  let T = fst::<Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>>(v6);
-  let v11 = Clone::clone(&st);
-  let U = snd::<Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>>(v11);
-  let v23 = Rc::clone(&T);
-  let v26 = Rc::clone(&U);
-  let s = find_piv(n, m, c, v23, v26);
-  match eqb(s, n) {
-    true => {
-      std::mem::drop(U);
-      std::mem::drop(T);
-      st
-    },
-    false => {
-      std::mem::drop(st);
-      let v48 = elim_rows(n, m, s, c, T);
-      let v57 = rocq_array::set::<bool>(U, s, true);
-      (v48, v57)
-    },
+  let st_clone = Clone::clone(&st);
+  let T = fst::<Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>>(st_clone);
+  let st_clone_1 = Clone::clone(&st);
+  let U = snd::<Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>>(st_clone_1);
+  let T_clone = Rc::clone(&T);
+  let U_clone = Rc::clone(&U);
+  let s = find_piv(n, m, c, T_clone, U_clone);
+  if eqb(s, n) {
+    std::mem::drop(U);
+    std::mem::drop(T);
+    st
+  } else {
+    std::mem::drop(st);
+    let tmp = elim_rows(n, m, s, c, T);
+    let tmp_1 = rocq_array::set::<bool>(U, s, true);
+    (tmp, tmp_1)
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.count_nz
 // Variant: borrowed, uncurried
 pub fn count_nz(m: u64, i: u64, T: &Rc<Array<Rc<BigInt>>>) -> u64 {
-  let v7 = 0u64;
-  let v9 = 0u64;
-  let v16 = Rc::clone(T);
-  let v17 = {
+  let tmp = 0u64;
+  let tmp_1 = 0u64;
+  let T_clone = Rc::clone(T);
+  let callback: Rc<dyn Fn(u64, u64) -> u64> = Rc::new({
     let __anf_capture_20 = m;
     move |j: u64, k: u64| -> u64 {
       let i = &i;
       let m = &__anf_capture_20;
-      let T = &v16;
-      let v39 = add_1(mul(Clone::clone(i), Clone::clone(m)), j);
-      let v41 = rocq_array::get::<Rc<BigInt>>(&T, v39);
-      let v42 = rocq_bigint::zero();
-      match eqb_1(v41, v42) {
-        true => {
-          k
-        },
-        false => {
-          add_1(k, 1u64)
-        },
+      let T = &T_clone;
+      let tmp_2 = rocq_array::get::<Rc<BigInt>>(T, add_1(mul(Clone::clone(i), Clone::clone(m)), j));
+      let tmp_3 = rocq_bigint::zero();
+      if eqb_1(tmp_2, tmp_3) {
+        k
+      } else {
+        add_1(k, 1u64)
       }
     }
-  };
-  let v64: Rc<dyn Fn(u64, u64) -> u64> = Rc::new(v17);
-  for_::<u64>(v7, m, v9, v64)
+  });
+  for_::<u64>(tmp, m, tmp_1, callback)
 }
 
 // Rocq: Dimensionalanalysis.dimensionalanalysis_implem.valid_impl
 // Variant: uncurried
 pub fn valid_impl(xm: u64, xe: Rc<Array<Rc<Array<u64>>>>) -> bool {
-  let v2 = &xe;
-  let n = rocq_array::length::<Rc<Array<u64>>>(&v2);
-  let v6 = 0u64;
-  let v14 = ztab(n, xm, xe);
-  let v21 = rocq_array::make::<bool>(n, false);
-  let v27 = (v14, v21);
-  let v32 = {
+  let n = rocq_array::length::<Rc<Array<u64>>>(&xe);
+  let tmp = 0u64;
+  let tmp_1 = ztab(n, xm, xe);
+  let tmp_2 = rocq_array::make::<bool>(n, false);
+  let tmp_3 = (tmp_1, tmp_2);
+  let callback: Rc<dyn Fn(u64, (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)) -> (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)> = Rc::new({
     let __anf_capture_33 = n;
     let __anf_capture_35 = xm;
     move |v37: u64, v38: (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)| -> (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>) {
-      let v41 = Clone::clone(&__anf_capture_33);
-      let v43 = Clone::clone(&__anf_capture_35);
-      col_step(v41, v43, v37, v38)
+      let tmp_4 = Clone::clone(&__anf_capture_33);
+      let tmp_5 = Clone::clone(&__anf_capture_35);
+      col_step(tmp_4, tmp_5, v37, v38)
     }
-  };
-  let v51: Rc<dyn Fn(u64, (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)) -> (Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)> = Rc::new(v32);
-  let st = for_::<(Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)>(v6, xm, v27, v51);
+  });
+  let st = for_::<(Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>)>(tmp, xm, tmp_3, callback);
   let T = fst::<Rc<Array<Rc<BigInt>>>, Rc<Array<bool>>>(st);
-  let v68 = 0u64;
-  let v70 = true;
-  let v75 = {
+  let tmp_6 = 0u64;
+  let tmp_7 = true;
+  let callback_1: Rc<dyn Fn(u64, bool) -> bool> = Rc::new({
     let __anf_capture_76 = xm;
     move |i: u64, b: bool| -> bool {
       let xm = &__anf_capture_76;
       let T = &T;
-      match b {
-        true => {
-          let v91 = count_nz(Clone::clone(xm), i, T);
-          negb(eqb(v91, 1u64))
-        },
-        false => {
-          false
-        },
+      if b {
+        let tmp_8 = count_nz(Clone::clone(xm), i, T);
+        negb(eqb(tmp_8, 1u64))
+      } else {
+        false
       }
     }
-  };
-  let v111: Rc<dyn Fn(u64, bool) -> bool> = Rc::new(v75);
-  for_::<bool>(v68, n, v70, v111)
-}
-
-// Rocq: Dimensionalanalysis.dimensionalanalysis_implem.valid_impl
-pub fn valid_impl_curried(xm: u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool> {
-  let v3 = {
-    move |xe: Rc<Array<Rc<Array<u64>>>>| -> bool {
-      let v9 = Clone::clone(&xm);
-      valid_impl(v9, xe)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool> = Rc::new(v3);
-  v15
+  });
+  for_::<bool>(tmp_6, n, tmp_7, callback_1)
 }
 
 mod __rocq_reuse {
@@ -784,10 +666,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool> = __rocq_global_884.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_884: Rc<dyn Fn(u64, Rc<Array<Rc<Array<u64>>>>) -> bool> = valid(); }
-std::thread_local! { static __rocq_global_887: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> bool>> = valid_curried(); }

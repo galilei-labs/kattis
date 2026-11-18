@@ -6,9 +6,11 @@
  (rocq.theory
   (name Longincsubseq.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Longincsubseq)
  (modules longincsubseq_implem)
- (theories Longincsubseq.spec Stdlib stdpp StdGalilei))
+  (theories Longincsubseq.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

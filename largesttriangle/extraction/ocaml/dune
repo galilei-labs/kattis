@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules largesttriangle_extracted_marray)
- (theories Largesttriangle Largesttriangle.spec Stdlib stdpp StdGalilei Flocq))
+ (theories Largesttriangle Largesttriangle.spec Stdlib stdpp StdGalilei Flocq KattisLib))
 
 (library
  (name largesttriangle_extraction)

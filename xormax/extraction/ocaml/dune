@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules xormax_extracted_marray)
- (theories Xormax Xormax.spec Stdlib stdpp StdGalilei))
+ (theories Xormax Xormax.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name xormax_extraction)

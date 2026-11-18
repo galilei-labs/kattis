@@ -6,9 +6,11 @@
  (rocq.theory
   (name Chesstournament.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Chesstournament)
  (modules chesstournament_implem)
- (theories Chesstournament.spec Stdlib stdpp StdGalilei))
+  (theories Chesstournament.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

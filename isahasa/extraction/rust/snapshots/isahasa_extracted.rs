@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -39,32 +38,10 @@ pub type pstr = Rc<rocq_string::RocqString>;
 
 pub type char63 = u64;
 
-// Rocq: Isahasa.isahasa_implem.isahasa
-// Variant: uncurried
-pub fn isahasa() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>> = isahasa_impl;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Isahasa.isahasa_implem.isahasa
-pub fn isahasa_curried() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>> = isahasa_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
   rocq_int63::add(v0, v1)
-}
-
-// Rocq: Corelib.Strings.PrimString.make
-// Variant: uncurried
-pub fn make(v0: u64, v1: u64) -> Rc<rocq_string::RocqString> {
-  let v8 = rocq_string::make(v0, v1);
-  v8
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -93,21 +70,18 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Isahasa.isahasa_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
@@ -119,9 +93,9 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Isahasa.isahasa_implem.hloop
@@ -133,13 +107,13 @@ pub fn hloop_1(s: Rc<rocq_string::RocqString>, len: u64, i: u64, h: u64) -> u64 
 // Rocq: Isahasa.isahasa_implem.hloop (local: hloop)
 // Variant: uncurried, lifted
 pub fn hloop(s: Rc<rocq_string::RocqString>, len: u64, i: u64, h: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, len);
-  match bdec(v12) {
+  let tmp = ltb(i, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v32 = mul(h, 31u64);
-      let v36 = Rc::clone(&s);
-      hloop(s, len, v23, add(v32, get(v36, i)), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = mul(h, 31u64);
+      let s_clone = Rc::clone(&s);
+      hloop(s, len, tmp_1, add(tmp_2, get(s_clone, i)), ())
     },
     sumbool::right => {
       std::mem::drop(s);
@@ -150,25 +124,25 @@ pub fn hloop(s: Rc<rocq_string::RocqString>, len: u64, i: u64, h: u64, _H: ()) -
 
 // Rocq: Isahasa.isahasa_implem.hash
 pub fn hash(s: Rc<rocq_string::RocqString>) -> u64 {
-  let v4 = Rc::clone(&s);
-  let len = length(v4);
+  let s_clone = Rc::clone(&s);
+  let len = length(s_clone);
   land(hloop_1(s, len, 0u64, 0u64), 1023u64)
 }
 
 // Rocq: Isahasa.isahasa_implem.hhead
 pub fn hhead(h: Rc<ht>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&h).hhead));
+  let h_hhead_clone = Rc::clone(&h.hhead);
   std::mem::drop(h);
-  v3
+  h_hhead_clone
 }
 
 // Rocq: Corelib.Strings.PrimString.compare
 // Variant: uncurried
 pub fn compare(v0: Rc<rocq_string::RocqString>, v1: Rc<rocq_string::RocqString>) -> std::cmp::Ordering {
-  let v4 = rocq_string::compare(&v0, &v1);
+  let tmp = rocq_string::compare(&v0, &v1);
   std::mem::drop(v1);
   std::mem::drop(v0);
-  v4
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
@@ -186,8 +160,8 @@ pub fn walk_1(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::Roc
 // Rocq: Isahasa.isahasa_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::RocqString>>>, nxt: Rc<Array<u64>>, p: u64, _H: ()) -> u64 {
-  let v14 = eqb(p, 0u64);
-  match bdec(v14) {
+  let tmp = eqb(p, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       std::mem::drop(s);
       std::mem::drop(keys);
@@ -195,11 +169,9 @@ pub fn walk(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::RocqS
       0u64
     },
     sumbool::right => {
-      let v30 = sub(p, 1u64);
-      let v31 = &keys;
-      let v35 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v31, v30);
-      let v39 = Rc::clone(&s);
-      match compare(v35, v39) {
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&keys, sub(p, 1u64));
+      let s_clone = Rc::clone(&s);
+      match compare(tmp_1, s_clone) {
         std::cmp::Ordering::Equal => {
           std::mem::drop(s);
           std::mem::drop(nxt);
@@ -207,11 +179,9 @@ pub fn walk(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::RocqS
           p
         },
         std::cmp::Ordering::Less => {
-          let v51 = sub(p, 1u64);
-          let v52 = &nxt;
-          let q = rocq_array::get::<u64>(&v52, v51);
-          let v63 = ltb(q, p);
-          match bdec(v63) {
+          let q = rocq_array::get::<u64>(&nxt, sub(p, 1u64));
+          let tmp_2 = ltb(q, p);
+          match bdec(tmp_2) {
             sumbool::left => {
               walk(s, keys, nxt, q, ())
             },
@@ -224,11 +194,9 @@ pub fn walk(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::RocqS
           }
         },
         std::cmp::Ordering::Greater => {
-          let v97 = sub(p, 1u64);
-          let v98 = &nxt;
-          let q = rocq_array::get::<u64>(&v98, v97);
-          let v109 = ltb(q, p);
-          match bdec(v109) {
+          let q = rocq_array::get::<u64>(&nxt, sub(p, 1u64));
+          let tmp_3 = ltb(q, p);
+          match bdec(tmp_3) {
             sumbool::left => {
               walk(s, keys, nxt, q, ())
             },
@@ -247,59 +215,55 @@ pub fn walk(s: Rc<rocq_string::RocqString>, keys: Rc<Array<Rc<rocq_string::RocqS
 
 // Rocq: Isahasa.isahasa_implem.hkeys
 pub fn hkeys(h: Rc<ht>) -> Rc<Array<Rc<rocq_string::RocqString>>> {
-  let v3 = Rc::clone((&(&**&h).hkeys));
+  let h_hkeys_clone = Rc::clone(&h.hkeys);
   std::mem::drop(h);
-  v3
+  h_hkeys_clone
 }
 
 // Rocq: Isahasa.isahasa_implem.hnxt
 pub fn hnxt(h: Rc<ht>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&h).hnxt));
+  let h_hnxt_clone = Rc::clone(&h.hnxt);
   std::mem::drop(h);
-  v3
+  h_hnxt_clone
 }
 
 // Rocq: Isahasa.isahasa_implem.hcnt
 // Variant: borrowed
 pub fn hcnt(h: &Rc<ht>) -> u64 {
-  let v1 = h;
-  Clone::clone((&(&**v1).hcnt))
+  let tmp = h;
+  Clone::clone(&tmp.hcnt)
 }
 
 // Rocq: Isahasa.isahasa_implem.intern
 // Variant: uncurried
 pub fn intern(st: Rc<ht>, s: Rc<rocq_string::RocqString>) -> (Rc<ht>, u64) {
-  let v5 = Rc::clone(&s);
-  let b = hash(v5);
-  let v10 = Rc::clone(&st);
-  let v11 = hhead(v10);
-  let v12 = &v11;
-  let hb = rocq_array::get::<u64>(&v12, b);
-  let v20 = Rc::clone(&st);
-  let v21 = hkeys(v20);
-  let v25 = Rc::clone(&st);
-  let v26 = hnxt(v25);
-  let v29 = Rc::clone(&s);
-  let p = walk_1(v29, v21, v26, hb);
-  match eqb(p, 0u64) {
-    true => {
-      std::mem::drop(v11);
-      let c = hcnt(&st);
-      let v53 = Rc::clone(&st);
-      let v55 = hkeys(v53);
-      let v61 = rocq_array::set::<Rc<rocq_string::RocqString>>(v55, c, s);
-      let v65 = Rc::clone(&st);
-      let v67 = hnxt(v65);
-      let v73 = rocq_array::set::<u64>(v67, c, hb);
-      let v77 = hhead(st);
-      let v92 = rocq_array::set::<u64>(v77, b, add(c, 1u64));
-      (Rc::new(ht { hkeys: v61, hnxt: v73, hhead: v92, hcnt: add(c, 1u64) }), c)
-    },
-    false => {
-      std::mem::drop(s);
-      std::mem::drop(v11);
-      (st, sub(p, 1u64))
-    },
+  let s_clone = Rc::clone(&s);
+  let b = hash(s_clone);
+  let st_clone = Rc::clone(&st);
+  let tmp = hhead(st_clone);
+  let hb = rocq_array::get::<u64>(&tmp, b);
+  let st_clone_1 = Rc::clone(&st);
+  let tmp_1 = hkeys(st_clone_1);
+  let st_clone_2 = Rc::clone(&st);
+  let tmp_2 = hnxt(st_clone_2);
+  let s_clone_1 = Rc::clone(&s);
+  let p = walk_1(s_clone_1, tmp_1, tmp_2, hb);
+  if eqb(p, 0u64) {
+    std::mem::drop(tmp);
+    let c = hcnt(&st);
+    let st_clone_3 = Rc::clone(&st);
+    let tmp_3 = hkeys(st_clone_3);
+    let tmp_4 = rocq_array::set::<Rc<rocq_string::RocqString>>(tmp_3, c, s);
+    let st_clone_4 = Rc::clone(&st);
+    let tmp_5 = hnxt(st_clone_4);
+    let tmp_6 = rocq_array::set::<u64>(tmp_5, c, hb);
+    let tmp_7 = hhead(st);
+    let tmp_8 = rocq_array::set::<u64>(tmp_7, b, add(c, 1u64));
+    (Rc::new(ht { hkeys: tmp_4, hnxt: tmp_6, hhead: tmp_8, hcnt: add(c, 1u64) }), c)
+  } else {
+    std::mem::drop(s);
+    std::mem::drop(tmp);
+    (st, sub(p, 1u64))
   }
 }
 
@@ -312,23 +276,21 @@ pub fn iloop_1(xsrc: Rc<Array<Rc<rocq_string::RocqString>>>, xdst: Rc<Array<Rc<r
 // Rocq: Isahasa.isahasa_implem.iloop (local: iloop)
 // Variant: uncurried, lifted
 pub fn iloop(xsrc: Rc<Array<Rc<rocq_string::RocqString>>>, xdst: Rc<Array<Rc<rocq_string::RocqString>>>, n: u64, i: u64, st: Rc<ht>, ia: Rc<Array<u64>>, ib: Rc<Array<u64>>, _H: ()) -> ((Rc<ht>, Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &xsrc;
-      let v23 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v20, i);
-      let v28 = intern(st, v23);
-      match v28 {
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&xsrc, i);
+      let tmp_2 = intern(st, tmp_1);
+      match tmp_2 {
         (v30, v32) => {
-          let v35 = &xdst;
-          let v38 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v35, i);
-          let v43 = intern(v30, v38);
-          match v43 {
+          let tmp_3 = rocq_array::get::<Rc<rocq_string::RocqString>>(&xdst, i);
+          let tmp_4 = intern(v30, tmp_3);
+          match tmp_4 {
             (v45, v47) => {
-              let v56 = add(i, 1u64);
-              let v63 = rocq_array::set::<u64>(ia, i, v32);
-              let v70 = rocq_array::set::<u64>(ib, i, v47);
-              iloop(xsrc, xdst, n, v56, v45, v63, v70, ())
+              let tmp_5 = add(i, 1u64);
+              let tmp_6 = rocq_array::set::<u64>(ia, i, v32);
+              let tmp_7 = rocq_array::set::<u64>(ib, i, v47);
+              iloop(xsrc, xdst, n, tmp_5, v45, tmp_6, tmp_7, ())
             },
           }
         },
@@ -370,9 +332,8 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 // Variant: uncurried
 pub fn setbit(T: Rc<Array<u64>>, W: u64, u: u64, v: u64) -> Rc<Array<u64>> {
   let i = add(mul(u, W), div(v, 63u64));
-  let v25 = &T;
-  let v28 = rocq_array::get::<u64>(&v25, i);
-  rocq_array::set::<u64>(T, i, lor(v28, lsl(1u64, mod_(v, 63u64))))
+  let tmp = rocq_array::get::<u64>(&T, i);
+  rocq_array::set::<u64>(T, i, lor(tmp, lsl(1u64, mod_(v, 63u64))))
 }
 
 // Rocq: Isahasa.isahasa_implem.eloop
@@ -384,23 +345,20 @@ pub fn eloop_1(xrs: Rc<Array<relkind>>, ia: Rc<Array<u64>>, ib: Rc<Array<u64>>, 
 // Rocq: Isahasa.isahasa_implem.eloop (local: eloop)
 // Variant: uncurried, lifted
 pub fn eloop(xrs: Rc<Array<relkind>>, ia: Rc<Array<u64>>, ib: Rc<Array<u64>>, k: u64, W: u64, n: u64, l: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(l, n);
-  match bdec(v16) {
+  let tmp = ltb(l, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &ia;
-      let a = rocq_array::get::<u64>(&v20, l);
-      let v24 = &ib;
-      let b = rocq_array::get::<u64>(&v24, l);
-      let v28 = &xrs;
-      let v31 = rocq_array::get::<relkind>(&v28, l);
-      let T_ = match v31 {
+      let a = rocq_array::get::<u64>(&ia, l);
+      let b = rocq_array::get::<u64>(&ib, l);
+      let tmp_1 = rocq_array::get::<relkind>(&xrs, l);
+      let T_ = match tmp_1 {
         relkind::IsA => {
-          let v43 = setbit(T, W, a, b);
-          setbit(v43, W, add(a, k), add(b, k))
+          let tmp_2 = setbit(T, W, a, b);
+          setbit(tmp_2, W, add(a, k), add(b, k))
         },
         relkind::HasA => {
-          let v83 = setbit(T, W, a, add(b, k));
-          setbit(v83, W, add(a, k), add(b, k))
+          let tmp_3 = setbit(T, W, a, add(b, k));
+          setbit(tmp_3, W, add(a, k), add(b, k))
         },
       };
       eloop(xrs, ia, ib, k, W, n, add(l, 1u64), T_, ())
@@ -417,11 +375,9 @@ pub fn eloop(xrs: Rc<Array<relkind>>, ia: Rc<Array<u64>>, ib: Rc<Array<u64>>, k:
 // Rocq: Isahasa.isahasa_implem.getbit
 // Variant: uncurried
 pub fn getbit(T: Rc<Array<u64>>, W: u64, u: u64, v: u64) -> bool {
-  let v26 = add(mul(u, W), div(v, 63u64));
-  let v27 = &T;
-  let v30 = rocq_array::get::<u64>(&v27, v26);
+  let tmp = rocq_array::get::<u64>(&T, add(mul(u, W), div(v, 63u64)));
   std::mem::drop(T);
-  eqb(land(lsr(v30, mod_(v, 63u64)), 1u64), 1u64)
+  eqb(land(lsr(tmp, mod_(v, 63u64)), 1u64), 1u64)
 }
 
 // Rocq: Isahasa.isahasa_implem.rowor
@@ -433,18 +389,14 @@ pub fn rowor_1(T: Rc<Array<u64>>, W: u64, u: u64, w: u64, j: u64) -> Rc<Array<u6
 // Rocq: Isahasa.isahasa_implem.rowor (local: rowor)
 // Variant: uncurried, lifted
 pub fn rowor(T: Rc<Array<u64>>, W: u64, u: u64, w: u64, j: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(j, W);
-  match bdec(v13) {
+  let tmp = ltb(j, W);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = add(mul(u, W), j);
-      let v41 = add(mul(u, W), j);
-      let v42 = &T;
-      let v45 = rocq_array::get::<u64>(&v42, v41);
-      let v57 = add(mul(w, W), j);
-      let v58 = &T;
-      let v61 = rocq_array::get::<u64>(&v58, v57);
-      let v73 = rocq_array::set::<u64>(T, v28, lor(v45, v61));
-      rowor(v73, W, u, w, add(j, 1u64), ())
+      let tmp_1 = add(mul(u, W), j);
+      let tmp_2 = rocq_array::get::<u64>(&T, add(mul(u, W), j));
+      let tmp_3 = rocq_array::get::<u64>(&T, add(mul(w, W), j));
+      let tmp_4 = rocq_array::set::<u64>(T, tmp_1, lor(tmp_2, tmp_3));
+      rowor(tmp_4, W, u, w, add(j, 1u64), ())
     },
     sumbool::right => {
       T
@@ -461,19 +413,16 @@ pub fn fw_inner_1(T: Rc<Array<u64>>, N: u64, W: u64, w: u64, u: u64) -> Rc<Array
 // Rocq: Isahasa.isahasa_implem.fw_inner (local: fw_inner)
 // Variant: uncurried, lifted
 pub fn fw_inner(T: Rc<Array<u64>>, N: u64, W: u64, w: u64, u: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(u, N);
-  match bdec(v13) {
+  let tmp = ltb(u, N);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = Rc::clone(&T);
-      let v28 = match getbit(v20, W, u, w) {
-        true => {
-          rowor_1(T, W, u, w, 0u64)
-        },
-        false => {
-          T
-        },
+      let T_clone = Rc::clone(&T);
+      let tmp_1 = if getbit(T_clone, W, u, w) {
+        rowor_1(T, W, u, w, 0u64)
+      } else {
+        T
       };
-      fw_inner(v28, N, W, w, add(u, 1u64), ())
+      fw_inner(tmp_1, N, W, w, add(u, 1u64), ())
     },
     sumbool::right => {
       T
@@ -490,11 +439,11 @@ pub fn fw_outer_1(T: Rc<Array<u64>>, N: u64, W: u64, w: u64) -> Rc<Array<u64>> {
 // Rocq: Isahasa.isahasa_implem.fw_outer (local: fw_outer)
 // Variant: uncurried, lifted
 pub fn fw_outer(T: Rc<Array<u64>>, N: u64, W: u64, w: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(w, N);
-  match bdec(v12) {
+  let tmp = ltb(w, N);
+  match bdec(tmp) {
     sumbool::left => {
-      let v29 = fw_inner_1(T, N, W, w, 0u64);
-      fw_outer(v29, N, W, add(w, 1u64), ())
+      let tmp_1 = fw_inner_1(T, N, W, w, 0u64);
+      fw_outer(tmp_1, N, W, add(w, 1u64), ())
     },
     sumbool::right => {
       T
@@ -511,14 +460,14 @@ pub fn fill_1(f: Rc<dyn Fn(u64) -> bool>, m: u64, j: u64, out: Rc<Array<bool>>) 
 // Rocq: Isahasa.isahasa_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(f: Rc<dyn Fn(u64) -> bool>, m: u64, j: u64, out: Rc<Array<bool>>, _H: ()) -> Rc<Array<bool>> {
-  let v12 = ltb(j, m);
-  match bdec(v12) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(j, 1u64);
-      let v24: &Rc<dyn Fn(u64) -> bool> = &f;
-      let v27 = v24(j);
-      let v34 = rocq_array::set::<bool>(out, j, v27);
-      fill(f, m, v23, v34, ())
+      let tmp_1 = add(j, 1u64);
+      let f_ref: &Rc<dyn Fn(u64) -> bool> = &f;
+      let tmp_2 = f_ref(j);
+      let tmp_3 = rocq_array::set::<bool>(out, j, tmp_2);
+      fill(f, m, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(f);
@@ -530,176 +479,103 @@ pub fn fill(f: Rc<dyn Fn(u64) -> bool>, m: u64, j: u64, out: Rc<Array<bool>>, _H
 // Rocq: Isahasa.isahasa_implem.lookup
 // Variant: uncurried
 pub fn lookup(st: Rc<ht>, s: Rc<rocq_string::RocqString>) -> u64 {
-  let v5 = Rc::clone(&st);
-  let v6 = hhead(v5);
-  let v10 = Rc::clone(&s);
-  let v11 = hash(v10);
-  let v12 = &v6;
-  let p = rocq_array::get::<u64>(&v12, v11);
-  std::mem::drop(v6);
-  let v20 = Rc::clone(&st);
-  let v21 = hkeys(v20);
-  let v25 = hnxt(st);
-  walk_1(s, v21, v25, p)
+  let st_clone = Rc::clone(&st);
+  let tmp = hhead(st_clone);
+  let s_clone = Rc::clone(&s);
+  let p = rocq_array::get::<u64>(&tmp, hash(s_clone));
+  std::mem::drop(tmp);
+  let st_clone_1 = Rc::clone(&st);
+  let tmp_1 = hkeys(st_clone_1);
+  let tmp_2 = hnxt(st);
+  walk_1(s, tmp_1, tmp_2, p)
 }
 
 // Rocq: Isahasa.isahasa_implem.answer
 // Variant: uncurried
 pub fn answer(st: Rc<ht>, T: Rc<Array<u64>>, W: u64, k: u64, s1: Rc<rocq_string::RocqString>, s2: Rc<rocq_string::RocqString>, r: relkind) -> bool {
-  let v10 = Rc::clone(&st);
-  let a = lookup(v10, s1);
+  let st_clone = Rc::clone(&st);
+  let a = lookup(st_clone, s1);
   let b = lookup(st, s2);
-  match eqb(a, 0u64) {
-    true => {
+  if eqb(a, 0u64) {
+    std::mem::drop(T);
+    false
+  } else {
+    if eqb(b, 0u64) {
       std::mem::drop(T);
       false
-    },
-    false => {
-      match eqb(b, 0u64) {
-        true => {
-          std::mem::drop(T);
-          false
-        },
-        false => {
-          match r {
-            relkind::IsA => {
-              match eqb(a, b) {
-                true => {
-                  std::mem::drop(T);
-                  true
-                },
-                false => {
-                  getbit(T, W, sub(a, 1u64), sub(b, 1u64))
-                },
-              }
-            },
-            relkind::HasA => {
-              getbit(T, W, sub(a, 1u64), add(sub(b, 1u64), k))
-            },
+    } else {
+      match r {
+        relkind::IsA => {
+          if eqb(a, b) {
+            std::mem::drop(T);
+            true
+          } else {
+            getbit(T, W, sub(a, 1u64), sub(b, 1u64))
           }
         },
+        relkind::HasA => {
+          getbit(T, W, sub(a, 1u64), add(sub(b, 1u64), k))
+        },
       }
-    },
+    }
   }
 }
 
 // Rocq: Isahasa.isahasa_implem.isahasa_impl
 // Variant: uncurried
 pub fn isahasa_impl(xsrc: Rc<Array<Rc<rocq_string::RocqString>>>, xrs: Rc<Array<relkind>>, xdst: Rc<Array<Rc<rocq_string::RocqString>>>, xqsrc: Rc<Array<Rc<rocq_string::RocqString>>>, xqrs: Rc<Array<relkind>>, xqdst: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>> {
-  let v6 = &xsrc;
-  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&v6);
+  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&xsrc);
   let cap = add(n, n);
-  let v23 = make(0u64, 0u64);
-  let v28 = rocq_array::make::<Rc<rocq_string::RocqString>>(cap, v23);
-  let v35 = rocq_array::make::<u64>(cap, 0u64);
-  let v44 = rocq_array::make::<u64>(1024u64, 0u64);
-  let st0 = Rc::new(ht { hkeys: v28, hnxt: v35, hhead: v44, hcnt: 0u64 });
-  let v67 = rocq_array::make::<u64>(n, 0u64);
-  let v74 = rocq_array::make::<u64>(n, 0u64);
-  let v89 = iloop_1(xsrc, xdst, n, 0u64, st0, v67, v74);
-  match v89 {
-    (v91, v93) => {
-      match v91 {
-        (v96, v98) => {
-          let ia = &v96;
+  let tmp = rocq_string::RocqString::from_bytes(vec![]);
+  let tmp_1 = Rc::new(tmp);
+  let tmp_2 = rocq_array::make::<Rc<rocq_string::RocqString>>(cap, tmp_1);
+  let tmp_3 = rocq_array::make::<u64>(cap, 0u64);
+  let tmp_4 = rocq_array::make::<u64>(1024u64, 0u64);
+  let st0 = Rc::new(ht { hkeys: tmp_2, hnxt: tmp_3, hhead: tmp_4, hcnt: 0u64 });
+  let tmp_5 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_6 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_7 = iloop_1(xsrc, xdst, n, 0u64, st0, tmp_5, tmp_6);
+  match tmp_7 {
+    (v84, v86) => {
+      match v84 {
+        (v89, v91) => {
+          let ia = &v89;
           let k = hcnt(ia);
           let N = add(k, k);
           let W = div(add(N, 62u64), 63u64);
-          let v141 = rocq_array::make::<u64>(mul(N, W), 0u64);
-          let T0 = eloop_1(xrs, v98, v93, k, W, n, 0u64, v141);
+          let tmp_8 = rocq_array::make::<u64>(mul(N, W), 0u64);
+          let T0 = eloop_1(xrs, v91, v86, k, W, n, 0u64, tmp_8);
           let T = fw_outer_1(T0, N, W, 0u64);
-          let v171 = &xqsrc;
-          let m = rocq_array::length::<Rc<rocq_string::RocqString>>(&v171);
-          let v188 = {
-            let __anf_capture_189 = xqsrc;
-            let __anf_capture_195 = v96;
-            let __anf_capture_199 = W;
-            let __anf_capture_201 = k;
+          let m = rocq_array::length::<Rc<rocq_string::RocqString>>(&xqsrc);
+          let callback: Rc<dyn Fn(u64) -> bool> = Rc::new({
+            let __anf_capture_182 = xqsrc;
+            let __anf_capture_188 = v89;
+            let __anf_capture_192 = W;
+            let __anf_capture_194 = k;
             move |j: u64| -> bool {
-              let xqsrc = &__anf_capture_189;
+              let xqsrc = &__anf_capture_182;
               let xqdst = &xqdst;
               let xqrs = &xqrs;
-              let ia = &__anf_capture_195;
+              let ia = &__anf_capture_188;
               let T = &T;
-              let W = &__anf_capture_199;
-              let k = &__anf_capture_201;
-              let v207 = rocq_array::get::<Rc<rocq_string::RocqString>>(&xqsrc, j);
-              let v210 = rocq_array::get::<Rc<rocq_string::RocqString>>(&xqdst, j);
-              let v213 = rocq_array::get::<relkind>(&xqrs, j);
-              let v215 = Rc::clone(ia);
-              let v217 = Rc::clone(T);
-              let v219 = Clone::clone(W);
-              let v221 = Clone::clone(k);
-              answer(v215, v217, v219, v221, v207, v210, v213)
+              let W = &__anf_capture_192;
+              let k = &__anf_capture_194;
+              let tmp_9 = rocq_array::get::<Rc<rocq_string::RocqString>>(xqsrc, j);
+              let tmp_10 = rocq_array::get::<Rc<rocq_string::RocqString>>(xqdst, j);
+              let tmp_11 = rocq_array::get::<relkind>(xqrs, j);
+              let ia_clone = Rc::clone(ia);
+              let T_clone = Rc::clone(T);
+              let W_clone = Clone::clone(W);
+              let k_clone = Clone::clone(k);
+              answer(ia_clone, T_clone, W_clone, k_clone, tmp_9, tmp_10, tmp_11)
             }
-          };
-          let v231: Rc<dyn Fn(u64) -> bool> = Rc::new(v188);
-          let v241 = rocq_array::make::<bool>(m, false);
-          fill_1(v231, m, 0u64, v241)
+          });
+          let tmp_12 = rocq_array::make::<bool>(m, false);
+          fill_1(callback, m, 0u64, tmp_12)
         },
       }
     },
   }
-}
-
-// Rocq: Isahasa.isahasa_implem.isahasa_impl
-pub fn isahasa_impl_curried(xsrc: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>> {
-  let v3 = {
-    move |xrs: Rc<Array<relkind>>| -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>> {
-      let xsrc = &xsrc;
-      let v8 = Rc::clone(xsrc);
-      let v11 = {
-        move |xdst: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>> {
-          let xsrc = &v8;
-          let xrs = &xrs;
-          let v18 = Rc::clone(xsrc);
-          let v20 = Rc::clone(xrs);
-          let v23 = {
-            move |xqsrc: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>> {
-              let xsrc = &v18;
-              let xrs = &v20;
-              let xdst = &xdst;
-              let v32 = Rc::clone(xsrc);
-              let v34 = Rc::clone(xrs);
-              let v36 = Rc::clone(xdst);
-              let v39 = {
-                move |xqrs: Rc<Array<relkind>>| -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> {
-                  let xsrc = &v32;
-                  let xrs = &v34;
-                  let xdst = &v36;
-                  let xqsrc = &xqsrc;
-                  let v50 = Rc::clone(xsrc);
-                  let v52 = Rc::clone(xrs);
-                  let v54 = Rc::clone(xdst);
-                  let v56 = Rc::clone(xqsrc);
-                  let v59 = {
-                    move |xqdst: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<Array<bool>> {
-                      let v73 = Rc::clone(&v50);
-                      let v75 = Rc::clone(&v52);
-                      let v77 = Rc::clone(&v54);
-                      let v79 = Rc::clone(&v56);
-                      let v81 = Rc::clone(&xqrs);
-                      isahasa_impl(v73, v75, v77, v79, v81, xqdst)
-                    }
-                  };
-                  let v87: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> = Rc::new(v59);
-                  v87
-                }
-              };
-              let v91: Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>> = Rc::new(v39);
-              v91
-            }
-          };
-          let v95: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>> = Rc::new(v23);
-          v95
-        }
-      };
-      let v99: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>> = Rc::new(v11);
-      v99
-    }
-  };
-  let v103: Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>> = Rc::new(v3);
-  v103
 }
 
 mod __rocq_reuse {
@@ -850,10 +726,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> = __rocq_global_1019.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_1019: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<relkind>>, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>> = isahasa(); }
-std::thread_local! { static __rocq_global_1022: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<relkind>>) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<Array<bool>>>>>>>> = isahasa_curried(); }

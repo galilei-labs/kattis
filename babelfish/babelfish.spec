@@ -11,8 +11,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - At most $100{,}000$ dictionary entries and $100{,}000$ query words.
-    - Words contain $1\text{ to }10$ lowercase letters; dictionary keys are unique. *)
+    - At most $10^{5}$ dictionary entries and $10^{5}$ query words.
+    - Word length: $1 \le \ell \le 10$ lowercase letters; dictionary keys are unique. *)
 
 (** ** Examples *)
 
@@ -58,17 +58,17 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The dictionary lines "english foreign" are
+(* The dictionary lines "english foreign" are
   two parallel lists,
    one per column: english_words and foreign_words. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The i-th element of l, if any. *)
+(** The entry at zero-based index [i] in [l], if any. *)
 Definition at_ {A} (l : list A) (i : N) : option A :=
   nth_error l (N.to_nat i).
 
@@ -80,10 +80,10 @@ Definition word (text : string) : Prop :=
   forall k character, String.get k text = Some character ->
     97 <= N_of_ascii character <= 122.
 
-(** Some dictionary entry pairs the foreign word
-    foreign_word with the English word english_word. *)
+(** Some dictionary entry pairs the foreign word [foreign_word] with the English
+    word [english_word]. *)
 Definition translates
-  (english_words foreign_words : list string)
+  (foreign_words english_words : list string)
     (foreign_word english_word : string) : Prop :=
   exists i, at_ foreign_words i = Some foreign_word /\
             at_ english_words i = Some english_word.
@@ -96,9 +96,9 @@ Record valid_input
     word, followed by
      a space and a foreign language word *)
   vi_entries : len english_words = len foreign_words;
-  (* up to 100 000 dictionary entries *)
+  (* up to 10^5 dictionary entries *)
   vi_dict_length : len foreign_words <= 100000;
-  (* a message of up to 100 000 words *)
+  (* a message of up to 10^5 words *)
   vi_message_length : len message_words <= 100000;
   (* each word in the input is a non-empty sequence of at
     most 10 lowercase
@@ -113,11 +113,11 @@ Record valid_input
 
 (** Some translation when the dictionary contains the query word; None otherwise. *)
 Definition answer
-  (english_words foreign_words : list string)
+  (foreign_words english_words : list string)
     (foreign_word : string)
       (translation : option string) : Prop :=
   forall english_word, translation = Some english_word <->
-    translates english_words foreign_words foreign_word
+    translates foreign_words english_words foreign_word
       english_word.
 
 (** ** Correctness *)
@@ -129,7 +129,7 @@ Definition babelfish_spec
     (english_words foreign_words message_words : list
       string)
     (output : list (option string)) : Prop :=
-  Forall2 (answer english_words foreign_words) message_words
+  Forall2 (answer foreign_words english_words) message_words
     output.
 
 (** ** Interface *)
@@ -144,6 +144,14 @@ Program babelfish :
   array PrimString.string -> array PrimString.string ->
   array PrimString.string -> array
     (option PrimString.string).
+
+(** [@example babelfish]
+    - Sample: 1
+    - Input [english_words]: ["dog"; "cat"; "pig"; "froot"; "loops"]%string
+    - Input [foreign_words]: ["ogday"; "atcay"; "igpay"; "ootfray"; "oopslay"]%string
+    - Input [message_words]: ["atcay"; "ittenkay"; "oopslay"]%string
+    - Output [output]: [Some "cat"; None; Some "loops"]%string
+*)
 
 (** ** Bridge *)
 

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Loopycabdrivers.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Loopycabdrivers)
  (modules loopycabdrivers_implem)
- (theories Loopycabdrivers.spec Stdlib stdpp StdGalilei))
+  (theories Loopycabdrivers.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

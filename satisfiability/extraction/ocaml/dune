@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules satisfiability_extracted_marray)
- (theories Satisfiability Satisfiability.spec Stdlib stdpp StdGalilei))
+ (theories Satisfiability Satisfiability.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name satisfiability_extraction)

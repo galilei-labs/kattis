@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules kattissquest_extracted_marray)
- (theories Kattissquest Kattissquest.spec Stdlib stdpp StdGalilei))
+ (theories Kattissquest Kattissquest.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name kattissquest_extraction)

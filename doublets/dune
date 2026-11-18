@@ -6,9 +6,11 @@
  (rocq.theory
   (name Doublets.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Doublets)
  (modules doublets_implem)
- (theories Doublets.spec Stdlib stdpp StdGalilei))
+  (theories Doublets.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

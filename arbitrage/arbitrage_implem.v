@@ -2825,6 +2825,6 @@ Lemma arbitrage_correct :
 Proof.
   intros c src dst a b xc xs xd xa xb Hv Hc Hs Hd Ha Hb.
   exists (arbitrage_impl xc xs xd xa xb). split; [reflexivity |].
-  unfold arbitrage_spec. apply bool_match_of_iff.
+  unfold arbitrage_spec.
   exact (arbitrage_main c src dst a b xc xs xd xa xb Hv Hc Hs Hd Ha Hb).
 Qed.

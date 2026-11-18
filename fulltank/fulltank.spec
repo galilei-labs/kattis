@@ -12,9 +12,9 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Vertex count: $1 \le n \le 1{,}000$; at most $10{,}000$ roads; Query count: $1 \le q \le 100$.
-    - Fuel prices, road lengths and tank capacities are integers from $1$ to
-      $100$. *)
+    - Vertex count: $1 \le n \le 10^{3}$; at most $10^{4}$ roads; Query count: $1 \le q \le 100$.
+    - Fuel prices, road lengths and tank capacities are integers satisfying
+      $1 \le x \le 100$. *)
 
 (** ** Examples *)
 
@@ -64,18 +64,16 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** The roads (road_starts, road_ends, road_lengths) and the queries
-    (capacities, starts, goals) are given as parallel lists, one per
-    column of the input. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The j-th element of l (0 beyond the end). *)
+(** The entry at zero-based index [j] in [l], or zero beyond the end. *)
 Definition get (l : list N) (j : N) : N :=
   nth (N.to_nat j) l 0.
 
-(** Some road joins from_city and to_city (in either direction) and has
-    length distance. *)
+(** Some road joins [from_city] and [to_city] (in either direction) and has length
+    [distance]. *)
 Definition road
   (road_starts road_ends road_lengths : list N)
     (from_city to_city distance : N) : Prop :=
@@ -86,12 +84,11 @@ Definition road
        from_city)) /\
     distance = get road_lengths j.
 
-(** [trip prices road_starts road_ends road_lengths capacity goal city
-    fuel price]: standing in city with fuel units of fuel in the
-    tank, the car can reach city goal paying price in total. At each
-    city it buys bought >= 0 units at that city's price, never
-    holding more than capacity, then drives a road it has the fuel
-    for. *)
+(** [trip prices road_starts road_ends road_lengths capacity goal city fuel price]
+    means that, starting in [city] with [fuel] units of fuel, a sequence of
+    purchases and road journeys reaches [goal] at total additional cost [price].
+    The road lists describe the network, and [prices] gives fuel prices by city.
+    Purchases respect [capacity], and each road journey requires sufficient fuel. *)
 Inductive trip
   (prices road_starts road_ends road_lengths : list N)
     (capacity goal : N) : N -> N -> N -> Prop :=
@@ -112,8 +109,8 @@ Inductive trip
         capacity goal city fuel
         (get prices city * bought + price).
 
-(** price is the least price over all trips from start, tank empty, to
-    goal. *)
+(** [price] is the minimum cost of a trip from [start] to [goal], starting with an
+    empty tank. *)
 Definition cheapest
   (prices road_starts road_ends road_lengths : list N)
     (capacity start goal price : N) : Prop :=
@@ -131,13 +128,13 @@ Record valid_input (city_count : N)
     (prices road_starts road_ends road_lengths capacities
       starts goals
        : list N) : Prop := {
-  (* 1 <= n <= 1 000, the number of cities (city_count) *)
+  (* 1 <= n <= 10^3, the number of cities (city_count) *)
   vi_n : 1 <= city_count <= 1000;
   (* a line with n integers 1 <= p_i <= 100, the fuel
      price in city i (prices) *)
   vi_p_len : len prices = city_count;
   vi_p : Forall (fun price => 1 <= price <= 100) prices;
-  (* 0 <= m <= 10 000, the number of roads *)
+  (* 0 <= m <= 10^4, the number of roads *)
   vi_m : len road_starts <= 10000;
   (* m lines with three integers u, v, d (road_starts,
      road_ends, road_lengths) *)
@@ -164,7 +161,7 @@ Record valid_input (city_count : N)
   vi_e : Forall (fun city => city < city_count) goals;
 }.
 
-(** Some minimum feasible trip cost, or None exactly when no feasible trip exists. *)
+(** A minimum feasible trip cost, or [None] exactly when no feasible trip exists. *)
 Definition answer
   (prices road_starts road_ends road_lengths : list N)
     (capacity start goal : N) (result : option N) : Prop :=
@@ -215,6 +212,19 @@ Program fulltank : uint -> array uint -> array uint -> array
   uint ->
   array uint -> array uint -> array uint -> array uint ->
   array (option uint).
+
+(** [@example fulltank]
+    - Sample: 1
+    - Input [city_count]: 5
+    - Input [prices]: [10; 10; 20; 12; 13]
+    - Input [road_starts]: [0; 0; 1; 1; 2]
+    - Input [road_ends]: [1; 2; 2; 3; 3]
+    - Input [road_lengths]: [9; 8; 1; 11; 7]
+    - Input [capacities]: [10; 20]
+    - Input [starts]: [0; 1]
+    - Input [goals]: [3; 4]
+    - Output [output]: [Some 170; None]
+*)
 
 (** ** Bridge *)
 

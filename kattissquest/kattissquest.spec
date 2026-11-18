@@ -2,9 +2,18 @@
 
 (** ** Description *)
 
-(** Maintain tasks with energy costs and rewards. For each budget query,
-    repeatedly remove the affordable task with greatest cost, breaking ties
-    by greatest reward, and return the total reward earned.
+(** Maintain an initially empty collection of quests. Each quest has an energy
+    cost and a gold reward. Process two kinds of commands in order:
+
+    - [add E G]: Add a quest costing [E] energy and rewarding [G] gold.
+    - [query X]: Start with a fresh budget of [X] energy. Repeatedly complete
+      the affordable quest with the highest cost, breaking ties by the highest
+      reward. Deduct its cost from the remaining budget, collect its reward,
+      and remove it from the collection. Stop when no remaining quest is
+      affordable, and output the total gold collected.
+
+    Completed quests stay removed; uncompleted quests remain available for
+    later queries.
 
     [@kattis kattissquest]
     - Difficulty: 4.0
@@ -12,8 +21,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Command count: $1 \le q \le 200{,}000$.
-    - Task energy, reward and query budget are in $[1, 10^{5}]$. *)
+    - Command count: $1 \le q \le 2 \times 10^{5}$.
+    - Quest cost, reward and query budget: $1 \le E, G, X \le 10^{5}$. *)
 
 (** ** Examples *)
 
@@ -50,27 +59,38 @@ Output:
                     subtracting its energy) and prints the gold earned.  The
                     result, output, holds the printed golds, one per
                     query, in order.
+                    It runs in at most c1 * (U + (N + 1) * (log2 N + log2
+                    log2 U + 1)) + c2 steps of the cost model on a valid
+                    input, N the number of commands and U the largest value
+                    they carry ([max_size], an upper bound of the energy
+                    universe): the van Emde Boas tree costs U to build and
+                    log log U per operation, the gold heaps log N per
+                    operation, and the quests cleared over a call are at
+                    most the quests added, for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Permutation.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
 (** One input line, already parsed: "add E G" or "query X"; [command] on
-    the machine side, [op] on the math side, related field by field. *)
+    the machine side, [op] in the specification, related field by field. *)
 Inductive command : Set :=
 | Add (energy gold : uint)
 | Query (energy : uint).
 
-(** The [op] datatype. *)
+(** A mathematical command: add a quest with its energy cost and gold reward, or
+    query with an available energy budget. *)
 Inductive op : Set :=
 | add (energy gold : N)
 | query (energy : N).
 
+(** [@hide] The representation relation between machine and mathematical commands. *)
 Instance repr_command : Repr command op :=
   fun machine_command math_command =>
     match machine_command, math_command with
@@ -81,29 +101,41 @@ Instance repr_command : Repr command op :=
     | _, _ => False
     end.
 
-(** Math side. A quest is (energy, gold); the pool is a multiset of
-    quests, as a list taken up to permutation. *)
+(** [@hide] The cost translation of [command], the witness of a machine
+    command and its size (the largest value it carries), for the bound below. *)
+Elpi complexity command.
+Instance witness_command : Witness command (fun CM c => command_cost CM c) :=
+  fun c => match c with
+           | Add e g => Add_cost stepsCM e (witness e) g (witness g)
+           | Query e => Query_cost stepsCM e (witness e)
+           end.
+Instance witness_array_command :
+  Witness (array command) (fun CM t => array_cost CM command (command_cost CM) t) :=
+  @witness_array command (fun CM => command_cost CM) witness_command.
+Instance size_command : Size command :=
+  fun c => match c with Add e g => Nat.max (size e) (size g) | Query e => size e end.
+
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The quests of the add commands, and the energies of the query
-    commands. *)
+(** The energy-cost and gold-reward pairs of the add commands, in command order. *)
 Definition adds (commands : list op) : list (N * N) :=
   flat_map (fun instruction => match instruction with
             | add energy gold =>
             [(energy, gold)]
             | query _ => []
             end) commands.
-(** The [queries] definition. *)
+(** The energy budgets of the query commands, in command order. *)
 Definition queries (commands : list op) : list N :=
   flat_map (fun instruction => match instruction with
             | query energy => [energy]
             | add _ _ => []
             end) commands.
 
-(** [quest] is the quest step 1 picks with energy [energy]: among the
-    quests of the pool of energy at most [energy], the largest
-    energy, ties by the largest gold. *)
+(** [chosen pool energy quest] means that [quest] is the next quest to complete
+    from [pool] with budget [energy]. Among affordable quests, choose the one
+    with the highest cost, breaking ties by the highest reward. *)
 Definition chosen (pool : list (N * N)) (energy : N)
   (quest : N * N) : Prop :=
   In quest pool /\ fst quest <= energy /\
@@ -111,10 +143,11 @@ Definition chosen (pool : list (N * N)) (energy : N)
     fst quest' < fst quest \/
     (fst quest' = fst quest /\ snd quest' <= snd quest).
 
-(** [session pool energy gold pool']: the greedy session with energy
-    [energy] on [pool] earns [gold] and leaves [pool']; it stops
-    when no quest of the pool has energy <= the energy left (in
-    particular when that is 0). *)
+(** [session pool energy gold pool'] describes one query: start with quests
+    [pool] and budget [energy], repeatedly complete the quest selected by
+    [chosen], deduct its cost, and collect its reward. Stop when no remaining
+    quest is affordable. The total reward is [gold], and the remaining quests
+    are [pool']. *)
 Inductive session : list (N * N) -> N -> N -> list
   (N * N) -> Prop :=
 | session_stop : forall pool energy,
@@ -158,20 +191,32 @@ Record valid_input (commands : list op) : Prop := {
 
 (** [@requirement]
     The output gives the total reward for each budget query under the specified greedy
-    task-selection rule, starting with an empty task collection. *)
+    quest-selection rule, starting with an empty quest collection. *)
 Definition kattissquest_spec (commands : list op)
   (output : list N)
     : Prop :=
   runs [] commands output.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(U+1+(n+1)(\log(n+2)+\log\log(U+4)))$ steps, where $n$ is the number of commands and $U$ the largest numeric value carried by any command. *)
+Definition kattissquest_time_spec (c1 c2 max_commands n_commands steps : nat) : Prop :=
+  (steps <= c1 * (max_commands + 1 + (n_commands + 1) * (Nat.log2 (n_commands) + Nat.log2 (Nat.log2 (max_commands + 1) + 1) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Maintain tasks with energy costs and rewards. For each budget query, repeatedly remove
-    the affordable task with greatest cost, breaking ties by greatest reward, and return
+(** Maintain quests with energy costs and rewards. For each budget query, repeatedly remove
+    the affordable quest with greatest cost, breaking ties by greatest reward, and return
     the total reward earned.
-    - Input [commands]: Task additions and budget queries in execution order.
-    - Output [output]: The output gives the total reward for each budget query under the specified greedy task-selection rule, starting with an empty task collection. *)
+    - Input [commands]: Quest additions and budget queries in execution order.
+    - Output [output]: The output gives the total reward for each budget query under the specified greedy quest-selection rule, starting with an empty quest collection. *)
 Program kattissquest : array command -> array uint.
+
+(** [@example kattissquest]
+    - Sample: 1
+    - Input [commands]: [add 8 10; add 3 25; add 5 6; query 7; query 7; add 1 9; add 2 13; query 20; query 1]
+    - Output [output]: [6; 25; 32; 0]
+*)
 
 (** ** Bridge *)
 
@@ -185,6 +230,20 @@ Specification kattissquest_correct :
   exists output : list N,
     repr (kattissquest commands_arr) output /\
     kattissquest_spec commands output.
+
+(** ** Complexity *)
+
+(** [@hide] [kattissquest_cost] is the cost translation of [kattissquest] (the judge
+    recomputes it and compares) ... *)
+Complexity kattissquest_cost for kattissquest.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (U + (N + 1) * (log2 N + log2 log2 U + 1)) + c2 steps of the cost model on a valid input, N the number of commands and U the largest value they carry ([max_size], an upper bound of the energy universe): the van Emde Boas tree costs U to build and log log U per operation, the gold heaps log N per operation, and the quests cleared over a call are at most the quests added, for two constants
+    quantified before the inputs, on every valid input. [@requirement kattissquest_time_spec] *)
+Specification kattissquest_time : exists c1 c2 : nat,
+  forall (commands : list op) (commands_arr : array
+  command),
+  valid_input commands -> repr commands_arr commands ->
+  kattissquest_time_spec c1 c2 (max_size commands_arr) (size commands_arr) (cost1 kattissquest_cost commands_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

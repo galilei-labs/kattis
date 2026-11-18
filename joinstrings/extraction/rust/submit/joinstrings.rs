@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Joinstrings.joinstrings_implem.joinstrings
-// Variant: uncurried
-pub fn joinstrings() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString> = joinstrings_impl;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Joinstrings.joinstrings_implem.joinstrings
-pub fn joinstrings_curried() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>>> {
-  let v0: fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>> = joinstrings_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -698,13 +682,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Joinstrings.joinstrings_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -723,12 +704,12 @@ pub fn init_loop_1(n: u64, k: u64, tl: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Joinstrings.joinstrings_implem.init_loop (local: init_loop)
 // Variant: uncurried, lifted
 pub fn init_loop(n: u64, k: u64, tl: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(k, n);
-  match bdec(v11) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(k, 1u64);
-      let v29 = rocq_array::set::<u64>(tl, k, k);
-      init_loop(n, v22, v29, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(tl, k, k);
+      init_loop(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       tl
@@ -751,23 +732,19 @@ pub fn ops_loop_1(xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, m: u64, k: u64, nx: Rc
 // Rocq: Joinstrings.joinstrings_implem.ops_loop (local: ops_loop)
 // Variant: uncurried, lifted
 pub fn ops_loop(xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, m: u64, k: u64, nx: Rc<Array<u64>>, tl: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(k, m);
-  match bdec(v14) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &xa;
-      let v22 = rocq_array::get::<u64>(&v19, k);
-      let x = sub(v22, 1u64);
-      let v31 = &xb;
-      let v34 = rocq_array::get::<u64>(&v31, k);
-      let y = sub(v34, 1u64);
-      let v42 = &tl;
-      let ty = rocq_array::get::<u64>(&v42, y);
-      let v46 = &tl;
-      let tx = rocq_array::get::<u64>(&v46, x);
-      let v57 = add(k, 1u64);
-      let v64 = rocq_array::set::<u64>(nx, tx, y);
-      let v71 = rocq_array::set::<u64>(tl, x, ty);
-      ops_loop(xa, xb, m, v57, v64, v71, ())
+      let tmp_1 = rocq_array::get::<u64>(&xa, k);
+      let x = sub(tmp_1, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&xb, k);
+      let y = sub(tmp_2, 1u64);
+      let ty = rocq_array::get::<u64>(&tl, y);
+      let tx = rocq_array::get::<u64>(&tl, x);
+      let tmp_3 = add(k, 1u64);
+      let tmp_4 = rocq_array::set::<u64>(nx, tx, y);
+      let tmp_5 = rocq_array::set::<u64>(tl, x, ty);
+      ops_loop(xa, xb, m, tmp_3, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(xa);
@@ -779,33 +756,28 @@ pub fn ops_loop(xa: Rc<Array<u64>>, xb: Rc<Array<u64>>, m: u64, k: u64, nx: Rc<A
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Joinstrings.joinstrings_implem.root_of
 // Variant: uncurried
 pub fn root_of(xa: Rc<Array<u64>>, m: u64) -> u64 {
-  match eqb(m, 0u64) {
-    true => {
-      std::mem::drop(xa);
-      0u64
-    },
-    false => {
-      let v23 = sub(m, 1u64);
-      let v24 = &xa;
-      let v27 = rocq_array::get::<u64>(&v24, v23);
-      std::mem::drop(xa);
-      sub(v27, 1u64)
-    },
+  if eqb(m, 0u64) {
+    std::mem::drop(xa);
+    0u64
+  } else {
+    let tmp = rocq_array::get::<u64>(&xa, sub(m, 1u64));
+    std::mem::drop(xa);
+    sub(tmp, 1u64)
   }
 }
 
@@ -818,22 +790,18 @@ pub fn walk_1(nx: Rc<Array<u64>>, t: u64, n: u64, cur: u64, i: u64, ord: Rc<Arra
 // Rocq: Joinstrings.joinstrings_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(nx: Rc<Array<u64>>, t: u64, n: u64, cur: u64, i: u64, ord: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      match eqb(cur, t) {
-        true => {
-          std::mem::drop(nx);
-          let v31 = rocq_array::set::<u64>(ord, i, cur);
-          (v31, add(i, 1u64))
-        },
-        false => {
-          let v48 = &nx;
-          let v51 = rocq_array::get::<u64>(&v48, cur);
-          let v59 = add(i, 1u64);
-          let v66 = rocq_array::set::<u64>(ord, i, cur);
-          walk(nx, t, n, v51, v59, v66, ())
-        },
+      if eqb(cur, t) {
+        std::mem::drop(nx);
+        let tmp_1 = rocq_array::set::<u64>(ord, i, cur);
+        (tmp_1, add(i, 1u64))
+      } else {
+        let tmp_2 = rocq_array::get::<u64>(&nx, cur);
+        let tmp_3 = add(i, 1u64);
+        let tmp_4 = rocq_array::set::<u64>(ord, i, cur);
+        walk(nx, t, n, tmp_2, tmp_3, tmp_4, ())
       }
     },
     sumbool::right => {
@@ -846,13 +814,10 @@ pub fn walk(nx: Rc<Array<u64>>, t: u64, n: u64, cur: u64, i: u64, ord: Rc<Array<
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -865,10 +830,10 @@ pub fn split_ok(lo: u64, hi: u64) -> bool {
 // Rocq: Corelib.Strings.PrimString.cat
 // Variant: uncurried
 pub fn cat(v0: Rc<rocq_string::RocqString>, v1: Rc<rocq_string::RocqString>) -> Rc<rocq_string::RocqString> {
-  let v4 = rocq_string::cat(&v0, &v1);
+  let tmp = rocq_string::cat(&v0, &v1);
   std::mem::drop(v1);
   std::mem::drop(v0);
-  v4
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -880,91 +845,64 @@ pub fn div(v0: u64, v1: u64) -> u64 {
 // Rocq: Joinstrings.joinstrings_implem.mid_of
 // Variant: uncurried
 pub fn mid_of(lo: u64, hi: u64) -> u64 {
-  let v9 = sub(hi, lo);
-  add(lo, div(v9, 2u64))
+  let tmp = sub(hi, lo);
+  add(lo, div(tmp, 2u64))
 }
 
 // Rocq: Joinstrings.joinstrings_implem.build
 // Variant: uncurried
 pub fn build_1(xs: Rc<Array<Rc<rocq_string::RocqString>>>, ord: Rc<Array<u64>>, lo: u64, hi: u64) -> Rc<rocq_string::RocqString> {
-  let v18 = build(xs, ord, lo, hi, ());
-  v18
+  let tmp = build(xs, ord, lo, hi, ());
+  tmp
 }
 
 // Rocq: Joinstrings.joinstrings_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(xs: Rc<Array<Rc<rocq_string::RocqString>>>, ord: Rc<Array<u64>>, lo: u64, hi: u64, _H: ()) -> Rc<rocq_string::RocqString> {
-  let v12 = split_ok(lo, hi);
-  let v77 = match bdec(v12) {
+  let tmp = split_ok(lo, hi);
+  let tmp_1 = match bdec(tmp) {
     sumbool::left => {
-      let v22 = mid_of(lo, hi);
-      let v28 = Rc::clone(&xs);
-      let v31 = Rc::clone(&ord);
-      let v38 = build(v28, v31, lo, v22, ());
-      let v58 = build(xs, ord, mid_of(lo, hi), hi, ());
-      let v64 = cat(v38, v58);
-      v64
+      let tmp_2 = mid_of(lo, hi);
+      let xs_clone = Rc::clone(&xs);
+      let ord_clone = Rc::clone(&ord);
+      let tmp_3 = build(xs_clone, ord_clone, lo, tmp_2, ());
+      let tmp_4 = build(xs, ord, mid_of(lo, hi), hi, ());
+      let tmp_5 = cat(tmp_3, tmp_4);
+      tmp_5
     },
     sumbool::right => {
-      let v66 = &ord;
-      let v69 = rocq_array::get::<u64>(&v66, lo);
+      let tmp_6 = rocq_array::get::<u64>(&ord, lo);
       std::mem::drop(ord);
-      let v70 = &xs;
-      let v73 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v70, v69);
+      let tmp_7 = rocq_array::get::<Rc<rocq_string::RocqString>>(&xs, tmp_6);
       std::mem::drop(xs);
-      v73
+      tmp_7
     },
   };
-  v77
+  tmp_1
 }
 
 // Rocq: Joinstrings.joinstrings_implem.joinstrings_impl
 // Variant: uncurried
 pub fn joinstrings_impl(xs: Rc<Array<Rc<rocq_string::RocqString>>>, xa: Rc<Array<u64>>, xb: Rc<Array<u64>>) -> Rc<rocq_string::RocqString> {
-  let v3 = &xs;
-  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&v3);
-  let v5 = &xa;
-  let m = rocq_array::length::<u64>(&v5);
-  let v16 = rocq_array::make::<u64>(n, 0u64);
-  let tl0 = init_loop_1(n, 0u64, v16);
-  let v33 = rocq_array::make::<u64>(n, 0u64);
-  let v36 = Rc::clone(&xa);
-  let nt = ops_loop_1(v36, xb, m, 0u64, v33, tl0);
-  let v50 = Clone::clone(&nt);
-  let nx = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v50);
+  let n = rocq_array::length::<Rc<rocq_string::RocqString>>(&xs);
+  let m = rocq_array::length::<u64>(&xa);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tl0 = init_loop_1(n, 0u64, tmp);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let xa_clone = Rc::clone(&xa);
+  let nt = ops_loop_1(xa_clone, xb, m, 0u64, tmp_1, tl0);
+  let nt_clone = Clone::clone(&nt);
+  let nx = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(nt_clone);
   let tl = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(nt);
   let r = root_of(xa, m);
-  let v64 = &tl;
-  let v67 = rocq_array::get::<u64>(&v64, r);
+  let tmp_2 = rocq_array::get::<u64>(&tl, r);
   std::mem::drop(tl);
-  let v76 = rocq_array::make::<u64>(n, 0u64);
-  let oc = walk_1(nx, v67, n, r, 0u64, v76);
-  let v93 = Clone::clone(&oc);
-  let v95 = fst::<Rc<Array<u64>>, u64>(v93);
-  let v111 = build_1(xs, v95, 0u64, snd::<Rc<Array<u64>>, u64>(oc));
-  v111
-}
-
-// Rocq: Joinstrings.joinstrings_implem.joinstrings_impl
-pub fn joinstrings_impl_curried(xs: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>> {
-  let v3 = {
-    move |xa: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> {
-      let xs = &xs;
-      let v8 = Rc::clone(xs);
-      let v11 = {
-        move |xb: Rc<Array<u64>>| -> Rc<rocq_string::RocqString> {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&xa);
-          let v25 = joinstrings_impl(v19, v21, xb);
-          v25
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>> = Rc::new(v3);
-  v31
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let oc = walk_1(nx, tmp_2, n, r, 0u64, tmp_3);
+  let oc_clone = Clone::clone(&oc);
+  let tmp_4 = fst::<Rc<Array<u64>>, u64>(oc_clone);
+  let tmp_5 = build_1(xs, tmp_4, 0u64, snd::<Rc<Array<u64>>, u64>(oc));
+  tmp_5
 }
 
 mod __rocq_reuse {
@@ -1116,12 +1054,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> = __rocq_global_438.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_438: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<rocq_string::RocqString>> = joinstrings(); }
-std::thread_local! { static __rocq_global_441: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<rocq_string::RocqString>>>> = joinstrings_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1200,6 +1132,6 @@ fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let ss = words(&mut t, n);
     let mut a = Vec::new(); let mut b = Vec::new();
     for _ in 0..n-1 { a.push(t.uint()); b.push(t.uint()); }
-    format!("{}\n", text(&run()(ss, ints(a), ints(b))))
+    format!("{}\n", text(&joinstrings_impl(ss, ints(a), ints(b))))
 }
 fn main() { entry(solve); }

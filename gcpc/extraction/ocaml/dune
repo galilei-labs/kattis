@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules gcpc_extracted_marray)
- (theories Gcpc Gcpc.spec Stdlib stdpp StdGalilei))
+ (theories Gcpc Gcpc.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name gcpc_extraction)

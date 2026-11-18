@@ -2,8 +2,10 @@
 
 (** ** Description *)
 
-(** Partition a graph's vertices into as few groups as possible, with no
-    adjacent vertices in the same group.
+(** Assign every department member to exactly one committee. Some pairs of
+    members do not get along and must be assigned to different committees.
+    Find the fewest committees needed to separate all such pairs. Members
+    not named in an incompatible pair can join any committee.
 
     [@kattis committeeassignment]
     - Difficulty: 7.0
@@ -46,22 +48,30 @@ Output:
                     returns the minimum number of committees such that
                     everyone sits on exactly one committee and no two
                     members of a pair sit on the same one.
+                    It runs in at most c1 * ((n + 1)^(n + 3) + (m + 1) * (n
+                    + log2 m + 1)) + c2 steps of the cost model on a valid
+                    input, n the number of members and m of pairs: the
+                    naming by binary search and insertion in a sorted table,
+                    then the iterative-deepening colouring search, at most
+                    k^p nodes for k colours and p <= n members, each node
+                    checking p earlier neighbours, for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   PrimString.
 From Stdlib Require String Ascii.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The m pairs come as two parallel lists, one
+(* The m pairs come as two parallel lists, one
   per name column
    of the m lines; a member is known by its name. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -83,12 +93,9 @@ Definition listed
     (member : String.string) : Prop :=
   In member first_names \/ In member second_names.
 
-(** [committee_of] puts everyone on one of
-    committee_count committees, numbered 0 ..
-    committee_count-1. The department has at least one
-    member, so committee_count >= 1; members listed in
-    no pair can sit on any committee, so only the listed
-    ones are constrained. *)
+(** [committee_of] assigns every listed member to a committee numbered from zero
+    through [committee_count - 1]. At least one committee is required. Members not
+    appearing in a pair impose no additional separation constraints. *)
 Definition assignment
   (first_names second_names : list String.string)
     (committee_count : N) (committee_of : String.string
@@ -105,7 +112,7 @@ Definition separates
     committee_of member')
     first_names second_names.
 
-(** committee_count committees suffice. *)
+(** Some assignment to [committee_count] committees separates every input pair. *)
 Definition feasible
   (first_names second_names : list String.string)
     (committee_count : N) : Prop :=
@@ -146,8 +153,8 @@ Record valid_input (member_count : N)
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the minimum number of groups in a partition of the vertices with no
-    adjacent vertices in the same group. *)
+    The output is the fewest committees needed to assign every department
+    member to exactly one committee without placing an incompatible pair together. *)
 Definition committees_spec (member_count : N)
     (first_names second_names : list String.string)
       (output : N)
@@ -157,17 +164,50 @@ Definition committees_spec (member_count : N)
     ->
     output <= output'.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((n+1)^{n+3}+(m+1)(n+\log(m+2)))$ steps, where $n$ is the member count and $m$ the number of incompatible pairs. *)
+Definition committees_time_spec (c1 c2 n_member_count n_first_names steps : nat) : Prop :=
+  (steps <= c1 * ((n_member_count + 1) ^ (n_member_count + 3) + (n_first_names + 1) * (n_member_count + Nat.log2 (n_first_names) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Partition a graph's vertices into as few groups as possible, with no adjacent vertices
-    in the same group.
-    - Input [member_count]: Total number of vertices to partition.
-    - Input [first_names]: First endpoint name of each incompatible pair.
-    - Input [second_names]: Second endpoint name of each incompatible pair.
-    - Output [output]: The output is the minimum number of groups in a partition of the vertices with no adjacent vertices in the same group. *)
+(** Assign department members to the fewest committees so that no incompatible
+    pair serves on the same committee.
+    - Input [member_count]: Total number of department members.
+    - Input [first_names]: First member of each incompatible pair.
+    - Input [second_names]: Second member of each corresponding incompatible pair.
+    - Output [output]: Minimum number of committees needed. *)
 Program committees :
   uint -> array PrimString.string
     -> array PrimString.string -> uint.
+
+(** [@example committees]
+    - Sample: 1
+    - Case: 1
+    - Input [member_count]: 5
+    - Input [first_names]: []
+    - Input [second_names]: []
+    - Output [output]: 1
+*)
+
+(** [@example committees]
+    - Sample: 1
+    - Case: 2
+    - Input [member_count]: 5
+    - Input [first_names]: ["wally"; "wally"]%string
+    - Input [second_names]: ["alice"; "dilbert"]%string
+    - Output [output]: 2
+*)
+
+(** [@example committees]
+    - Sample: 1
+    - Case: 3
+    - Input [member_count]: 5
+    - Input [first_names]: ["greg"; "greg"; "don"]%string
+    - Input [second_names]: ["don"; "bill"; "bill"]%string
+    - Output [output]: 3
+*)
 
 (** ** Bridge *)
 
@@ -191,6 +231,26 @@ Specification committees_correct :
       output /\
     committees_spec member_count first_names second_names
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [committees_cost] is the cost translation of [committees] (the judge
+    recomputes it and compares) ... *)
+Complexity committees_cost for committees.
+
+(** [@fold complexity bound] ... and runs in at most c1 * ((n + 1)^(n + 3) + (m + 1) * (n + log2 m + 1)) + c2 steps of the cost model on a valid input, n the number of members and m of pairs: the naming by binary search and insertion in a sorted table, then the iterative-deepening colouring search, at most k^p nodes for k colours and p <= n members, each node checking p earlier neighbours, for two constants
+    quantified before the inputs, on every valid input. [@requirement committees_time_spec] *)
+Specification committees_time : exists c1 c2 : nat,
+  forall (member_count : N)
+  (first_names second_names : list String.string)
+  (member_count_int : uint)
+  (first_names_arr second_names_arr : array
+  PrimString.string),
+  valid_input member_count first_names second_names ->
+  repr member_count_int member_count
+  -> repr first_names_arr first_names ->
+  repr second_names_arr second_names ->
+  committees_time_spec c1 c2 (size member_count_int) (size first_names_arr) (cost3 committees_cost member_count_int first_names_arr second_names_arr).
 
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)

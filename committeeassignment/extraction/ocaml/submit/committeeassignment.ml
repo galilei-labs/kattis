@@ -926,13 +926,7 @@ let set = Marray.set
 
 let length = Marray.length
 
-type char63 = Uint63.t
-
 type string = Pstring.t
-
-(** val make0 : Uint63.t -> char63 -> string **)
-
-let make0 = Pstring.make
 
 (** val compare : string -> string -> comparison **)
 
@@ -1073,8 +1067,7 @@ let committees_impl _ y z =
   let m = length y in
   let (k, p) =
     build y z m (Uint63.of_int (0))
-      (make (add m m) (make0 (Uint63.of_int (0)) (Uint63.of_int (0))))
-      (Uint63.of_int (0))
+      (make (add m m) (Pstring.unsafe_of_string "")) (Uint63.of_int (0))
   in
   let tbl = fill y z k p m (Uint63.of_int (0)) (make (mul p p) false) in
   let p0 = if ltb p (Uint63.of_int (1)) then (Uint63.of_int (1)) else p in

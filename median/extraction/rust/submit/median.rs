@@ -783,7 +783,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -802,13 +801,6 @@ pub type uint = u64;
 // Rocq: Median.median_implem.seed0
 pub fn seed0() -> u64 {
   88172645463325252u64
-}
-
-// Rocq: Median.median_implem.median
-pub fn median() -> Rc<dyn Fn(Rc<Array<u64>>) -> f64> {
-  let v0: fn(Rc<Array<u64>>) -> f64 = median_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> f64> = Rc::new(v0);
-  v1
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
@@ -837,13 +829,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Median.median_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -885,23 +874,19 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Median.median_implem.tst
 // Variant: uncurried
 pub fn tst(strict: bool, x: u64, v: u64) -> bool {
-  match strict {
-    true => {
-      ltb(v, x)
-    },
-    false => {
-      leb(v, x)
-    },
+  if strict {
+    ltb(v, x)
+  } else {
+    leb(v, x)
   }
 }
 
 // Rocq: Median.median_implem.swap_with
 // Variant: uncurried
 pub fn swap_with(y: Rc<Array<u64>>, i: u64, j: u64, v: u64) -> Rc<Array<u64>> {
-  let v4 = &y;
-  let w = rocq_array::get::<u64>(&v4, i);
-  let v15 = rocq_array::set::<u64>(y, i, v);
-  rocq_array::set::<u64>(v15, j, w)
+  let w = rocq_array::get::<u64>(&y, i);
+  let tmp = rocq_array::set::<u64>(y, i, v);
+  rocq_array::set::<u64>(tmp, j, w)
 }
 
 // Rocq: Median.median_implem.part
@@ -913,19 +898,15 @@ pub fn part_1(strict: bool, x: u64, hi: u64, y: Rc<Array<u64>>, i: u64, j: u64) 
 // Rocq: Median.median_implem.part (local: part)
 // Variant: uncurried, lifted
 pub fn part(strict: bool, x: u64, hi: u64, y: Rc<Array<u64>>, i: u64, j: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v14 = ltb(j, hi);
-  match bdec(v14) {
+  let tmp = ltb(j, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &y;
-      let v = rocq_array::get::<u64>(&v18, j);
-      match tst(strict, x, v) {
-        true => {
-          let v40 = swap_with(y, i, j, v);
-          part(strict, x, hi, v40, add(i, 1u64), add(j, 1u64), ())
-        },
-        false => {
-          part(strict, x, hi, y, i, add(j, 1u64), ())
-        },
+      let v = rocq_array::get::<u64>(&y, j);
+      if tst(strict, x, v) {
+        let tmp_1 = swap_with(y, i, j, v);
+        part(strict, x, hi, tmp_1, add(i, 1u64), add(j, 1u64), ())
+      } else {
+        part(strict, x, hi, y, i, add(j, 1u64), ())
       }
     },
     sumbool::right => {
@@ -943,51 +924,43 @@ pub fn sel_1(k: u64, y: Rc<Array<u64>>, lo: u64, hi: u64, seed: u64) -> Rc<Array
 // Rocq: Median.median_implem.sel (local: sel)
 // Variant: uncurried, lifted
 pub fn sel(k: u64, y: Rc<Array<u64>>, lo: u64, hi: u64, seed: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(lo, hi);
-  match bdec(v13) {
+  let tmp = ltb(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
       let s = lcg(seed);
-      let v30 = lsr(s, 17u64);
-      let v36 = sub(hi, lo);
-      let v46 = add(lo, mod_(v30, v36));
-      let v47 = &y;
-      let x = rocq_array::get::<u64>(&v47, v46);
-      let v66 = part_1(true, x, hi, y, lo, lo);
-      match v66 {
+      let tmp_1 = lsr(s, 17u64);
+      let tmp_2 = sub(hi, lo);
+      let x = rocq_array::get::<u64>(&y, add(lo, mod_(tmp_1, tmp_2)));
+      let tmp_3 = part_1(true, x, hi, y, lo, lo);
+      match tmp_3 {
         (v68, v70) => {
-          let v87 = part_1(false, x, hi, v68, v70, v70);
-          match v87 {
+          let tmp_4 = part_1(false, x, hi, v68, v70, v70);
+          match tmp_4 {
             (v89, v91) => {
-              match ltb(k, v70) {
-                true => {
-                  let v107 = ltb(v70, hi);
-                  match bdec(v107) {
+              if ltb(k, v70) {
+                let tmp_5 = ltb(v70, hi);
+                match bdec(tmp_5) {
+                  sumbool::left => {
+                    sel(k, v89, lo, v70, s, ())
+                  },
+                  sumbool::right => {
+                    v89
+                  },
+                }
+              } else {
+                if ltb(k, v91) {
+                  v89
+                } else {
+                  let tmp_6 = ltb(lo, v91);
+                  match bdec(tmp_6) {
                     sumbool::left => {
-                      sel(k, v89, lo, v70, s, ())
+                      sel(k, v89, v91, hi, s, ())
                     },
                     sumbool::right => {
                       v89
                     },
                   }
-                },
-                false => {
-                  match ltb(k, v91) {
-                    true => {
-                      v89
-                    },
-                    false => {
-                      let v150 = ltb(lo, v91);
-                      match bdec(v150) {
-                        sumbool::left => {
-                          sel(k, v89, v91, hi, s, ())
-                        },
-                        sumbool::right => {
-                          v89
-                        },
-                      }
-                    },
-                  }
-                },
+                }
               }
             },
           }
@@ -1014,21 +987,17 @@ pub fn maxl_1(y: Rc<Array<u64>>, k: u64, j: u64, acc: u64) -> u64 {
 // Rocq: Median.median_implem.maxl (local: maxl)
 // Variant: uncurried, lifted
 pub fn maxl(y: Rc<Array<u64>>, k: u64, j: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(j, k);
-  match bdec(v12) {
+  let tmp = ltb(j, k);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &y;
-      let v = rocq_array::get::<u64>(&v16, j);
-      let v27 = add(j, 1u64);
-      let v34 = match ltb(acc, v) {
-        true => {
-          v
-        },
-        false => {
-          acc
-        },
+      let v = rocq_array::get::<u64>(&y, j);
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = if ltb(acc, v) {
+        v
+      } else {
+        acc
       };
-      maxl(y, k, v27, v34, ())
+      maxl(y, k, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       std::mem::drop(y);
@@ -1045,29 +1014,21 @@ pub fn div_1(v0: f64, v1: f64) -> f64 {
 
 // Rocq: Median.median_implem.median_impl
 pub fn median_impl(x: Rc<Array<u64>>) -> f64 {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
+  let n = rocq_array::length::<u64>(&x);
   let k = div(n, 2u64);
-  let v12 = &x;
-  let v13 = rocq_array::copy::<u64>(&v12);
-  let y = sel_1(k, v13, 0u64, n, __rocq_global_343);
-  let v28 = &y;
-  let u = rocq_array::get::<u64>(&v28, k);
-  let v40 = mod_(n, 2u64);
-  match eqb(v40, 1u64) {
-    true => {
-      std::mem::drop(x);
-      std::mem::drop(y);
-      of_uint63(u)
-    },
-    false => {
-      std::mem::drop(x);
-      let v59 = 0u64;
-      let v60 = &y;
-      let v63 = rocq_array::get::<u64>(&v60, v59);
-      let w = maxl_1(y, k, 1u64, v63);
-      div_1(of_uint63(add(w, u)), of_uint63(2u64))
-    },
+  let tmp = rocq_array::copy::<u64>(&x);
+  let y = sel_1(k, tmp, 0u64, n, __rocq_global_343);
+  let u = rocq_array::get::<u64>(&y, k);
+  let tmp_1 = mod_(n, 2u64);
+  if eqb(tmp_1, 1u64) {
+    std::mem::drop(x);
+    std::mem::drop(y);
+    of_uint63(u)
+  } else {
+    std::mem::drop(x);
+    let tmp_2 = rocq_array::get::<u64>(&y, 0u64);
+    let w = maxl_1(y, k, 1u64, tmp_2);
+    div_1(of_uint63(add(w, u)), of_uint63(2u64))
   }
 }
 
@@ -1219,13 +1180,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> f64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> f64> = __rocq_global_449.with(Clone::clone);
-  v0
-}
 const __rocq_global_343: u64 = 88172645463325252u64;
-std::thread_local! { static __rocq_global_449: Rc<dyn Fn(Rc<Array<u64>>) -> f64> = median(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1301,6 +1256,6 @@ const STACK_MIB: usize = 256;
 use kattis_io::*;
 
 fn solve(input: &str) -> String {
-    let mut t = Tokens::new(input); let n = t.uint(); format!("{}\n", run()(t.uints(n)))
+    let mut t = Tokens::new(input); let n = t.uint(); format!("{}\n", median_impl(t.uints(n)))
 }
 fn main() { entry(solve); }

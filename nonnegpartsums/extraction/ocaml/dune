@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules nonnegpartsums_extracted_marray)
- (theories Nonnegpartsums Nonnegpartsums.spec Stdlib stdpp StdGalilei))
+ (theories Nonnegpartsums Nonnegpartsums.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name nonnegpartsums_extraction)

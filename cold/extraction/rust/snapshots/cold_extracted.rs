@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -16,13 +15,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Cold.cold_implem.count_negatives
-pub fn count_negatives() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = count_negatives_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -31,13 +23,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Cold.cold_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -62,22 +51,18 @@ pub fn count_loop_1(x: Rc<Array<u64>>, n: u64, i: u64, acc: u64) -> u64 {
 // Rocq: Cold.cold_implem.count_loop (local: count_loop)
 // Variant: uncurried, lifted
 pub fn count_loop(x: Rc<Array<u64>>, n: u64, i: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v25 = &x;
-      let v28 = rocq_array::get::<u64>(&v25, i);
-      let v30 = 0u64;
-      let v36 = match ltsb(v28, v30) {
-        true => {
-          add(acc, 1u64)
-        },
-        false => {
-          acc
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, i);
+      let tmp_3 = 0u64;
+      let tmp_4 = if ltsb(tmp_2, tmp_3) {
+        add(acc, 1u64)
+      } else {
+        acc
       };
-      count_loop(x, n, v23, v36, ())
+      count_loop(x, n, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -88,8 +73,7 @@ pub fn count_loop(x: Rc<Array<u64>>, n: u64, i: u64, acc: u64, _H: ()) -> u64 {
 
 // Rocq: Cold.cold_implem.count_negatives_impl
 pub fn count_negatives_impl(x: Rc<Array<u64>>) -> u64 {
-  let v1 = &x;
-  let n = rocq_array::length::<u64>(&v1);
+  let n = rocq_array::length::<u64>(&x);
   count_loop_1(x, n, 0u64, 0u64)
 }
 
@@ -241,9 +225,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_111.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_111: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = count_negatives(); }

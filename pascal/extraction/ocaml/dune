@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules pascal_extracted_marray)
- (theories Pascal Pascal.spec Stdlib stdpp StdGalilei))
+ (theories Pascal Pascal.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name pascal_extraction)

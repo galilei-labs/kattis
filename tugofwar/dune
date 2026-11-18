@@ -6,9 +6,11 @@
  (rocq.theory
   (name Tugofwar.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Tugofwar)
  (modules tugofwar_implem)
- (theories Tugofwar.spec Stdlib stdpp StdGalilei))
+  (theories Tugofwar.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

@@ -7,10 +7,14 @@
    each cell is read once.  No Z, no nat in the extracted code.
 
    Termination: the loop recurses structurally on an erased
-   [Acc (Zwf 0) (gap n i)] proof, as in template/polymul1. *)
+   [Acc (Zwf 0) (gap n i)] proof.
+
+   Cost: the loop takes at most 30 * (n - i) + 10 steps;
+   count_negatives takes at most 30 * size x + 40 steps. *)
 
 From Cold.spec Require Import Prelude.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
 Import ListNotations.
@@ -31,6 +35,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -56,6 +62,7 @@ Fixpoint count_loop (x : array int) (n i acc : int)
         (Acc_inv H (dec_step n i Hi))
   | right _ => acc
   end.
+Elpi complexity count_loop.
 
 Lemma count_loop_eq : forall x n i acc H,
   count_loop x n i acc H =
@@ -71,6 +78,7 @@ Proof. intros. destruct H. reflexivity. Qed.
 Definition count_negatives_impl (x : array sint) : uint :=
   let n := PArray.length x in
   count_loop x n 0 0 (Zwf_well_founded 0 (gap n 0)).
+Elpi complexity count_negatives_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side                                                           *)
@@ -192,8 +200,64 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition count_negatives : array sint -> uint := count_negatives_impl.
+Elpi complexity count_negatives.
 
 Definition count_negatives_correct : forall (l : list Z) (x : array sint),
   valid_input l -> repr x l ->
   exists c : N, repr (count_negatives x) c /\ count_negatives_spec l c
   := count_negatives_impl_correct.
+
+(* ====================================================================== *)
+(* Cost                                                                   *)
+(* ====================================================================== *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma loop_time a aC n nC i iC acc accC H HC :
+  (cost (extract (extract (extract (extract (count_loop_cost stepsCM a aC) n nC) i iC) acc accC) H HC)
+     <= 30 * Z.to_nat (gap n i) + 10)%nat.
+Proof.
+  unfold count_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G a aC n nC i iC acc accC H HC)] =>
+    assert (HG : forall k i iC acc accC H HC, (Z.to_nat (gap n i) <= k)%nat ->
+       (cost (G a aC n nC i iC acc accC H HC) <= 30 * k + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' acc' accC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB;
+      cost_destruct (bdec (i' <? n)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hk' : (Z.to_nat (gap n (i' + 1)) <= k)%nat).
+      { unfold gap in *. assert (φ (i' + 1) = φ i' + 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      cost_destruct (PrimInt63.ltsb a.[i'] 0); cost_simpl.
+      + match goal with |- context [@cost ?T (?G' a aC n nC (i' + 1)%uint63 ?w ?c ?wc ?h ?e)] =>
+          have HI := (IH (i' + 1)%uint63 w c wc h e : _ -> (@cost T (G' a aC n nC (i' + 1)%uint63 w c wc h e) <= _)%nat) end.
+        specialize (HI Hk'). lia.
+      + match goal with |- context [@cost ?T (?G' a aC n nC (i' + 1)%uint63 ?w ?c ?wc ?h ?e)] =>
+          have HI := (IH (i' + 1)%uint63 w c wc h e : _ -> (@cost T (G' a aC n nC (i' + 1)%uint63 w c wc h e) <= _)%nat) end.
+        specialize (HI Hk'). lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G a aC n nC i iC acc accC H HC)] =>
+    exact (HG _ i iC acc accC H HC (le_n _) : (@cost T (G a aC n nC i iC acc accC H HC) <= _)%nat) end.
+Qed.
+
+Theorem count_negatives_time : exists c1 c2 : nat, forall temperatures_arr : array sint,
+  (cost1 count_negatives_cost temperatures_arr <= c1 * Cost.size temperatures_arr + c2)%nat.
+Proof.
+  exists 30%nat, 40%nat. intros x.
+  unfold cost1, count_negatives_cost, count_negatives_impl_cost. cost_simpl.
+  match goal with |- context [@cost ?T (?G x ?xw ?n ?nw 0%uint63 ?w1 0%uint63 ?w2 ?h ?e)] =>
+    have HS := (loop_time x xw n nw 0 w1 0 w2 h e
+                : (@cost T (G x xw n nw 0%uint63 w1 0%uint63 w2 h e) <= _)%nat);
+    revert HS; generalize (@cost T (G x xw n nw 0%uint63 w1 0%uint63 w2 h e)); intros C HS end.
+  unfold gap in HS. change (φ 0) with 0%Z in HS. rewrite Z.sub_0_r in HS.
+  assert (E : Z.to_nat (φ (PArray.length x)) = Cost.size x) by reflexivity.
+  rewrite E in HS. lia.
+Qed.
+
+Print Assumptions count_negatives_correct.
+Print Assumptions count_negatives_time.

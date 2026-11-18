@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -48,21 +47,6 @@ pub fn INF() -> u64 {
   9223372036854775807u64
 }
 
-// Rocq: Shortestpath1.shortestpath1_implem.dijkstra
-// Variant: uncurried
-pub fn dijkstra() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>>> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>> = dijkstra_impl_owned;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Shortestpath1.shortestpath1_implem.dijkstra
-pub fn dijkstra_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>> = dijkstra_impl_curried_owned;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -83,13 +67,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Shortestpath1.shortestpath1_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -108,17 +89,15 @@ pub fn count_loop_1(us: Rc<Array<u64>>, m: u64, k: u64, c: Rc<Array<u64>>) -> Rc
 // Rocq: Shortestpath1.shortestpath1_implem.count_loop (local: count_loop)
 // Variant: uncurried, lifted
 pub fn count_loop(us: Rc<Array<u64>>, m: u64, k: u64, c: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, m);
-  match bdec(v12) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17 = &us;
-      let v20 = rocq_array::get::<u64>(&v17, k);
-      let u1 = add(v20, 1u64);
-      let v35 = add(k, 1u64);
-      let v37 = &c;
-      let v40 = rocq_array::get::<u64>(&v37, u1);
-      let v54 = rocq_array::set::<u64>(c, u1, add(v40, 1u64));
-      count_loop(us, m, v35, v54, ())
+      let tmp_1 = rocq_array::get::<u64>(&us, k);
+      let u1 = add(tmp_1, 1u64);
+      let tmp_2 = add(k, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&c, u1);
+      let tmp_4 = rocq_array::set::<u64>(c, u1, add(tmp_3, 1u64));
+      count_loop(us, m, tmp_2, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(us);
@@ -136,17 +115,14 @@ pub fn prefix_loop_1(n: u64, i: u64, c: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Shortestpath1.shortestpath1_implem.prefix_loop (local: prefix_loop)
 // Variant: uncurried, lifted
 pub fn prefix_loop(n: u64, i: u64, c: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v15 = &c;
-      let a = rocq_array::get::<u64>(&v15, i);
-      let v26 = add(i, 1u64);
-      let v27 = &c;
-      let b = rocq_array::get::<u64>(&v27, v26);
-      let v38 = add(i, 1u64);
-      let v59 = rocq_array::set::<u64>(c, add(i, 1u64), add(b, a));
-      prefix_loop(n, v38, v59, ())
+      let a = rocq_array::get::<u64>(&c, i);
+      let b = rocq_array::get::<u64>(&c, add(i, 1u64));
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(c, add(i, 1u64), add(b, a));
+      prefix_loop(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       c
@@ -163,22 +139,18 @@ pub fn fill_loop_1(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, m
 // Rocq: Shortestpath1.shortestpath1_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, m: u64, k: u64, pos: Rc<Array<u64>>, adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v16 = ltb(k, m);
-  match bdec(v16) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &us;
-      let u = rocq_array::get::<u64>(&v20, k);
-      let v24 = &pos;
-      let j = rocq_array::get::<u64>(&v24, u);
-      let v35 = add(k, 1u64);
-      let v50 = rocq_array::set::<u64>(pos, u, add(j, 1u64));
-      let v51 = &vs;
-      let v54 = rocq_array::get::<u64>(&v51, k);
-      let v61 = rocq_array::set::<u64>(adj, j, v54);
-      let v62 = &ws;
-      let v65 = rocq_array::get::<u64>(&v62, k);
-      let v72 = rocq_array::set::<u64>(wt, j, v65);
-      fill_loop(us, vs, ws, m, v35, v50, v61, v72, ())
+      let u = rocq_array::get::<u64>(&us, k);
+      let j = rocq_array::get::<u64>(&pos, u);
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(pos, u, add(j, 1u64));
+      let tmp_3 = rocq_array::get::<u64>(&vs, k);
+      let tmp_4 = rocq_array::set::<u64>(adj, j, tmp_3);
+      let tmp_5 = rocq_array::get::<u64>(&ws, k);
+      let tmp_6 = rocq_array::set::<u64>(wt, j, tmp_5);
+      fill_loop(us, vs, ws, m, tmp_1, tmp_2, tmp_4, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(us);
@@ -198,57 +170,48 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Shortestpath1.shortestpath1_implem.st_sz
 pub fn st_sz_owned(s: Rc<St>) -> u64 {
-  let v3 = Clone::clone((&(&**&s).st_sz));
+  let s_st_sz_clone = Clone::clone(&s.st_sz);
   std::mem::drop(s);
-  v3
+  s_st_sz_clone
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.st_sz
 // Variant: borrowed
 pub fn st_sz(s: &Rc<St>) -> u64 {
-  let v1 = s;
-  Clone::clone((&(&**v1).st_sz))
+  let tmp = s;
+  Clone::clone(&tmp.st_sz)
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.st_hv
 // Variant: borrowed
 pub fn st_hv(s: &Rc<St>) -> Rc<Array<u64>> {
-  let v1 = s;
-  Rc::clone((&(&**v1).st_hv))
+  let tmp = s;
+  Rc::clone(&tmp.st_hv)
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.child
 // Variant: uncurried
 pub fn child(hk: Rc<Array<u64>>, sz: u64, l: u64) -> u64 {
-  let v17 = ltb(add(l, 1u64), sz);
-  let v26 = add(l, 1u64);
-  let v27 = &hk;
-  let v30 = rocq_array::get::<u64>(&v27, v26);
-  let v31 = &hk;
-  let v34 = rocq_array::get::<u64>(&v31, l);
-  let v39 = ltb(v30, v34);
-  match andb(v17, v39) {
-    true => {
-      std::mem::drop(hk);
-      add(l, 1u64)
-    },
-    false => {
-      std::mem::drop(hk);
-      l
-    },
+  let tmp = ltb(add(l, 1u64), sz);
+  let tmp_1 = rocq_array::get::<u64>(&hk, add(l, 1u64));
+  let tmp_2 = rocq_array::get::<u64>(&hk, l);
+  let tmp_3 = ltb(tmp_1, tmp_2);
+  if andb(tmp, tmp_3) {
+    std::mem::drop(hk);
+    add(l, 1u64)
+  } else {
+    std::mem::drop(hk);
+    l
   }
 }
 
@@ -261,29 +224,25 @@ pub fn sift_down_1(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64, i: u64) -> (
 // Rocq: Shortestpath1.shortestpath1_implem.sift_down (local: sift_down)
 // Variant: uncurried, lifted
 pub fn sift_down(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64, i: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v11 = add(i, i);
-  let l = add(v11, 1u64);
-  let v38 = andb(ltb(l, sz), ltb(i, l));
-  match bdec(v38) {
+  let tmp = add(i, i);
+  let l = add(tmp, 1u64);
+  let tmp_1 = andb(ltb(l, sz), ltb(i, l));
+  match bdec(tmp_1) {
     sumbool::left => {
-      let v45 = Rc::clone(&hk);
-      let c = child(v45, sz, l);
-      let v51 = &hk;
-      let ki = rocq_array::get::<u64>(&v51, i);
-      let v55 = &hk;
-      let kc = rocq_array::get::<u64>(&v55, c);
-      let v66 = ltb(kc, ki);
-      match bdec(v66) {
+      let hk_clone = Rc::clone(&hk);
+      let c = child(hk_clone, sz, l);
+      let ki = rocq_array::get::<u64>(&hk, i);
+      let kc = rocq_array::get::<u64>(&hk, c);
+      let tmp_2 = ltb(kc, ki);
+      match bdec(tmp_2) {
         sumbool::left => {
-          let v70 = &hv;
-          let vi = rocq_array::get::<u64>(&v70, i);
-          let v74 = &hv;
-          let vc = rocq_array::get::<u64>(&v74, c);
-          let v85 = rocq_array::set::<u64>(hk, i, kc);
-          let v91 = rocq_array::set::<u64>(v85, c, ki);
-          let v99 = rocq_array::set::<u64>(hv, i, vc);
-          let v105 = rocq_array::set::<u64>(v99, c, vi);
-          sift_down(v91, v105, sz, c, ())
+          let vi = rocq_array::get::<u64>(&hv, i);
+          let vc = rocq_array::get::<u64>(&hv, c);
+          let tmp_3 = rocq_array::set::<u64>(hk, i, kc);
+          let tmp_4 = rocq_array::set::<u64>(tmp_3, c, ki);
+          let tmp_5 = rocq_array::set::<u64>(hv, i, vc);
+          let tmp_6 = rocq_array::set::<u64>(tmp_5, c, vi);
+          sift_down(tmp_4, tmp_6, sz, c, ())
         },
         sumbool::right => {
           (hk, hv)
@@ -300,20 +259,18 @@ pub fn sift_down(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64, i: u64, _H: ()
 // Variant: uncurried
 pub fn pop(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   let sz_ = sub(sz, 1u64);
-  let v11 = &hk;
-  let k = rocq_array::get::<u64>(&v11, sz_);
-  let v15 = &hv;
-  let v = rocq_array::get::<u64>(&v15, sz_);
-  let v28 = rocq_array::set::<u64>(hk, 0u64, k);
-  let v37 = rocq_array::set::<u64>(hv, 0u64, v);
-  sift_down_1(v28, v37, sz_, 0u64)
+  let k = rocq_array::get::<u64>(&hk, sz_);
+  let v = rocq_array::get::<u64>(&hv, sz_);
+  let tmp = rocq_array::set::<u64>(hk, 0u64, k);
+  let tmp_1 = rocq_array::set::<u64>(hv, 0u64, v);
+  sift_down_1(tmp, tmp_1, sz_, 0u64)
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.st_hk
 // Variant: borrowed
 pub fn st_hk(s: &Rc<St>) -> Rc<Array<u64>> {
-  let v1 = s;
-  Rc::clone((&(&**v1).st_hk))
+  let tmp = s;
+  Rc::clone(&tmp.st_hk)
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.sift_up
@@ -325,26 +282,22 @@ pub fn sift_up_1(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, i: u64) -> (Rc<Array<u6
 // Rocq: Shortestpath1.shortestpath1_implem.sift_up (local: sift_up)
 // Variant: uncurried, lifted
 pub fn sift_up(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, i: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v13 = ltb(0u64, i);
-  match bdec(v13) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
       let p = lsr(sub(i, 1u64), 1u64);
-      let v33 = &hk;
-      let ki = rocq_array::get::<u64>(&v33, i);
-      let v37 = &hk;
-      let kp = rocq_array::get::<u64>(&v37, p);
-      let v48 = ltb(ki, kp);
-      match bdec(v48) {
+      let ki = rocq_array::get::<u64>(&hk, i);
+      let kp = rocq_array::get::<u64>(&hk, p);
+      let tmp_1 = ltb(ki, kp);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v52 = &hv;
-          let vi = rocq_array::get::<u64>(&v52, i);
-          let v56 = &hv;
-          let vp = rocq_array::get::<u64>(&v56, p);
-          let v67 = rocq_array::set::<u64>(hk, i, kp);
-          let v73 = rocq_array::set::<u64>(v67, p, ki);
-          let v81 = rocq_array::set::<u64>(hv, i, vp);
-          let v87 = rocq_array::set::<u64>(v81, p, vi);
-          sift_up(v73, v87, p, ())
+          let vi = rocq_array::get::<u64>(&hv, i);
+          let vp = rocq_array::get::<u64>(&hv, p);
+          let tmp_2 = rocq_array::set::<u64>(hk, i, kp);
+          let tmp_3 = rocq_array::set::<u64>(tmp_2, p, ki);
+          let tmp_4 = rocq_array::set::<u64>(hv, i, vp);
+          let tmp_5 = rocq_array::set::<u64>(tmp_4, p, vi);
+          sift_up(tmp_3, tmp_5, p, ())
         },
         sumbool::right => {
           (hk, hv)
@@ -360,9 +313,9 @@ pub fn sift_up(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, i: u64, _H: ()) -> (Rc<Ar
 // Rocq: Shortestpath1.shortestpath1_implem.push
 // Variant: uncurried
 pub fn push(hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64, k: u64, v: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v12 = rocq_array::set::<u64>(hk, sz, k);
-  let v19 = rocq_array::set::<u64>(hv, sz, v);
-  sift_up_1(v12, v19, sz)
+  let tmp = rocq_array::set::<u64>(hk, sz, k);
+  let tmp_1 = rocq_array::set::<u64>(hv, sz, v);
+  sift_up_1(tmp, tmp_1, sz)
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.scan
@@ -374,25 +327,22 @@ pub fn scan_1(adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, du: u64, hi: u64, j: u64,
 // Rocq: Shortestpath1.shortestpath1_implem.scan (local: scan)
 // Variant: uncurried, lifted
 pub fn scan(adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, du: u64, hi: u64, j: u64, dist: Rc<Array<u64>>, hk: Rc<Array<u64>>, hv: Rc<Array<u64>>, sz: u64, _H: ()) -> Rc<St> {
-  let v17 = ltb(j, hi);
-  match bdec(v17) {
+  let tmp = ltb(j, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &adj;
-      let v = rocq_array::get::<u64>(&v21, j);
-      let v26 = &wt;
-      let v29 = rocq_array::get::<u64>(&v26, j);
-      let nd = add(du, v29);
-      let v37 = &dist;
-      let v40 = rocq_array::get::<u64>(&v37, v);
-      let v46 = ltb(nd, v40);
-      match bdec(v46) {
+      let v = rocq_array::get::<u64>(&adj, j);
+      let tmp_1 = rocq_array::get::<u64>(&wt, j);
+      let nd = add(du, tmp_1);
+      let tmp_2 = rocq_array::get::<u64>(&dist, v);
+      let tmp_3 = ltb(nd, tmp_2);
+      match bdec(tmp_3) {
         sumbool::left => {
-          let v61 = push(hk, hv, sz, nd, v);
-          match v61 {
+          let tmp_4 = push(hk, hv, sz, nd, v);
+          match tmp_4 {
             (v63, v65) => {
-              let v74 = add(j, 1u64);
-              let v81 = rocq_array::set::<u64>(dist, v, nd);
-              scan(adj, wt, du, hi, v74, v81, v63, v65, add(sz, 1u64), ())
+              let tmp_5 = add(j, 1u64);
+              let tmp_6 = rocq_array::set::<u64>(dist, v, nd);
+              scan(adj, wt, du, hi, tmp_5, tmp_6, v63, v65, add(sz, 1u64), ())
             },
           }
         },
@@ -411,9 +361,9 @@ pub fn scan(adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, du: u64, hi: u64, j: u64, d
 
 // Rocq: Shortestpath1.shortestpath1_implem.st_dist
 pub fn st_dist(s: Rc<St>) -> Rc<Array<u64>> {
-  let v3 = Rc::clone((&(&**&s).st_dist));
+  let s_st_dist_clone = Rc::clone(&s.st_dist);
   std::mem::drop(s);
-  v3
+  s_st_dist_clone
 }
 
 // Rocq: Shortestpath1.shortestpath1_implem.main
@@ -425,51 +375,43 @@ pub fn main_2(off: Rc<Array<u64>>, adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, done
 // Rocq: Shortestpath1.shortestpath1_implem.main (local: main)
 // Variant: uncurried, lifted
 pub fn main_1(off: Rc<Array<u64>>, adj: Rc<Array<u64>>, wt: Rc<Array<u64>>, done: Rc<Array<u64>>, st: Rc<St>, _H: ()) -> Rc<Array<u64>> {
-  let v19 = ltb(0u64, st_sz(&st));
-  match bdec(v19) {
+  let tmp = ltb(0u64, st_sz(&st));
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = st_hv(&st);
-      let v28 = 0u64;
-      let v29 = &v26;
-      let u = rocq_array::get::<u64>(&v29, v28);
-      let v37 = st_hk(&st);
-      let v41 = st_hv(&st);
-      let v52 = pop(v37, v41, st_sz(&st));
-      match v52 {
+      let tmp_1 = st_hv(&st);
+      let u = rocq_array::get::<u64>(&tmp_1, 0u64);
+      let tmp_2 = st_hk(&st);
+      let tmp_3 = st_hv(&st);
+      let tmp_4 = pop(tmp_2, tmp_3, st_sz(&st));
+      match tmp_4 {
         (v54, v56) => {
-          let v61 = &done;
-          let v62 = rocq_array::length::<u64>(&v61);
-          let v67 = ltb(u, v62);
-          let v69 = &done;
-          let v72 = rocq_array::get::<u64>(&v69, u);
-          let v85 = andb(v67, eqb(v72, 0u64));
-          match bdec(v85) {
+          let tmp_5 = rocq_array::length::<u64>(&done);
+          let tmp_6 = ltb(u, tmp_5);
+          let tmp_7 = rocq_array::get::<u64>(&done, u);
+          let tmp_8 = andb(tmp_6, eqb(tmp_7, 0u64));
+          match bdec(tmp_8) {
             sumbool::left => {
-              std::mem::drop(v26);
-              let v93 = Rc::clone(&st);
-              let v94 = st_dist(v93);
-              let v95 = &v94;
-              let v98 = rocq_array::get::<u64>(&v95, u);
-              std::mem::drop(v94);
-              let v106 = add(u, 1u64);
-              let v107 = &off;
-              let v110 = rocq_array::get::<u64>(&v107, v106);
-              let v111 = &off;
-              let v114 = rocq_array::get::<u64>(&v111, u);
-              let v118 = Rc::clone(&st);
-              let v119 = st_dist(v118);
-              let v131 = sub(st_sz_owned(st), 1u64);
-              let v134 = Rc::clone(&adj);
-              let v137 = Rc::clone(&wt);
-              let st2 = scan_1(v134, v137, v98, v110, v114, v119, v54, v56, v131);
-              let v161 = rocq_array::set::<u64>(done, u, 1u64);
-              main_1(off, adj, wt, v161, st2, ())
+              std::mem::drop(tmp_1);
+              let st_clone = Rc::clone(&st);
+              let tmp_9 = st_dist(st_clone);
+              let tmp_10 = rocq_array::get::<u64>(&tmp_9, u);
+              std::mem::drop(tmp_9);
+              let tmp_11 = rocq_array::get::<u64>(&off, add(u, 1u64));
+              let tmp_12 = rocq_array::get::<u64>(&off, u);
+              let st_clone_1 = Rc::clone(&st);
+              let tmp_13 = st_dist(st_clone_1);
+              let tmp_14 = sub(st_sz_owned(st), 1u64);
+              let adj_clone = Rc::clone(&adj);
+              let wt_clone = Rc::clone(&wt);
+              let st2 = scan_1(adj_clone, wt_clone, tmp_10, tmp_11, tmp_12, tmp_13, v54, v56, tmp_14);
+              let tmp_15 = rocq_array::set::<u64>(done, u, 1u64);
+              main_1(off, adj, wt, tmp_15, st2, ())
             },
             sumbool::right => {
-              std::mem::drop(v26);
-              let v183 = Rc::clone(&st);
-              let v184 = st_dist(v183);
-              main_1(off, adj, wt, done, Rc::new(St { st_dist: v184, st_hk: v54, st_hv: v56, st_sz: sub(st_sz_owned(st), 1u64) }), ())
+              std::mem::drop(tmp_1);
+              let st_clone_2 = Rc::clone(&st);
+              let tmp_16 = st_dist(st_clone_2);
+              main_1(off, adj, wt, done, Rc::new(St { st_dist: tmp_16, st_hk: v54, st_hv: v56, st_sz: sub(st_sz_owned(st), 1u64) }), ())
             },
           }
         },
@@ -494,23 +436,19 @@ pub fn out_loop_1(dist: Rc<Array<u64>>, n: u64, v: u64, out: Rc<Array<Rc<option<
 // Rocq: Shortestpath1.shortestpath1_implem.out_loop (local: out_loop)
 // Variant: uncurried, lifted
 pub fn out_loop(dist: Rc<Array<u64>>, n: u64, v: u64, out: Rc<Array<Rc<option<u64>>>>, _H: ()) -> Rc<Array<Rc<option<u64>>>> {
-  let v12 = ltb(v, n);
-  match bdec(v12) {
+  let tmp = ltb(v, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &dist;
-      let d = rocq_array::get::<u64>(&v16, v);
-      let v27 = add(v, 1u64);
-      let v29 = __rocq_global_253;
-      let v35 = match eqb(d, v29) {
-        true => {
-          Rc::new(option::<u64>::None)
-        },
-        false => {
-          Rc::new(option::<u64>::Some(d))
-        },
+      let d = rocq_array::get::<u64>(&dist, v);
+      let tmp_1 = add(v, 1u64);
+      let tmp_2 = __rocq_global_253;
+      let tmp_3 = if eqb(d, tmp_2) {
+        Rc::new(option::<u64>::None)
+      } else {
+        Rc::new(option::<u64>::Some(d))
       };
-      let v55 = rocq_array::set::<Rc<option<u64>>>(out, v, v35);
-      out_loop(dist, n, v27, v55, ())
+      let tmp_4 = rocq_array::set::<Rc<option<u64>>>(out, v, tmp_3);
+      out_loop(dist, n, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(dist);
@@ -521,107 +459,29 @@ pub fn out_loop(dist: Rc<Array<u64>>, n: u64, v: u64, out: Rc<Array<Rc<option<u6
 
 // Rocq: Shortestpath1.shortestpath1_implem.dijkstra_impl
 // Variant: uncurried
-pub fn dijkstra_impl_owned(n: u64, us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, s: u64) -> Rc<Array<Rc<option<u64>>>> {
-  let v5 = &us;
-  let m = rocq_array::length::<u64>(&v5);
-  let v24 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let v27 = Rc::clone(&us);
-  let c = count_loop_1(v27, m, 0u64, v24);
+pub fn dijkstra_impl(n: u64, us: Rc<Array<u64>>, vs: Rc<Array<u64>>, ws: Rc<Array<u64>>, s: u64) -> Rc<Array<Rc<option<u64>>>> {
+  let m = rocq_array::length::<u64>(&us);
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  let us_clone = Rc::clone(&us);
+  let c = count_loop_1(us_clone, m, 0u64, tmp);
   let off = prefix_loop_1(n, 0u64, c);
-  let v48 = &off;
-  let v49 = rocq_array::copy::<u64>(&v48);
-  let v56 = rocq_array::make::<u64>(m, 0u64);
-  let v63 = rocq_array::make::<u64>(m, 0u64);
-  let v80 = fill_loop_1(us, vs, ws, m, 0u64, v49, v56, v63);
-  match v80 {
+  let tmp_1 = rocq_array::copy::<u64>(&off);
+  let tmp_2 = rocq_array::make::<u64>(m, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(m, 0u64);
+  let tmp_4 = fill_loop_1(us, vs, ws, m, 0u64, tmp_1, tmp_2, tmp_3);
+  match tmp_4 {
     (v82, v84) => {
-      let v91 = rocq_array::make::<u64>(n, __rocq_global_253);
-      let dist0 = rocq_array::set::<u64>(v91, s, 0u64);
+      let tmp_5 = rocq_array::make::<u64>(n, __rocq_global_253);
+      let dist0 = rocq_array::set::<u64>(tmp_5, s, 0u64);
       let hk0 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
-      let v130 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
-      let hv0 = rocq_array::set::<u64>(v130, 0u64, s);
-      let v147 = rocq_array::make::<u64>(n, 0u64);
-      let dist = main_2(off, v82, v84, v147, Rc::new(St { st_dist: dist0, st_hk: hk0, st_hv: hv0, st_sz: 1u64 }));
-      let v182 = rocq_array::make::<Rc<option<u64>>>(n, Rc::new(option::<u64>::None));
-      out_loop_1(dist, n, 0u64, v182)
+      let tmp_6 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
+      let hv0 = rocq_array::set::<u64>(tmp_6, 0u64, s);
+      let tmp_7 = rocq_array::make::<u64>(n, 0u64);
+      let dist = main_2(off, v82, v84, tmp_7, Rc::new(St { st_dist: dist0, st_hk: hk0, st_hv: hv0, st_sz: 1u64 }));
+      let tmp_8 = rocq_array::make::<Rc<option<u64>>>(n, Rc::new(option::<u64>::None));
+      out_loop_1(dist, n, 0u64, tmp_8)
     },
   }
-}
-
-// Rocq: Shortestpath1.shortestpath1_implem.dijkstra_impl
-// Variant: borrowed, uncurried
-pub fn dijkstra_impl(n: u64, us: &Rc<Array<u64>>, vs: &Rc<Array<u64>>, ws: &Rc<Array<u64>>, s: u64) -> Rc<Array<Rc<option<u64>>>> {
-  let n_1 = n;
-  let s_1 = s;
-  let v7 = us;
-  let m = rocq_array::length::<u64>(&v7);
-  let v26 = rocq_array::make::<u64>(add(n_1, 1u64), 0u64);
-  let v29 = Rc::clone(us);
-  let c = count_loop_1(v29, m, 0u64, v26);
-  let off = prefix_loop_1(n_1, 0u64, c);
-  let v50 = &off;
-  let v51 = rocq_array::copy::<u64>(&v50);
-  let v58 = rocq_array::make::<u64>(m, 0u64);
-  let v65 = rocq_array::make::<u64>(m, 0u64);
-  let v68 = Rc::clone(us);
-  let v71 = Rc::clone(vs);
-  let v74 = Rc::clone(ws);
-  let v85 = fill_loop_1(v68, v71, v74, m, 0u64, v51, v58, v65);
-  match v85 {
-    (v87, v89) => {
-      let v96 = rocq_array::make::<u64>(n_1, __rocq_global_253);
-      let dist0 = rocq_array::set::<u64>(v96, s_1, 0u64);
-      let hk0 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
-      let v135 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
-      let hv0 = rocq_array::set::<u64>(v135, 0u64, s_1);
-      let v152 = rocq_array::make::<u64>(n_1, 0u64);
-      let dist = main_2(off, v87, v89, v152, Rc::new(St { st_dist: dist0, st_hk: hk0, st_hv: hv0, st_sz: 1u64 }));
-      let v187 = rocq_array::make::<Rc<option<u64>>>(n_1, Rc::new(option::<u64>::None));
-      out_loop_1(dist, n_1, 0u64, v187)
-    },
-  }
-}
-
-// Rocq: Shortestpath1.shortestpath1_implem.dijkstra_impl
-pub fn dijkstra_impl_curried_owned(n: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>> {
-  let v3 = {
-    move |us: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |vs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>> {
-          let n = &v8;
-          let us = &us;
-          let v18 = Clone::clone(n);
-          let v20 = Rc::clone(us);
-          let v23 = {
-            move |ws: Rc<Array<u64>>| -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>> {
-              let n = &v18;
-              let us = &v20;
-              let vs = &vs;
-              let v32 = Clone::clone(n);
-              let v34 = Rc::clone(us);
-              let v36 = Rc::clone(vs);
-              let v39 = {
-                move |s: u64| -> Rc<Array<Rc<option<u64>>>> {
-                  let v50 = Clone::clone(&v32);
-                  dijkstra_impl(v50, &v34, &v36, &ws, s)
-                }
-              };
-              let v60: Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>> = Rc::new(v39);
-              v60
-            }
-          };
-          let v64: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>> = Rc::new(v23);
-          v64
-        }
-      };
-      let v68: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>> = Rc::new(v11);
-      v68
-    }
-  };
-  let v72: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>> = Rc::new(v3);
-  v72
 }
 
 mod __rocq_reuse {
@@ -772,11 +632,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>>> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>>> = __rocq_global_820.with(Clone::clone);
-  v0
-}
 const __rocq_global_253: u64 = 9223372036854775807u64;
-std::thread_local! { static __rocq_global_820: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, u64) -> Rc<Array<Rc<option<u64>>>>> = dijkstra(); }
-std::thread_local! { static __rocq_global_823: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(u64) -> Rc<Array<Rc<option<u64>>>>>>>>> = dijkstra_curried(); }

@@ -11,8 +11,7 @@
 (* Above this comment: tools/kattis_shim.ml and the marray extraction  *)
 (* of UnionfindImpl verbatim.  This part is the untrusted wrapper:     *)
 (* read all of stdin, scan by hand, build the three operation columns, *)
-(* call run_ops once, print the answers at the query positions only    *)
-(* (the union positions of the result are unspecified).               *)
+(* call run_ops once, print its query-only answers in order.           *)
 (* ------------------------------------------------------------------ *)
 
 let () =
@@ -71,9 +70,8 @@ let () =
       (Arr.of_array b Uint63.zero)
   in
   let buf = Buffer.create (4 * q + 16) in
-  for i = 0 to q - 1 do
-    if not u.(i) then
-      Buffer.add_string buf
-        (if Arr.get out (Uint63.of_int i) then "yes\n" else "no\n")
+  for i = 0 to snd (Uint63.to_int2 (Arr.length out)) - 1 do
+    Buffer.add_string buf
+      (if Arr.get out (Uint63.of_int i) then "yes\n" else "no\n")
   done;
   print_string (Buffer.contents buf)

@@ -10,7 +10,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Entry count: $1 \le n \le 100{,}000$.
+    - Entry count: $1 \le n \le 10^{5}$.
     - Signed $32$-bit integer values. *)
 
 (** ** Examples *)
@@ -41,26 +41,28 @@ Output:
                     ascending order, of a longest strictly increasing
                     subsequence of sequence ; any one of them when several
                     exist
+                    It runs in at most c1 * n * (log2 n + 1) + c2 steps of
+                    the cost model, n the length of the array, for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The k-th value of the sequence, for k < len sequence (0 outside,
-    never relied on). *)
+(** The entry at zero-based index [k] in [sequence], or zero beyond the end. *)
 Definition get_list_Z (sequence : list Z) (k : N) : Z :=
   nth (N.to_nat k) sequence 0%Z.
 
-(** The t-th position listed in positions, for t < len positions (0
-    outside, never relied on). *)
+(** The entry at zero-based index [t] in [positions], or zero beyond the end. *)
 Definition get_list_N (positions : list N) (t : N) : N :=
   nth (N.to_nat t) positions 0.
 
@@ -83,8 +85,8 @@ Definition values_increasing (sequence : list Z)
     (get_list_Z sequence (get_list_N positions t) <
      get_list_Z sequence (get_list_N positions u))%Z.
 
-(** positions is a strictly increasing subsequence of sequence, given by
-    the positions of its elements. *)
+(** [positions] lists strictly increasing valid indices whose values in [sequence]
+    also strictly increase. *)
 Definition increasing_subseq (sequence : list Z)
   (positions : list N)
     : Prop :=
@@ -96,7 +98,7 @@ Definition increasing_subseq (sequence : list Z)
 Record valid_input (sequence : list Z) : Prop := {
   (* 1 <= n <= 10^5 *)
   vi_length : 1 <= len sequence <= 10 ^ 5;
-  (* every value in [-2^31, 2^31) *)
+  (* every value x satisfies -2^31 <= x < 2^31 *)
   vi_values : Forall (fun value => (- 2 ^ 31 <= value < 2 ^
     31)%Z) sequence;
 }.
@@ -113,12 +115,39 @@ Definition lis_spec (sequence : list Z)
     subsequence' ->
     len subsequence' <= len output.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n \log(n+1))$ steps, where $n$ is the sequence length. *)
+Definition lis_time_spec (c1 c2 n_sequence steps : nat) : Prop :=
+  (steps <= c1 * (n_sequence * (Nat.log2 (n_sequence) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Return the positions of a longest strictly increasing subsequence.
     - Input [sequence]: Integer sequence in which to find an increasing subsequence.
     - Output [output]: The output is an increasing sequence of input indices identifying a longest strictly increasing subsequence. *)
 Program lis : array sint -> array uint.
+
+(** [@example lis]
+    - Sample: 1
+    - Case: 1
+    - Input [sequence]: [1; 2; 3; 4; 5; 6; 7; 8; 9; 10]%Z
+    - Output [output]: [0; 1; 2; 3; 4; 5; 6; 7; 8; 9]
+*)
+
+(** [@example lis]
+    - Sample: 1
+    - Case: 2
+    - Input [sequence]: [1; 1; 1; 1; 1; 1; 1; 1; 1; 1]%Z
+    - Output [output]: [7]
+*)
+
+(** [@example lis]
+    - Sample: 1
+    - Case: 3
+    - Input [sequence]: [5; 19; 5; 81; 50; 28; 29; 1; 83; 23]%Z
+    - Output [output]: [0; 1; 5; 6; 8]
+*)
 
 (** ** Bridge *)
 
@@ -131,6 +160,17 @@ Specification lis_correct :
   exists output : list N,
     repr (lis sequence_arr) output /\ lis_spec sequence
       output.
+
+(** ** Complexity *)
+
+(** [@hide] [lis_cost] is the cost translation of [lis] (the judge
+    recomputes it and compares) ... *)
+Complexity lis_cost for lis.
+
+(** [@fold complexity bound] ... and runs in at most c1 * n * (log2 n + 1) + c2 steps of the cost model, n the length of the array, for two constants
+    quantified before the input. [@requirement lis_time_spec] *)
+Specification lis_time : exists c1 c2 : nat, forall sequence_arr : array sint,
+  lis_time_spec c1 c2 (size sequence_arr) (cost1 lis_cost sequence_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

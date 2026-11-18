@@ -21,4 +21,4 @@ archive = "palindromes_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/palindromes.ml"
-Rust = "extraction/rust/submit/palindromes.rs"
+Rust = "extraction/rust/snapshots/palindromes_extracted.rs.interface.json"

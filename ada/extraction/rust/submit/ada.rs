@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -671,13 +670,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Ada.ada_implem.ada
-pub fn ada() -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: fn(Rc<Array<u64>>) -> (u64, u64) = ada_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -692,13 +684,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Ada.ada_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -717,25 +706,19 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -748,18 +731,15 @@ pub fn row_loop_1(m: u64, j: u64, t: Rc<Array<u64>>, nz: bool) -> (Rc<Array<u64>
 // Rocq: Ada.ada_implem.row_loop (local: row_loop)
 // Variant: uncurried, lifted
 pub fn row_loop(m: u64, j: u64, t: Rc<Array<u64>>, nz: bool, _H: ()) -> (Rc<Array<u64>>, bool) {
-  let v12 = ltb(j, m);
-  match bdec(v12) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(j, 1u64);
-      let v25 = &t;
-      let v28 = rocq_array::get::<u64>(&v25, v24);
-      let v29 = &t;
-      let v32 = rocq_array::get::<u64>(&v29, j);
-      let x = sub(v28, v32);
-      let v45 = add(j, 1u64);
-      let v52 = rocq_array::set::<u64>(t, j, x);
-      row_loop(m, v45, v52, orb(nz, negb(eqb(x, 0u64))), ())
+      let tmp_1 = rocq_array::get::<u64>(&t, add(j, 1u64));
+      let tmp_2 = rocq_array::get::<u64>(&t, j);
+      let x = sub(tmp_1, tmp_2);
+      let tmp_3 = add(j, 1u64);
+      let tmp_4 = rocq_array::set::<u64>(t, j, x);
+      row_loop(m, tmp_3, tmp_4, orb(nz, negb(eqb(x, 0u64))), ())
     },
     sumbool::right => {
       (t, nz)
@@ -769,16 +749,16 @@ pub fn row_loop(m: u64, j: u64, t: Rc<Array<u64>>, nz: bool, _H: ()) -> (Rc<Arra
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Ada.ada_implem.rows_loop
@@ -790,22 +770,19 @@ pub fn rows_loop_1(n: u64, k: u64, t: Rc<Array<u64>>, d: u64) -> (Rc<Array<u64>>
 // Rocq: Ada.ada_implem.rows_loop (local: rows_loop)
 // Variant: uncurried, lifted
 pub fn rows_loop(n: u64, k: u64, t: Rc<Array<u64>>, d: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v12 = ltb(k, n);
-  match bdec(v12) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
       let r = row_loop_1(sub(n, k), 0u64, t, false);
-      let v43 = add(k, 1u64);
-      let v46 = Clone::clone(&r);
-      let v48 = fst::<Rc<Array<u64>>, bool>(v46);
-      let v53 = match snd::<Rc<Array<u64>>, bool>(r) {
-        true => {
-          k
-        },
-        false => {
-          d
-        },
+      let tmp_1 = add(k, 1u64);
+      let r_clone = Clone::clone(&r);
+      let tmp_2 = fst::<Rc<Array<u64>>, bool>(r_clone);
+      let tmp_3 = if snd::<Rc<Array<u64>>, bool>(r) {
+        k
+      } else {
+        d
       };
-      rows_loop(n, v43, v48, v53, ())
+      rows_loop(n, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       (t, d)
@@ -815,10 +792,9 @@ pub fn rows_loop(n: u64, k: u64, t: Rc<Array<u64>>, d: u64, _H: ()) -> (Rc<Array
 
 // Rocq: Ada.ada_implem.acopy
 pub fn acopy(t: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v1 = &t;
-  let v2 = rocq_array::copy::<u64>(&v1);
+  let tmp = rocq_array::copy::<u64>(&t);
   std::mem::drop(t);
-  v2
+  tmp
 }
 
 // Rocq: Ada.ada_implem.sum_loop
@@ -830,14 +806,12 @@ pub fn sum_loop_1(t: Rc<Array<u64>>, top: u64, e: u64, k: u64, acc: u64) -> u64 
 // Rocq: Ada.ada_implem.sum_loop (local: sum_loop)
 // Variant: uncurried, lifted
 pub fn sum_loop(t: Rc<Array<u64>>, top: u64, e: u64, k: u64, acc: u64, _H: ()) -> u64 {
-  let v13 = ltb(k, e);
-  match bdec(v13) {
+  let tmp = ltb(k, e);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(k, 1u64);
-      let v31 = sub(top, k);
-      let v32 = &t;
-      let v35 = rocq_array::get::<u64>(&v32, v31);
-      sum_loop(t, top, e, v24, add(acc, v35), ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&t, sub(top, k));
+      sum_loop(t, top, e, tmp_1, add(acc, tmp_2), ())
     },
     sumbool::right => {
       std::mem::drop(t);
@@ -848,15 +822,14 @@ pub fn sum_loop(t: Rc<Array<u64>>, top: u64, e: u64, k: u64, acc: u64, _H: ()) -
 
 // Rocq: Ada.ada_implem.ada_impl
 pub fn ada_impl(a: Rc<Array<u64>>) -> (u64, u64) {
-  let v1 = &a;
-  let n = rocq_array::length::<u64>(&v1);
-  let v9 = acopy(a);
-  let v20 = rows_loop_1(n, 1u64, v9, 0u64);
-  match v20 {
+  let n = rocq_array::length::<u64>(&a);
+  let tmp = acopy(a);
+  let tmp_1 = rows_loop_1(n, 1u64, tmp, 0u64);
+  match tmp_1 {
     (v22, v24) => {
-      let v34 = sub(n, 1u64);
-      let v42 = add(v24, 1u64);
-      (v24, sum_loop_1(v22, v34, v42, 0u64, 0u64))
+      let tmp_2 = sub(n, 1u64);
+      let tmp_3 = add(v24, 1u64);
+      (v24, sum_loop_1(v22, tmp_2, tmp_3, 0u64, 0u64))
     },
   }
 }
@@ -1010,11 +983,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = __rocq_global_289.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_289: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, u64)> = ada(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1092,7 +1060,7 @@ use kattis_io::*;
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input);
     let n = t.uint();
-    let result = run()(t.signed_ints(n));
+    let result = ada_impl(t.signed_ints(n));
     let (d, w) = &result;
     format!("{} {}\n", d, decoded(*w))
 }

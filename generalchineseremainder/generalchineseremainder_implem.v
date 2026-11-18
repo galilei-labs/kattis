@@ -15,12 +15,18 @@
    no signed word.
 
    Termination: [egcd_loop] recurses structurally on an erased
-   [Acc (Zwf 0) (φ r1)] proof, the shape of the loops of
-   template/polymul1/implem-bens-1/polymul1_implem.v. *)
+   [Acc (Zwf 0) (meas r1)] proof (meas r = φ r, opaque to cbn).
+
+   Cost: [Elpi complexity] on sumbool, bdec, egcd_loop,
+   crt_impl, crt (callee first).  egcd_loop costs at most 50 * k + 60 when
+   r1 <= r0 and r0 * r1 < 2^k (two consecutive remainders: the product
+   halves at each step), 50 * k + 120 in any order (egcd_time); crt adds a
+   constant: crt_time with c1 = 50, c2 = 300. *)
 
 From Generalchineseremainder.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -45,11 +51,18 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
+
+(* the termination measure, named and opaque to cbn (cost proofs) *)
+Definition meas (r : int) : Z := φ r.
+
+Arguments meas : simpl never.
 
 Lemma dec_mod : forall r0 r1 : int,
-  (r1 =? 0) = false -> Zwf 0 (φ (r0 mod r1)) (φ r1).
+  (r1 =? 0) = false -> Zwf 0 (meas (r0 mod r1)) (meas r1).
 Proof.
-  intros r0 r1 H.
+  intros r0 r1 H. unfold meas.
   assert (H1 : (φ r1) <> 0%Z).
   { intros E. assert (r1 = 0) by (apply to_Z_inj; exact E). subst. discriminate. }
   unfold Zwf. rewrite mod_spec. pose proof (to_Z_bounded r0). pose proof (to_Z_bounded r1).
@@ -62,13 +75,14 @@ Qed.
 
 (* Euclid on (r0, r1), with s0 * n = r0 and s1 * n = r1 (mod m). *)
 Fixpoint egcd_loop (m r0 r1 s0 s1 : int)
-    (H : Acc (Zwf 0) (φ r1)) {struct H} : int * int :=
+    (H : Acc (Zwf 0) (meas r1)) {struct H} : int * int :=
   match bdec (r1 =? 0) with
   | left _ => (r0, s0)
   | right Hne =>
       egcd_loop m r1 (r0 mod r1) s1 ((s0 + m - (r0 / r1 * s1) mod m) mod m)
         (Acc_inv H (dec_mod r0 r1 Hne))
   end.
+Elpi complexity egcd_loop.
 
 Lemma egcd_loop_eq : forall m r0 r1 s0 s1 H,
   egcd_loop m r0 r1 s0 s1 H =
@@ -81,13 +95,14 @@ Lemma egcd_loop_eq : forall m r0 r1 s0 s1 H,
 Proof. intros. destruct H. reflexivity. Qed.
 
 Definition crt_impl (a n b m : uint) : option (uint * uint) :=
-  let '(g, s) := egcd_loop m n m (1 mod m) 0 (Zwf_well_founded 0 (φ m)) in
+  let '(g, s) := egcd_loop m n m (1 mod m) 0 (Zwf_well_founded 0 (meas m)) in
   let mg := m / g in
   let d := (b + m - a mod m) mod m in
   if d mod g =? 0 then
     let t := (d / g * s) mod mg in
     Some (a + n * t, n * mg)
   else None.
+Elpi complexity crt_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: arithmetic over Z                                        *)
@@ -130,7 +145,7 @@ Qed.
 (* The loop: it returns the gcd and a coefficient s with s * N = g (mod M). *)
 Lemma egcd_loop_spec : forall (m xn : int) (N M G : Z),
   (φ m) = M -> (φ xn) = N -> 0 < M <= bnd -> 0 < N <= bnd ->
-  forall (z : Z) (r0 r1 s0 s1 : int) (H : Acc (Zwf 0) (φ r1)),
+  forall (z : Z) (r0 r1 s0 s1 : int) (H : Acc (Zwf 0) (meas r1)),
   (φ r1) = z ->
   (φ r0) <= bnd -> (φ r1) <= bnd -> (φ s0) < M -> (φ s1) < M ->
   Z.gcd (φ r0) (φ r1) = G ->
@@ -289,12 +304,12 @@ Proof.
     exists (- (1 / M) * N0). ring. }
   destruct Hone as [Hone1 Hone2].
   pose proof (egcd_loop_spec xm xn N0 M (Z.gcd N0 M) Rm Rn HM HN (φ xm)
-                xn xm (1 mod xm) 0 (Zwf_well_founded 0 (φ xm)) eq_refl
+                xn xm (1 mod xm) 0 (Zwf_well_founded 0 (meas xm)) eq_refl
                 ltac:(lia) ltac:(lia) Hone1 ltac:(change (φ 0) with 0; lia)
                 ltac:(rewrite Rn, Rm; reflexivity) Hone2
                 ltac:(change (φ 0) with 0; rewrite Rm; exists (-1); ring))
     as Hloop.
-  destruct (egcd_loop xm xn xm (1 mod xm) 0 (Zwf_well_founded 0 (φ xm)))
+  destruct (egcd_loop xm xn xm (1 mod xm) 0 (Zwf_well_founded 0 (meas xm)))
     as [g s].
   simpl in Hloop. destruct Hloop as [Hg [Hs HgsD]].
   set (G := Z.gcd N0 M) in *.
@@ -377,6 +392,7 @@ Qed.
 
 Definition crt : uint -> uint -> uint -> uint -> option (uint * uint) :=
   crt_impl.
+Elpi complexity crt.
 
 Definition crt_correct :
   forall (a n b m : N) (xa xn xb xm : uint),
@@ -384,3 +400,166 @@ Definition crt_correct :
   repr xa a -> repr xn n -> repr xb b -> repr xm m ->
   exists o : option (N * N), repr (crt xa xn xb xm) o /\ crt_spec a n b m o
   := crt_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Complexity                                                          *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Arguments bdec_cost : simpl never.
+
+Lemma eqb0_false (r : int) : (r =? 0)%uint63 = false -> φ r <> 0.
+Proof.
+  intros H E. assert (r = 0%uint63) by (apply to_Z_inj; exact E). subst. discriminate.
+Qed.
+
+Lemma mod_half (a b : Z) : 0 < b <= a -> 2 * (a mod b) <= a.
+Proof.
+  intros Hb. pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  pose proof (Z.div_mod a b ltac:(lia)).
+  assert (1 <= a / b) by (apply Z.div_le_lower_bound; lia).
+  nia.
+Qed.
+
+Lemma halve (a b : Z) (k : nat) : 0 < b <= a ->
+  a * b < 2 ^ Z.of_nat (S k) -> b * (a mod b) < 2 ^ Z.of_nat k.
+Proof.
+  intros Hb Hlt. pose proof (mod_half a b Hb). pose proof (Z.mod_pos_bound a b ltac:(lia)).
+  rewrite Nat2Z.inj_succ Z.pow_succ_r in Hlt; [lia|]. nia.
+Qed.
+
+(* Euclid with r1 <= r0: the product r0 * r1 halves at each step. *)
+Lemma egcd_ord_time m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC k :
+  φ r1 <= φ r0 -> φ r0 * φ r1 < 2 ^ Z.of_nat k ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_loop_cost stepsCM m mC) r0 r0C) r1 r1C) s0 s0C) s1 s1C) H HC)
+     <= 50 * k + 60)%nat.
+Proof.
+  unfold egcd_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC)] =>
+    assert (HG : forall j r0 r0C r1 r1C s0 s0C s1 s1C H HC,
+       φ r1 <= φ r0 -> φ r0 * φ r1 < 2 ^ Z.of_nat j ->
+       (cost (G m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC) <= 50 * j + 60)%nat) end.
+  { clear H HC. induction j as [|j IH]; intros r0' r0C' r1' r1C' s0' s0C' s1' s1C' [g] HC' Hle Hlt;
+      cost_simpl;
+      pose proof (bdec_time (r1' =? 0)%uint63 (bool_w (r1' =? 0)%uint63)) as HB;
+      cost_destruct (bdec (r1' =? 0)%uint63); cost_simpl.
+    - lia.
+    - exfalso. pose proof (to_Z_bounded r1'). pose proof (to_Z_bounded r0').
+      pose proof (eqb0_false r1' e).
+      change (2 ^ Z.of_nat 0) with 1 in Hlt. nia.
+    - lia.
+    - pose proof (to_Z_bounded r1'). pose proof (to_Z_bounded r0').
+      pose proof (eqb0_false r1' e).
+      assert (Hle' : φ (r0' mod r1') <= φ r1').
+      { rewrite Uint63.mod_spec. pose proof (Z.mod_pos_bound (φ r0') (φ r1')). lia. }
+      assert (Hlt' : φ r1' * φ (r0' mod r1') < 2 ^ Z.of_nat j).
+      { rewrite Uint63.mod_spec. apply halve; [lia|exact Hlt]. }
+      match goal with |- context [@cost ?T (?G' m mC r1' ?w1 (r0' mod r1')%uint63 ?w2 s1' ?w3 ?s ?w4 ?h ?e)] =>
+        have HI := (IH r1' w1 (r0' mod r1')%uint63 w2 s1' w3 s w4 h e
+                    : _ -> _ -> (@cost T (G' m mC r1' w1 (r0' mod r1')%uint63 w2 s1' w3 s w4 h e) <= _)%nat) end.
+      specialize (HI Hle' Hlt'). lia. }
+  match goal with |- context [@cost ?T (?G m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC)] =>
+    exact (HG _ r0 r0C r1 r1C s0 s0C s1 s1C H HC : _ -> _ -> (@cost T (G m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC) <= _)%nat) end.
+Qed.
+
+(* Any order: one step brings r1 <= r0 back (r0 mod r1 = r0 when r0 < r1). *)
+Lemma egcd_time m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC k :
+  φ r0 * φ r1 < 2 ^ Z.of_nat k ->
+  (cost (extract (extract (extract (extract (extract
+     (egcd_loop_cost stepsCM m mC) r0 r0C) r1 r1C) s0 s0C) s1 s1C) H HC)
+     <= 50 * k + 120)%nat.
+Proof.
+  intros Hlt. destruct (Z.le_gt_cases (φ r1) (φ r0)) as [Hle|Hgt].
+  { pose proof (egcd_ord_time m mC r0 r0C r1 r1C s0 s0C s1 s1C H HC k Hle Hlt). lia. }
+  pose proof (to_Z_bounded r1). pose proof (to_Z_bounded r0).
+  assert (Hm : φ (r0 mod r1) = φ r0).
+  { rewrite Uint63.mod_spec. apply Z.mod_small. lia. }
+  destruct H as [g].
+  unfold egcd_loop_cost. cost_simpl.
+  pose proof (bdec_time (r1 =? 0)%uint63 (bool_w (r1 =? 0)%uint63)) as HB.
+  cost_destruct (bdec (r1 =? 0)%uint63); cost_simpl.
+  - lia.
+  - assert (Hle' : φ (r0 mod r1) <= φ r1) by lia.
+    assert (Hlt' : φ r1 * φ (r0 mod r1) < 2 ^ Z.of_nat k) by (rewrite Hm; lia).
+    match goal with |- context [@cost ?T (?G' m mC r1 ?w1 (r0 mod r1)%uint63 ?w2 s1 ?w3 ?s ?w4 ?h ?e)] =>
+      have HI := (egcd_ord_time m mC r1 w1 (r0 mod r1)%uint63 w2 s1 w3 s w4 h e k
+                  : _ -> _ -> (@cost T (G' m mC r1 w1 (r0 mod r1)%uint63 w2 s1 w3 s w4 h e) <= _)%nat) end.
+    specialize (HI Hle' Hlt'). lia.
+Qed.
+
+(* the call's layers before the last cost nothing *)
+Lemma egcd_layers m mC r0 r0C r1 r1C s0 s0C s1 s1C :
+  (cost (egcd_loop_cost stepsCM m mC) = 0
+   /\ cost (extract (egcd_loop_cost stepsCM m mC) r0 r0C) = 0
+   /\ cost (extract (extract (egcd_loop_cost stepsCM m mC) r0 r0C) r1 r1C) = 0
+   /\ cost (extract (extract (extract (egcd_loop_cost stepsCM m mC) r0 r0C) r1 r1C) s0 s0C) = 0
+   /\ cost (extract (extract (extract (extract (egcd_loop_cost stepsCM m mC) r0 r0C) r1 r1C) s0 s0C) s1 s1C)
+   = 0)%nat.
+Proof. repeat split. Qed.
+
+Arguments egcd_loop_cost : simpl never.
+
+Lemma pow_log2_bound (X : Z) : 0 < X -> X < 2 ^ Z.of_nat (S (Nat.log2 (Z.to_nat X))).
+Proof.
+  intros HX. pose proof (Nat.log2_spec (Z.to_nat X) ltac:(lia)) as [_ H2].
+  apply Nat2Z.inj_lt in H2. rewrite Nat2Z.inj_pow Z2Nat.id in H2; [lia|]. exact H2.
+Qed.
+
+Lemma prod_bound (X Y : Z) : 0 <= X -> 0 <= Y ->
+  X * Y < 2 ^ Z.of_nat (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2).
+Proof.
+  intros HX HY.
+  assert (P : 0 < 2 ^ Z.of_nat (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2))
+    by (apply Z.pow_pos_nonneg; lia).
+  destruct (Z.eq_dec X 0) as [->|HX0]; [lia|].
+  destruct (Z.eq_dec Y 0) as [->|HY0]; [lia|].
+  pose proof (pow_log2_bound X ltac:(lia)). pose proof (pow_log2_bound Y ltac:(lia)).
+  replace (Nat.log2 (Z.to_nat X) + Nat.log2 (Z.to_nat Y) + 2)%nat
+    with (S (Nat.log2 (Z.to_nat X)) + S (Nat.log2 (Z.to_nat Y)))%nat by lia.
+  rewrite Nat2Z.inj_add Z.pow_add_r; [lia|lia|]. nia.
+Qed.
+
+(* crt: one Euclid run on (n, m), then a constant number of steps. *)
+Lemma crt_cost_bound : forall (a n b m : uint) (L : nat),
+  φ n * φ m < 2 ^ Z.of_nat (L + 2) ->
+  (cost4 crt_cost a n b m <= L * 50 + 300)%nat.
+Proof.
+  intros a n b m L Hp. unfold cost4, crt_cost. cbn. unfold crt_impl_cost. cost_simpl.
+  match goal with |- context [@cost ?T (extract (extract (extract (extract (extract (egcd_loop_cost stepsCM m ?mC) n ?nC) m ?mC') ?s0 ?s0C) ?s1 ?s1C) ?h ?hC)] =>
+    have HI := (egcd_time m mC n nC m mC' s0 s0C s1 s1C h hC (L + 2) Hp
+                : (@cost T (extract (extract (extract (extract (extract (egcd_loop_cost stepsCM m mC) n nC) m mC') s0 s0C) s1 s1C) h hC) <= _)%nat);
+    have HL := egcd_layers m mC n nC m mC' s0 s0C s1 s1C end.
+  destruct HL as [L1 [L2 [L3 [L4 L5]]]].
+  rewrite L1 L2 L3 L4 L5.
+  revert HI. generalize (cost (extract (extract (extract (extract (extract (egcd_loop_cost stepsCM m (witness m)) n (witness n)) m (witness m)) (1 mod m)%uint63 (int_val stepsCM (1 mod m))) 0%uint63 (int_val stepsCM 0)) (Zwf_well_founded 0 (meas m)) erased_I)).
+  intros CE HI. clear L1 L2 L3 L4 L5 Hp.
+  cost_destruct_witness (egcd_loop m n m (1 mod m) 0 (Zwf_well_founded 0 (meas m))) as [g gC s sC] eqn:E.
+  cost_simpl.
+  cost_destruct ((((b + m - a mod m) mod m) mod g =? 0)%uint63); cost_simpl; lia.
+Qed.
+
+Theorem crt_time : exists c1 c2 : nat,
+  forall (residue1 modulus1 residue2 modulus2 : N)
+  (residue1_int modulus1_int residue2_int
+  modulus2_int : uint),
+  valid_input residue1 modulus1 residue2 modulus2 ->
+  repr residue1_int residue1 ->
+  repr modulus1_int modulus1 ->
+  repr residue2_int residue2 ->
+  repr modulus2_int modulus2 ->
+  (cost4 crt_cost residue1_int modulus1_int residue2_int modulus2_int <= c1 * (Nat.log2 (size modulus1_int) + Nat.log2 (size modulus2_int) + 1) + c2)%nat.
+Proof.
+  exists 50%nat, 300%nat. intros a0 n0 b0 m0 a n b m _ _ _ _ _.
+  assert (Hp : φ n * φ m < 2 ^ Z.of_nat (Nat.log2 (size n) + Nat.log2 (size m) + 2)).
+  { pose proof (to_Z_bounded n). pose proof (to_Z_bounded m).
+    exact (prod_bound (φ n) (φ m) ltac:(lia) ltac:(lia)). }
+  revert Hp. generalize (Nat.log2 (size n) + Nat.log2 (size m))%nat. intros L Hp.
+  pose proof (crt_cost_bound a n b m L Hp). lia.
+Qed.
+
+Print Assumptions crt_time.

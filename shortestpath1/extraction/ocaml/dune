@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules shortestpath1_extracted_marray)
- (theories Shortestpath1 Shortestpath1.spec Stdlib stdpp StdGalilei))
+ (theories Shortestpath1 Shortestpath1.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name shortestpath1_extraction)

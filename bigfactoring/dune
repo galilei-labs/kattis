@@ -6,9 +6,11 @@
  (rocq.theory
   (name Bigfactoring.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Bigfactoring)
  (modules bigfactoring_implem)
- (theories Bigfactoring.spec Stdlib stdpp StdGalilei))
+  (theories Bigfactoring.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

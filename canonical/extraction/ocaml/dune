@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules canonical_extracted_marray)
- (theories Canonical Canonical.spec Stdlib stdpp StdGalilei))
+ (theories Canonical Canonical.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name canonical_extraction)

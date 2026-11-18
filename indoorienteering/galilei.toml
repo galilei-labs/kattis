@@ -21,4 +21,4 @@ archive = "indoorienteering_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/indoorienteering.ml"
-Rust = "extraction/rust/submit/indoorienteering.rs"
+Rust = "extraction/rust/snapshots/indoorienteering_extracted.rs.interface.json"

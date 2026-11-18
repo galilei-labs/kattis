@@ -6,9 +6,11 @@
  (rocq.theory
   (name Slowleak.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Slowleak)
  (modules slowleak_implem)
- (theories Slowleak.spec Stdlib stdpp StdGalilei))
+  (theories Slowleak.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

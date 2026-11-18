@@ -9,12 +9,20 @@
    so the word read through Sint63 is the exact sum.  No Z in the code.
 
    Termination: the loop recurses structurally on an erased
-   [Acc (Zwf 0) (gap m i)] proof, as in template/polymul1. *)
+   [Acc (Zwf 0) (gap m i)] proof, as in template/polymul1.
+
+   Cost: [Elpi complexity] translates sumbool, bdec, area_loop,
+   signed_area2_impl and signed_area2 (callee first).  area_loop from i costs
+   at most gap m i * 100 + 10 steps (area_loop_time), the whole call at most
+   loop_meas x * 100 + 100 (signed_area2_steps), and on a valid input
+   (n >= 3, so length x - 1 does not wrap) at most 100 * (|x| + |y| + 1)
+   (signed_area2_time). *)
 
 From Polygonarea.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Sint63.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -40,6 +48,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -65,6 +75,7 @@ Fixpoint area_loop (x y : array int) (m i acc : int)
         (Acc_inv H (dec_step m i Hi))
   | right _ => acc
   end.
+Elpi complexity area_loop.
 
 Lemma area_loop_eq : forall x y m i acc H,
   area_loop x y m i acc H =
@@ -81,6 +92,7 @@ Definition signed_area2_impl (x y : array sint) : sint :=
   let m := PArray.length x - 1 in
   let s := area_loop x y m 0 0 (Zwf_well_founded 0 (gap m 0)) in
   s + x.[m] * y.[0] - x.[0] * y.[m].
+Elpi complexity signed_area2_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side                                                           *)
@@ -285,8 +297,96 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition signed_area2 : array sint -> array sint -> sint := signed_area2_impl.
+Elpi complexity signed_area2.
 
 Definition signed_area2_correct : forall (xs ys : list Z) (x y : array sint),
   valid_input xs ys -> repr x xs -> repr y ys ->
   exists v : Z, repr (signed_area2 x y) v /\ signed_area2_spec xs ys v
   := signed_area2_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma area_loop_time x xC y yC m mC i iC acc accC H HC :
+  (cost (extract (extract (extract (extract (extract (area_loop_cost stepsCM x xC) y yC) m mC) i iC) acc accC) H HC)
+     <= Z.to_nat (gap m i) * 100 + 10)%nat.
+Proof.
+  unfold area_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC y yC m mC i iC acc accC H HC)] =>
+    assert (HG : forall k i iC acc accC H HC, (Z.to_nat (gap m i) <= k)%nat ->
+       (cost (G x xC y yC m mC i iC acc accC H HC) <= k * 100 + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' acc' accC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (i' <? m) (bool_w (i' <? m))) as HB;
+      cost_destruct (bdec (i' <? m)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hk' : (Z.to_nat (gap m (i' + 1)) <= k)%nat).
+      { unfold gap in *. assert (φ (i' + 1) = φ i' + 1)%Z by sia. lia. }
+      match goal with |- context [@cost ?T (?G' x xC y yC m mC (i' + 1)%uint63 ?w ?c ?wc ?h ?e)] =>
+        have HI := (IH (i' + 1)%uint63 w c wc h e : _ -> (@cost T (G' x xC y yC m mC (i' + 1)%uint63 w c wc h e) <= _)%nat) end.
+      specialize (HI Hk'). lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G x xC y yC m mC i iC acc accC H HC)] =>
+    exact (HG _ i iC acc accC H HC (le_n _) : (@cost T (G x xC y yC m mC i iC acc accC H HC) <= _)%nat) end.
+Qed.
+
+Definition loop_meas (x : array sint) : nat := Z.to_nat (gap (PArray.length x - 1) 0).
+Arguments loop_meas : simpl never.
+
+Lemma signed_area2_steps : forall x y : array sint,
+  (cost2 signed_area2_cost x y <= loop_meas x * 100 + 100)%nat.
+Proof.
+  intros x y. unfold cost2, signed_area2_cost. rewrite call_cost2_eq. cost_simpl.
+  match goal with |- context [@cost ?T (?G x ?xw y ?yw ?m ?mw 0%uint63 ?w1 0%uint63 ?w2 ?h ?e)] =>
+    have HS := (area_loop_time x xw y yw m mw 0 w1 0 w2 h e
+                : (@cost T (G x xw y yw m mw 0%uint63 w1 0%uint63 w2 h e) <= _)%nat);
+    revert HS; generalize (@cost T (G x xw y yw m mw 0%uint63 w1 0%uint63 w2 h e)); intros C HS end.
+  change (Z.to_nat (gap (PArray.length x - 1) 0)) with (loop_meas x) in HS.
+  lia.
+Qed.
+
+(* On a valid input x has at least three cells, so length x - 1 does not
+   wrap and the loop runs size x - 1 times.  (On an empty x it would wrap
+   to 2^63 - 1: the bound needs the contract's premises.) *)
+Lemma loop_meas_size : forall (xs : list Z) (x : array sint),
+  repr x xs -> (1 <= len xs)%N -> (loop_meas x <= size x)%nat.
+Proof.
+  intros xs x Hx Hn. unfold loop_meas, gap.
+  pose proof (repr_length x xs Hx) as Lx. unfold len in Hn.
+  assert (Es : Z.to_nat (φ (PArray.length x)) = size x) by reflexivity.
+  rewrite <- Es.
+  match goal with |- (Z.to_nat (φ (?L - 1) - _) <= _)%nat =>
+    assert (HL : φ L = Z.of_nat (List.length xs)) by exact Lx;
+    assert (Hm : φ (L - 1) = (φ L - 1)%Z)
+      by (rewrite sub_spec; change (φ 1) with 1%Z;
+          pose proof (to_Z_bounded L); apply Z.mod_small; lia) end.
+  rewrite Hm HL. change (φ 0) with 0%Z. lia.
+Qed.
+
+Theorem signed_area2_time : exists c1 c2 : nat,
+  forall (x_coordinates y_coordinates : list Z)
+         (x_coordinates_arr y_coordinates_arr : array sint),
+  valid_input x_coordinates y_coordinates ->
+  repr x_coordinates_arr x_coordinates ->
+  repr y_coordinates_arr y_coordinates ->
+  (cost2 signed_area2_cost x_coordinates_arr y_coordinates_arr <=
+     c1 * (size x_coordinates_arr + size y_coordinates_arr + 1) + c2)%nat.
+Proof.
+  exists 100%nat, 0%nat. intros xs ys x y Hv Hx Hy.
+  pose proof (signed_area2_steps x y) as H.
+  assert (Hn : (1 <= len xs)%N) by (destruct Hv; lia).
+  pose proof (loop_meas_size xs x Hx Hn) as HM.
+  revert H HM. generalize (cost2 signed_area2_cost x y) (loop_meas x) (size x) (size y).
+  intros. lia.
+Qed.
+
+Print Assumptions signed_area2_correct.
+Print Assumptions signed_area2_time.

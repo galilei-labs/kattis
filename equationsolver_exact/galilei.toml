@@ -21,4 +21,4 @@ archive = "equationsolver_exact_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/equationsolver_exact.ml"
-Rust = "extraction/rust/submit/equationsolver_exact.rs"
+Rust = "extraction/rust/snapshots/equationsolver_exact_extracted.rs.interface.json"

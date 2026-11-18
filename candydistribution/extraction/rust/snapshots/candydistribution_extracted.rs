@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
@@ -27,21 +26,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Candydistribution.candydistribution_implem.candydistribution
-// Variant: uncurried
-pub fn candydistribution() -> Rc<dyn Fn(u64, u64) -> Rc<option<u64>>> {
-  let v0: fn(u64, u64) -> Rc<option<u64>> = candy_impl;
-  let v1: Rc<dyn Fn(u64, u64) -> Rc<option<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Candydistribution.candydistribution_implem.candydistribution
-pub fn candydistribution_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<u64>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<u64>>> = candy_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -50,13 +34,10 @@ pub fn eqb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Candydistribution.candydistribution_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -99,44 +80,41 @@ pub fn egcd_loop_1(k: u64, a: u64, b: u64, sa: u64, sb: u64) -> (u64, u64) {
 // Rocq: Candydistribution.candydistribution_implem.egcd_loop (local: egcd_loop)
 // Variant: uncurried, lifted
 pub fn egcd_loop(k: u64, a: u64, b: u64, sa: u64, sb: u64, _H: ()) -> (u64, u64) {
-  let v15 = eqb(b, 0u64);
-  match bdec(v15) {
+  let tmp = eqb(b, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
       (a, sa)
     },
     sumbool::right => {
-      let v32 = mod_(a, b);
-      let v53 = mod_(mul(div(a, b), sb), k);
-      let v68 = mod_(add(sa, sub(k, v53)), k);
-      egcd_loop(k, b, v32, sb, v68, ())
+      let tmp_1 = mod_(a, b);
+      let tmp_2 = mod_(mul(div(a, b), sb), k);
+      let tmp_3 = mod_(add(sa, sub(k, tmp_2)), k);
+      egcd_loop(k, b, tmp_1, sb, tmp_3, ())
     },
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -149,58 +127,34 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Candydistribution.candydistribution_implem.candy_impl
 // Variant: uncurried
 pub fn candy_impl(k: u64, c: u64) -> Rc<option<u64>> {
-  let v8 = mod_(c, k);
-  let v18 = mod_(1u64, k);
-  let p = egcd_loop_1(k, k, v8, 0u64, v18);
-  let v32 = Clone::clone(&p);
-  let g = fst::<u64, u64>(v32);
+  let tmp = mod_(c, k);
+  let tmp_1 = mod_(1u64, k);
+  let p = egcd_loop_1(k, k, tmp, 0u64, tmp_1);
+  let p_clone = Clone::clone(&p);
+  let g = fst::<u64, u64>(p_clone);
   let s = snd::<u64, u64>(p);
-  match eqb(g, 1u64) {
-    true => {
-      let v50 = 0u64;
-      let b1 = match eqb(s, v50) {
-        true => {
-          k
-        },
-        false => {
-          s
-        },
-      };
-      let v70 = eqb(b1, 1u64);
-      let v78 = eqb(c, 1u64);
-      let b2 = match andb(v70, v78) {
-        true => {
-          add(b1, k)
-        },
-        false => {
-          b1
-        },
-      };
-      match leb(b2, 1000000000u64) {
-        true => {
-          Rc::new(option::<u64>::Some(b2))
-        },
-        false => {
-          Rc::new(option::<u64>::None)
-        },
-      }
-    },
-    false => {
+  if eqb(g, 1u64) {
+    let tmp_2 = 0u64;
+    let b1 = if eqb(s, tmp_2) {
+      k
+    } else {
+      s
+    };
+    let tmp_3 = eqb(b1, 1u64);
+    let tmp_4 = eqb(c, 1u64);
+    let b2 = if andb(tmp_3, tmp_4) {
+      add(b1, k)
+    } else {
+      b1
+    };
+    if leb(b2, 1000000000u64) {
+      Rc::new(option::<u64>::Some(b2))
+    } else {
       Rc::new(option::<u64>::None)
-    },
-  }
-}
-
-// Rocq: Candydistribution.candydistribution_implem.candy_impl
-pub fn candy_impl_curried(k: u64) -> Rc<dyn Fn(u64) -> Rc<option<u64>>> {
-  let v3 = {
-    move |c: u64| -> Rc<option<u64>> {
-      let v9 = Clone::clone(&k);
-      candy_impl(v9, c)
     }
-  };
-  let v15: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new(v3);
-  v15
+  } else {
+    Rc::new(option::<u64>::None)
+  }
 }
 
 mod __rocq_reuse {
@@ -351,10 +305,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64) -> Rc<option<u64>>> {
-  let v0: Rc<dyn Fn(u64, u64) -> Rc<option<u64>>> = __rocq_global_231.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_231: Rc<dyn Fn(u64, u64) -> Rc<option<u64>>> = candydistribution(); }
-std::thread_local! { static __rocq_global_234: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<option<u64>>>> = candydistribution_curried(); }

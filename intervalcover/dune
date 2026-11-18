@@ -6,9 +6,11 @@
  (rocq.theory
   (name Intervalcover.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Intervalcover)
  (modules intervalcover_implem)
- (theories Intervalcover.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Intervalcover.spec Stdlib stdpp StdGalilei Flocq KattisLib)
+  (generate_project_file))

@@ -4,7 +4,7 @@
 
 (** Count ordered sequences of positive integers with a specified length,
     greatest common divisor and least common multiple. The latter two are
-    given as products of factors; return the count modulo 1000000007.
+    given as products of factors; return the count modulo $10^{9} + 7$.
 
     [@kattis atrivialpursuit]
     - Difficulty: 9.1
@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Sequence length in $[1, 10^{18}]$.
-    - Each factor list has Entry count: $1 \le n \le 400$, each in $[1, 10^{18}]$. *)
+    - Sequence length: $1 \le P \le 10^{18}$.
+    - Each factor list has entry count $1 \le n \le 400$; each factor: $1 \le f_i \le 10^{18}$. *)
 
 (** ** Examples *)
 
@@ -45,29 +45,38 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  G and L can have 400 * 18 digits: they exist
+(* G and L can have 400 * 18 digits: they exist
   only here, as
    [N]; every input and the answer fit in a [uint]. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The product of the elements of l (G_1 * ... * G_N,
-    L_1 * ... * L_M). *)
-Definition prod (l : list N) : N := fold_right N.mul 1 l.
+(** The product of the elements of [l], with value one for the empty list. *)
+Fixpoint prod (l : list N) : N :=
+  match l with
+  | [] => 1
+  | term :: rest => term * prod rest
+  end.
 
 (** The greatest common divisor of the sequence. *)
-Definition seq_gcd (terms : list N) : N :=
-  fold_right N.gcd 0 terms.
+Fixpoint seq_gcd (terms : list N) : N :=
+  match terms with
+  | [] => 0
+  | term :: rest => N.gcd term (seq_gcd rest)
+  end.
 (** The least common multiple of the sequence. *)
-Definition seq_lcm (terms : list N) : N :=
-  fold_right N.lcm 1 terms.
+Fixpoint seq_lcm (terms : list N) : N :=
+  match terms with
+  | [] => 1
+  | term :: rest => N.lcm term (seq_lcm rest)
+  end.
 
-(** terms = x_1, ..., x_P : term_count (P) positive
-    integers with gcd target_gcd and lcm target_lcm. *)
+(** [terms] contains [term_count] positive integers with greatest common divisor
+    [target_gcd] and least common multiple [target_lcm]. *)
 Definition is_sequence
   (term_count target_gcd target_lcm : N)
     (terms : list N) : Prop :=
@@ -75,8 +84,7 @@ Definition is_sequence
     (fun term => 0 < term) terms /\
   seq_gcd terms = target_gcd /\ seq_lcm terms = target_lcm.
 
-(** Exactly sequence_count sequences satisfy
-    is_sequence: sequences lists each of them once. *)
+(** Exactly [sequence_count] distinct ordered sequences satisfy [is_sequence]. *)
 Definition num_sequences
   (term_count target_gcd target_lcm sequence_count
     : N) : Prop :=
@@ -122,13 +130,21 @@ Definition atrivialpursuit_spec (term_count : N)
 
 (** Count ordered sequences of positive integers with a specified length, greatest common
     divisor and least common multiple. The latter two are given as products of factors;
-    return the count modulo 1000000007.
+    return the count modulo $10^{9} + 7$.
     - Input [term_count]: Required sequence length.
     - Input [gcd_factors]: Factors whose product is the required greatest common divisor.
     - Input [lcm_factors]: Factors whose product is the required least common multiple.
     - Output [output]: The output counts ordered sequences with the specified length, GCD and LCM, modulo $10^9 + 7$. *)
 Program atrivialpursuit : uint -> array uint -> array uint
   -> uint.
+
+(** [@example atrivialpursuit]
+    - Sample: 1
+    - Input [term_count]: 3
+    - Input [gcd_factors]: [3]
+    - Input [lcm_factors]: [17; 18]
+    - Output [output]: 216
+*)
 
 (** ** Bridge *)
 

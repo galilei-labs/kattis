@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules candydistribution_extracted_marray)
- (theories Candydistribution Candydistribution.spec Stdlib stdpp StdGalilei))
+ (theories Candydistribution Candydistribution.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name candydistribution_extraction)

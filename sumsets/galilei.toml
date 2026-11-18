@@ -21,4 +21,4 @@ archive = "sumsets_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/sumsets.ml"
-Rust = "extraction/rust/submit/sumsets.rs"
+Rust = "extraction/rust/snapshots/sumsets_extracted.rs.interface.json"

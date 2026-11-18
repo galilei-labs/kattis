@@ -2,10 +2,11 @@
 
 (** ** Description *)
 
-(** Build a network on distinct integer labels, joining two vertices when
-    their greatest common divisor exceeds one and using that divisor as
-    capacity in each direction. Find the maximum flow from the smallest
-    label to the largest.
+(** A maze has rooms with distinct integer room numbers. Two rooms have a
+    passage when their numbers have greatest common divisor greater than one;
+    that divisor is the passage capacity in each direction, in people per
+    minute. Find the maximum rate of movement from the lowest-numbered room
+    (the entrance) to the highest-numbered room (the exit).
 
     [@kattis mazemovement]
     - Difficulty: 2.8
@@ -13,13 +14,13 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - $2\text{ to }1{,}000$ distinct labels, each in $[2, 2{,}000{,}000{,}000]$.
+    - Distinct room count: $2 \le n \le 10^{3}$; room numbers: $2 \le a_i \le 2 \times 10^{9}$.
     - The maximum flow is at most $10^{9}$. *)
 
 (** ** Examples *)
 
-(** - Input convention: Vertex count, followed by distinct integer labels, one per line.
-    - Output convention: The maximum flow from the smallest label to the largest. *)
+(** - Input convention: Room count, followed by distinct room numbers, one per line.
+    - Output convention: The maximum number of people per minute that can move from the entrance to the exit. *)
 (* Input:
 4
 4
@@ -42,28 +43,34 @@ Output:
                     minute that can enter at the lowest-numbered room and
                     leave at the highest-numbered one, nobody waiting in a
                     room.
+                    It runs in at most c1 * (n + 1)^4 + c2 steps of the cost
+                    model on a valid input, n the number of rooms: the
+                    generic push-relabel bound on the dense n x n network
+                    (at most n^2 relabels, n^3 saturating pushes and n^4
+                    non-saturating ones by the potential of the active
+                    heights), the gap and global relabelings within it, the
+                    gcd table in n^2 word gcds; the n^3 of the FIFO
+                    selection is not stated, for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. A room is designated by its position in the list (the
-    room numbers are distinct); a walking pattern [pattern] gives,
-    for every ordered pair of positions (i, j), the number of people
-    per minute walking from room i to room j. The number of elements
-    of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The number of the room at position i. *)
+(** The room number at zero-based position [i] in [rooms]. A room's position
+    identifies it in the flow model; its number determines passage capacities. *)
 Definition room (rooms : list N) (i : N) : N :=
   nth (N.to_nat i) rooms 0.
 
-(** term 0 + term 1 + ... + term (count - 1). *)
+(** The sum of [term] over zero-based indices below [count]. *)
 Fixpoint sum_below (term : N -> N) (count : nat) : N :=
   match count with
   | O => 0
@@ -84,22 +91,21 @@ Definition exit (rooms : list N)
   forall j, j < len rooms ->
     room rooms j <= room rooms exit_position.
 
-(** The number of people per minute that can walk from room i to room j:
-    their largest common factor if it is greater than one, and no
-    passage (0) otherwise, or from a room to itself. *)
+(** The directed passage capacity between rooms [i] and [j], in people per minute:
+    their greatest common divisor when it exceeds one. Self-passages and coprime
+    pairs have capacity zero. *)
 Definition cap (rooms : list N) (i j : N) : N :=
   let common := N.gcd (room rooms i) (room rooms j) in
   if N.eqb i j then 0 else if 1 <? common then common else
     0.
 
-(** People leaving room [position] per minute, and people arriving in
-    it. *)
+(** The total number of people leaving [position] per minute under [pattern]. *)
 Definition outflow (rooms : list N)
   (pattern : N -> N -> N) (position : N)
     : N :=
   sum_below (fun j => pattern position j) (List.length
     rooms).
-(** The [inflow] definition. *)
+(** The total number of people arriving at [position] per minute under [pattern]. *)
 Definition inflow (rooms : list N)
   (pattern : N -> N -> N) (position : N)
     : N :=
@@ -129,10 +135,10 @@ Definition entering (rooms : list N) (entry_position : N)
 
 (** [@inside mazemovement_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (rooms : list N) : Prop := {
-  (* an integer 2 <= n <= 1000 indicating the number of
+  (* an integer 2 <= n <= 10^3 indicating the number of
      rooms *)
   vi_n : 2 <= len rooms <= 1000;
-  (* each room number is in the range [2, 2 * 10^9] *)
+  (* each room number x satisfies 2 <= x <= 2 * 10^9 *)
   vi_range : Forall (fun number => 2 <= number <= 2 * 10 ^
     9) rooms;
   (* n unique integers *)
@@ -149,8 +155,9 @@ Record valid_input (rooms : list N) : Prop := {
 (** ** Correctness *)
 
 (** [@requirement]
-    The output is the maximum flow from the smallest to the largest vertex label, using
-    the specified GCD-based edge capacities. *)
+    The output is the maximum flow, in people per minute, from the
+    lowest-numbered room to the highest-numbered room, using the specified
+    GCD-based passage capacities. *)
 Definition mazemovement_spec (rooms : list N)
   (output : N) : Prop :=
   forall entry_position exit_position,
@@ -165,14 +172,26 @@ Definition mazemovement_spec (rooms : list N)
        (entering rooms entry_position pattern <= Z.of_N
          output)%Z).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n^4)$ steps, where $n$ is the number of rooms. *)
+Definition mazemovement_time_spec (c1 c2 n_rooms steps : nat) : Prop :=
+  (steps <= c1 * ((n_rooms + 1) * (n_rooms + 1) * (n_rooms + 1) * (n_rooms + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Build a network on distinct integer labels, joining two vertices when their greatest
-    common divisor exceeds one and using that divisor as capacity in each direction.
-    Find the maximum flow from the smallest label to the largest.
-    - Input [rooms]: Distinct vertex labels defining the GCD-based capacities.
-    - Output [output]: The output is the maximum flow from the smallest to the largest vertex label, using the specified GCD-based edge capacities. *)
+(** Find the maximum rate of movement through the maze from the lowest-numbered
+    room to the highest-numbered room. Passage capacities are the GCDs of room
+    numbers, with no passage for coprime numbers.
+    - Input [rooms]: Distinct room numbers defining the passage capacities.
+    - Output [output]: Maximum flow from entrance to exit, in people per minute. *)
 Program mazemovement : array uint -> uint.
+
+(** [@example mazemovement]
+    - Sample: 1
+    - Input [rooms]: [4; 6; 8; 9]
+    - Output [output]: 3
+*)
 
 (** ** Bridge *)
 
@@ -185,6 +204,19 @@ Specification mazemovement_correct :
   exists output : N,
     repr (mazemovement rooms_arr) output /\
     mazemovement_spec rooms output.
+
+(** ** Complexity *)
+
+(** [@hide] [mazemovement_cost] is the cost translation of [mazemovement] (the judge
+    recomputes it and compares) ... *)
+Complexity mazemovement_cost for mazemovement.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1)^4 + c2 steps of the cost model on a valid input, n the number of rooms: the generic push-relabel bound on the dense n x n network (at most n^2 relabels, n^3 saturating pushes and n^4 non-saturating ones by the potential of the active heights), the gap and global relabelings within it, the gcd table in n^2 word gcds; the n^3 of the FIFO selection is not stated, for two constants
+    quantified before the inputs, on every valid input. [@requirement mazemovement_time_spec] *)
+Specification mazemovement_time : exists c1 c2 : nat,
+  forall (rooms : list N) (rooms_arr : array uint),
+  valid_input rooms -> repr rooms_arr rooms ->
+  mazemovement_time_spec c1 c2 (size rooms_arr) (cost1 mazemovement_cost rooms_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

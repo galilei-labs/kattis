@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -17,21 +16,6 @@ pub type uint = u64;
 // Rocq: Indoorienteering.indoorienteering_implem.hmul
 pub fn hmul() -> u64 {
   7046029254386353131u64
-}
-
-// Rocq: Indoorienteering.indoorienteering_implem.indoorienteering
-// Variant: uncurried
-pub fn indoorienteering() -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool> {
-  let v0: fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool = indoor_owned;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Indoorienteering.indoorienteering_implem.indoorienteering
-pub fn indoorienteering_curried() -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> Rc<dyn Fn(u64) -> bool>> {
-  let v0: fn(Rc<Array<Rc<Array<u64>>>>) -> Rc<dyn Fn(u64) -> bool> = indoor_curried_owned;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> Rc<dyn Fn(u64) -> bool>> = Rc::new(v0);
-  v1
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
@@ -66,13 +50,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Indoorienteering.indoorienteering_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -103,20 +84,18 @@ pub fn fill_1(x: Rc<Array<Rc<Array<u64>>>>, n: u64, N: u64, i: u64, D: Rc<Array<
 // Rocq: Indoorienteering.indoorienteering_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(x: Rc<Array<Rc<Array<u64>>>>, n: u64, N: u64, i: u64, D: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, N);
-  match bdec(v13) {
+  let tmp = ltb(i, N);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v30 = div(i, n);
-      let v33 = Rc::clone(&x);
-      let v37 = rocq_array::get::<Rc<Array<u64>>>(&v33, v30);
-      std::mem::drop(v33);
-      let v43 = mod_(i, n);
-      let v44 = &v37;
-      let v47 = rocq_array::get::<u64>(&v44, v43);
-      std::mem::drop(v37);
-      let v54 = rocq_array::set::<u64>(D, i, v47);
-      fill(x, n, N, v24, v54, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = div(i, n);
+      let x_clone = Rc::clone(&x);
+      let tmp_3 = rocq_array::get::<Rc<Array<u64>>>(&x_clone, tmp_2);
+      std::mem::drop(x_clone);
+      let tmp_4 = rocq_array::get::<u64>(&tmp_3, mod_(i, n));
+      std::mem::drop(tmp_3);
+      let tmp_5 = rocq_array::set::<u64>(D, i, tmp_4);
+      fill(x, n, N, tmp_1, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -139,48 +118,30 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Indoorienteering.indoorienteering_implem.logcap
 pub fn logcap(n: u64) -> u64 {
-  match leb(n, 8u64) {
-    true => {
-      7u64
-    },
-    false => {
-      match eqb(n, 9u64) {
-        true => {
-          9u64
-        },
-        false => {
-          match eqb(n, 10u64) {
-            true => {
-              11u64
-            },
-            false => {
-              match eqb(n, 11u64) {
-                true => {
-                  13u64
-                },
-                false => {
-                  match eqb(n, 12u64) {
-                    true => {
-                      15u64
-                    },
-                    false => {
-                      match eqb(n, 13u64) {
-                        true => {
-                          17u64
-                        },
-                        false => {
-                          20u64
-                        },
-                      }
-                    },
-                  }
-                },
-              }
-            },
+  if leb(n, 8u64) {
+    7u64
+  } else {
+    if eqb(n, 9u64) {
+      9u64
+    } else {
+      if eqb(n, 10u64) {
+        11u64
+      } else {
+        if eqb(n, 11u64) {
+          13u64
+        } else {
+          if eqb(n, 12u64) {
+            15u64
+          } else {
+            if eqb(n, 13u64) {
+              17u64
+            } else {
+              20u64
+            }
           }
-        },
+        }
       }
-    },
+    }
   }
 }
 
@@ -199,26 +160,20 @@ pub fn lsl(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -231,23 +186,18 @@ pub fn find_1(t: Rc<Array<u64>>, k: u64, i: u64) -> u64 {
 // Rocq: Indoorienteering.indoorienteering_implem.find (local: find)
 // Variant: uncurried, lifted
 pub fn find(t: Rc<Array<u64>>, k: u64, i: u64, _H: ()) -> u64 {
-  let v6 = &t;
-  let v7 = rocq_array::length::<u64>(&v6);
-  let v13 = ltb(i, v7);
-  match bdec(v13) {
+  let tmp = rocq_array::length::<u64>(&t);
+  let tmp_1 = ltb(i, tmp);
+  match bdec(tmp_1) {
     sumbool::left => {
-      let v17 = &t;
-      let x = rocq_array::get::<u64>(&v17, i);
-      let v29 = eqb(x, 0u64);
-      let v35 = eqb(x, k);
-      match orb(v29, v35) {
-        true => {
-          std::mem::drop(t);
-          i
-        },
-        false => {
-          find(t, k, add(i, 1u64), ())
-        },
+      let x = rocq_array::get::<u64>(&t, i);
+      let tmp_2 = eqb(x, 0u64);
+      let tmp_3 = eqb(x, k);
+      if orb(tmp_2, tmp_3) {
+        std::mem::drop(t);
+        i
+      } else {
+        find(t, k, add(i, 1u64), ())
       }
     },
     sumbool::right => {
@@ -266,56 +216,46 @@ pub fn hidx(sh: u64, k: u64) -> u64 {
 // Rocq: Indoorienteering.indoorienteering_implem.find0
 // Variant: uncurried
 pub fn find0(sh: u64, t: Rc<Array<u64>>, k: u64) -> u64 {
-  let v9 = hidx(sh, k);
-  find_1(t, k, v9)
+  let tmp = hidx(sh, k);
+  find_1(t, k, tmp)
 }
 
 // Rocq: Indoorienteering.indoorienteering_implem.insert
 // Variant: uncurried
 pub fn insert(sh: u64, t: Rc<Array<u64>>, k: u64) -> (Rc<Array<u64>>, bool) {
-  let v8 = Rc::clone(&t);
-  let j = find0(sh, v8, k);
-  let v13 = &t;
-  let v14 = rocq_array::length::<u64>(&v13);
-  match ltb(j, v14) {
-    true => {
-      let v22 = &t;
-      let v25 = rocq_array::get::<u64>(&v22, j);
-      match eqb(v25, 0u64) {
-        true => {
-          let v40 = rocq_array::set::<u64>(t, j, k);
-          (v40, true)
-        },
-        false => {
-          (t, true)
-        },
-      }
-    },
-    false => {
-      (t, false)
-    },
+  let t_clone = Rc::clone(&t);
+  let j = find0(sh, t_clone, k);
+  let tmp = rocq_array::length::<u64>(&t);
+  if ltb(j, tmp) {
+    let tmp_1 = rocq_array::get::<u64>(&t, j);
+    if eqb(tmp_1, 0u64) {
+      let tmp_2 = rocq_array::set::<u64>(t, j, k);
+      (tmp_2, true)
+    } else {
+      (t, true)
+    }
+  } else {
+    (t, false)
   }
 }
 
 // Rocq: Indoorienteering.indoorienteering_implem.lookup
 // Variant: uncurried
 pub fn lookup(sh: u64, t: Rc<Array<u64>>, k: u64) -> bool {
-  let v8 = Rc::clone(&t);
-  let j = find0(sh, v8, k);
-  let v14 = &t;
-  let v15 = rocq_array::length::<u64>(&v14);
-  let v20 = ltb(j, v15);
-  let v22 = &t;
-  let v25 = rocq_array::get::<u64>(&v22, j);
+  let t_clone = Rc::clone(&t);
+  let j = find0(sh, t_clone, k);
+  let tmp = rocq_array::length::<u64>(&t);
+  let tmp_1 = ltb(j, tmp);
+  let tmp_2 = rocq_array::get::<u64>(&t, j);
   std::mem::drop(t);
-  andb(v20, eqb(v25, k))
+  andb(tmp_1, eqb(tmp_2, k))
 }
 
 // Rocq: Indoorienteering.indoorienteering_implem.key
 // Variant: uncurried
 pub fn key(S: u64, l: u64) -> u64 {
-  let v16 = add(lsl(S, 50u64), l);
-  add(v16, 1u64)
+  let tmp = add(lsl(S, 50u64), l);
+  add(tmp, 1u64)
 }
 
 // Rocq: Indoorienteering.indoorienteering_implem.pdfs
@@ -327,62 +267,46 @@ pub fn pdfs_1(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, base2: u64, sh: u64, t:
 // Rocq: Indoorienteering.indoorienteering_implem.pdfs (local: pdfs)
 // Variant: uncurried, lifted
 pub fn pdfs(n: u64, a: u64, D: Rc<Array<u64>>, L: u64, base2: u64, sh: u64, t: Rc<Array<u64>>, c: u64, free: u64, len: u64, r: u64, v: u64, _H: ()) -> bool {
-  let v22 = eqb(r, 0u64);
-  match bdec(v22) {
+  let tmp = eqb(r, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v38 = add(mul(c, n), a);
-      let v39 = &D;
-      let v42 = rocq_array::get::<u64>(&v39, v38);
-      let l = add(len, v42);
-      match leb(l, L) {
-        true => {
-          std::mem::drop(D);
-          lookup(sh, t, key(lxor(base2, free), sub(L, l)))
-        },
-        false => {
-          std::mem::drop(t);
-          std::mem::drop(D);
-          false
-        },
+      let tmp_1 = rocq_array::get::<u64>(&D, add(mul(c, n), a));
+      let l = add(len, tmp_1);
+      if leb(l, L) {
+        std::mem::drop(D);
+        lookup(sh, t, key(lxor(base2, free), sub(L, l)))
+      } else {
+        std::mem::drop(t);
+        std::mem::drop(D);
+        false
       }
     },
     sumbool::right => {
-      let v97 = ltb(v, n);
-      match bdec(v97) {
+      let tmp_2 = ltb(v, n);
+      match bdec(tmp_2) {
         sumbool::left => {
           let bv = lsl(1u64, v);
-          let v115 = land(free, bv);
-          match eqb(v115, 0u64) {
-            true => {
-              pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
-            },
-            false => {
-              let v176 = add(mul(c, n), v);
-              let v177 = &D;
-              let v180 = rocq_array::get::<u64>(&v177, v176);
-              let l = add(len, v180);
-              match leb(l, L) {
-                true => {
-                  let v198 = lxor(free, bv);
-                  let v206 = sub(r, 1u64);
-                  let v218 = Rc::clone(&D);
-                  let v227 = Rc::clone(&t);
-                  match pdfs(n, a, v218, L, base2, sh, v227, v, v198, l, v206, 0u64, ()) {
-                    true => {
-                      std::mem::drop(t);
-                      std::mem::drop(D);
-                      true
-                    },
-                    false => {
-                      pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
-                    },
-                  }
-                },
-                false => {
-                  pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
-                },
+          let tmp_3 = land(free, bv);
+          if eqb(tmp_3, 0u64) {
+            pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
+          } else {
+            let tmp_4 = rocq_array::get::<u64>(&D, add(mul(c, n), v));
+            let l = add(len, tmp_4);
+            if leb(l, L) {
+              let tmp_5 = lxor(free, bv);
+              let tmp_6 = sub(r, 1u64);
+              let D_clone = Rc::clone(&D);
+              let t_clone = Rc::clone(&t);
+              if pdfs(n, a, D_clone, L, base2, sh, t_clone, v, tmp_5, l, tmp_6, 0u64, ()) {
+                std::mem::drop(t);
+                std::mem::drop(D);
+                true
+              } else {
+                pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
               }
-            },
+            } else {
+              pdfs(n, a, D, L, base2, sh, t, c, free, len, r, add(v, 1u64), ())
+            }
           }
         },
         sumbool::right => {
@@ -397,37 +321,31 @@ pub fn pdfs(n: u64, a: u64, D: Rc<Array<u64>>, L: u64, base2: u64, sh: u64, t: R
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Indoorienteering.indoorienteering_implem.leafins
 // Variant: uncurried
 pub fn leafins(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, m: u64, fr2: u64, base2: u64, k2: u64, sh: u64, size: u64, t: Rc<Array<u64>>, k: u64) -> (Rc<Array<u64>>, bool) {
-  let v19 = insert(sh, t, k);
-  match v19 {
+  let tmp = insert(sh, t, k);
+  match tmp {
     (v21, v23) => {
       let b = &v21;
-      match v23 {
-        true => {
-          std::mem::drop(D);
-          (v21, false)
-        },
-        false => {
-          let v55 = Rc::clone(b);
-          match pdfs_1(D, n, L, a, base2, sh, v55, m, fr2, 0u64, k2, 0u64) {
-            true => {
-              (v21, true)
-            },
-            false => {
-              std::mem::drop(v21);
-              let v86 = rocq_array::make::<u64>(size, 0u64);
-              let v96 = fst::<Rc<Array<u64>>, bool>(insert(sh, v86, k));
-              (v96, false)
-            },
-          }
-        },
+      if v23 {
+        std::mem::drop(D);
+        (v21, false)
+      } else {
+        let b_clone = Rc::clone(b);
+        if pdfs_1(D, n, L, a, base2, sh, b_clone, m, fr2, 0u64, k2, 0u64) {
+          (v21, true)
+        } else {
+          std::mem::drop(v21);
+          let tmp_1 = rocq_array::make::<u64>(size, 0u64);
+          let tmp_2 = fst::<Rc<Array<u64>>, bool>(insert(sh, tmp_1, k));
+          (tmp_2, false)
+        }
       }
     },
   }
@@ -435,13 +353,10 @@ pub fn leafins(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, m: u64, fr2: u64, base
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -454,72 +369,53 @@ pub fn idfs_1(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, m: u64, fp: u64, need: 
 // Rocq: Indoorienteering.indoorienteering_implem.idfs (local: idfs)
 // Variant: uncurried, lifted
 pub fn idfs(n: u64, m: u64, D: Rc<Array<u64>>, L: u64, fp: u64, a: u64, fr2: u64, base2: u64, k2: u64, sh: u64, size: u64, need: u64, t: Rc<Array<u64>>, c: u64, free: u64, len: u64, r: u64, v: u64, _H: ()) -> (Rc<Array<u64>>, bool) {
-  let v28 = eqb(r, 0u64);
-  match bdec(v28) {
+  let tmp = eqb(r, 0u64);
+  match bdec(tmp) {
     sumbool::left => {
-      let v44 = add(mul(c, n), m);
-      let v45 = &D;
-      let v48 = rocq_array::get::<u64>(&v45, v44);
-      let l = add(len, v48);
-      match leb(l, L) {
-        true => {
-          leafins(D, n, L, a, m, fr2, base2, k2, sh, size, t, key(lxor(fp, free), l))
-        },
-        false => {
-          std::mem::drop(D);
-          (t, false)
-        },
+      let tmp_1 = rocq_array::get::<u64>(&D, add(mul(c, n), m));
+      let l = add(len, tmp_1);
+      if leb(l, L) {
+        leafins(D, n, L, a, m, fr2, base2, k2, sh, size, t, key(lxor(fp, free), l))
+      } else {
+        std::mem::drop(D);
+        (t, false)
       }
     },
     sumbool::right => {
-      let v121 = ltb(v, n);
-      match bdec(v121) {
+      let tmp_2 = ltb(v, n);
+      match bdec(tmp_2) {
         sumbool::left => {
           let bv = lsl(1u64, v);
-          let v139 = land(free, bv);
-          match eqb(v139, 0u64) {
-            true => {
+          let tmp_3 = land(free, bv);
+          if eqb(tmp_3, 0u64) {
+            idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, t, c, free, len, r, add(v, 1u64), ())
+          } else {
+            let tmp_4 = eqb(r, 1u64);
+            let tmp_5 = negb(eqb(land(need, lxor(free, bv)), 0u64));
+            if andb(tmp_4, tmp_5) {
               idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, t, c, free, len, r, add(v, 1u64), ())
-            },
-            false => {
-              let v208 = eqb(r, 1u64);
-              let v232 = negb(eqb(land(need, lxor(free, bv)), 0u64));
-              match andb(v208, v232) {
-                true => {
-                  idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, t, c, free, len, r, add(v, 1u64), ())
-                },
-                false => {
-                  let v303 = add(mul(c, n), v);
-                  let v304 = &D;
-                  let v307 = rocq_array::get::<u64>(&v304, v303);
-                  let l = add(len, v307);
-                  match leb(l, L) {
-                    true => {
-                      let v325 = lxor(free, bv);
-                      let v333 = sub(r, 1u64);
-                      let v345 = Rc::clone(&D);
-                      let v378 = idfs(n, m, v345, L, fp, a, fr2, base2, k2, sh, size, need, t, v, v325, l, v333, 0u64, ());
-                      match v378 {
-                        (v380, v382) => {
-                          match v382 {
-                            true => {
-                              std::mem::drop(D);
-                              (v380, true)
-                            },
-                            false => {
-                              idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, v380, c, free, len, r, add(v, 1u64), ())
-                            },
-                          }
-                        },
-                      }
-                    },
-                    false => {
-                      idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, t, c, free, len, r, add(v, 1u64), ())
-                    },
-                  }
-                },
+            } else {
+              let tmp_6 = rocq_array::get::<u64>(&D, add(mul(c, n), v));
+              let l = add(len, tmp_6);
+              if leb(l, L) {
+                let tmp_7 = lxor(free, bv);
+                let tmp_8 = sub(r, 1u64);
+                let D_clone = Rc::clone(&D);
+                let tmp_9 = idfs(n, m, D_clone, L, fp, a, fr2, base2, k2, sh, size, need, t, v, tmp_7, l, tmp_8, 0u64, ());
+                match tmp_9 {
+                  (v380, v382) => {
+                    if v382 {
+                      std::mem::drop(D);
+                      (v380, true)
+                    } else {
+                      idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, v380, c, free, len, r, add(v, 1u64), ())
+                    }
+                  },
+                }
+              } else {
+                idfs(n, m, D, L, fp, a, fr2, base2, k2, sh, size, need, t, c, free, len, r, add(v, 1u64), ())
               }
-            },
+            }
           }
         },
         sumbool::right => {
@@ -535,41 +431,32 @@ pub fn idfs(n: u64, m: u64, D: Rc<Array<u64>>, L: u64, fp: u64, a: u64, fr2: u64
 // Variant: uncurried
 pub fn search_m(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, k1: u64, k2: u64, sh: u64, size: u64, m: u64) -> bool {
   let fp = lxor(sub(lsl(1u64, a), 1u64), lsl(1u64, m));
-  let v55 = eqb(land(n, 1u64), 0u64);
-  let v63 = leb(4u64, n);
-  let need = match andb(v55, v63) {
-    true => {
-      let v72 = 1u64;
-      let v75 = 0u64;
-      let v81 = match eqb(m, v75) {
-        true => {
-          1u64
-        },
-        false => {
-          0u64
-        },
-      };
-      lsl(v72, v81)
-    },
-    false => {
+  let tmp = eqb(land(n, 1u64), 0u64);
+  let tmp_1 = leb(4u64, n);
+  let need = if andb(tmp, tmp_1) {
+    let tmp_2 = 1u64;
+    let tmp_3 = 0u64;
+    let tmp_4 = if eqb(m, tmp_3) {
+      1u64
+    } else {
       0u64
-    },
+    };
+    lsl(tmp_2, tmp_4)
+  } else {
+    0u64
   };
   let fr2 = lxor(fp, need);
-  let v116 = rocq_array::make::<u64>(size, 0u64);
-  let v123 = Rc::clone(&D);
-  let v158 = idfs_1(v123, n, L, a, m, fp, need, fr2, need, k2, sh, size, v116, a, fp, 0u64, k1, 0u64);
-  match v158 {
+  let tmp_5 = rocq_array::make::<u64>(size, 0u64);
+  let D_clone = Rc::clone(&D);
+  let tmp_6 = idfs_1(D_clone, n, L, a, m, fp, need, fr2, need, k2, sh, size, tmp_5, a, fp, 0u64, k1, 0u64);
+  match tmp_6 {
     (v160, v162) => {
-      match v162 {
-        true => {
-          std::mem::drop(D);
-          std::mem::drop(v160);
-          true
-        },
-        false => {
-          pdfs_1(D, n, L, a, need, sh, v160, m, fr2, 0u64, k2, 0u64)
-        },
+      if v162 {
+        std::mem::drop(D);
+        std::mem::drop(v160);
+        true
+      } else {
+        pdfs_1(D, n, L, a, need, sh, v160, m, fr2, 0u64, k2, 0u64)
       }
     },
   }
@@ -584,18 +471,15 @@ pub fn mloop_1(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, k1: u64, k2: u64, sh: 
 // Rocq: Indoorienteering.indoorienteering_implem.mloop (local: mloop)
 // Variant: uncurried, lifted
 pub fn mloop(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, k1: u64, k2: u64, sh: u64, size: u64, m: u64, _H: ()) -> bool {
-  let v17 = ltb(m, a);
-  match bdec(v17) {
+  let tmp = ltb(m, a);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = Rc::clone(&D);
-      match search_m(v24, n, L, a, k1, k2, sh, size, m) {
-        true => {
-          std::mem::drop(D);
-          true
-        },
-        false => {
-          mloop(D, n, L, a, k1, k2, sh, size, add(m, 1u64), ())
-        },
+      let D_clone = Rc::clone(&D);
+      if search_m(D_clone, n, L, a, k1, k2, sh, size, m) {
+        std::mem::drop(D);
+        true
+      } else {
+        mloop(D, n, L, a, k1, k2, sh, size, add(m, 1u64), ())
       }
     },
     sumbool::right => {
@@ -607,47 +491,17 @@ pub fn mloop(D: Rc<Array<u64>>, n: u64, L: u64, a: u64, k1: u64, k2: u64, sh: u6
 
 // Rocq: Indoorienteering.indoorienteering_implem.indoor
 // Variant: uncurried
-pub fn indoor_owned(x: Rc<Array<Rc<Array<u64>>>>, L: u64) -> bool {
-  let v2 = &x;
-  let n = rocq_array::length::<Rc<Array<u64>>>(&v2);
+pub fn indoor(x: Rc<Array<Rc<Array<u64>>>>, L: u64) -> bool {
+  let n = rocq_array::length::<Rc<Array<u64>>>(&x);
   let N = mul(n, n);
-  let v19 = rocq_array::make::<u64>(N, 0u64);
-  let D = fill_1(x, n, N, 0u64, v19);
+  let tmp = rocq_array::make::<u64>(N, 0u64);
+  let D = fill_1(x, n, N, 0u64, tmp);
   let a = sub(n, 1u64);
   let k1 = div(sub(n, 2u64), 2u64);
-  let v64 = sub(n, 2u64);
-  let k2 = sub(v64, k1);
+  let tmp_1 = sub(n, 2u64);
+  let k2 = sub(tmp_1, k1);
   let b = logcap(n);
   mloop_1(D, n, L, a, k1, k2, sub(63u64, b), add(lsl(1u64, b), 256u64), 0u64)
-}
-
-// Rocq: Indoorienteering.indoorienteering_implem.indoor
-// Variant: borrowed, uncurried
-pub fn indoor(x: &Rc<Array<Rc<Array<u64>>>>, L: u64) -> bool {
-  let L_1 = L;
-  let v3 = x;
-  let n = rocq_array::length::<Rc<Array<u64>>>(&v3);
-  let N = mul(n, n);
-  let v20 = rocq_array::make::<u64>(N, 0u64);
-  let v23 = Rc::clone(x);
-  let D = fill_1(v23, n, N, 0u64, v20);
-  let a = sub(n, 1u64);
-  let k1 = div(sub(n, 2u64), 2u64);
-  let v66 = sub(n, 2u64);
-  let k2 = sub(v66, k1);
-  let b = logcap(n);
-  mloop_1(D, n, L_1, a, k1, k2, sub(63u64, b), add(lsl(1u64, b), 256u64), 0u64)
-}
-
-// Rocq: Indoorienteering.indoorienteering_implem.indoor
-pub fn indoor_curried_owned(x: Rc<Array<Rc<Array<u64>>>>) -> Rc<dyn Fn(u64) -> bool> {
-  let v3 = {
-    move |L: u64| -> bool {
-      indoor(&x, L)
-    }
-  };
-  let v14: Rc<dyn Fn(u64) -> bool> = Rc::new(v3);
-  v14
 }
 
 mod __rocq_reuse {
@@ -798,11 +652,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool> = __rocq_global_1038.with(Clone::clone);
-  v0
-}
 const __rocq_global_342: u64 = 7046029254386353131u64;
-std::thread_local! { static __rocq_global_1038: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>, u64) -> bool> = indoorienteering(); }
-std::thread_local! { static __rocq_global_1041: Rc<dyn Fn(Rc<Array<Rc<Array<u64>>>>) -> Rc<dyn Fn(u64) -> bool>> = indoorienteering_curried(); }

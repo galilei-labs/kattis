@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules farmingmars_extracted_marray)
- (theories Farmingmars Farmingmars.spec Stdlib stdpp StdGalilei Flocq))
+ (theories Farmingmars Farmingmars.spec Stdlib stdpp StdGalilei Flocq KattisLib))
 
 (library
  (name farmingmars_extraction)

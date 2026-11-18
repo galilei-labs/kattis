@@ -21,4 +21,4 @@ archive = "ada_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/ada.ml"
-Rust = "extraction/rust/submit/ada.rs"
+Rust = "extraction/rust/snapshots/ada_extracted.rs.interface.json"

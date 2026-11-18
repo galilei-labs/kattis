@@ -423,7 +423,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -471,24 +470,51 @@ pub enum sumbool {
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
+pub enum operation<U: 'static, S: 'static> {
+  CopyFrom { source: U },
+  FindKey { key: S },
+  LowerBound { key: S },
+  UpperBound { key: S },
+  Insert { key: S, value: S },
+  Erase,
+  First,
+  Last,
+  NextKey,
+  PreviousKey,
+  SelectRank { index: S },
+  GetRank,
+  GetValue,
+  SetValue { value: S },
+  GetSize,
+}
+
+impl<U: Clone + 'static, S: Clone + 'static> Clone for operation<U, S> {
+  fn clone(&self) -> Self {
+    match self {
+      operation::CopyFrom { source: __field0 } => operation::CopyFrom { source: Clone::clone(__field0) },
+      operation::FindKey { key: __field0 } => operation::FindKey { key: Clone::clone(__field0) },
+      operation::LowerBound { key: __field0 } => operation::LowerBound { key: Clone::clone(__field0) },
+      operation::UpperBound { key: __field0 } => operation::UpperBound { key: Clone::clone(__field0) },
+      operation::Insert { key: __field0, value: __field1 } => operation::Insert { key: Clone::clone(__field0), value: Clone::clone(__field1) },
+      operation::Erase => operation::Erase,
+      operation::First => operation::First,
+      operation::Last => operation::Last,
+      operation::NextKey => operation::NextKey,
+      operation::PreviousKey => operation::PreviousKey,
+      operation::SelectRank { index: __field0 } => operation::SelectRank { index: Clone::clone(__field0) },
+      operation::GetRank => operation::GetRank,
+      operation::GetValue => operation::GetValue,
+      operation::SetValue { value: __field0 } => operation::SetValue { value: Clone::clone(__field0) },
+      operation::GetSize => operation::GetSize,
+    }
+  }
+}
+
 pub type uint = u64;
 
 pub type sint = u64;
 
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_commands
-// Variant: uncurried
-pub fn run_commands() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>> = run_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_commands
-pub fn run_commands_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>> = run_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>>> = Rc::new(v0);
-  v1
-}
+pub type machine_command = (u64, Rc<operation<u64, u64>>);
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
@@ -504,13 +530,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -520,54 +543,209 @@ pub fn add(v0: u64, v1: u64) -> u64 {
   rocq_int63::add(v0, v1)
 }
 
-// Rocq: Corelib.Init.Datatypes.orb
-// Variant: uncurried
-pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
+// Rocq: Selfbalancingbst.selfbalancingbst_implem.output_command
+pub fn output_command(line: (u64, Rc<operation<u64, u64>>)) -> bool {
+  match line {
+    (_v2, v4) => {
+      let (v6, v7) = __rocq_reuse::reset(v4, |__payload| Clone::clone(__payload));
+      std::mem::drop(v7);
+      match v6 {
+        operation::CopyFrom { source: _v19 } => {
+          false
+        },
+        operation::FindKey { key: _v25 } => {
+          false
+        },
+        operation::LowerBound { key: _v31 } => {
+          false
+        },
+        operation::UpperBound { key: _v37 } => {
+          false
+        },
+        operation::Insert { key: _v43, value: _v45 } => {
+          false
+        },
+        operation::Erase => {
+          false
+        },
+        operation::First => {
+          false
+        },
+        operation::Last => {
+          false
+        },
+        operation::NextKey => {
+          false
+        },
+        operation::PreviousKey => {
+          false
+        },
+        operation::SelectRank { index: _v71 } => {
+          false
+        },
+        operation::GetRank => {
+          true
+        },
+        operation::GetValue => {
+          true
+        },
+        operation::SetValue { value: _v85 } => {
+          false
+        },
+        operation::GetSize => {
+          true
+        },
+      }
     },
   }
 }
 
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.is_out
-pub fn is_out(op: u64) -> bool {
-  let v23 = orb(eqb(op, 114u64), eqb(op, 103u64));
-  orb(v23, eqb(op, 122u64))
-}
-
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.count_loop
 // Variant: uncurried
-pub fn count_loop_1(ops: Rc<Array<u64>>, q: u64, j: u64, acc: u64) -> u64 {
+pub fn count_loop_1(ops: Rc<Array<(u64, Rc<operation<u64, u64>>)>>, q: u64, j: u64, acc: u64) -> u64 {
   count_loop(ops, q, j, acc, ())
 }
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.count_loop (local: count_loop)
 // Variant: uncurried, lifted
-pub fn count_loop(ops: Rc<Array<u64>>, q: u64, j: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(j, q);
-  match bdec(v12) {
+pub fn count_loop(ops: Rc<Array<(u64, Rc<operation<u64, u64>>)>>, q: u64, j: u64, acc: u64, _H: ()) -> u64 {
+  let tmp = ltb(j, q);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(j, 1u64);
-      let v25 = &ops;
-      let v27 = j;
-      let v29 = Clone::clone(&(v25)[v27]);
-      let v32 = match is_out(v29) {
-        true => {
-          add(acc, 1u64)
-        },
-        false => {
-          acc
-        },
+      let tmp_1 = add(j, 1u64);
+      let ops_ref = &ops;
+      let tmp_2 = j;
+      let tmp_3 = Clone::clone(&(ops_ref)[tmp_2]);
+      let tmp_4 = if output_command(tmp_3) {
+        add(acc, 1u64)
+      } else {
+        acc
       };
-      count_loop(ops, q, v23, v32, ())
+      count_loop(ops, q, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(ops);
       acc
+    },
+  }
+}
+
+// Rocq: Selfbalancingbst.selfbalancingbst_implem.encode_operation
+// Variant: uncurried
+pub fn encode_operation<U: Clone + 'static, S: Clone + 'static>(zero: S, source: Rc<dyn Fn(U) -> S>, op: Rc<operation<U, S>>) -> ((u64, S), S) {
+  let (v3, v4) = __rocq_reuse::reset(op, |__payload| match __payload {
+    operation::CopyFrom { source: __field0 } => operation::CopyFrom { source: Clone::clone(__field0) },
+    operation::FindKey { key: __field0 } => operation::FindKey { key: Clone::clone(__field0) },
+    operation::LowerBound { key: __field0 } => operation::LowerBound { key: Clone::clone(__field0) },
+    operation::UpperBound { key: __field0 } => operation::UpperBound { key: Clone::clone(__field0) },
+    operation::Insert { key: __field0, value: __field1 } => operation::Insert { key: Clone::clone(__field0), value: Clone::clone(__field1) },
+    operation::Erase => operation::Erase,
+    operation::First => operation::First,
+    operation::Last => operation::Last,
+    operation::NextKey => operation::NextKey,
+    operation::PreviousKey => operation::PreviousKey,
+    operation::SelectRank { index: __field0 } => operation::SelectRank { index: Clone::clone(__field0) },
+    operation::GetRank => operation::GetRank,
+    operation::GetValue => operation::GetValue,
+    operation::SetValue { value: __field0 } => operation::SetValue { value: Clone::clone(__field0) },
+    operation::GetSize => operation::GetSize,
+  });
+  std::mem::drop(v4);
+  match v3 {
+    operation::CopyFrom { source: v16 } => {
+      let tmp = 97u64;
+      let source_ref: &Rc<dyn Fn(U) -> S> = &source;
+      let tmp_1 = source_ref(v16);
+      std::mem::drop(source);
+      ((tmp, tmp_1), zero)
+    },
+    operation::FindKey { key: v38 } => {
+      std::mem::drop(source);
+      ((63u64, v38), zero)
+    },
+    operation::LowerBound { key: v56 } => {
+      std::mem::drop(source);
+      ((108u64, v56), zero)
+    },
+    operation::UpperBound { key: v74 } => {
+      std::mem::drop(source);
+      ((117u64, v74), zero)
+    },
+    operation::Insert { key: v92, value: v94 } => {
+      std::mem::drop(zero);
+      std::mem::drop(source);
+      ((105u64, v92), v94)
+    },
+    operation::Erase => {
+      std::mem::drop(source);
+      let zero_clone = Clone::clone(&zero);
+      ((101u64, zero_clone), zero)
+    },
+    operation::First => {
+      std::mem::drop(source);
+      let zero_clone_1 = Clone::clone(&zero);
+      ((102u64, zero_clone_1), zero)
+    },
+    operation::Last => {
+      std::mem::drop(source);
+      let zero_clone_2 = Clone::clone(&zero);
+      ((98u64, zero_clone_2), zero)
+    },
+    operation::NextKey => {
+      std::mem::drop(source);
+      let zero_clone_3 = Clone::clone(&zero);
+      ((62u64, zero_clone_3), zero)
+    },
+    operation::PreviousKey => {
+      std::mem::drop(source);
+      let zero_clone_4 = Clone::clone(&zero);
+      ((60u64, zero_clone_4), zero)
+    },
+    operation::SelectRank { index: v197 } => {
+      std::mem::drop(source);
+      ((107u64, v197), zero)
+    },
+    operation::GetRank => {
+      std::mem::drop(source);
+      let zero_clone_5 = Clone::clone(&zero);
+      ((114u64, zero_clone_5), zero)
+    },
+    operation::GetValue => {
+      std::mem::drop(source);
+      let zero_clone_6 = Clone::clone(&zero);
+      ((103u64, zero_clone_6), zero)
+    },
+    operation::SetValue { value: v249 } => {
+      std::mem::drop(source);
+      ((115u64, v249), zero)
+    },
+    operation::GetSize => {
+      std::mem::drop(source);
+      let zero_clone_7 = Clone::clone(&zero);
+      ((122u64, zero_clone_7), zero)
+    },
+  }
+}
+
+// Rocq: Selfbalancingbst.selfbalancingbst_implem.encode_machine
+#[inline(never)]
+pub fn encode_machine(line: (u64, Rc<operation<u64, u64>>)) -> (((u64, u64), u64), u64) {
+  match line {
+    (v2, v4) => {
+      let tmp = 0u64;
+      let callback: Rc<dyn Fn(u64) -> u64> = Rc::new(move |id: u64| -> u64 {
+        id
+      });
+      let tmp_1 = encode_operation::<u64, u64>(tmp, callback, v4);
+      match tmp_1 {
+        (v23, v25) => {
+          match v23 {
+            (v28, v30) => {
+              (((v2, v28), v30), v25)
+            },
+          }
+        },
+      }
     },
   }
 }
@@ -600,24 +778,18 @@ pub fn find_t(x: u64, t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v18, l: v20, k: v22, v: _v24, s: _v26, r: v28 } => {
-      match key_lt(x, v22) {
-        true => {
+      if key_lt(x, v22) {
+        std::mem::drop(v28);
+        find_t(x, v20)
+      } else {
+        if eqb(x, v22) {
+          std::mem::drop(v20);
           std::mem::drop(v28);
-          find_t(x, v20)
-        },
-        false => {
-          match eqb(x, v22) {
-            true => {
-              std::mem::drop(v20);
-              std::mem::drop(v28);
-              Rc::new(option::<u64>::Some(v22))
-            },
-            false => {
-              std::mem::drop(v20);
-              find_t(x, v28)
-            },
-          }
-        },
+          Rc::new(option::<u64>::Some(v22))
+        } else {
+          std::mem::drop(v20);
+          find_t(x, v28)
+        }
       }
     },
   }
@@ -639,25 +811,22 @@ pub fn lower_t(x: u64, t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v18, l: v20, k: v22, v: _v24, s: _v26, r: v28 } => {
-      match key_lt(v22, x) {
-        true => {
-          std::mem::drop(v20);
-          lower_t(x, v28)
-        },
-        false => {
-          let v50 = lower_t(x, v20);
-          let (v51, v52) = __rocq_reuse::reset(v50, |__payload| Clone::clone(__payload));
-          match v51 {
-            option::Some(v57) => {
-              std::mem::drop(v28);
-              __rocq_reuse::rebuild(v52, option::<u64>::Some(v57))
-            },
-            option::None => {
-              std::mem::drop(v28);
-              __rocq_reuse::rebuild(v52, option::<u64>::Some(v22))
-            },
-          }
-        },
+      if key_lt(v22, x) {
+        std::mem::drop(v20);
+        lower_t(x, v28)
+      } else {
+        let tmp = lower_t(x, v20);
+        let (v51, v52) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
+        match v51 {
+          option::Some(v57) => {
+            std::mem::drop(v28);
+            __rocq_reuse::rebuild(v52, option::<u64>::Some(v57))
+          },
+          option::None => {
+            std::mem::drop(v28);
+            __rocq_reuse::rebuild(v52, option::<u64>::Some(v22))
+          },
+        }
       }
     },
   }
@@ -679,25 +848,22 @@ pub fn upper_t_owned(x: u64, t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v18, l: v20, k: v22, v: _v24, s: _v26, r: v28 } => {
-      match key_lt(x, v22) {
-        true => {
-          let v42 = upper_t_owned(x, v20);
-          let (v43, v44) = __rocq_reuse::reset(v42, |__payload| Clone::clone(__payload));
-          match v43 {
-            option::Some(v49) => {
-              std::mem::drop(v28);
-              __rocq_reuse::rebuild(v44, option::<u64>::Some(v49))
-            },
-            option::None => {
-              std::mem::drop(v28);
-              __rocq_reuse::rebuild(v44, option::<u64>::Some(v22))
-            },
-          }
-        },
-        false => {
-          std::mem::drop(v20);
-          upper_t_owned(x, v28)
-        },
+      if key_lt(x, v22) {
+        let tmp = upper_t_owned(x, v20);
+        let (v43, v44) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
+        match v43 {
+          option::Some(v49) => {
+            std::mem::drop(v28);
+            __rocq_reuse::rebuild(v44, option::<u64>::Some(v49))
+          },
+          option::None => {
+            std::mem::drop(v28);
+            __rocq_reuse::rebuild(v44, option::<u64>::Some(v22))
+          },
+        }
+      } else {
+        std::mem::drop(v20);
+        upper_t_owned(x, v28)
       }
     },
   }
@@ -714,31 +880,28 @@ pub fn upper_t_1(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
 // Variant: borrowed, uncurried, lifted
 pub fn upper_t(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
   let x_1 = x;
-  let v3 = t;
-  match &**v3 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _r, l: s, k: v, v: _k, s: _l, r: c } => {
-      let v26 = Clone::clone(v);
-      match key_lt(x_1, v26) {
-        true => {
-          let v33 = upper_t(x_1, s);
-          let (v34, v35) = __rocq_reuse::reset(v33, |__payload| Clone::clone(__payload));
-          match v34 {
-            option::Some(v40) => {
-              __rocq_reuse::rebuild(v35, option::<u64>::Some(v40))
-            },
-            option::None => {
-              let v50 = Clone::clone(v);
-              __rocq_reuse::rebuild(v35, option::<u64>::Some(v50))
-            },
-          }
-        },
-        false => {
-          let v63 = Rc::clone(c);
-          upper_t_owned(x_1, v63)
-        },
+      let v_clone = Clone::clone(v);
+      if key_lt(x_1, v_clone) {
+        let tmp_1 = upper_t(x_1, s);
+        let (v34, v35) = __rocq_reuse::reset(tmp_1, |__payload| Clone::clone(__payload));
+        match v34 {
+          option::Some(v40) => {
+            __rocq_reuse::rebuild(v35, option::<u64>::Some(v40))
+          },
+          option::None => {
+            let v_clone_1 = Clone::clone(v);
+            __rocq_reuse::rebuild(v35, option::<u64>::Some(v_clone_1))
+          },
+        }
+      } else {
+        let c_clone = Rc::clone(c);
+        upper_t_owned(x_1, c_clone)
       }
     },
   }
@@ -776,8 +939,8 @@ pub fn size_owned(t: Rc<tree>) -> u64 {
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.size
 // Variant: borrowed
 pub fn size(t: &Rc<tree>) -> u64 {
-  let v1 = t;
-  match &**v1 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
@@ -790,10 +953,10 @@ pub fn size(t: &Rc<tree>) -> u64 {
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.node
 // Variant: uncurried
 pub fn node(c: color, l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
-  let v10 = size(&l);
-  let v14 = size(&r);
-  let v19 = add(v10, v14);
-  Rc::new(tree::Node { c, l, k, v, s: add(v19, 1u64), r })
+  let tmp = size(&l);
+  let tmp_1 = size(&r);
+  let tmp_2 = add(tmp, tmp_1);
+  Rc::new(tree::Node { c, l, k, v, s: add(tmp_2, 1u64), r })
 }
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.lbal
@@ -815,12 +978,12 @@ pub fn lbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                 tree::Node { c: c_1, l: s0, k: vy, v: y, s: _b, r: c1 } => {
                   match c_1 {
                     color::Red => {
-                      let v82 = node(color::Black, Rc::clone(s), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
-                      let v96 = node(color::Black, Rc::clone(c1), k, v, r);
-                      let v102 = Clone::clone(vy);
-                      let v103 = Clone::clone(y);
+                      let tmp = node(color::Black, Rc::clone(s), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
+                      let tmp_1 = node(color::Black, Rc::clone(c1), k, v, r);
+                      let vy_clone = Clone::clone(vy);
+                      let y_clone = Clone::clone(y);
                       std::mem::drop(l);
-                      node(color::Red, v82, v102, v103, v96)
+                      node(color::Red, tmp, vy_clone, y_clone, tmp_1)
                     },
                     color::Black => {
                       node(color::Black, l, k, v, r)
@@ -832,16 +995,16 @@ pub fn lbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
             tree::Node { c: b, l: s0, k: vx_1, v: x_1, s: _a_1, r: c1 } => {
               match b {
                 color::Red => {
-                  let v154 = Rc::clone(s0);
-                  let v156 = Clone::clone(vx_1);
-                  let v158 = Clone::clone(x_1);
-                  let v160 = Rc::clone(c1);
-                  let v161 = node(color::Black, v154, v156, v158, v160);
-                  let v175 = node(color::Black, Rc::clone(c0), k, v, r);
-                  let v181 = Clone::clone(vx);
-                  let v182 = Clone::clone(x);
+                  let s0_clone = Rc::clone(s0);
+                  let vx_clone = Clone::clone(vx_1);
+                  let x_clone = Clone::clone(x_1);
+                  let c1_clone = Rc::clone(c1);
+                  let tmp_2 = node(color::Black, s0_clone, vx_clone, x_clone, c1_clone);
+                  let tmp_3 = node(color::Black, Rc::clone(c0), k, v, r);
+                  let vx_clone_1 = Clone::clone(vx);
+                  let x_clone_1 = Clone::clone(x);
                   std::mem::drop(l);
-                  node(color::Red, v161, v181, v182, v175)
+                  node(color::Red, tmp_2, vx_clone_1, x_clone_1, tmp_3)
                 },
                 color::Black => {
                   match &**c0 {
@@ -851,12 +1014,12 @@ pub fn lbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                     tree::Node { c: c_1, l: s1, k: vy, v: y, s: _b_1, r: c2 } => {
                       match c_1 {
                         color::Red => {
-                          let v235 = node(color::Black, Rc::clone(s), Clone::clone(vx), Clone::clone(x), Rc::clone(s1));
-                          let v249 = node(color::Black, Rc::clone(c2), k, v, r);
-                          let v255 = Clone::clone(vy);
-                          let v256 = Clone::clone(y);
+                          let tmp_4 = node(color::Black, Rc::clone(s), Clone::clone(vx), Clone::clone(x), Rc::clone(s1));
+                          let tmp_5 = node(color::Black, Rc::clone(c2), k, v, r);
+                          let vy_clone_1 = Clone::clone(vy);
+                          let y_clone_1 = Clone::clone(y);
                           std::mem::drop(l);
-                          node(color::Red, v235, v255, v256, v249)
+                          node(color::Red, tmp_4, vy_clone_1, y_clone_1, tmp_5)
                         },
                         color::Black => {
                           node(color::Black, l, k, v, r)
@@ -896,16 +1059,16 @@ pub fn rbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                 tree::Node { c: d_1, l: s0, k: vz, v: z, s: _c, r: c1 } => {
                   match d_1 {
                     color::Red => {
-                      let v82 = node(color::Black, l, k, v, Rc::clone(s));
-                      let v89 = Rc::clone(s0);
-                      let v91 = Clone::clone(vz);
-                      let v93 = Clone::clone(z);
-                      let v95 = Rc::clone(c1);
-                      let v96 = node(color::Black, v89, v91, v93, v95);
-                      let v102 = Clone::clone(vy);
-                      let v103 = Clone::clone(y);
+                      let tmp = node(color::Black, l, k, v, Rc::clone(s));
+                      let s0_clone = Rc::clone(s0);
+                      let vz_clone = Clone::clone(vz);
+                      let z_clone = Clone::clone(z);
+                      let c1_clone = Rc::clone(c1);
+                      let tmp_1 = node(color::Black, s0_clone, vz_clone, z_clone, c1_clone);
+                      let vy_clone = Clone::clone(vy);
+                      let y_clone = Clone::clone(y);
                       std::mem::drop(r);
-                      node(color::Red, v82, v102, v103, v96)
+                      node(color::Red, tmp, vy_clone, y_clone, tmp_1)
                     },
                     color::Black => {
                       node(color::Black, l, k, v, r)
@@ -917,12 +1080,12 @@ pub fn rbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
             tree::Node { c, l: s0, k: vy_1, v: y_1, s: _b_1, r: c1 } => {
               match c {
                 color::Red => {
-                  let v161 = node(color::Black, l, k, v, Rc::clone(s0));
-                  let v175 = node(color::Black, Rc::clone(c1), Clone::clone(vy), Clone::clone(y), Rc::clone(c0));
-                  let v181 = Clone::clone(vy_1);
-                  let v182 = Clone::clone(y_1);
+                  let tmp_2 = node(color::Black, l, k, v, Rc::clone(s0));
+                  let tmp_3 = node(color::Black, Rc::clone(c1), Clone::clone(vy), Clone::clone(y), Rc::clone(c0));
+                  let vy_clone_1 = Clone::clone(vy_1);
+                  let y_clone_1 = Clone::clone(y_1);
                   std::mem::drop(r);
-                  node(color::Red, v161, v181, v182, v175)
+                  node(color::Red, tmp_2, vy_clone_1, y_clone_1, tmp_3)
                 },
                 color::Black => {
                   match &**c0 {
@@ -932,16 +1095,16 @@ pub fn rbal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                     tree::Node { c: d_1, l: s1, k: vz, v: z, s: _c_1, r: c2 } => {
                       match d_1 {
                         color::Red => {
-                          let v235 = node(color::Black, l, k, v, Rc::clone(s));
-                          let v242 = Rc::clone(s1);
-                          let v244 = Clone::clone(vz);
-                          let v246 = Clone::clone(z);
-                          let v248 = Rc::clone(c2);
-                          let v249 = node(color::Black, v242, v244, v246, v248);
-                          let v255 = Clone::clone(vy);
-                          let v256 = Clone::clone(y);
+                          let tmp_4 = node(color::Black, l, k, v, Rc::clone(s));
+                          let s1_clone = Rc::clone(s1);
+                          let vz_clone_1 = Clone::clone(vz);
+                          let z_clone_1 = Clone::clone(z);
+                          let c2_clone = Rc::clone(c2);
+                          let tmp_5 = node(color::Black, s1_clone, vz_clone_1, z_clone_1, c2_clone);
+                          let vy_clone_2 = Clone::clone(vy);
+                          let y_clone_2 = Clone::clone(y);
                           std::mem::drop(r);
-                          node(color::Red, v235, v255, v256, v249)
+                          node(color::Red, tmp_4, vy_clone_2, y_clone_2, tmp_5)
                         },
                         color::Black => {
                           node(color::Black, l, k, v, r)
@@ -977,56 +1140,50 @@ pub fn ins(x: u64, vx: u64, t: Rc<tree>) -> Rc<tree> {
       node(color::Red, Rc::new(tree::Leaf), x, vx, Rc::new(tree::Leaf))
     },
     tree::Node { c: r, l: s, k: vy, v: y, s: _l, r: c } => {
-      let v43 = Clone::clone(vy);
-      match key_lt(x, v43) {
-        true => {
+      let vy_clone = Clone::clone(vy);
+      if key_lt(x, vy_clone) {
+        match r {
+          color::Red => {
+            let tmp = ins(x, vx, Rc::clone(s));
+            let vy_clone_1 = Clone::clone(vy);
+            let y_clone = Clone::clone(y);
+            let c_clone = Rc::clone(c);
+            std::mem::drop(t);
+            node(color::Red, tmp, vy_clone_1, y_clone, c_clone)
+          },
+          color::Black => {
+            let tmp_1 = ins(x, vx, Rc::clone(s));
+            let vy_clone_2 = Clone::clone(vy);
+            let y_clone_1 = Clone::clone(y);
+            let c_clone_1 = Rc::clone(c);
+            std::mem::drop(t);
+            lbal(tmp_1, vy_clone_2, y_clone_1, c_clone_1)
+          },
+        }
+      } else {
+        let vy_clone_3 = Clone::clone(vy);
+        if eqb(x, vy_clone_3) {
+          t
+        } else {
           match r {
             color::Red => {
-              let v57 = ins(x, vx, Rc::clone(s));
-              let v63 = Clone::clone(vy);
-              let v65 = Clone::clone(y);
-              let v66 = Rc::clone(c);
+              let tmp_2 = ins(x, vx, Rc::clone(c));
+              let s_clone = Rc::clone(s);
+              let vy_clone_4 = Clone::clone(vy);
+              let y_clone_2 = Clone::clone(y);
               std::mem::drop(t);
-              node(color::Red, v57, v63, v65, v66)
+              node(color::Red, s_clone, vy_clone_4, y_clone_2, tmp_2)
             },
             color::Black => {
-              let v80 = ins(x, vx, Rc::clone(s));
-              let v83 = Clone::clone(vy);
-              let v85 = Clone::clone(y);
-              let v86 = Rc::clone(c);
+              let tmp_3 = ins(x, vx, Rc::clone(c));
+              let s_clone_1 = Rc::clone(s);
+              let vy_clone_5 = Clone::clone(vy);
+              let y_clone_3 = Clone::clone(y);
               std::mem::drop(t);
-              lbal(v80, v83, v85, v86)
+              rbal(s_clone_1, vy_clone_5, y_clone_3, tmp_3)
             },
           }
-        },
-        false => {
-          let v98 = Clone::clone(vy);
-          match eqb(x, v98) {
-            true => {
-              t
-            },
-            false => {
-              match r {
-                color::Red => {
-                  let v114 = ins(x, vx, Rc::clone(c));
-                  let v118 = Rc::clone(s);
-                  let v120 = Clone::clone(vy);
-                  let v121 = Clone::clone(y);
-                  std::mem::drop(t);
-                  node(color::Red, v118, v120, v121, v114)
-                },
-                color::Black => {
-                  let v136 = ins(x, vx, Rc::clone(c));
-                  let v138 = Rc::clone(s);
-                  let v140 = Clone::clone(vy);
-                  let v141 = Clone::clone(y);
-                  std::mem::drop(t);
-                  rbal(v138, v140, v141, v136)
-                },
-              }
-            },
-          }
-        },
+        }
       }
     },
   }
@@ -1057,16 +1214,16 @@ pub fn rbal_(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                 tree::Node { c: d_1, l: s0, k: vz_1, v: z_1, s: _c, r: c1 } => {
                   match d_1 {
                     color::Red => {
-                      let v82 = node(color::Black, l, k, v, Rc::clone(s));
-                      let v89 = Rc::clone(s0);
-                      let v91 = Clone::clone(vz_1);
-                      let v93 = Clone::clone(z_1);
-                      let v95 = Rc::clone(c1);
-                      let v96 = node(color::Black, v89, v91, v93, v95);
-                      let v102 = Clone::clone(vz);
-                      let v103 = Clone::clone(z);
+                      let tmp = node(color::Black, l, k, v, Rc::clone(s));
+                      let s0_clone = Rc::clone(s0);
+                      let vz_clone = Clone::clone(vz_1);
+                      let z_clone = Clone::clone(z_1);
+                      let c1_clone = Rc::clone(c1);
+                      let tmp_1 = node(color::Black, s0_clone, vz_clone, z_clone, c1_clone);
+                      let vz_clone_1 = Clone::clone(vz);
+                      let z_clone_1 = Clone::clone(z);
                       std::mem::drop(r);
-                      node(color::Red, v82, v102, v103, v96)
+                      node(color::Red, tmp, vz_clone_1, z_clone_1, tmp_1)
                     },
                     color::Black => {
                       node(color::Black, l, k, v, r)
@@ -1080,34 +1237,34 @@ pub fn rbal_(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                 color::Red => {
                   match &**c0 {
                     tree::Leaf => {
-                      let v162 = node(color::Black, l, k, v, Rc::clone(s0));
-                      let v176 = node(color::Black, Rc::clone(c1), Clone::clone(vz), Clone::clone(z), Rc::clone(c0));
-                      let v182 = Clone::clone(vy);
-                      let v183 = Clone::clone(y);
+                      let tmp_2 = node(color::Black, l, k, v, Rc::clone(s0));
+                      let tmp_3 = node(color::Black, Rc::clone(c1), Clone::clone(vz), Clone::clone(z), Rc::clone(c0));
+                      let vy_clone = Clone::clone(vy);
+                      let y_clone = Clone::clone(y);
                       std::mem::drop(r);
-                      node(color::Red, v162, v182, v183, v176)
+                      node(color::Red, tmp_2, vy_clone, y_clone, tmp_3)
                     },
                     tree::Node { c: d_1, l: s1, k: vz_1, v: z_1, s: _c_1, r: c2 } => {
                       match d_1 {
                         color::Red => {
-                          let v219 = node(color::Black, l, k, v, Rc::clone(s));
-                          let v226 = Rc::clone(s1);
-                          let v228 = Clone::clone(vz_1);
-                          let v230 = Clone::clone(z_1);
-                          let v232 = Rc::clone(c2);
-                          let v233 = node(color::Black, v226, v228, v230, v232);
-                          let v239 = Clone::clone(vz);
-                          let v240 = Clone::clone(z);
+                          let tmp_4 = node(color::Black, l, k, v, Rc::clone(s));
+                          let s1_clone = Rc::clone(s1);
+                          let vz_clone_2 = Clone::clone(vz_1);
+                          let z_clone_2 = Clone::clone(z_1);
+                          let c2_clone = Rc::clone(c2);
+                          let tmp_5 = node(color::Black, s1_clone, vz_clone_2, z_clone_2, c2_clone);
+                          let vz_clone_3 = Clone::clone(vz);
+                          let z_clone_3 = Clone::clone(z);
                           std::mem::drop(r);
-                          node(color::Red, v219, v239, v240, v233)
+                          node(color::Red, tmp_4, vz_clone_3, z_clone_3, tmp_5)
                         },
                         color::Black => {
-                          let v263 = node(color::Black, l, k, v, Rc::clone(s0));
-                          let v277 = node(color::Black, Rc::clone(c1), Clone::clone(vz), Clone::clone(z), Rc::clone(c0));
-                          let v283 = Clone::clone(vy);
-                          let v284 = Clone::clone(y);
+                          let tmp_6 = node(color::Black, l, k, v, Rc::clone(s0));
+                          let tmp_7 = node(color::Black, Rc::clone(c1), Clone::clone(vz), Clone::clone(z), Rc::clone(c0));
+                          let vy_clone_1 = Clone::clone(vy);
+                          let y_clone_1 = Clone::clone(y);
                           std::mem::drop(r);
-                          node(color::Red, v263, v283, v284, v277)
+                          node(color::Red, tmp_6, vy_clone_1, y_clone_1, tmp_7)
                         },
                       }
                     },
@@ -1121,16 +1278,16 @@ pub fn rbal_(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                     tree::Node { c: d_1, l: s1, k: vz_1, v: z_1, s: _c_1_1, r: c2 } => {
                       match d_1 {
                         color::Red => {
-                          let v343 = node(color::Black, l, k, v, Rc::clone(s));
-                          let v350 = Rc::clone(s1);
-                          let v352 = Clone::clone(vz_1);
-                          let v354 = Clone::clone(z_1);
-                          let v356 = Rc::clone(c2);
-                          let v357 = node(color::Black, v350, v352, v354, v356);
-                          let v363 = Clone::clone(vz);
-                          let v364 = Clone::clone(z);
+                          let tmp_8 = node(color::Black, l, k, v, Rc::clone(s));
+                          let s1_clone_1 = Rc::clone(s1);
+                          let vz_clone_4 = Clone::clone(vz_1);
+                          let z_clone_4 = Clone::clone(z_1);
+                          let c2_clone_1 = Rc::clone(c2);
+                          let tmp_9 = node(color::Black, s1_clone_1, vz_clone_4, z_clone_4, c2_clone_1);
+                          let vz_clone_5 = Clone::clone(vz);
+                          let z_clone_5 = Clone::clone(z);
                           std::mem::drop(r);
-                          node(color::Red, v343, v363, v364, v357)
+                          node(color::Red, tmp_8, vz_clone_5, z_clone_5, tmp_9)
                         },
                         color::Black => {
                           node(color::Black, l, k, v, r)
@@ -1186,25 +1343,25 @@ pub fn lbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                       node(color::Red, l, k, v, r)
                     },
                     color::Black => {
-                      let v99 = node(color::Black, l, k, v, Rc::clone(s0));
-                      let v104 = makeRed(Rc::clone(c0));
-                      let v113 = rbal_(Rc::clone(c1), Clone::clone(vz), Clone::clone(z), v104);
-                      let v119 = Clone::clone(vy);
-                      let v120 = Clone::clone(y);
+                      let tmp = node(color::Black, l, k, v, Rc::clone(s0));
+                      let tmp_1 = makeRed(Rc::clone(c0));
+                      let tmp_2 = rbal_(Rc::clone(c1), Clone::clone(vz), Clone::clone(z), tmp_1);
+                      let vy_clone = Clone::clone(vy);
+                      let y_clone = Clone::clone(y);
                       std::mem::drop(r);
-                      node(color::Red, v99, v119, v120, v113)
+                      node(color::Red, tmp, vy_clone, y_clone, tmp_2)
                     },
                   }
                 },
               }
             },
             color::Black => {
-              let v140 = Rc::clone(s);
-              let v142 = Clone::clone(vz);
-              let v144 = Clone::clone(z);
-              let v145 = Rc::clone(c0);
+              let s_clone = Rc::clone(s);
+              let vz_clone = Clone::clone(vz);
+              let z_clone = Clone::clone(z);
+              let c0_clone = Rc::clone(c0);
               std::mem::drop(r);
-              rbal_(l, k, v, node(color::Red, v140, v142, v144, v145))
+              rbal_(l, k, v, node(color::Red, s_clone, vz_clone, z_clone, c0_clone))
             },
           }
         },
@@ -1213,13 +1370,13 @@ pub fn lbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
     tree::Node { c: b, l: s, k: vx, v: x, s: _a_2, r: c } => {
       match b {
         color::Red => {
-          let v187 = Rc::clone(s);
-          let v189 = Clone::clone(vx);
-          let v191 = Clone::clone(x);
-          let v192 = Rc::clone(c);
+          let s_clone_1 = Rc::clone(s);
+          let vx_clone = Clone::clone(vx);
+          let x_clone = Clone::clone(x);
+          let c_clone = Rc::clone(c);
           std::mem::drop(l);
-          let v194 = node(color::Black, v187, v189, v191, v192);
-          node(color::Red, v194, k, v, r)
+          let tmp_3 = node(color::Black, s_clone_1, vx_clone, x_clone, c_clone);
+          node(color::Red, tmp_3, k, v, r)
         },
         color::Black => {
           match &*r {
@@ -1239,25 +1396,25 @@ pub fn lbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                           node(color::Red, l, k, v, r)
                         },
                         color::Black => {
-                          let v301 = node(color::Black, l, k, v, Rc::clone(s0));
-                          let v306 = makeRed(Rc::clone(c0));
-                          let v315 = rbal_(Rc::clone(c1), Clone::clone(vz), Clone::clone(z), v306);
-                          let v321 = Clone::clone(vy);
-                          let v322 = Clone::clone(y);
+                          let tmp_4 = node(color::Black, l, k, v, Rc::clone(s0));
+                          let tmp_5 = makeRed(Rc::clone(c0));
+                          let tmp_6 = rbal_(Rc::clone(c1), Clone::clone(vz), Clone::clone(z), tmp_5);
+                          let vy_clone_1 = Clone::clone(vy);
+                          let y_clone_1 = Clone::clone(y);
                           std::mem::drop(r);
-                          node(color::Red, v301, v321, v322, v315)
+                          node(color::Red, tmp_4, vy_clone_1, y_clone_1, tmp_6)
                         },
                       }
                     },
                   }
                 },
                 color::Black => {
-                  let v342 = Rc::clone(s_1);
-                  let v344 = Clone::clone(vz);
-                  let v346 = Clone::clone(z);
-                  let v347 = Rc::clone(c0);
+                  let s_clone_2 = Rc::clone(s_1);
+                  let vz_clone_1 = Clone::clone(vz);
+                  let z_clone_1 = Clone::clone(z);
+                  let c0_clone_1 = Rc::clone(c0);
                   std::mem::drop(r);
-                  rbal_(l, k, v, node(color::Red, v342, v344, v346, v347))
+                  rbal_(l, k, v, node(color::Red, s_clone_2, vz_clone_1, z_clone_1, c0_clone_1))
                 },
               }
             },
@@ -1270,8 +1427,8 @@ pub fn lbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.append
 pub fn append_1(l: Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>> {
-  let v4: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append(l);
-  v4
+  let tmp: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append(l);
+  tmp
 }
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.append (local: append_l)
@@ -1290,50 +1447,50 @@ pub fn append_l(l: Rc<tree>, lr: color, append_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn 
         color::Red => {
           match rr {
             color::Red => {
-              let v27: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
-              let v30: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = v27(lc);
-              let v31: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &v30;
-              let lrl = v31(Rc::clone(s_1));
+              let append_ref: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
+              let tmp: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append_ref(lc);
+              let tmp_1: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &tmp;
+              let lrl = tmp_1(Rc::clone(s_1));
               match &*lrl {
                 tree::Leaf => {
-                  std::mem::drop(v30);
+                  std::mem::drop(tmp);
                   std::mem::drop(l);
                   std::mem::drop(append_2);
-                  let v48 = Clone::clone(rv);
-                  let v50 = Clone::clone(rx);
-                  let v51 = Rc::clone(rc);
+                  let rv_clone = Clone::clone(rv);
+                  let rx_clone = Clone::clone(rx);
+                  let rc_clone = Rc::clone(rc);
                   std::mem::drop(r);
-                  let v53 = node(color::Red, lrl, v48, v50, v51);
-                  node(color::Red, s, lv, lx, v53)
+                  let tmp_2 = node(color::Red, lrl, rv_clone, rx_clone, rc_clone);
+                  node(color::Red, s, lv, lx, tmp_2)
                 },
                 tree::Node { c: rl_, l: s_2, k: vx, v: x, s: _lr_, r: c } => {
                   match rl_ {
                     color::Red => {
-                      std::mem::drop(v30);
+                      std::mem::drop(tmp);
                       std::mem::drop(l);
                       std::mem::drop(append_2);
-                      let v96 = node(color::Red, s, lv, lx, Rc::clone(s_2));
-                      let v103 = Rc::clone(c);
-                      let v105 = Clone::clone(rv);
-                      let v107 = Clone::clone(rx);
-                      let v108 = Rc::clone(rc);
+                      let tmp_3 = node(color::Red, s, lv, lx, Rc::clone(s_2));
+                      let c_clone = Rc::clone(c);
+                      let rv_clone_1 = Clone::clone(rv);
+                      let rx_clone_1 = Clone::clone(rx);
+                      let rc_clone_1 = Rc::clone(rc);
                       std::mem::drop(r);
-                      let v110 = node(color::Red, v103, v105, v107, v108);
-                      let v116 = Clone::clone(vx);
-                      let v117 = Clone::clone(x);
+                      let tmp_4 = node(color::Red, c_clone, rv_clone_1, rx_clone_1, rc_clone_1);
+                      let vx_clone = Clone::clone(vx);
+                      let x_clone = Clone::clone(x);
                       std::mem::drop(lrl);
-                      node(color::Red, v96, v116, v117, v110)
+                      node(color::Red, tmp_3, vx_clone, x_clone, tmp_4)
                     },
                     color::Black => {
-                      std::mem::drop(v30);
+                      std::mem::drop(tmp);
                       std::mem::drop(l);
                       std::mem::drop(append_2);
-                      let v135 = Clone::clone(rv);
-                      let v137 = Clone::clone(rx);
-                      let v138 = Rc::clone(rc);
+                      let rv_clone_2 = Clone::clone(rv);
+                      let rx_clone_2 = Clone::clone(rx);
+                      let rc_clone_2 = Rc::clone(rc);
                       std::mem::drop(r);
-                      let v140 = node(color::Red, lrl, v135, v137, v138);
-                      node(color::Red, s, lv, lx, v140)
+                      let tmp_5 = node(color::Red, lrl, rv_clone_2, rx_clone_2, rc_clone_2);
+                      node(color::Red, s, lv, lx, tmp_5)
                     },
                   }
                 },
@@ -1341,69 +1498,69 @@ pub fn append_l(l: Rc<tree>, lr: color, append_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn 
             },
             color::Black => {
               std::mem::drop(l);
-              let v163: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
-              let v166: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = v163(lc);
+              let append_ref_1: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
+              let tmp_6: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append_ref_1(lc);
               std::mem::drop(append_2);
-              let v167: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &v166;
-              let v170 = v167(r);
-              std::mem::drop(v166);
-              node(color::Red, s, lv, lx, v170)
+              let tmp_7: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &tmp_6;
+              let tmp_8 = tmp_7(r);
+              std::mem::drop(tmp_6);
+              node(color::Red, s, lv, lx, tmp_8)
             },
           }
         },
         color::Black => {
           match rr {
             color::Red => {
-              let v208 = append_l(l, lr, append_2, lc, s, lv, lx, Rc::clone(s_1));
-              let v214 = Clone::clone(rv);
-              let v216 = Clone::clone(rx);
-              let v217 = Rc::clone(rc);
+              let tmp_9 = append_l(l, lr, append_2, lc, s, lv, lx, Rc::clone(s_1));
+              let rv_clone_3 = Clone::clone(rv);
+              let rx_clone_3 = Clone::clone(rx);
+              let rc_clone_3 = Rc::clone(rc);
               std::mem::drop(r);
-              node(color::Red, v208, v214, v216, v217)
+              node(color::Red, tmp_9, rv_clone_3, rx_clone_3, rc_clone_3)
             },
             color::Black => {
-              let v222: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
-              let v225: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = v222(lc);
-              let v226: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &v225;
-              let lrl = v226(Rc::clone(s_1));
+              let append_ref_2: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = &append_2;
+              let tmp_10: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append_ref_2(lc);
+              let tmp_11: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &tmp_10;
+              let lrl = tmp_11(Rc::clone(s_1));
               match &*lrl {
                 tree::Leaf => {
-                  std::mem::drop(v225);
+                  std::mem::drop(tmp_10);
                   std::mem::drop(l);
                   std::mem::drop(append_2);
-                  let v241 = Clone::clone(rv);
-                  let v243 = Clone::clone(rx);
-                  let v244 = Rc::clone(rc);
+                  let rv_clone_4 = Clone::clone(rv);
+                  let rx_clone_4 = Clone::clone(rx);
+                  let rc_clone_4 = Rc::clone(rc);
                   std::mem::drop(r);
-                  lbalS(s, lv, lx, node(color::Black, lrl, v241, v243, v244))
+                  lbalS(s, lv, lx, node(color::Black, lrl, rv_clone_4, rx_clone_4, rc_clone_4))
                 },
                 tree::Node { c: rl_, l: s_2, k: vx, v: x, s: _lr__1, r: c } => {
                   match rl_ {
                     color::Red => {
-                      std::mem::drop(v225);
+                      std::mem::drop(tmp_10);
                       std::mem::drop(l);
                       std::mem::drop(append_2);
-                      let v287 = node(color::Black, s, lv, lx, Rc::clone(s_2));
-                      let v294 = Rc::clone(c);
-                      let v296 = Clone::clone(rv);
-                      let v298 = Clone::clone(rx);
-                      let v299 = Rc::clone(rc);
+                      let tmp_12 = node(color::Black, s, lv, lx, Rc::clone(s_2));
+                      let c_clone_1 = Rc::clone(c);
+                      let rv_clone_5 = Clone::clone(rv);
+                      let rx_clone_5 = Clone::clone(rx);
+                      let rc_clone_5 = Rc::clone(rc);
                       std::mem::drop(r);
-                      let v301 = node(color::Black, v294, v296, v298, v299);
-                      let v307 = Clone::clone(vx);
-                      let v308 = Clone::clone(x);
+                      let tmp_13 = node(color::Black, c_clone_1, rv_clone_5, rx_clone_5, rc_clone_5);
+                      let vx_clone_1 = Clone::clone(vx);
+                      let x_clone_1 = Clone::clone(x);
                       std::mem::drop(lrl);
-                      node(color::Red, v287, v307, v308, v301)
+                      node(color::Red, tmp_12, vx_clone_1, x_clone_1, tmp_13)
                     },
                     color::Black => {
-                      std::mem::drop(v225);
+                      std::mem::drop(tmp_10);
                       std::mem::drop(l);
                       std::mem::drop(append_2);
-                      let v324 = Clone::clone(rv);
-                      let v326 = Clone::clone(rx);
-                      let v327 = Rc::clone(rc);
+                      let rv_clone_6 = Clone::clone(rv);
+                      let rx_clone_6 = Clone::clone(rx);
+                      let rc_clone_6 = Rc::clone(rc);
                       std::mem::drop(r);
-                      lbalS(s, lv, lx, node(color::Black, lrl, v324, v326, v327))
+                      lbalS(s, lv, lx, node(color::Black, lrl, rv_clone_6, rx_clone_6, rc_clone_6))
                     },
                   }
                 },
@@ -1419,52 +1576,44 @@ pub fn append_l(l: Rc<tree>, lr: color, append_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.append (local: append)
 // Variant: lifted
 pub fn append(l: Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>> {
-  let v1 = {
-    move |l: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>> {
-      let v6: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append(l);
-      v6
-    }
-  };
-  let v9: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = Rc::new(v1);
-  let append_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = v9;
-  let v12: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = match &*l {
+  let append_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = Rc::new(move |l: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>> {
+    let tmp: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append(l);
+    tmp
+  });
+  let tmp_1: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = match &*l {
     tree::Leaf => {
       std::mem::drop(append_2);
       std::mem::drop(l);
-      let v13 = {
-        move |r: Rc<tree>| -> Rc<tree> {
-          r
-        }
-      };
-      let v17: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = Rc::new(v13);
-      v17
+      let callback: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = Rc::new(move |r: Rc<tree>| -> Rc<tree> {
+        r
+      });
+      callback
     },
     tree::Node { c: lr, l: s, k: lv, v: lx, s: _ll, r: lc } => {
-      let v35 = Rc::clone(&l);
-      let v37 = Clone::clone(lr);
-      let v41 = Rc::clone(lc);
-      let v43 = Rc::clone(s);
-      let v45 = Clone::clone(lv);
-      let v46 = Clone::clone(lx);
+      let l_clone = Rc::clone(&l);
+      let lr_clone = Clone::clone(lr);
+      let lc_clone = Rc::clone(lc);
+      let s_clone = Rc::clone(s);
+      let lv_clone = Clone::clone(lv);
+      let lx_clone = Clone::clone(lx);
       std::mem::drop(l);
-      let v48 = {
+      let callback_1: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = Rc::new({
         let __anf_capture_53 = append_2;
         move |r: Rc<tree>| -> Rc<tree> {
-          let v66 = Rc::clone(&v35);
-          let v68 = Clone::clone(&v37);
-          let v69: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = Rc::clone(&__anf_capture_53);
-          let v72 = Rc::clone(&v41);
-          let v74 = Rc::clone(&v43);
-          let v76 = Clone::clone(&v45);
-          let v78 = Clone::clone(&v46);
-          append_l(v66, v68, v69, v72, v74, v76, v78, r)
+          let tmp_2 = Rc::clone(&l_clone);
+          let tmp_3 = Clone::clone(&lr_clone);
+          let tmp_4: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<tree>>> = Rc::clone(&__anf_capture_53);
+          let tmp_5 = Rc::clone(&lc_clone);
+          let tmp_6 = Rc::clone(&s_clone);
+          let tmp_7 = Clone::clone(&lv_clone);
+          let tmp_8 = Clone::clone(&lx_clone);
+          append_l(tmp_2, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, r)
         }
-      };
-      let v84: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = Rc::new(v48);
-      v84
+      });
+      callback_1
     },
   };
-  v12
+  tmp_1
 }
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.rbalS
@@ -1489,24 +1638,24 @@ pub fn rbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                       node(color::Red, l, k, v, r)
                     },
                     color::Black => {
-                      let v99 = lbal(makeRed(Rc::clone(s)), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
-                      let v113 = node(color::Black, Rc::clone(c1), k, v, r);
-                      let v119 = Clone::clone(vy);
-                      let v120 = Clone::clone(y);
+                      let tmp = lbal(makeRed(Rc::clone(s)), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
+                      let tmp_1 = node(color::Black, Rc::clone(c1), k, v, r);
+                      let vy_clone = Clone::clone(vy);
+                      let y_clone = Clone::clone(y);
                       std::mem::drop(l);
-                      node(color::Red, v99, v119, v120, v113)
+                      node(color::Red, tmp, vy_clone, y_clone, tmp_1)
                     },
                   }
                 },
               }
             },
             color::Black => {
-              let v140 = Rc::clone(s);
-              let v142 = Clone::clone(vx);
-              let v144 = Clone::clone(x);
-              let v145 = Rc::clone(c0);
+              let s_clone = Rc::clone(s);
+              let vx_clone = Clone::clone(vx);
+              let x_clone = Clone::clone(x);
+              let c0_clone = Rc::clone(c0);
               std::mem::drop(l);
-              lbal(node(color::Red, v140, v142, v144, v145), k, v, r)
+              lbal(node(color::Red, s_clone, vx_clone, x_clone, c0_clone), k, v, r)
             },
           }
         },
@@ -1515,13 +1664,13 @@ pub fn rbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
     tree::Node { c, l: s, k: vy, v: y, s: _b, r: c0 } => {
       match c {
         color::Red => {
-          let v187 = Rc::clone(s);
-          let v189 = Clone::clone(vy);
-          let v191 = Clone::clone(y);
-          let v192 = Rc::clone(c0);
+          let s_clone_1 = Rc::clone(s);
+          let vy_clone_1 = Clone::clone(vy);
+          let y_clone_1 = Clone::clone(y);
+          let c0_clone_1 = Rc::clone(c0);
           std::mem::drop(r);
-          let v194 = node(color::Black, v187, v189, v191, v192);
-          node(color::Red, l, k, v, v194)
+          let tmp_2 = node(color::Black, s_clone_1, vy_clone_1, y_clone_1, c0_clone_1);
+          node(color::Red, l, k, v, tmp_2)
         },
         color::Black => {
           match &*l {
@@ -1541,24 +1690,24 @@ pub fn rbalS(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
                           node(color::Red, l, k, v, r)
                         },
                         color::Black => {
-                          let v301 = lbal(makeRed(Rc::clone(s_1)), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
-                          let v315 = node(color::Black, Rc::clone(c1), k, v, r);
-                          let v321 = Clone::clone(vy_1);
-                          let v322 = Clone::clone(y_1);
+                          let tmp_3 = lbal(makeRed(Rc::clone(s_1)), Clone::clone(vx), Clone::clone(x), Rc::clone(s0));
+                          let tmp_4 = node(color::Black, Rc::clone(c1), k, v, r);
+                          let vy_clone_2 = Clone::clone(vy_1);
+                          let y_clone_2 = Clone::clone(y_1);
                           std::mem::drop(l);
-                          node(color::Red, v301, v321, v322, v315)
+                          node(color::Red, tmp_3, vy_clone_2, y_clone_2, tmp_4)
                         },
                       }
                     },
                   }
                 },
                 color::Black => {
-                  let v342 = Rc::clone(s_1);
-                  let v344 = Clone::clone(vx);
-                  let v346 = Clone::clone(x);
-                  let v347 = Rc::clone(c0_1);
+                  let s_clone_2 = Rc::clone(s_1);
+                  let vx_clone_1 = Clone::clone(vx);
+                  let x_clone_1 = Clone::clone(x);
+                  let c0_clone_2 = Rc::clone(c0_1);
                   std::mem::drop(l);
-                  lbal(node(color::Red, v342, v344, v346, v347), k, v, r)
+                  lbal(node(color::Red, s_clone_2, vx_clone_1, x_clone_1, c0_clone_2), k, v, r)
                 },
               }
             },
@@ -1587,52 +1736,46 @@ pub fn del(x: u64, t: Rc<tree>) -> Rc<tree> {
       std::mem::drop(v3);
       let s = &v20;
       let c = &v28;
-      match key_lt(x, v22) {
-        true => {
-          match &**s {
+      if key_lt(x, v22) {
+        match &**s {
+          tree::Leaf => {
+            node(color::Red, del(x, v20), v22, v24, v28)
+          },
+          tree::Node { c: r, l: _s_1, k: _v, v: _k, s: _l, r: _c_1 } => {
+            match r {
+              color::Red => {
+                node(color::Red, del(x, v20), v22, v24, v28)
+              },
+              color::Black => {
+                lbalS(del(x, v20), v22, v24, v28)
+              },
+            }
+          },
+        }
+      } else {
+        if eqb(x, v22) {
+          let tmp: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append_1(v20);
+          let tmp_1: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &tmp;
+          let tmp_2 = tmp_1(v28);
+          std::mem::drop(tmp);
+          tmp_2
+        } else {
+          match &**c {
             tree::Leaf => {
-              node(color::Red, del(x, v20), v22, v24, v28)
+              node(color::Red, v20, v22, v24, del(x, v28))
             },
-            tree::Node { c: r, l: _s_1, k: _v, v: _k, s: _l, r: _c_1 } => {
+            tree::Node { c: r, l: _s_1_1, k: _v_1, v: _k_1, s: _l_1, r: _c_1_1 } => {
               match r {
                 color::Red => {
-                  node(color::Red, del(x, v20), v22, v24, v28)
-                },
-                color::Black => {
-                  lbalS(del(x, v20), v22, v24, v28)
-                },
-              }
-            },
-          }
-        },
-        false => {
-          match eqb(x, v22) {
-            true => {
-              let v131: Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = append_1(v20);
-              let v132: &Rc<dyn Fn(Rc<tree>) -> Rc<tree>> = &v131;
-              let v135 = v132(v28);
-              std::mem::drop(v131);
-              v135
-            },
-            false => {
-              match &**c {
-                tree::Leaf => {
                   node(color::Red, v20, v22, v24, del(x, v28))
                 },
-                tree::Node { c: r, l: _s_1_1, k: _v_1, v: _k_1, s: _l_1, r: _c_1_1 } => {
-                  match r {
-                    color::Red => {
-                      node(color::Red, v20, v22, v24, del(x, v28))
-                    },
-                    color::Black => {
-                      rbalS(v20, v22, v24, del(x, v28))
-                    },
-                  }
+                color::Black => {
+                  rbalS(v20, v22, v24, del(x, v28))
                 },
               }
             },
           }
-        },
+        }
       }
     },
   }
@@ -1659,8 +1802,8 @@ pub fn front_t(t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v17, l: v19, k: v21, v: _v23, s: _v25, r: v27 } => {
-      let v32 = front_t(v19);
-      let (v33, v34) = __rocq_reuse::reset(v32, |__payload| Clone::clone(__payload));
+      let tmp = front_t(v19);
+      let (v33, v34) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
       match v33 {
         option::Some(v39) => {
           std::mem::drop(v27);
@@ -1690,8 +1833,8 @@ pub fn back_t(t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v17, l: v19, k: v21, v: _v23, s: _v25, r: v27 } => {
-      let v32 = back_t(v27);
-      let (v33, v34) = __rocq_reuse::reset(v32, |__payload| Clone::clone(__payload));
+      let tmp = back_t(v27);
+      let (v33, v34) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
       match v33 {
         option::Some(v39) => {
           std::mem::drop(v19);
@@ -1713,10 +1856,10 @@ pub fn on_cur(cur: Rc<option<u64>>, f: Rc<dyn Fn(u64) -> Rc<option<u64>>>) -> Rc
   match v2 {
     option::Some(v8) => {
       std::mem::drop(v3);
-      let v10: &Rc<dyn Fn(u64) -> Rc<option<u64>>> = &f;
-      let v13 = v10(v8);
+      let f_ref: &Rc<dyn Fn(u64) -> Rc<option<u64>>> = &f;
+      let tmp = f_ref(v8);
       std::mem::drop(f);
-      v13
+      tmp
     },
     option::None => {
       std::mem::drop(f);
@@ -1735,25 +1878,22 @@ pub fn pred_t_owned(x: u64, t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v18, l: v20, k: v22, v: _v24, s: _v26, r: v28 } => {
-      match key_lt(v22, x) {
-        true => {
-          let v42 = pred_t_owned(x, v28);
-          let (v43, v44) = __rocq_reuse::reset(v42, |__payload| Clone::clone(__payload));
-          match v43 {
-            option::Some(v49) => {
-              std::mem::drop(v20);
-              __rocq_reuse::rebuild(v44, option::<u64>::Some(v49))
-            },
-            option::None => {
-              std::mem::drop(v20);
-              __rocq_reuse::rebuild(v44, option::<u64>::Some(v22))
-            },
-          }
-        },
-        false => {
-          std::mem::drop(v28);
-          pred_t_owned(x, v20)
-        },
+      if key_lt(v22, x) {
+        let tmp = pred_t_owned(x, v28);
+        let (v43, v44) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
+        match v43 {
+          option::Some(v49) => {
+            std::mem::drop(v20);
+            __rocq_reuse::rebuild(v44, option::<u64>::Some(v49))
+          },
+          option::None => {
+            std::mem::drop(v20);
+            __rocq_reuse::rebuild(v44, option::<u64>::Some(v22))
+          },
+        }
+      } else {
+        std::mem::drop(v28);
+        pred_t_owned(x, v20)
       }
     },
   }
@@ -1770,31 +1910,28 @@ pub fn pred_t_1(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
 // Variant: borrowed, uncurried, lifted
 pub fn pred_t(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
   let x_1 = x;
-  let v3 = t;
-  match &**v3 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _r, l: s, k: v, v: _k, s: _l, r: c } => {
-      let v24 = Clone::clone(v);
-      match key_lt(v24, x_1) {
-        true => {
-          let v33 = pred_t(x_1, c);
-          let (v34, v35) = __rocq_reuse::reset(v33, |__payload| Clone::clone(__payload));
-          match v34 {
-            option::Some(v40) => {
-              __rocq_reuse::rebuild(v35, option::<u64>::Some(v40))
-            },
-            option::None => {
-              let v50 = Clone::clone(v);
-              __rocq_reuse::rebuild(v35, option::<u64>::Some(v50))
-            },
-          }
-        },
-        false => {
-          let v63 = Rc::clone(s);
-          pred_t_owned(x_1, v63)
-        },
+      let v_clone = Clone::clone(v);
+      if key_lt(v_clone, x_1) {
+        let tmp_1 = pred_t(x_1, c);
+        let (v34, v35) = __rocq_reuse::reset(tmp_1, |__payload| Clone::clone(__payload));
+        match v34 {
+          option::Some(v40) => {
+            __rocq_reuse::rebuild(v35, option::<u64>::Some(v40))
+          },
+          option::None => {
+            let v_clone_1 = Clone::clone(v);
+            __rocq_reuse::rebuild(v35, option::<u64>::Some(v_clone_1))
+          },
+        }
+      } else {
+        let s_clone = Rc::clone(s);
+        pred_t_owned(x_1, s_clone)
       }
     },
   }
@@ -1824,25 +1961,19 @@ pub fn kth_t(n: u64, t: Rc<tree>) -> Rc<option<u64>> {
     tree::Node { c: _v18, l: v20, k: v22, v: _v24, s: _v26, r: v28 } => {
       let s = &v20;
       let sl = size(s);
-      match ltb(n, sl) {
-        true => {
+      if ltb(n, sl) {
+        std::mem::drop(v28);
+        kth_t(n, v20)
+      } else {
+        if eqb(n, sl) {
           std::mem::drop(v28);
-          kth_t(n, v20)
-        },
-        false => {
-          match eqb(n, sl) {
-            true => {
-              std::mem::drop(v28);
-              std::mem::drop(v20);
-              Rc::new(option::<u64>::Some(v22))
-            },
-            false => {
-              std::mem::drop(v20);
-              let v69 = sub(n, sl);
-              kth_t(sub(v69, 1u64), v28)
-            },
-          }
-        },
+          std::mem::drop(v20);
+          Rc::new(option::<u64>::Some(v22))
+        } else {
+          std::mem::drop(v20);
+          let tmp = sub(n, sl);
+          kth_t(sub(tmp, 1u64), v28)
+        }
       }
     },
   }
@@ -1859,30 +1990,24 @@ pub fn rank_t_1(x: u64, t: &Rc<tree>) -> u64 {
 // Variant: borrowed, uncurried, lifted
 pub fn rank_t(x: u64, t: &Rc<tree>) -> u64 {
   let x_1 = x;
-  let v3 = t;
-  match &**v3 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
     tree::Node { c: _r, l: s, k: v, v: _k, s: _l, r: c } => {
-      let v25 = Clone::clone(v);
-      match key_lt(x_1, v25) {
-        true => {
-          rank_t(x_1, s)
-        },
-        false => {
-          let v39 = Clone::clone(v);
-          match eqb(x_1, v39) {
-            true => {
-              size(s)
-            },
-            false => {
-              let v58 = add(size(s), 1u64);
-              let v63 = rank_t(x_1, c);
-              add(v58, v63)
-            },
-          }
-        },
+      let v_clone = Clone::clone(v);
+      if key_lt(x_1, v_clone) {
+        rank_t(x_1, s)
+      } else {
+        let v_clone_1 = Clone::clone(v);
+        if eqb(x_1, v_clone_1) {
+          size(s)
+        } else {
+          let tmp_1 = add(size(s), 1u64);
+          let tmp_2 = rank_t(x_1, c);
+          add(tmp_1, tmp_2)
+        }
       }
     },
   }
@@ -1898,24 +2023,18 @@ pub fn lookup_t_owned(x: u64, t: Rc<tree>) -> Rc<option<u64>> {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _v18, l: v20, k: v22, v: v24, s: _v26, r: v28 } => {
-      match key_lt(x, v22) {
-        true => {
+      if key_lt(x, v22) {
+        std::mem::drop(v28);
+        lookup_t_owned(x, v20)
+      } else {
+        if eqb(x, v22) {
+          std::mem::drop(v20);
           std::mem::drop(v28);
-          lookup_t_owned(x, v20)
-        },
-        false => {
-          match eqb(x, v22) {
-            true => {
-              std::mem::drop(v20);
-              std::mem::drop(v28);
-              Rc::new(option::<u64>::Some(v24))
-            },
-            false => {
-              std::mem::drop(v20);
-              lookup_t_owned(x, v28)
-            },
-          }
-        },
+          Rc::new(option::<u64>::Some(v24))
+        } else {
+          std::mem::drop(v20);
+          lookup_t_owned(x, v28)
+        }
       }
     },
   }
@@ -1932,31 +2051,25 @@ pub fn lookup_t_1(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
 // Variant: borrowed, uncurried, lifted
 pub fn lookup_t(x: u64, t: &Rc<tree>) -> Rc<option<u64>> {
   let x_1 = x;
-  let v3 = t;
-  match &**v3 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       Rc::new(option::<u64>::None)
     },
     tree::Node { c: _r, l: s, k: v, v: k, s: _l, r: c } => {
-      let v26 = Clone::clone(v);
-      match key_lt(x_1, v26) {
-        true => {
-          let v33 = Rc::clone(s);
-          lookup_t_owned(x_1, v33)
-        },
-        false => {
-          let v41 = Clone::clone(v);
-          match eqb(x_1, v41) {
-            true => {
-              let v45 = Clone::clone(k);
-              Rc::new(option::<u64>::Some(v45))
-            },
-            false => {
-              let v55 = Rc::clone(c);
-              lookup_t_owned(x_1, v55)
-            },
-          }
-        },
+      let v_clone = Clone::clone(v);
+      if key_lt(x_1, v_clone) {
+        let s_clone = Rc::clone(s);
+        lookup_t_owned(x_1, s_clone)
+      } else {
+        let v_clone_1 = Clone::clone(v);
+        if eqb(x_1, v_clone_1) {
+          let k_clone = Clone::clone(k);
+          Rc::new(option::<u64>::Some(k_clone))
+        } else {
+          let c_clone = Rc::clone(c);
+          lookup_t_owned(x_1, c_clone)
+        }
       }
     },
   }
@@ -1977,20 +2090,14 @@ pub fn setv_t(x: u64, w: u64, t: Rc<tree>) -> Rc<tree> {
       __rocq_reuse::rebuild(v4, tree::Leaf)
     },
     tree::Node { c: v19, l: v21, k: v23, v: v25, s: v27, r: v29 } => {
-      match key_lt(x, v23) {
-        true => {
-          __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: setv_t(x, w, v21), k: v23, v: v25, s: v27, r: v29 })
-        },
-        false => {
-          match eqb(x, v23) {
-            true => {
-              __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: v21, k: v23, v: w, s: v27, r: v29 })
-            },
-            false => {
-              __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: v21, k: v23, v: v25, s: v27, r: setv_t(x, w, v29) })
-            },
-          }
-        },
+      if key_lt(x, v23) {
+        __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: setv_t(x, w, v21), k: v23, v: v25, s: v27, r: v29 })
+      } else {
+        if eqb(x, v23) {
+          __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: v21, k: v23, v: w, s: v27, r: v29 })
+        } else {
+          __rocq_reuse::rebuild(v4, tree::Node { c: v19, l: v21, k: v23, v: v25, s: v27, r: setv_t(x, w, v29) })
+        }
       }
     },
   }
@@ -2000,203 +2107,197 @@ pub fn setv_t(x: u64, w: u64, t: Rc<tree>) -> Rc<tree> {
 // Variant: uncurried
 #[inline(never)]
 pub fn exec(T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<Rc<option<u64>>>>, p: u64, id: u64, op: u64, x: u64, y: u64) -> (((Rc<Array<Rc<tree>>>, Rc<Array<Rc<option<u64>>>>), Rc<Array<Rc<option<u64>>>>), u64) {
-  let v8 = &T;
-  let v10 = id;
-  let t = Clone::clone(&(v8)[v10]);
-  let v12 = &C;
-  let v14 = id;
-  let cur = Clone::clone(&(v12)[v14]);
-  match eqb(op, 97u64) {
-    true => {
+  let T_ref = &T;
+  let tmp = id;
+  let t = Clone::clone(&(T_ref)[tmp]);
+  let C_ref = &C;
+  let tmp_1 = id;
+  let cur = Clone::clone(&(C_ref)[tmp_1]);
+  if eqb(op, 97u64) {
+    std::mem::drop(cur);
+    std::mem::drop(t);
+    let T_ref_1 = &T;
+    let tmp_2 = x;
+    let tmp_3 = Clone::clone(&(T_ref_1)[tmp_2]);
+    let tmp_4 = rocq_array::set::<Rc<tree>>(T, id, tmp_3);
+    let tmp_5 = rocq_array::set::<Rc<option<u64>>>(C, id, Rc::new(option::<u64>::None));
+    (((tmp_4, tmp_5), O), p)
+  } else {
+    if eqb(op, 63u64) {
       std::mem::drop(cur);
-      std::mem::drop(t);
-      let v25 = &T;
-      let v27 = x;
-      let v28 = Clone::clone(&(v25)[v27]);
-      let v35 = rocq_array::set::<Rc<tree>>(T, id, v28);
-      let v45 = rocq_array::set::<Rc<option<u64>>>(C, id, Rc::new(option::<u64>::None));
-      (((v35, v45), O), p)
-    },
-    false => {
-      match eqb(op, 63u64) {
-        true => {
+      let tmp_6 = rocq_array::set::<Rc<option<u64>>>(C, id, find_t_1(x, t));
+      (((T, tmp_6), O), p)
+    } else {
+      if eqb(op, 108u64) {
+        std::mem::drop(cur);
+        let tmp_7 = rocq_array::set::<Rc<option<u64>>>(C, id, lower_t_1(x, t));
+        (((T, tmp_7), O), p)
+      } else {
+        if eqb(op, 117u64) {
           std::mem::drop(cur);
-          let v87 = rocq_array::set::<Rc<option<u64>>>(C, id, find_t_1(x, t));
-          (((T, v87), O), p)
-        },
-        false => {
-          match eqb(op, 108u64) {
-            true => {
-              std::mem::drop(cur);
-              let v129 = rocq_array::set::<Rc<option<u64>>>(C, id, lower_t_1(x, t));
-              (((T, v129), O), p)
-            },
-            false => {
-              match eqb(op, 117u64) {
-                true => {
-                  std::mem::drop(cur);
-                  let v171 = rocq_array::set::<Rc<option<u64>>>(C, id, upper_t_owned_1(x, t));
-                  (((T, v171), O), p)
+          let tmp_8 = rocq_array::set::<Rc<option<u64>>>(C, id, upper_t_owned_1(x, t));
+          (((T, tmp_8), O), p)
+        } else {
+          if eqb(op, 105u64) {
+            std::mem::drop(cur);
+            let tmp_9 = rocq_array::set::<Rc<tree>>(T, id, insert_t(x, y, t));
+            let tmp_10 = rocq_array::set::<Rc<option<u64>>>(C, id, Rc::new(option::<u64>::Some(x)));
+            (((tmp_9, tmp_10), O), p)
+          } else {
+            if eqb(op, 101u64) {
+              let (v257, v258) = __rocq_reuse::reset(cur, |__payload| Clone::clone(__payload));
+              let tmp_11 = match v257 {
+                option::Some(v263) => {
+                  delete_t(v263, t)
                 },
-                false => {
-                  match eqb(op, 105u64) {
-                    true => {
-                      std::mem::drop(cur);
-                      let v215 = rocq_array::set::<Rc<tree>>(T, id, insert_t(x, y, t));
-                      let v227 = rocq_array::set::<Rc<option<u64>>>(C, id, Rc::new(option::<u64>::Some(x)));
-                      (((v215, v227), O), p)
-                    },
-                    false => {
-                      match eqb(op, 101u64) {
-                        true => {
-                          let (v257, v258) = __rocq_reuse::reset(cur, |__payload| Clone::clone(__payload));
-                          let v262 = match v257 {
-                            option::Some(v263) => {
-                              delete_t(v263, t)
-                            },
-                            option::None => {
-                              t
-                            },
-                          };
-                          let v282 = rocq_array::set::<Rc<tree>>(T, id, v262);
-                          let v292 = rocq_array::set::<Rc<option<u64>>>(C, id, __rocq_reuse::rebuild(v258, option::<u64>::None));
-                          (((v282, v292), O), p)
-                        },
-                        false => {
-                          match eqb(op, 102u64) {
-                            true => {
-                              std::mem::drop(cur);
-                              let v332 = rocq_array::set::<Rc<option<u64>>>(C, id, front_t_1(t));
-                              (((T, v332), O), p)
-                            },
-                            false => {
-                              match eqb(op, 98u64) {
-                                true => {
-                                  std::mem::drop(cur);
-                                  let v372 = rocq_array::set::<Rc<option<u64>>>(C, id, back_t_1(t));
-                                  (((T, v372), O), p)
-                                },
-                                false => {
-                                  match eqb(op, 62u64) {
-                                    true => {
-                                      let v405 = {
-                                        let __anf_capture_406 = t;
-                                        move |c: u64| -> Rc<option<u64>> {
-                                          let t = &__anf_capture_406;
-                                          upper_t_1(c, t)
-                                        }
-                                      };
-                                      let v416: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new(v405);
-                                      let v429 = rocq_array::set::<Rc<option<u64>>>(C, id, on_cur(cur, v416));
-                                      (((T, v429), O), p)
-                                    },
-                                    false => {
-                                      match eqb(op, 60u64) {
-                                        true => {
-                                          let v462 = {
-                                            let __anf_capture_463 = t;
-                                            move |c: u64| -> Rc<option<u64>> {
-                                              let t = &__anf_capture_463;
-                                              pred_t_1(c, t)
-                                            }
-                                          };
-                                          let v473: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new(v462);
-                                          let v486 = rocq_array::set::<Rc<option<u64>>>(C, id, on_cur(cur, v473));
-                                          (((T, v486), O), p)
-                                        },
-                                        false => {
-                                          match eqb(op, 107u64) {
-                                            true => {
-                                              let v518 = 0u64;
-                                              let v524 = match ltsb(x, v518) {
-                                                true => {
-                                                  std::mem::drop(cur);
-                                                  std::mem::drop(t);
-                                                  Rc::new(option::<u64>::None)
-                                                },
-                                                false => {
-                                                  std::mem::drop(cur);
-                                                  kth_t_1(x, t)
-                                                },
-                                              };
-                                              let v545 = rocq_array::set::<Rc<option<u64>>>(C, id, v524);
-                                              (((T, v545), O), p)
-                                            },
-                                            false => {
-                                              match eqb(op, 114u64) {
-                                                true => {
-                                                  let v580 = (T, C);
-                                                  let v584 = {
-                                                    let __anf_capture_585 = t;
-                                                    move |c: u64| -> Rc<option<u64>> {
-                                                      let t = &__anf_capture_585;
-                                                      let v593 = rank_t_1(c, t);
-                                                      Rc::new(option::<u64>::Some(v593))
-                                                    }
-                                                  };
-                                                  let v600: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new(v584);
-                                                  let v613 = rocq_array::set::<Rc<option<u64>>>(O, p, on_cur(cur, v600));
-                                                  ((v580, v613), add(p, 1u64))
-                                                },
-                                                false => {
-                                                  match eqb(op, 103u64) {
-                                                    true => {
-                                                      let v650 = (T, C);
-                                                      let v654 = {
-                                                        let __anf_capture_655 = t;
-                                                        move |c: u64| -> Rc<option<u64>> {
-                                                          let t = &__anf_capture_655;
-                                                          lookup_t_1(c, t)
-                                                        }
-                                                      };
-                                                      let v665: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new(v654);
-                                                      let v678 = rocq_array::set::<Rc<option<u64>>>(O, p, on_cur(cur, v665));
-                                                      ((v650, v678), add(p, 1u64))
-                                                    },
-                                                    false => {
-                                                      match eqb(op, 115u64) {
-                                                        true => {
-                                                          let (v710, v711) = __rocq_reuse::reset(cur, |__payload| Clone::clone(__payload));
-                                                          std::mem::drop(v711);
-                                                          let v715 = match v710 {
-                                                            option::Some(v716) => {
-                                                              setv_t_1(v716, x, t)
-                                                            },
-                                                            option::None => {
-                                                              t
-                                                            },
-                                                          };
-                                                          let v738 = rocq_array::set::<Rc<tree>>(T, id, v715);
-                                                          (((v738, C), O), p)
-                                                        },
-                                                        false => {
-                                                          match eqb(op, 122u64) {
-                                                            true => {
-                                                              std::mem::drop(cur);
-                                                              let v771 = (T, C);
-                                                              let v788 = rocq_array::set::<Rc<option<u64>>>(O, p, Rc::new(option::<u64>::Some(size_owned(t))));
-                                                              ((v771, v788), add(p, 1u64))
-                                                            },
-                                                            false => {
-                                                              std::mem::drop(cur);
-                                                              std::mem::drop(t);
-                                                              (((T, C), O), p)
-                                                            },
-                                                          }
-                                                        },
-                                                      }
-                                                    },
-                                                  }
-                                                },
-                                              }
-                                            },
-                                          }
-                                        },
-                                      }
-                                    },
-                                  }
-                                },
+                option::None => {
+                  t
+                },
+              };
+              let tmp_12 = rocq_array::set::<Rc<tree>>(T, id, tmp_11);
+              let tmp_13 = rocq_array::set::<Rc<option<u64>>>(C, id, __rocq_reuse::rebuild(v258, option::<u64>::None));
+              (((tmp_12, tmp_13), O), p)
+            } else {
+              if eqb(op, 102u64) {
+                std::mem::drop(cur);
+                let tmp_14 = rocq_array::set::<Rc<option<u64>>>(C, id, front_t_1(t));
+                (((T, tmp_14), O), p)
+              } else {
+                if eqb(op, 98u64) {
+                  std::mem::drop(cur);
+                  let tmp_15 = rocq_array::set::<Rc<option<u64>>>(C, id, back_t_1(t));
+                  (((T, tmp_15), O), p)
+                } else {
+                  if eqb(op, 62u64) {
+                    let callback: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new({
+                      let __anf_capture_406 = t;
+                      move |c: u64| -> Rc<option<u64>> {
+                        let t = &__anf_capture_406;
+                        upper_t_1(c, t)
+                      }
+                    });
+                    let tmp_16 = rocq_array::set::<Rc<option<u64>>>(C, id, on_cur(cur, callback));
+                    (((T, tmp_16), O), p)
+                  } else {
+                    if eqb(op, 60u64) {
+                      let callback_1: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new({
+                        let __anf_capture_463 = t;
+                        move |c: u64| -> Rc<option<u64>> {
+                          let t = &__anf_capture_463;
+                          pred_t_1(c, t)
+                        }
+                      });
+                      let tmp_17 = rocq_array::set::<Rc<option<u64>>>(C, id, on_cur(cur, callback_1));
+                      (((T, tmp_17), O), p)
+                    } else {
+                      if eqb(op, 107u64) {
+                        let tmp_18 = 0u64;
+                        let tmp_19 = if ltsb(x, tmp_18) {
+                          std::mem::drop(cur);
+                          std::mem::drop(t);
+                          Rc::new(option::<u64>::None)
+                        } else {
+                          std::mem::drop(cur);
+                          kth_t_1(x, t)
+                        };
+                        let tmp_20 = rocq_array::set::<Rc<option<u64>>>(C, id, tmp_19);
+                        (((T, tmp_20), O), p)
+                      } else {
+                        if eqb(op, 114u64) {
+                          let tmp_21 = (T, C);
+                          let callback_2: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new({
+                            let __anf_capture_585 = t;
+                            move |c: u64| -> Rc<option<u64>> {
+                              let t = &__anf_capture_585;
+                              let tmp_22 = rank_t_1(c, t);
+                              Rc::new(option::<u64>::Some(tmp_22))
+                            }
+                          });
+                          let tmp_23 = rocq_array::set::<Rc<option<u64>>>(O, p, on_cur(cur, callback_2));
+                          ((tmp_21, tmp_23), add(p, 1u64))
+                        } else {
+                          if eqb(op, 103u64) {
+                            let tmp_24 = (T, C);
+                            let callback_3: Rc<dyn Fn(u64) -> Rc<option<u64>>> = Rc::new({
+                              let __anf_capture_655 = t;
+                              move |c: u64| -> Rc<option<u64>> {
+                                let t = &__anf_capture_655;
+                                lookup_t_1(c, t)
                               }
+                            });
+                            let tmp_25 = rocq_array::set::<Rc<option<u64>>>(O, p, on_cur(cur, callback_3));
+                            ((tmp_24, tmp_25), add(p, 1u64))
+                          } else {
+                            if eqb(op, 115u64) {
+                              let (v710, v711) = __rocq_reuse::reset(cur, |__payload| Clone::clone(__payload));
+                              std::mem::drop(v711);
+                              let tmp_26 = match v710 {
+                                option::Some(v716) => {
+                                  setv_t_1(v716, x, t)
+                                },
+                                option::None => {
+                                  t
+                                },
+                              };
+                              let tmp_27 = rocq_array::set::<Rc<tree>>(T, id, tmp_26);
+                              (((tmp_27, C), O), p)
+                            } else {
+                              if eqb(op, 122u64) {
+                                std::mem::drop(cur);
+                                let tmp_28 = (T, C);
+                                let tmp_29 = rocq_array::set::<Rc<option<u64>>>(O, p, Rc::new(option::<u64>::Some(size_owned(t))));
+                                ((tmp_28, tmp_29), add(p, 1u64))
+                              } else {
+                                std::mem::drop(cur);
+                                std::mem::drop(t);
+                                (((T, C), O), p)
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_loop
+// Variant: uncurried
+pub fn run_loop_1(commands: Rc<Array<(u64, Rc<operation<u64, u64>>)>>, q: u64, j: u64, T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<Rc<option<u64>>>>, p: u64) -> Rc<Array<Rc<option<u64>>>> {
+  run_loop(commands, q, j, T, C, O, p, ())
+}
+
+// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_loop (local: run_loop)
+// Variant: uncurried, lifted
+pub fn run_loop(commands: Rc<Array<(u64, Rc<operation<u64, u64>>)>>, q: u64, j: u64, T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<Rc<option<u64>>>>, p: u64, _H: ()) -> Rc<Array<Rc<option<u64>>>> {
+  let tmp = ltb(j, q);
+  match bdec(tmp) {
+    sumbool::left => {
+      let commands_ref = &commands;
+      let tmp_1 = j;
+      let tmp_2 = Clone::clone(&(commands_ref)[tmp_1]);
+      let tmp_3 = encode_machine(tmp_2);
+      match tmp_3 {
+        (v28, v30) => {
+          match v28 {
+            (v33, v35) => {
+              match v33 {
+                (v38, v40) => {
+                  let tmp_4 = exec(T, C, O, p, v38, v40, v35, v30);
+                  match tmp_4 {
+                    (v61, v63) => {
+                      match v61 {
+                        (v66, v68) => {
+                          match v66 {
+                            (v71, v73) => {
+                              run_loop(commands, q, add(j, 1u64), v71, v73, v68, v63, ())
                             },
                           }
                         },
@@ -2210,53 +2311,8 @@ pub fn exec(T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<R
         },
       }
     },
-  }
-}
-
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_loop
-// Variant: uncurried
-pub fn run_loop_1(ids: Rc<Array<u64>>, ops: Rc<Array<u64>>, xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, q: u64, j: u64, T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<Rc<option<u64>>>>, p: u64) -> Rc<Array<Rc<option<u64>>>> {
-  run_loop(ids, ops, xs, ys, q, j, T, C, O, p, ())
-}
-
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_loop (local: run_loop)
-// Variant: uncurried, lifted
-pub fn run_loop(ids: Rc<Array<u64>>, ops: Rc<Array<u64>>, xs: Rc<Array<u64>>, ys: Rc<Array<u64>>, q: u64, j: u64, T: Rc<Array<Rc<tree>>>, C: Rc<Array<Rc<option<u64>>>>, O: Rc<Array<Rc<option<u64>>>>, p: u64, _H: ()) -> Rc<Array<Rc<option<u64>>>> {
-  let v18 = ltb(j, q);
-  match bdec(v18) {
-    sumbool::left => {
-      let v23 = &ids;
-      let v25 = j;
-      let v26 = Clone::clone(&(v23)[v25]);
-      let v27 = &ops;
-      let v29 = j;
-      let v30 = Clone::clone(&(v27)[v29]);
-      let v31 = &xs;
-      let v33 = j;
-      let v34 = Clone::clone(&(v31)[v33]);
-      let v35 = &ys;
-      let v37 = j;
-      let v38 = Clone::clone(&(v35)[v37]);
-      let v55 = exec(T, C, O, p, v26, v30, v34, v38);
-      match v55 {
-        (v57, v59) => {
-          match v57 {
-            (v62, v64) => {
-              match v62 {
-                (v67, v69) => {
-                  run_loop(ids, ops, xs, ys, q, add(j, 1u64), v67, v69, v64, v59, ())
-                },
-              }
-            },
-          }
-        },
-      }
-    },
     sumbool::right => {
-      std::mem::drop(ids);
-      std::mem::drop(ops);
-      std::mem::drop(xs);
-      std::mem::drop(ys);
+      std::mem::drop(commands);
       std::mem::drop(T);
       std::mem::drop(C);
       O
@@ -2265,48 +2321,14 @@ pub fn run_loop(ids: Rc<Array<u64>>, ops: Rc<Array<u64>>, xs: Rc<Array<u64>>, ys
 }
 
 // Rocq: Selfbalancingbst.selfbalancingbst_implem.run_impl
-// Variant: uncurried
-pub fn run_impl(ids: Rc<Array<u64>>, ops: Rc<Array<u64>>, xs: Rc<Array<u64>>, ys: Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>> {
-  let v4 = &ids;
-  let q = rocq_array::length::<u64>(&v4);
-  let v13 = Rc::clone(&ops);
-  let n = count_loop_1(v13, q, 0u64, 0u64);
-  let v33 = rocq_array::make::<Rc<tree>>(1001u64, Rc::new(tree::Leaf));
-  let v43 = rocq_array::make::<Rc<option<u64>>>(1001u64, Rc::new(option::<u64>::None));
-  let v51 = rocq_array::make::<Rc<option<u64>>>(n, Rc::new(option::<u64>::None));
-  run_loop_1(ids, ops, xs, ys, q, 0u64, v33, v43, v51, 0u64)
-}
-
-// Rocq: Selfbalancingbst.selfbalancingbst_implem.run_impl
-pub fn run_impl_curried(ids: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>> {
-  let v3 = {
-    move |ops: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>> {
-      let ids = &ids;
-      let v8 = Rc::clone(ids);
-      let v11 = {
-        move |xs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> {
-          let ids = &v8;
-          let ops = &ops;
-          let v18 = Rc::clone(ids);
-          let v20 = Rc::clone(ops);
-          let v23 = {
-            move |ys: Rc<Array<u64>>| -> Rc<Array<Rc<option<u64>>>> {
-              let v33 = Rc::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&xs);
-              run_impl(v33, v35, v37, ys)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>> = Rc::new(v3);
-  v51
+pub fn run_impl(commands: Rc<Array<(u64, Rc<operation<u64, u64>>)>>) -> Rc<Array<Rc<option<u64>>>> {
+  let q = rocq_array::length::<(u64, Rc<operation<u64, u64>>)>(&commands);
+  let commands_clone = Rc::clone(&commands);
+  let n = count_loop_1(commands_clone, q, 0u64, 0u64);
+  let tmp = rocq_array::make::<Rc<tree>>(1001u64, Rc::new(tree::Leaf));
+  let tmp_1 = rocq_array::make::<Rc<option<u64>>>(1001u64, Rc::new(option::<u64>::None));
+  let tmp_2 = rocq_array::make::<Rc<option<u64>>>(n, Rc::new(option::<u64>::None));
+  run_loop_1(commands, q, 0u64, tmp, tmp_1, tmp_2, 0u64)
 }
 
 mod __rocq_reuse {
@@ -2458,12 +2480,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> = __rocq_global_1714.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_1714: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>> = run_commands(); }
-std::thread_local! { static __rocq_global_1717: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<Rc<option<u64>>>>>>>> = run_commands_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -2540,17 +2556,31 @@ use kattis_io::*;
 
 fn solve(input: String, output: &mut dyn std::io::Write) {
     let mut input_lines = input.lines(); let q: usize = input_lines.next().unwrap().trim().parse().unwrap();
-    let mut ids = Vec::with_capacity(q); let mut ops = Vec::with_capacity(q);
-    let mut xs = Vec::with_capacity(q); let mut ys = Vec::with_capacity(q);
-    // Optional arguments stop at a newline, exactly as in the OCaml wrapper.
+    let mut commands = Vec::with_capacity(q);
     for line in input_lines.filter(|s| !s.trim().is_empty()).take(q) {
-        let mut t = Tokens::new(line); ids.push(t.int());
-        let op = t.next(); assert_eq!(op.len(),1); ops.push(op.as_bytes()[0] as u64);
-        xs.push(t.optional().map(|s| signed(s.parse().unwrap())).unwrap_or(0));
-        ys.push(t.optional().map(|s| signed(s.parse().unwrap())).unwrap_or(0));
+        let mut t = Tokens::new(line); let id = t.uint();
+        let operation = match t.next() {
+            "a" => operation::CopyFrom { source: t.uint() },
+            "?" => operation::FindKey { key: t.int() },
+            "l" => operation::LowerBound { key: t.int() },
+            "u" => operation::UpperBound { key: t.int() },
+            "i" => operation::Insert { key: t.int(), value: t.int() },
+            "e" => operation::Erase {},
+            "f" => operation::First {},
+            "b" => operation::Last {},
+            ">" => operation::NextKey {},
+            "<" => operation::PreviousKey {},
+            "k" => operation::SelectRank { index: t.int() },
+            "r" => operation::GetRank {},
+            "g" => operation::GetValue {},
+            "s" => operation::SetValue { value: t.int() },
+            "z" => operation::GetSize {},
+            _ => panic!("unknown command"),
+        };
+        commands.push((id, Rc::new(operation)));
     }
     drop(input);
-    let result = run()(ints(ids),ints(ops),ints(xs),ints(ys));
+    let result = run_impl(array(commands, (0, Rc::new(operation::GetSize {}))));
     for i in 0..result.length() {
         match crate::rocq_array::get(&result, i).as_ref() {
             option::None { } => writeln!(output, "-").unwrap(),

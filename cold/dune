@@ -6,9 +6,11 @@
  (rocq.theory
   (name Cold.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Cold)
  (modules cold_implem)
- (theories Cold.spec Stdlib stdpp StdGalilei))
+  (theories Cold.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

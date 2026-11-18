@@ -6,9 +6,11 @@
  (rocq.theory
   (name Farmingmars.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Farmingmars)
  (modules farmingmars_implem)
- (theories Farmingmars.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Farmingmars.spec Stdlib stdpp StdGalilei Flocq KattisLib)
+  (generate_project_file))

@@ -21,11 +21,17 @@
    and that every nonzero cell k lies in [2^k, 2^(k+1)).  The greedy pass
    is the function [gm]; [gm_in] puts its result in the span and
    [gm_max] bounds every element of the span by it (comparison through
-   the quotients by 2^k). *)
+   the quotients by 2^k).
+
+   Cost: [Elpi complexity] translates sumbool, bdec, reduce, build,
+   greedy, xormax_impl and xormax (callee first); xormax_time bounds
+   cost1 xormax_cost x by 2600 * (size x + 1) + 3000 (section Cost at
+   the end). *)
 
 From Xormax.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Unset Lia Cache.
@@ -41,6 +47,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := (to_Z m - to_Z j)%Z.
 
@@ -79,6 +87,8 @@ Fixpoint reduce (b : array int) (c i : int) (H : Acc (Zwf 0) (to_Z i)) {struct H
         else reduce b (c lxor bk) (i - 1) (Acc_inv H (dec_down i Hi))
   | right _ => b
   end.
+Elpi complexity reduce.
+#[global] Arguments reduce_cost : simpl never.
 
 (* Insert x.[j], ..., x.[n-1]. *)
 Fixpoint build (x : array uint) (n j : int) (b : array int)
@@ -89,6 +99,8 @@ Fixpoint build (x : array uint) (n j : int) (b : array int)
         (Acc_inv H (dec_step n j Hj))
   | right _ => b
   end.
+Elpi complexity build.
+#[global] Arguments build_cost : simpl never.
 
 (* Greedy maximum over the cells i-1, ..., 0, starting from r. *)
 Fixpoint greedy (b : array int) (r i : int) (H : Acc (Zwf 0) (to_Z i)) {struct H}
@@ -99,11 +111,15 @@ Fixpoint greedy (b : array int) (r i : int) (H : Acc (Zwf 0) (to_Z i)) {struct H
       greedy b (if r <? r' then r' else r) (i - 1) (Acc_inv H (dec_down i Hi))
   | right _ => r
   end.
+Elpi complexity greedy.
+#[global] Arguments greedy_cost : simpl never.
 
 Definition xormax_impl (x : array uint) : uint :=
   let b := build x (PArray.length x) 0 (PArray.make 63 0)
              (Zwf_well_founded 0 _) in
   greedy b 0 63 (Zwf_well_founded 0 _).
+Elpi complexity xormax_impl.
+#[global] Arguments xormax_impl_cost : simpl never.
 
 End Code.
 
@@ -720,8 +736,167 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition xormax : array uint -> uint := xormax_impl.
+Elpi complexity xormax.
 
 Definition xormax_correct : forall (a : list N) (x : array uint),
   valid_input a -> repr x a ->
   exists o : N, repr (xormax x) o /\ xormax_spec a o
   := xormax_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+(* One lemma per loop, by induction on a nat bound of its measure:
+   reduce from i <= 40 * i + 20 and greedy from i <= 40 * i + 20 (at
+   most i bits each), build from j <= 2600 * (n - j) + 20 (one reduce
+   from bit 63, <= 2540, per entry); xormax costs at most
+   2600 * (n + 1) + 3000.  cbn must not unfold φ (the Acc index of
+   reduce and greedy): to_Z is made simpl never for this section. *)
+
+From Stdlib Require Import ssreflect.
+Open Scope uint63_scope.
+Local Arguments Uint63.to_Z : simpl never.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Ltac set_simpl :=
+  repeat match goal with
+  | |- context [cost (extract (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g) ?h ?i)] =>
+      change (cost (extract (extract (extract (set_cost a b c) d e) f g) h i)) with 1%nat
+  | |- context [cost (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (set_cost a b c) d e) f g)) with 0%nat
+  | |- context [cost (extract (set_cost ?a ?b ?c) ?d ?e)] =>
+      change (cost (extract (set_cost a b c) d e)) with 0%nat
+  | |- context [cost (set_cost ?a ?b ?c)] =>
+      change (cost (set_cost a b c)) with 0%nat
+  end.
+
+Lemma reduce_time b bC c cC i iC H HC :
+  (cost (extract (extract (extract (reduce_cost stepsCM b bC) c cC) i iC) H HC)
+     <= Z.to_nat (φ i) * 40 + 20)%nat.
+Proof.
+  unfold reduce_cost. cbn.
+  match goal with |- context [@cost ?T (?G b bC c cC i iC H HC)] =>
+    assert (HG : forall k b bC c cC i iC H HC, (Z.to_nat (φ i) <= k)%nat ->
+       (cost (G b bC c cC i iC H HC) <= k * 40 + 20)%nat) end.
+  { induction k as [|k IH]; intros b' bC' c' cC' i' iC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (0 <? i') (bool_w (0 <? i'))) as HB;
+      cost_destruct (bdec (0 <? i')); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). change (φ 0) with 0%Z in H0. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt. change (φ 0) with 0%Z in Hlt.
+      assert (Hk' : (Z.to_nat (φ (i' - 1)) <= k)%nat).
+      { assert (φ (i' - 1) = φ i' - 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      cost_destruct (c' >> (i' - 1) =? 0); cost_simpl.
+      + match goal with |- context [@cost ?T (?G' ?bb ?bw ?cc ?cw (i' - 1)%uint63 ?w ?h ?e)] =>
+          have HI := (IH bb bw cc cw (i' - 1)%uint63 w h e Hk' : (@cost T (G' bb bw cc cw (i' - 1)%uint63 w h e) <= _)%nat) end.
+        lia.
+      + cost_destruct (b'.[i' - 1] =? 0); cost_simpl.
+        * set_simpl. lia.
+        * match goal with |- context [@cost ?T (?G' ?bb ?bw ?cc ?cw (i' - 1)%uint63 ?w ?h ?e)] =>
+            have HI := (IH bb bw cc cw (i' - 1)%uint63 w h e Hk' : (@cost T (G' bb bw cc cw (i' - 1)%uint63 w h e) <= _)%nat) end.
+          lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G b bC c cC i iC H HC)] =>
+    exact (HG _ b bC c cC i iC H HC (le_n _) : (@cost T (G b bC c cC i iC H HC) <= _)%nat) end.
+Qed.
+
+
+Lemma greedy_time b bC r rC i iC H HC :
+  (cost (extract (extract (extract (greedy_cost stepsCM b bC) r rC) i iC) H HC)
+     <= Z.to_nat (φ i) * 40 + 20)%nat.
+Proof.
+  unfold greedy_cost. cbn.
+  match goal with |- context [@cost ?T (?G b bC r rC i iC H HC)] =>
+    assert (HG : forall k b bC r rC i iC H HC, (Z.to_nat (φ i) <= k)%nat ->
+       (cost (G b bC r rC i iC H HC) <= k * 40 + 20)%nat) end.
+  { induction k as [|k IH]; intros b' bC' r' rC' i' iC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (0 <? i') (bool_w (0 <? i'))) as HB;
+      cost_destruct (bdec (0 <? i')); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). change (φ 0) with 0%Z in H0. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt. change (φ 0) with 0%Z in Hlt.
+      assert (Hk' : (Z.to_nat (φ (i' - 1)) <= k)%nat).
+      { assert (φ (i' - 1) = φ i' - 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      cost_destruct (r' <? r' lxor b'.[i' - 1]); cost_simpl.
+      + match goal with |- context [@cost ?T (?G' ?bb ?bw ?cc ?cw (i' - 1)%uint63 ?w ?h ?e)] =>
+          have HI := (IH bb bw cc cw (i' - 1)%uint63 w h e Hk' : (@cost T (G' bb bw cc cw (i' - 1)%uint63 w h e) <= _)%nat) end.
+        lia.
+      + match goal with |- context [@cost ?T (?G' ?bb ?bw ?cc ?cw (i' - 1)%uint63 ?w ?h ?e)] =>
+          have HI := (IH bb bw cc cw (i' - 1)%uint63 w h e Hk' : (@cost T (G' bb bw cc cw (i' - 1)%uint63 w h e) <= _)%nat) end.
+        lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G b bC r rC i iC H HC)] =>
+    exact (HG _ b bC r rC i iC H HC (le_n _) : (@cost T (G b bC r rC i iC H HC) <= _)%nat) end.
+Qed.
+
+Lemma build_time x xC n nC j jC b bC H HC :
+  (cost (extract (extract (extract (extract (build_cost stepsCM x xC) n nC) j jC) b bC) H HC)
+     <= Z.to_nat (gap n j) * 2600 + 20)%nat.
+Proof.
+  unfold build_cost. cbn.
+  match goal with |- context [@cost ?T (?G x xC n nC j jC b bC H HC)] =>
+    assert (HG : forall k j jC b bC H HC, (Z.to_nat (gap n j) <= k)%nat ->
+       (cost (G x xC n nC j jC b bC H HC) <= k * 2600 + 20)%nat) end.
+  { induction k as [|k IH]; intros j' jC' b' bC' [g] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (j' <? n) (bool_w (j' <? n))) as HB;
+      cost_destruct (bdec (j' <? n)); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hk. lia.
+    - lia.
+    - pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+      assert (Hk' : (Z.to_nat (gap n (j' + 1)) <= k)%nat).
+      { unfold gap in *. assert (φ (j' + 1) = φ j' + 1)%Z by (zify; Z.to_euclidean_division_equations; lia). lia. }
+      change (cost (reduce_cost stepsCM b' bC')) with 0%nat.
+      change (cost (extract (reduce_cost stepsCM b' bC') x.[j'] (array_elems xC j'))) with 0%nat.
+      change (cost (extract (extract (reduce_cost stepsCM b' bC') x.[j'] (array_elems xC j')) 63%uint63 (int_val stepsCM 63))) with 0%nat.
+      match goal with |- context [@cost ?T (extract (extract (extract (reduce_cost stepsCM b' bC') ?xx ?xw) ?ii ?iw) ?hh ?hw)] =>
+        let Hc := fresh "Hc" in
+        have Hc := (reduce_time b' bC' xx xw ii iw hh hw : (@cost T (extract (extract (extract (reduce_cost stepsCM b' bC') xx xw) ii iw) hh hw) <= _)%nat);
+        revert Hc; generalize (@cost T (extract (extract (extract (reduce_cost stepsCM b' bC') xx xw) ii iw) hh hw)); intros ? Hc end.
+      change (Z.to_nat (φ 63)) with 63%nat in Hc.
+      match goal with |- context [@cost ?T (?G' x xC n nC (j' + 1)%uint63 ?w ?bb ?bw ?h ?e)] =>
+          have HI := (IH (j' + 1)%uint63 w bb bw h e Hk' : (@cost T (G' x xC n nC (j' + 1)%uint63 w bb bw h e) <= _)%nat) end.
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G x xC n nC j jC b bC H HC)] =>
+    exact (HG _ j jC b bC H HC (le_n _) : (@cost T (G x xC n nC j jC b bC H HC) <= _)%nat) end.
+Qed.
+
+Lemma xormax_impl_time x xC :
+  (cost (xormax_impl_cost stepsCM x xC) <= size x * 2600 + 3000)%nat.
+Proof.
+  unfold xormax_impl_cost. cost_simpl.
+  match goal with |- context [@cost ?T (extract (extract (extract (extract (build_cost stepsCM ?a ?b) ?c ?d) ?e ?f) ?g ?h) ?i ?j)] =>
+    let X := constr:(extract (extract (extract (extract (build_cost stepsCM a b) c d) e f) g h) i j) in
+    let Hc := fresh "Hb" in
+    have Hc := (build_time a b c d e f g h i j : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end.
+  match goal with |- context [@cost ?T (extract (extract (extract (greedy_cost stepsCM ?a ?b) ?c ?d) ?e ?f) ?g ?h)] =>
+    let X := constr:(extract (extract (extract (greedy_cost stepsCM a b) c d) e f) g h) in
+    let Hc := fresh "Hg" in
+    have Hc := (greedy_time a b c d e f g h : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end.
+  repeat match goal with |- context [@cost ?T ?X] =>
+    let v := eval vm_compute in (@cost T X) in change (@cost T X) with v end.
+  change (Z.to_nat (φ 63)) with 63%nat in Hg.
+  assert (E : Z.to_nat (gap (length x) 0) = size x).
+  { unfold gap. change (φ 0) with 0%Z. rewrite Z.sub_0_r. reflexivity. }
+  rewrite E in Hb. lia.
+Qed.
+
+Theorem xormax_time : exists c1 c2 : nat, forall numbers_arr : array uint,
+  (cost1 xormax_cost numbers_arr <= c1 * (size numbers_arr + 1) + c2)%nat.
+Proof.
+  exists 2600%nat, 3000%nat. intros x.
+  match goal with |- (_ <= ?r)%nat => remember r as R eqn:ER end.
+  unfold cost1, xormax_cost. cost_simpl.
+  match goal with |- (@cost ?T ?X <= _)%nat =>
+    have HX := (xormax_impl_time x (witness x) : (@cost T X <= _)%nat) end.
+  subst R. lia.
+Qed.
+Print Assumptions xormax_time.

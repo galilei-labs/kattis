@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -33,21 +32,6 @@ pub fn INF() -> u64 {
   2305843009213693952u64
 }
 
-// Rocq: Slowleak.slowleak_implem.slowleak
-// Variant: uncurried
-pub fn slowleak() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> {
-  let v0: fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>> = slowleak_impl;
-  let v1: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Slowleak.slowleak_implem.slowleak
-pub fn slowleak_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> = slowleak_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -62,13 +46,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Slowleak.slowleak_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -93,12 +74,12 @@ pub fn diag_loop_1(n: u64, i: u64, T: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Slowleak.slowleak_implem.diag_loop (local: diag_loop)
 // Variant: uncurried, lifted
 pub fn diag_loop(n: u64, i: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(i, 1u64);
-      let v43 = rocq_array::set::<u64>(T, add(mul(i, n), i), 0u64);
-      diag_loop(n, v22, v43, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(T, add(mul(i, n), i), 0u64);
+      diag_loop(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       T
@@ -115,15 +96,11 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Slowleak.slowleak_implem.setmin
 // Variant: uncurried
 pub fn setmin(T: Rc<Array<u64>>, p: u64, s: u64) -> Rc<Array<u64>> {
-  let v4 = &T;
-  let v7 = rocq_array::get::<u64>(&v4, p);
-  match ltb(s, v7) {
-    true => {
-      rocq_array::set::<u64>(T, p, s)
-    },
-    false => {
-      T
-    },
+  let tmp = rocq_array::get::<u64>(&T, p);
+  if ltb(s, tmp) {
+    rocq_array::set::<u64>(T, p, s)
+  } else {
+    T
   }
 }
 
@@ -136,21 +113,18 @@ pub fn edge_loop_1(n: u64, xi: Rc<Array<u64>>, xj: Rc<Array<u64>>, xk: Rc<Array<
 // Rocq: Slowleak.slowleak_implem.edge_loop (local: edge_loop)
 // Variant: uncurried, lifted
 pub fn edge_loop(n: u64, xi: Rc<Array<u64>>, xj: Rc<Array<u64>>, xk: Rc<Array<u64>>, m: u64, e: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(e, m);
-  match bdec(v15) {
+  let tmp = ltb(e, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &xi;
-      let v23 = rocq_array::get::<u64>(&v20, e);
-      let u = sub(v23, 1u64);
-      let v32 = &xj;
-      let v35 = rocq_array::get::<u64>(&v32, e);
-      let v = sub(v35, 1u64);
-      let v43 = &xk;
-      let k = rocq_array::get::<u64>(&v43, e);
-      let v54 = add(e, 1u64);
-      let v75 = setmin(T, add(mul(u, n), v), k);
-      let v94 = setmin(v75, add(mul(v, n), u), k);
-      edge_loop(n, xi, xj, xk, m, v54, v94, ())
+      let tmp_1 = rocq_array::get::<u64>(&xi, e);
+      let u = sub(tmp_1, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&xj, e);
+      let v = sub(tmp_2, 1u64);
+      let k = rocq_array::get::<u64>(&xk, e);
+      let tmp_3 = add(e, 1u64);
+      let tmp_4 = setmin(T, add(mul(u, n), v), k);
+      let tmp_5 = setmin(tmp_4, add(mul(v, n), u), k);
+      edge_loop(n, xi, xj, xk, m, tmp_3, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(xi);
@@ -170,16 +144,14 @@ pub fn fw_j_1(n: u64, rowi: u64, rowk: u64, aik: u64, j: u64, T: Rc<Array<u64>>)
 // Rocq: Slowleak.slowleak_implem.fw_j (local: fw_j)
 // Variant: uncurried, lifted
 pub fn fw_j(n: u64, rowi: u64, rowk: u64, aik: u64, j: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(j, n);
-  match bdec(v14) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(j, 1u64);
-      let v32 = add(rowi, j);
-      let v39 = add(rowk, j);
-      let v40 = &T;
-      let v43 = rocq_array::get::<u64>(&v40, v39);
-      let v55 = setmin(T, v32, add(aik, v43));
-      fw_j(n, rowi, rowk, aik, v25, v55, ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = add(rowi, j);
+      let tmp_3 = rocq_array::get::<u64>(&T, add(rowk, j));
+      let tmp_4 = setmin(T, tmp_2, add(aik, tmp_3));
+      fw_j(n, rowi, rowk, aik, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       T
@@ -196,16 +168,14 @@ pub fn fw_i_1(n: u64, k: u64, rowk: u64, i: u64, T: Rc<Array<u64>>) -> Rc<Array<
 // Rocq: Slowleak.slowleak_implem.fw_i (local: fw_i)
 // Variant: uncurried, lifted
 pub fn fw_i(n: u64, k: u64, rowk: u64, i: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
       let rowi = mul(i, n);
-      let v30 = add(i, 1u64);
-      let v37 = add(rowi, k);
-      let v38 = &T;
-      let v41 = rocq_array::get::<u64>(&v38, v37);
-      let v56 = fw_j_1(n, rowi, rowk, v41, 0u64, T);
-      fw_i(n, k, rowk, v30, v56, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&T, add(rowi, k));
+      let tmp_3 = fw_j_1(n, rowi, rowk, tmp_2, 0u64, T);
+      fw_i(n, k, rowk, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       T
@@ -222,13 +192,13 @@ pub fn fw_k_1(n: u64, k: u64, T: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Slowleak.slowleak_implem.fw_k (local: fw_k)
 // Variant: uncurried, lifted
 pub fn fw_k(n: u64, k: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(k, n);
-  match bdec(v11) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(k, 1u64);
-      let v29 = mul(k, n);
-      let v42 = fw_i_1(n, k, v29, 0u64, T);
-      fw_k(n, v22, v42, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = mul(k, n);
+      let tmp_3 = fw_i_1(n, k, tmp_2, 0u64, T);
+      fw_k(n, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       T
@@ -245,15 +215,14 @@ pub fn vx_loop_1(xs: Rc<Array<u64>>, t: u64, i: u64, V: Rc<Array<u64>>) -> Rc<Ar
 // Rocq: Slowleak.slowleak_implem.vx_loop (local: vx_loop)
 // Variant: uncurried, lifted
 pub fn vx_loop(xs: Rc<Array<u64>>, t: u64, i: u64, V: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, t);
-  match bdec(v12) {
+  let tmp = ltb(i, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v31 = add(i, 1u64);
-      let v33 = &xs;
-      let v36 = rocq_array::get::<u64>(&v33, i);
-      let v50 = rocq_array::set::<u64>(V, v31, sub(v36, 1u64));
-      vx_loop(xs, t, v23, v50, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&xs, i);
+      let tmp_4 = rocq_array::set::<u64>(V, tmp_2, sub(tmp_3, 1u64));
+      vx_loop(xs, t, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(xs);
@@ -271,27 +240,19 @@ pub fn sel_loop_1(M: u64, vis: Rc<Array<bool>>, dist: Rc<Array<u64>>, i: u64, b:
 // Rocq: Slowleak.slowleak_implem.sel_loop (local: sel_loop)
 // Variant: uncurried, lifted
 pub fn sel_loop(M: u64, vis: Rc<Array<bool>>, dist: Rc<Array<u64>>, i: u64, b: u64, bv: u64, _H: ()) -> u64 {
-  let v14 = ltb(i, M);
-  match bdec(v14) {
+  let tmp = ltb(i, M);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &vis;
-      let v21 = rocq_array::get::<bool>(&v18, i);
-      match v21 {
-        true => {
+      let tmp_1 = rocq_array::get::<bool>(&vis, i);
+      if tmp_1 {
+        sel_loop(M, vis, dist, add(i, 1u64), b, bv, ())
+      } else {
+        let di = rocq_array::get::<u64>(&dist, i);
+        if ltb(di, bv) {
+          sel_loop(M, vis, dist, add(i, 1u64), i, di, ())
+        } else {
           sel_loop(M, vis, dist, add(i, 1u64), b, bv, ())
-        },
-        false => {
-          let v51 = &dist;
-          let di = rocq_array::get::<u64>(&v51, i);
-          match ltb(di, bv) {
-            true => {
-              sel_loop(M, vis, dist, add(i, 1u64), i, di, ())
-            },
-            false => {
-              sel_loop(M, vis, dist, add(i, 1u64), b, bv, ())
-            },
-          }
-        },
+        }
       }
     },
     sumbool::right => {
@@ -317,30 +278,20 @@ pub fn rel_loop_1(M: u64, V: Rc<Array<u64>>, T: Rc<Array<u64>>, vis: Rc<Array<bo
 // Rocq: Slowleak.slowleak_implem.rel_loop (local: rel_loop)
 // Variant: uncurried, lifted
 pub fn rel_loop(M: u64, V: Rc<Array<u64>>, T: Rc<Array<u64>>, vis: Rc<Array<bool>>, d: u64, ru: u64, du: u64, b: u64, dist: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v17 = ltb(b, M);
-  match bdec(v17) {
+  let tmp = ltb(b, M);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &vis;
-      let v24 = rocq_array::get::<bool>(&v21, b);
-      let dist_ = match v24 {
-        true => {
+      let tmp_1 = rocq_array::get::<bool>(&vis, b);
+      let dist_ = if tmp_1 {
+        dist
+      } else {
+        let tmp_2 = rocq_array::get::<u64>(&V, b);
+        let w = rocq_array::get::<u64>(&T, add(ru, tmp_2));
+        if leb(w, d) {
+          setmin(dist, b, add(du, w))
+        } else {
           dist
-        },
-        false => {
-          let v29 = &V;
-          let v32 = rocq_array::get::<u64>(&v29, b);
-          let v37 = add(ru, v32);
-          let v38 = &T;
-          let w = rocq_array::get::<u64>(&v38, v37);
-          match leb(w, d) {
-            true => {
-              setmin(dist, b, add(du, w))
-            },
-            false => {
-              dist
-            },
-          }
-        },
+        }
       };
       rel_loop(M, V, T, vis, d, ru, du, add(b, 1u64), dist_, ())
     },
@@ -362,46 +313,37 @@ pub fn dij_loop_1(n: u64, M: u64, tgt: u64, V: Rc<Array<u64>>, T: Rc<Array<u64>>
 // Rocq: Slowleak.slowleak_implem.dij_loop (local: dij_loop)
 // Variant: uncurried, lifted
 pub fn dij_loop(n: u64, M: u64, tgt: u64, V: Rc<Array<u64>>, T: Rc<Array<u64>>, d: u64, r: u64, vis: Rc<Array<bool>>, dist: Rc<Array<u64>>, _H: ()) -> Rc<option<u64>> {
-  let v19 = ltb(0u64, r);
-  match bdec(v19) {
+  let tmp = ltb(0u64, r);
+  match bdec(tmp) {
     sumbool::left => {
-      let v31 = Rc::clone(&vis);
-      let v34 = Rc::clone(&dist);
-      let u = sel_loop_1(M, v31, v34, 0u64, M, __rocq_global_110);
-      match eqb(u, M) {
-        true => {
+      let vis_clone = Rc::clone(&vis);
+      let dist_clone = Rc::clone(&dist);
+      let u = sel_loop_1(M, vis_clone, dist_clone, 0u64, M, __rocq_global_110);
+      if eqb(u, M) {
+        std::mem::drop(V);
+        std::mem::drop(T);
+        std::mem::drop(vis);
+        std::mem::drop(dist);
+        Rc::new(option::<u64>::None)
+      } else {
+        if eqb(u, tgt) {
           std::mem::drop(V);
           std::mem::drop(T);
           std::mem::drop(vis);
+          let tmp_1 = rocq_array::get::<u64>(&dist, u);
           std::mem::drop(dist);
-          Rc::new(option::<u64>::None)
-        },
-        false => {
-          match eqb(u, tgt) {
-            true => {
-              std::mem::drop(V);
-              std::mem::drop(T);
-              std::mem::drop(vis);
-              let v61 = &dist;
-              let v64 = rocq_array::get::<u64>(&v61, u);
-              std::mem::drop(dist);
-              Rc::new(option::<u64>::Some(v64))
-            },
-            false => {
-              let vis_ = rocq_array::set::<bool>(vis, u, true);
-              let v83 = &V;
-              let v87 = rocq_array::get::<u64>(&v83, u);
-              let v91 = mul(v87, n);
-              let v92 = &dist;
-              let v95 = rocq_array::get::<u64>(&v92, u);
-              let v102 = Rc::clone(&V);
-              let v105 = Rc::clone(&T);
-              let v108 = Rc::clone(&vis_);
-              let dist_ = rel_loop_1(M, v102, v105, v108, d, v91, v95, 0u64, dist);
-              dij_loop(n, M, tgt, V, T, d, sub(r, 1u64), vis_, dist_, ())
-            },
-          }
-        },
+          Rc::new(option::<u64>::Some(tmp_1))
+        } else {
+          let vis_ = rocq_array::set::<bool>(vis, u, true);
+          let tmp_2 = rocq_array::get::<u64>(&V, u);
+          let tmp_3 = mul(tmp_2, n);
+          let tmp_4 = rocq_array::get::<u64>(&dist, u);
+          let V_clone = Rc::clone(&V);
+          let T_clone = Rc::clone(&T);
+          let vis__clone = Rc::clone(&vis_);
+          let dist_ = rel_loop_1(M, V_clone, T_clone, vis__clone, d, tmp_3, tmp_4, 0u64, dist);
+          dij_loop(n, M, tgt, V, T, d, sub(r, 1u64), vis_, dist_, ())
+        }
       }
     },
     sumbool::right => {
@@ -417,83 +359,21 @@ pub fn dij_loop(n: u64, M: u64, tgt: u64, V: Rc<Array<u64>>, T: Rc<Array<u64>>, 
 // Rocq: Slowleak.slowleak_implem.slowleak_impl
 // Variant: uncurried
 pub fn slowleak_impl(x: u64, y: u64, xs: Rc<Array<u64>>, xi: Rc<Array<u64>>, xj: Rc<Array<u64>>, xk: Rc<Array<u64>>) -> Rc<option<u64>> {
-  let v20 = rocq_array::make::<u64>(mul(x, x), __rocq_global_110);
-  let T0 = diag_loop_1(x, 0u64, v20);
-  let v28 = &xi;
-  let m = rocq_array::length::<u64>(&v28);
+  let tmp = rocq_array::make::<u64>(mul(x, x), __rocq_global_110);
+  let T0 = diag_loop_1(x, 0u64, tmp);
+  let m = rocq_array::length::<u64>(&xi);
   let T1 = edge_loop_1(x, xi, xj, xk, m, 0u64, T0);
   let T = fw_k_1(x, 0u64, T1);
-  let v58 = &xs;
-  let t = rocq_array::length::<u64>(&v58);
+  let t = rocq_array::length::<u64>(&xs);
   let M = add(t, 2u64);
-  let v77 = rocq_array::make::<u64>(M, 0u64);
-  let v100 = rocq_array::set::<u64>(v77, add(t, 1u64), sub(x, 1u64));
-  let V = vx_loop_1(xs, t, 0u64, v100);
-  let v118 = add(t, 1u64);
-  let v125 = rocq_array::make::<bool>(M, false);
-  let v131 = rocq_array::make::<u64>(M, __rocq_global_110);
-  let v142 = rocq_array::set::<u64>(v131, 0u64, 0u64);
-  dij_loop_1(x, M, v118, V, T, y, M, v125, v142)
-}
-
-// Rocq: Slowleak.slowleak_implem.slowleak_impl
-pub fn slowleak_impl_curried(x: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> {
-  let v3 = {
-    move |y: u64| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>> {
-      let x = &x;
-      let v8 = Clone::clone(x);
-      let v11 = {
-        move |xs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>> {
-          let x = &v8;
-          let y = &y;
-          let v18 = Clone::clone(x);
-          let v20 = Clone::clone(y);
-          let v23 = {
-            move |xi: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>> {
-              let x = &v18;
-              let y = &v20;
-              let xs = &xs;
-              let v32 = Clone::clone(x);
-              let v34 = Clone::clone(y);
-              let v36 = Rc::clone(xs);
-              let v39 = {
-                move |xj: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>> {
-                  let x = &v32;
-                  let y = &v34;
-                  let xs = &v36;
-                  let xi = &xi;
-                  let v50 = Clone::clone(x);
-                  let v52 = Clone::clone(y);
-                  let v54 = Rc::clone(xs);
-                  let v56 = Rc::clone(xi);
-                  let v59 = {
-                    move |xk: Rc<Array<u64>>| -> Rc<option<u64>> {
-                      let v73 = Clone::clone(&v50);
-                      let v75 = Clone::clone(&v52);
-                      let v77 = Rc::clone(&v54);
-                      let v79 = Rc::clone(&v56);
-                      let v81 = Rc::clone(&xj);
-                      slowleak_impl(v73, v75, v77, v79, v81, xk)
-                    }
-                  };
-                  let v87: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>> = Rc::new(v59);
-                  v87
-                }
-              };
-              let v91: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>> = Rc::new(v39);
-              v91
-            }
-          };
-          let v95: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>> = Rc::new(v23);
-          v95
-        }
-      };
-      let v99: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>> = Rc::new(v11);
-      v99
-    }
-  };
-  let v103: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> = Rc::new(v3);
-  v103
+  let tmp_1 = rocq_array::make::<u64>(M, 0u64);
+  let tmp_2 = rocq_array::set::<u64>(tmp_1, add(t, 1u64), sub(x, 1u64));
+  let V = vx_loop_1(xs, t, 0u64, tmp_2);
+  let tmp_3 = add(t, 1u64);
+  let tmp_4 = rocq_array::make::<bool>(M, false);
+  let tmp_5 = rocq_array::make::<u64>(M, __rocq_global_110);
+  let tmp_6 = rocq_array::set::<u64>(tmp_5, 0u64, 0u64);
+  dij_loop_1(x, M, tmp_3, V, T, y, M, tmp_4, tmp_6)
 }
 
 mod __rocq_reuse {
@@ -644,11 +524,4 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> {
-  let v0: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = __rocq_global_783.with(Clone::clone);
-  v0
-}
 const __rocq_global_110: u64 = 2305843009213693952u64;
-std::thread_local! { static __rocq_global_783: Rc<dyn Fn(u64, u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = slowleak(); }
-std::thread_local! { static __rocq_global_786: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> = slowleak_curried(); }

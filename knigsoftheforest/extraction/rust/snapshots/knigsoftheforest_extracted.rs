@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -28,21 +27,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Knigsoftheforest.knigsoftheforest_implem.knigsoftheforest
-// Variant: uncurried
-pub fn knigsoftheforest() -> Rc<dyn Fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> {
-  let v0: fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>> = knigs_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Knigsoftheforest.knigsoftheforest_implem.knigsoftheforest
-pub fn knigsoftheforest_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> = knigs_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -57,13 +41,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -88,20 +69,18 @@ pub fn sift_up_1(h: Rc<Array<u64>>, i: u64) -> Rc<Array<u64>> {
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.sift_up (local: sift_up)
 // Variant: uncurried, lifted
 pub fn sift_up(h: Rc<Array<u64>>, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(0u64, i);
-  match bdec(v12) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
       let q = div(sub(i, 1u64), 2u64);
-      let v32 = &h;
-      let vi = rocq_array::get::<u64>(&v32, i);
-      let v36 = &h;
-      let vq = rocq_array::get::<u64>(&v36, q);
-      let v47 = ltb(vq, vi);
-      match bdec(v47) {
+      let vi = rocq_array::get::<u64>(&h, i);
+      let vq = rocq_array::get::<u64>(&h, q);
+      let tmp_1 = ltb(vq, vi);
+      match bdec(tmp_1) {
         sumbool::left => {
-          let v58 = rocq_array::set::<u64>(h, i, vq);
-          let v64 = rocq_array::set::<u64>(v58, q, vi);
-          sift_up(v64, q, ())
+          let tmp_2 = rocq_array::set::<u64>(h, i, vq);
+          let tmp_3 = rocq_array::set::<u64>(tmp_2, q, vi);
+          sift_up(tmp_3, q, ())
         },
         sumbool::right => {
           h
@@ -117,8 +96,8 @@ pub fn sift_up(h: Rc<Array<u64>>, i: u64, _H: ()) -> Rc<Array<u64>> {
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.insert
 // Variant: uncurried
 pub fn insert(h: Rc<Array<u64>>, s: u64, v: u64) -> Rc<Array<u64>> {
-  let v11 = rocq_array::set::<u64>(h, s, v);
-  sift_up_1(v11, s)
+  let tmp = rocq_array::set::<u64>(h, s, v);
+  sift_up_1(tmp, s)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
@@ -134,16 +113,13 @@ pub fn step(st: ((Rc<Array<u64>>, u64), Rc<Array<u64>>), yr: u64, sv: u64) -> ((
     (v4, v6) => {
       match v4 {
         (v9, v11) => {
-          match eqb(yr, 2011u64) {
-            true => {
-              let v29 = insert(v9, v11, sv);
-              ((v29, add(v11, 1u64)), v6)
-            },
-            false => {
-              let v56 = (v9, v11);
-              let v72 = rocq_array::set::<u64>(v6, sub(yr, 2011u64), sv);
-              (v56, v72)
-            },
+          if eqb(yr, 2011u64) {
+            let tmp = insert(v9, v11, sv);
+            ((tmp, add(v11, 1u64)), v6)
+          } else {
+            let tmp_1 = (v9, v11);
+            let tmp_2 = rocq_array::set::<u64>(v6, sub(yr, 2011u64), sv);
+            (tmp_1, tmp_2)
           }
         },
       }
@@ -160,15 +136,13 @@ pub fn fill_1(ys: Rc<Array<u64>>, ps: Rc<Array<u64>>, m: u64, i: u64, st: ((Rc<A
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(ys: Rc<Array<u64>>, ps: Rc<Array<u64>>, m: u64, i: u64, st: ((Rc<Array<u64>>, u64), Rc<Array<u64>>), _H: ()) -> ((Rc<Array<u64>>, u64), Rc<Array<u64>>) {
-  let v13 = ltb(i, m);
-  match bdec(v13) {
+  let tmp = ltb(i, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v26 = &ys;
-      let v29 = rocq_array::get::<u64>(&v26, i);
-      let v30 = &ps;
-      let v33 = rocq_array::get::<u64>(&v30, i);
-      fill(ys, ps, m, v24, step(st, v29, v33), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&ys, i);
+      let tmp_3 = rocq_array::get::<u64>(&ps, i);
+      fill(ys, ps, m, tmp_1, step(st, tmp_2, tmp_3), ())
     },
     sumbool::right => {
       std::mem::drop(ys);
@@ -181,29 +155,20 @@ pub fn fill(ys: Rc<Array<u64>>, ps: Rc<Array<u64>>, m: u64, i: u64, st: ((Rc<Arr
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.pick
 // Variant: uncurried
 pub fn pick(h: Rc<Array<u64>>, s: u64, l: u64) -> u64 {
-  let v12 = add(l, 1u64);
-  match ltb(v12, s) {
-    true => {
-      let v19 = &h;
-      let v22 = rocq_array::get::<u64>(&v19, l);
-      let v30 = add(l, 1u64);
-      let v31 = &h;
-      let v34 = rocq_array::get::<u64>(&v31, v30);
-      match ltb(v22, v34) {
-        true => {
-          std::mem::drop(h);
-          add(l, 1u64)
-        },
-        false => {
-          std::mem::drop(h);
-          l
-        },
-      }
-    },
-    false => {
+  let tmp = add(l, 1u64);
+  if ltb(tmp, s) {
+    let tmp_1 = rocq_array::get::<u64>(&h, l);
+    let tmp_2 = rocq_array::get::<u64>(&h, add(l, 1u64));
+    if ltb(tmp_1, tmp_2) {
+      std::mem::drop(h);
+      add(l, 1u64)
+    } else {
       std::mem::drop(h);
       l
-    },
+    }
+  } else {
+    std::mem::drop(h);
+    l
   }
 }
 
@@ -222,22 +187,20 @@ pub fn sift_down_1(h: Rc<Array<u64>>, s: u64, i: u64) -> Rc<Array<u64>> {
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.sift_down (local: sift_down)
 // Variant: uncurried, lifted
 pub fn sift_down(h: Rc<Array<u64>>, s: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v19 = ltb(i, div(s, 2u64));
-  match bdec(v19) {
+  let tmp = ltb(i, div(s, 2u64));
+  match bdec(tmp) {
     sumbool::left => {
-      let v39 = add(mul(2u64, i), 1u64);
-      let v42 = Rc::clone(&h);
-      let c = pick(v42, s, v39);
-      let v48 = &h;
-      let vi = rocq_array::get::<u64>(&v48, i);
-      let v52 = &h;
-      let vc = rocq_array::get::<u64>(&v52, c);
-      let v63 = ltb(vi, vc);
-      match bdec(v63) {
+      let tmp_1 = add(mul(2u64, i), 1u64);
+      let h_clone = Rc::clone(&h);
+      let c = pick(h_clone, s, tmp_1);
+      let vi = rocq_array::get::<u64>(&h, i);
+      let vc = rocq_array::get::<u64>(&h, c);
+      let tmp_2 = ltb(vi, vc);
+      match bdec(tmp_2) {
         sumbool::left => {
-          let v74 = rocq_array::set::<u64>(h, i, vc);
-          let v80 = rocq_array::set::<u64>(v74, c, vi);
-          sift_down(v80, s, c, ())
+          let tmp_3 = rocq_array::set::<u64>(h, i, vc);
+          let tmp_4 = rocq_array::set::<u64>(tmp_3, c, vi);
+          sift_down(tmp_4, s, c, ())
         },
         sumbool::right => {
           h
@@ -254,10 +217,9 @@ pub fn sift_down(h: Rc<Array<u64>>, s: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
 // Variant: uncurried
 pub fn extract(h: Rc<Array<u64>>, s: u64) -> Rc<Array<u64>> {
   let s1 = sub(s, 1u64);
-  let v13 = &h;
-  let v16 = rocq_array::get::<u64>(&v13, s1);
-  let v23 = rocq_array::set::<u64>(h, 0u64, v16);
-  sift_down_1(v23, s1, 0u64)
+  let tmp = rocq_array::get::<u64>(&h, s1);
+  let tmp_1 = rocq_array::set::<u64>(h, 0u64, tmp);
+  sift_down_1(tmp_1, s1, 0u64)
 }
 
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.sim
@@ -269,46 +231,33 @@ pub fn sim_1(t: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, p: u64, s: u64, d: u6
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.sim (local: sim)
 // Variant: uncurried, lifted
 pub fn sim(t: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, p: u64, s: u64, d: u64, _H: ()) -> Rc<option<u64>> {
-  let v14 = ltb(d, n);
-  match bdec(v14) {
+  let tmp = ltb(d, n);
+  match bdec(tmp) {
     sumbool::left => {
-      match eqb(s, 0u64) {
-        true => {
+      if eqb(s, 0u64) {
+        std::mem::drop(t);
+        std::mem::drop(h);
+        Rc::new(option::<u64>::None)
+      } else {
+        let top = rocq_array::get::<u64>(&h, 0u64);
+        if eqb(top, p) {
           std::mem::drop(t);
           std::mem::drop(h);
-          Rc::new(option::<u64>::None)
-        },
-        false => {
-          let v33 = 0u64;
-          let v34 = &h;
-          let top = rocq_array::get::<u64>(&v34, v33);
-          match eqb(top, p) {
-            true => {
-              std::mem::drop(t);
-              std::mem::drop(h);
-              Rc::new(option::<u64>::Some(add(2011u64, d)))
-            },
-            false => {
-              let v69 = add(d, 1u64);
-              match ltb(v69, n) {
-                true => {
-                  let v81 = extract(h, s);
-                  let v89 = sub(s, 1u64);
-                  let v97 = add(d, 1u64);
-                  let v98 = &t;
-                  let v101 = rocq_array::get::<u64>(&v98, v97);
-                  let v108 = insert(v81, v89, v101);
-                  sim(t, v108, n, p, s, add(d, 1u64), ())
-                },
-                false => {
-                  std::mem::drop(t);
-                  std::mem::drop(h);
-                  Rc::new(option::<u64>::None)
-                },
-              }
-            },
+          Rc::new(option::<u64>::Some(add(2011u64, d)))
+        } else {
+          let tmp_1 = add(d, 1u64);
+          if ltb(tmp_1, n) {
+            let tmp_2 = extract(h, s);
+            let tmp_3 = sub(s, 1u64);
+            let tmp_4 = rocq_array::get::<u64>(&t, add(d, 1u64));
+            let tmp_5 = insert(tmp_2, tmp_3, tmp_4);
+            sim(t, tmp_5, n, p, s, add(d, 1u64), ())
+          } else {
+            std::mem::drop(t);
+            std::mem::drop(h);
+            Rc::new(option::<u64>::None)
           }
-        },
+        }
       }
     },
     sumbool::right => {
@@ -322,14 +271,13 @@ pub fn sim(t: Rc<Array<u64>>, h: Rc<Array<u64>>, n: u64, p: u64, s: u64, d: u64,
 // Rocq: Knigsoftheforest.knigsoftheforest_implem.knigs_impl
 // Variant: uncurried
 pub fn knigs_impl(_k: u64, n: u64, y: u64, p: u64, ys: Rc<Array<u64>>, ps: Rc<Array<u64>>) -> Rc<option<u64>> {
-  let v6 = &ys;
-  let m = rocq_array::length::<u64>(&v6);
-  let v23 = rocq_array::make::<u64>(add(m, 1u64), 0u64);
-  let v30 = (v23, 0u64);
-  let v38 = rocq_array::make::<u64>(n, 0u64);
-  let st0 = step((v30, v38), y, p);
-  let v65 = fill_1(ys, ps, m, 0u64, st0);
-  match v65 {
+  let m = rocq_array::length::<u64>(&ys);
+  let tmp = rocq_array::make::<u64>(add(m, 1u64), 0u64);
+  let tmp_1 = (tmp, 0u64);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let st0 = step((tmp_1, tmp_2), y, p);
+  let tmp_3 = fill_1(ys, ps, m, 0u64, st0);
+  match tmp_3 {
     (v67, v69) => {
       match v67 {
         (v72, v74) => {
@@ -338,66 +286,6 @@ pub fn knigs_impl(_k: u64, n: u64, y: u64, p: u64, ys: Rc<Array<u64>>, ps: Rc<Ar
       }
     },
   }
-}
-
-// Rocq: Knigsoftheforest.knigsoftheforest_implem.knigs_impl
-pub fn knigs_impl_curried(k: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> {
-  let v3 = {
-    move |n: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>> {
-      let k = &k;
-      let v8 = Clone::clone(k);
-      let v11 = {
-        move |y: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>> {
-          let k = &v8;
-          let n = &n;
-          let v18 = Clone::clone(k);
-          let v20 = Clone::clone(n);
-          let v23 = {
-            move |p: u64| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>> {
-              let k = &v18;
-              let n = &v20;
-              let y = &y;
-              let v32 = Clone::clone(k);
-              let v34 = Clone::clone(n);
-              let v36 = Clone::clone(y);
-              let v39 = {
-                move |ys: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>> {
-                  let k = &v32;
-                  let n = &v34;
-                  let y = &v36;
-                  let p = &p;
-                  let v50 = Clone::clone(k);
-                  let v52 = Clone::clone(n);
-                  let v54 = Clone::clone(y);
-                  let v56 = Clone::clone(p);
-                  let v59 = {
-                    move |ps: Rc<Array<u64>>| -> Rc<option<u64>> {
-                      let v73 = Clone::clone(&v50);
-                      let v75 = Clone::clone(&v52);
-                      let v77 = Clone::clone(&v54);
-                      let v79 = Clone::clone(&v56);
-                      let v81 = Rc::clone(&ys);
-                      knigs_impl(v73, v75, v77, v79, v81, ps)
-                    }
-                  };
-                  let v87: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>> = Rc::new(v59);
-                  v87
-                }
-              };
-              let v91: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>> = Rc::new(v39);
-              v91
-            }
-          };
-          let v95: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>> = Rc::new(v23);
-          v95
-        }
-      };
-      let v99: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>> = Rc::new(v11);
-      v99
-    }
-  };
-  let v103: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>> = Rc::new(v3);
-  v103
 }
 
 mod __rocq_reuse {
@@ -548,10 +436,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> {
-  let v0: Rc<dyn Fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = __rocq_global_484.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_484: Rc<dyn Fn(u64, u64, u64, u64, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<option<u64>>> = knigsoftheforest(); }
-std::thread_local! { static __rocq_global_487: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<option<u64>>>>>>>> = knigsoftheforest_curried(); }

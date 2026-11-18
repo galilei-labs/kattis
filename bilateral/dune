@@ -6,9 +6,11 @@
  (rocq.theory
   (name Bilateral.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Bilateral)
  (modules bilateral_implem)
- (theories Bilateral.spec Stdlib stdpp StdGalilei))
+  (theories Bilateral.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -14,21 +13,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Chatter.chatter_implem.chatter
-// Variant: uncurried
-pub fn chatter() -> Rc<dyn Fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>)> {
-  let v0: fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>) = chatter_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>)> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Chatter.chatter_implem.chatter
-pub fn chatter_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>> = chatter_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -43,13 +27,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Chatter.chatter_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -68,13 +49,13 @@ pub fn init_1(n: u64, i: u64, rep: Rc<Array<u64>>, tl: Rc<Array<u64>>) -> (Rc<Ar
 // Rocq: Chatter.chatter_implem.init (local: init)
 // Variant: uncurried, lifted
 pub fn init(n: u64, i: u64, rep: Rc<Array<u64>>, tl: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v30 = rocq_array::set::<u64>(rep, i, i);
-      let v37 = rocq_array::set::<u64>(tl, i, i);
-      init(n, v23, v30, v37, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(rep, i, i);
+      let tmp_3 = rocq_array::set::<u64>(tl, i, i);
+      init(n, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       (rep, tl)
@@ -115,20 +96,17 @@ pub fn redraw_1(n: u64, a: u64, b: u64, c: u64, r: u64, bud: u64) -> ((u64, u64)
 // Rocq: Chatter.chatter_implem.redraw (local: redraw)
 // Variant: uncurried, lifted
 pub fn redraw(n: u64, a: u64, b: u64, c: u64, r: u64, bud: u64, _H: ()) -> ((u64, u64), u64) {
-  let v16 = ltb(0u64, bud);
-  match bdec(v16) {
+  let tmp = ltb(0u64, bud);
+  match bdec(tmp) {
     sumbool::left => {
       let r1 = nx(a, b, c, r);
       let r2 = nx(a, b, c, r1);
       let x = mod_(r1, n);
       let y = mod_(r2, n);
-      match eqb(x, y) {
-        true => {
-          redraw(n, a, b, c, r2, sub(bud, 1u64), ())
-        },
-        false => {
-          ((r2, x), y)
-        },
+      if eqb(x, y) {
+        redraw(n, a, b, c, r2, sub(bud, 1u64), ())
+      } else {
+        ((r2, x), y)
       }
     },
     sumbool::right => {
@@ -146,14 +124,13 @@ pub fn relabel_1(nxt: Rc<Array<u64>>, big: u64, q: u64, cnt: u64, rep: Rc<Array<
 // Rocq: Chatter.chatter_implem.relabel (local: relabel)
 // Variant: uncurried, lifted
 pub fn relabel(nxt: Rc<Array<u64>>, big: u64, q: u64, cnt: u64, rep: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v15 = ltb(0u64, cnt);
-  match bdec(v15) {
+  let tmp = ltb(0u64, cnt);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &nxt;
-      let v22 = rocq_array::get::<u64>(&v19, q);
-      let v30 = sub(cnt, 1u64);
-      let v37 = rocq_array::set::<u64>(rep, q, big);
-      relabel(nxt, big, v22, v30, v37, ())
+      let tmp_1 = rocq_array::get::<u64>(&nxt, q);
+      let tmp_2 = sub(cnt, 1u64);
+      let tmp_3 = rocq_array::set::<u64>(rep, q, big);
+      relabel(nxt, big, tmp_1, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(nxt);
@@ -165,49 +142,34 @@ pub fn relabel(nxt: Rc<Array<u64>>, big: u64, q: u64, cnt: u64, rep: Rc<Array<u6
 // Rocq: Chatter.chatter_implem.merge
 // Variant: uncurried
 pub fn merge(big: u64, small: u64, rep: Rc<Array<u64>>, nxt: Rc<Array<u64>>, tl: Rc<Array<u64>>, sz: Rc<Array<u64>>) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v7 = &sz;
-  let v10 = rocq_array::get::<u64>(&v7, small);
-  let v13 = Rc::clone(&nxt);
-  let rep_ = relabel_1(v13, big, small, v10, rep);
-  let v23 = &tl;
-  let v26 = rocq_array::get::<u64>(&v23, big);
-  let nxt_ = rocq_array::set::<u64>(nxt, v26, small);
-  let v34 = &tl;
-  let v37 = rocq_array::get::<u64>(&v34, small);
-  let tl_ = rocq_array::set::<u64>(tl, big, v37);
-  let v46 = &sz;
-  let v49 = rocq_array::get::<u64>(&v46, big);
-  let v50 = &sz;
-  let v53 = rocq_array::get::<u64>(&v50, small);
-  let sz_ = rocq_array::set::<u64>(sz, big, add(v49, v53));
+  let tmp = rocq_array::get::<u64>(&sz, small);
+  let nxt_clone = Rc::clone(&nxt);
+  let rep_ = relabel_1(nxt_clone, big, small, tmp, rep);
+  let tmp_1 = rocq_array::get::<u64>(&tl, big);
+  let nxt_ = rocq_array::set::<u64>(nxt, tmp_1, small);
+  let tmp_2 = rocq_array::get::<u64>(&tl, small);
+  let tl_ = rocq_array::set::<u64>(tl, big, tmp_2);
+  let tmp_3 = rocq_array::get::<u64>(&sz, big);
+  let tmp_4 = rocq_array::get::<u64>(&sz, small);
+  let sz_ = rocq_array::set::<u64>(sz, big, add(tmp_3, tmp_4));
   (((rep_, nxt_), tl_), sz_)
 }
 
 // Rocq: Chatter.chatter_implem.union
 // Variant: uncurried
 pub fn union(x: u64, y: u64, rep: Rc<Array<u64>>, nxt: Rc<Array<u64>>, tl: Rc<Array<u64>>, sz: Rc<Array<u64>>) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let v6 = &rep;
-  let px = rocq_array::get::<u64>(&v6, x);
-  let v10 = &rep;
-  let py = rocq_array::get::<u64>(&v10, y);
-  match eqb(px, py) {
-    true => {
-      (((rep, nxt), tl), sz)
-    },
-    false => {
-      let v42 = &sz;
-      let v45 = rocq_array::get::<u64>(&v42, py);
-      let v46 = &sz;
-      let v49 = rocq_array::get::<u64>(&v46, px);
-      match ltb(v45, v49) {
-        true => {
-          merge(px, py, rep, nxt, tl, sz)
-        },
-        false => {
-          merge(py, px, rep, nxt, tl, sz)
-        },
-      }
-    },
+  let px = rocq_array::get::<u64>(&rep, x);
+  let py = rocq_array::get::<u64>(&rep, y);
+  if eqb(px, py) {
+    (((rep, nxt), tl), sz)
+  } else {
+    let tmp = rocq_array::get::<u64>(&sz, py);
+    let tmp_1 = rocq_array::get::<u64>(&sz, px);
+    if ltb(tmp, tmp_1) {
+      merge(px, py, rep, nxt, tl, sz)
+    } else {
+      merge(py, px, rep, nxt, tl, sz)
+    }
   }
 }
 
@@ -220,17 +182,17 @@ pub fn sim_1(n: u64, a: u64, b: u64, c: u64, r: u64, k: u64, rep: Rc<Array<u64>>
 // Rocq: Chatter.chatter_implem.sim (local: sim)
 // Variant: uncurried, lifted
 pub fn sim(n: u64, a: u64, b: u64, c: u64, r: u64, k: u64, rep: Rc<Array<u64>>, nxt: Rc<Array<u64>>, tl: Rc<Array<u64>>, sz: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v20 = ltb(0u64, k);
-  match bdec(v20) {
+  let tmp = ltb(0u64, k);
+  match bdec(tmp) {
     sumbool::left => {
-      let v32 = add(c, 1u64);
-      let v45 = redraw_1(n, a, b, c, r, v32);
-      match v45 {
+      let tmp_1 = add(c, 1u64);
+      let tmp_2 = redraw_1(n, a, b, c, r, tmp_1);
+      match tmp_2 {
         (v47, v49) => {
           match v47 {
             (v52, v54) => {
-              let v69 = union(v54, v49, rep, nxt, tl, sz);
-              match v69 {
+              let tmp_3 = union(v54, v49, rep, nxt, tl, sz);
+              match tmp_3 {
                 (v71, v73) => {
                   match v71 {
                     (v76, v78) => {
@@ -265,27 +227,20 @@ pub fn tally_1(n: u64, i: u64, rep: Rc<Array<u64>>, sz: Rc<Array<u64>>, seen: Rc
 // Rocq: Chatter.chatter_implem.tally (local: tally)
 // Variant: uncurried, lifted
 pub fn tally(n: u64, i: u64, rep: Rc<Array<u64>>, sz: Rc<Array<u64>>, seen: Rc<Array<u64>>, cnt: Rc<Array<u64>>, g: u64, _H: ()) -> (u64, Rc<Array<u64>>) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &rep;
-      let ro = rocq_array::get::<u64>(&v19, i);
-      let v24 = &seen;
-      let v27 = rocq_array::get::<u64>(&v24, ro);
-      match eqb(v27, 0u64) {
-        true => {
-          let v36 = &sz;
-          let s = rocq_array::get::<u64>(&v36, ro);
-          let v47 = add(i, 1u64);
-          let v56 = rocq_array::set::<u64>(seen, ro, 1u64);
-          let v58 = &cnt;
-          let v61 = rocq_array::get::<u64>(&v58, s);
-          let v75 = rocq_array::set::<u64>(cnt, s, add(v61, 1u64));
-          tally(n, v47, rep, sz, v56, v75, add(g, 1u64), ())
-        },
-        false => {
-          tally(n, add(i, 1u64), rep, sz, seen, cnt, g, ())
-        },
+      let ro = rocq_array::get::<u64>(&rep, i);
+      let tmp_1 = rocq_array::get::<u64>(&seen, ro);
+      if eqb(tmp_1, 0u64) {
+        let s = rocq_array::get::<u64>(&sz, ro);
+        let tmp_2 = add(i, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(seen, ro, 1u64);
+        let tmp_4 = rocq_array::get::<u64>(&cnt, s);
+        let tmp_5 = rocq_array::set::<u64>(cnt, s, add(tmp_4, 1u64));
+        tally(n, tmp_2, rep, sz, tmp_3, tmp_5, add(g, 1u64), ())
+      } else {
+        tally(n, add(i, 1u64), rep, sz, seen, cnt, g, ())
       }
     },
     sumbool::right => {
@@ -306,23 +261,18 @@ pub fn countd_1(n: u64, i: u64, cnt: Rc<Array<u64>>, d: u64) -> u64 {
 // Rocq: Chatter.chatter_implem.countd (local: countd)
 // Variant: uncurried, lifted
 pub fn countd(n: u64, i: u64, cnt: Rc<Array<u64>>, d: u64, _H: ()) -> u64 {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v26 = 0u64;
-      let v32 = sub(n, i);
-      let v33 = &cnt;
-      let v36 = rocq_array::get::<u64>(&v33, v32);
-      let v42 = match ltb(v26, v36) {
-        true => {
-          add(d, 1u64)
-        },
-        false => {
-          d
-        },
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = 0u64;
+      let tmp_3 = rocq_array::get::<u64>(&cnt, sub(n, i));
+      let tmp_4 = if ltb(tmp_2, tmp_3) {
+        add(d, 1u64)
+      } else {
+        d
       };
-      countd(n, v23, cnt, v42, ())
+      countd(n, tmp_1, cnt, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(cnt);
@@ -340,22 +290,18 @@ pub fn fill_1(n: u64, i: u64, j: u64, cnt: Rc<Array<u64>>, out: Rc<Array<(u64, u
 // Rocq: Chatter.chatter_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(n: u64, i: u64, j: u64, cnt: Rc<Array<u64>>, out: Rc<Array<(u64, u64)>>, _H: ()) -> Rc<Array<(u64, u64)>> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
       let s = sub(n, i);
-      let v23 = &cnt;
-      let v = rocq_array::get::<u64>(&v23, s);
-      match ltb(0u64, v) {
-        true => {
-          let v43 = add(i, 1u64);
-          let v51 = add(j, 1u64);
-          let v64 = rocq_array::set::<(u64, u64)>(out, j, (s, v));
-          fill(n, v43, v51, cnt, v64, ())
-        },
-        false => {
-          fill(n, add(i, 1u64), j, cnt, out, ())
-        },
+      let v = rocq_array::get::<u64>(&cnt, s);
+      if ltb(0u64, v) {
+        let tmp_1 = add(i, 1u64);
+        let tmp_2 = add(j, 1u64);
+        let tmp_3 = rocq_array::set::<(u64, u64)>(out, j, (s, v));
+        fill(n, tmp_1, tmp_2, cnt, tmp_3, ())
+      } else {
+        fill(n, add(i, 1u64), j, cnt, out, ())
       }
     },
     sumbool::right => {
@@ -368,83 +314,38 @@ pub fn fill(n: u64, i: u64, j: u64, cnt: Rc<Array<u64>>, out: Rc<Array<(u64, u64
 // Rocq: Chatter.chatter_implem.chatter_impl
 // Variant: uncurried
 pub fn chatter_impl(n: u64, r: u64, a: u64, b: u64, c: u64) -> (u64, Rc<Array<(u64, u64)>>) {
-  let v14 = rocq_array::make::<u64>(n, 0u64);
-  let v21 = rocq_array::make::<u64>(n, 0u64);
-  let v30 = init_1(n, 0u64, v14, v21);
-  match v30 {
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = init_1(n, 0u64, tmp, tmp_1);
+  match tmp_2 {
     (v32, v34) => {
-      let v43 = rocq_array::make::<u64>(n, 0u64);
-      let v50 = rocq_array::make::<u64>(n, 1u64);
-      let v71 = sim_1(n, a, b, c, r, n, v32, v43, v34, v50);
-      match &v71 {
+      let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+      let tmp_4 = rocq_array::make::<u64>(n, 1u64);
+      let tmp_5 = sim_1(n, a, b, c, r, n, v32, tmp_3, v34, tmp_4);
+      match &tmp_5 {
         (sz, rep) => {
-          let v80 = 0u64;
-          let v87 = rocq_array::make::<u64>(n, 0u64);
-          let v102 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-          let v104 = 0u64;
-          let v110 = Rc::clone(sz);
-          let v111 = Rc::clone(rep);
-          std::mem::drop(v71);
-          let v119 = tally_1(n, v80, v110, v111, v87, v102, v104);
-          match v119 {
+          let tmp_6 = 0u64;
+          let tmp_7 = rocq_array::make::<u64>(n, 0u64);
+          let tmp_8 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+          let tmp_9 = 0u64;
+          let sz_clone = Rc::clone(sz);
+          let rep_clone = Rc::clone(rep);
+          std::mem::drop(tmp_5);
+          let tmp_10 = tally_1(n, tmp_6, sz_clone, rep_clone, tmp_7, tmp_8, tmp_9);
+          match tmp_10 {
             (v121, v123) => {
               let g = &v123;
-              let v136 = Rc::clone(g);
-              let d = countd_1(n, 0u64, v136, 0u64);
-              let v159 = rocq_array::make::<(u64, u64)>(d, (0u64, 0u64));
-              let v170 = fill_1(n, 0u64, 0u64, v123, v159);
-              (v121, v170)
+              let g_clone = Rc::clone(g);
+              let d = countd_1(n, 0u64, g_clone, 0u64);
+              let tmp_11 = rocq_array::make::<(u64, u64)>(d, (0u64, 0u64));
+              let tmp_12 = fill_1(n, 0u64, 0u64, v123, tmp_11);
+              (v121, tmp_12)
             },
           }
         },
       }
     },
   }
-}
-
-// Rocq: Chatter.chatter_implem.chatter_impl
-pub fn chatter_impl_curried(n: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>> {
-  let v3 = {
-    move |r: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |a: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>> {
-          let n = &v8;
-          let r = &r;
-          let v18 = Clone::clone(n);
-          let v20 = Clone::clone(r);
-          let v23 = {
-            move |b: u64| -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)> {
-              let n = &v18;
-              let r = &v20;
-              let a = &a;
-              let v32 = Clone::clone(n);
-              let v34 = Clone::clone(r);
-              let v36 = Clone::clone(a);
-              let v39 = {
-                move |c: u64| -> (u64, Rc<Array<(u64, u64)>>) {
-                  let v51 = Clone::clone(&v32);
-                  let v53 = Clone::clone(&v34);
-                  let v55 = Clone::clone(&v36);
-                  let v57 = Clone::clone(&b);
-                  chatter_impl(v51, v53, v55, v57, c)
-                }
-              };
-              let v63: Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)> = Rc::new(v39);
-              v63
-            }
-          };
-          let v67: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>> = Rc::new(v23);
-          v67
-        }
-      };
-      let v71: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>> = Rc::new(v11);
-      v71
-    }
-  };
-  let v75: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>> = Rc::new(v3);
-  v75
 }
 
 mod __rocq_reuse {
@@ -595,10 +496,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>)> {
-  let v0: Rc<dyn Fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>)> = __rocq_global_739.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_739: Rc<dyn Fn(u64, u64, u64, u64, u64) -> (u64, Rc<Array<(u64, u64)>>)> = chatter(); }
-std::thread_local! { static __rocq_global_742: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> (u64, Rc<Array<(u64, u64)>>)>>>>> = chatter_curried(); }

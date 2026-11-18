@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -669,21 +668,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
 
-// Rocq: Chesstournament.chesstournament_implem.chess_consistent
-// Variant: uncurried
-pub fn chess_consistent() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool = chess_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Chesstournament.chesstournament_implem.chess_consistent
-pub fn chess_consistent_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> = chess_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -698,13 +682,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Chesstournament.chesstournament_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -723,12 +704,12 @@ pub fn iota_loop_1(n: u64, x: u64, p: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Chesstournament.chesstournament_implem.iota_loop (local: iota_loop)
 // Variant: uncurried, lifted
 pub fn iota_loop(n: u64, x: u64, p: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(x, n);
-  match bdec(v11) {
+  let tmp = ltb(x, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(x, 1u64);
-      let v29 = rocq_array::set::<u64>(p, x, x);
-      iota_loop(n, v22, v29, ())
+      let tmp_1 = add(x, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(p, x, x);
+      iota_loop(n, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       p
@@ -738,22 +719,22 @@ pub fn iota_loop(n: u64, x: u64, p: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Chesstournament.chesstournament_implem.iota
 pub fn iota(n: u64) -> Rc<Array<u64>> {
-  let v10 = rocq_array::make::<u64>(n, 0u64);
-  iota_loop_1(n, 0u64, v10)
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  iota_loop_1(n, 0u64, tmp)
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Chesstournament.chesstournament_implem.find
@@ -765,20 +746,19 @@ pub fn find_1(p: Rc<Array<u64>>, x: u64) -> (Rc<Array<u64>>, u64) {
 // Rocq: Chesstournament.chesstournament_implem.find (local: find)
 // Variant: uncurried, lifted
 pub fn find(p: Rc<Array<u64>>, x: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v3 = &p;
-  let y = rocq_array::get::<u64>(&v3, x);
-  let v14 = eqb(y, x);
-  match bdec(v14) {
+  let y = rocq_array::get::<u64>(&p, x);
+  let tmp = eqb(y, x);
+  match bdec(tmp) {
     sumbool::left => {
       (p, x)
     },
     sumbool::right => {
       let f = find(p, y, ());
-      let v38 = Clone::clone(&f);
-      let v40 = fst::<Rc<Array<u64>>, u64>(v38);
-      let v43 = Clone::clone(&f);
-      let v52 = rocq_array::set::<u64>(v40, x, snd::<Rc<Array<u64>>, u64>(v43));
-      (v52, snd::<Rc<Array<u64>>, u64>(f))
+      let f_clone = Clone::clone(&f);
+      let tmp_1 = fst::<Rc<Array<u64>>, u64>(f_clone);
+      let f_clone_1 = Clone::clone(&f);
+      let tmp_2 = rocq_array::set::<u64>(tmp_1, x, snd::<Rc<Array<u64>>, u64>(f_clone_1));
+      (tmp_2, snd::<Rc<Array<u64>>, u64>(f))
     },
   }
 }
@@ -786,35 +766,24 @@ pub fn find(p: Rc<Array<u64>>, x: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
 // Rocq: Chesstournament.chesstournament_implem.union
 // Variant: uncurried
 pub fn union(p: Rc<Array<u64>>, rk: Rc<Array<u64>>, a: u64, b: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  match eqb(a, b) {
-    true => {
-      (p, rk)
-    },
-    false => {
-      let v19 = &rk;
-      let ra = rocq_array::get::<u64>(&v19, a);
-      let v23 = &rk;
-      let rb = rocq_array::get::<u64>(&v23, b);
-      match ltb(ra, rb) {
-        true => {
-          let v41 = rocq_array::set::<u64>(p, a, b);
-          (v41, rk)
-        },
-        false => {
-          match ltb(rb, ra) {
-            true => {
-              let v63 = rocq_array::set::<u64>(p, b, a);
-              (v63, rk)
-            },
-            false => {
-              let v77 = rocq_array::set::<u64>(p, b, a);
-              let v92 = rocq_array::set::<u64>(rk, a, add(ra, 1u64));
-              (v77, v92)
-            },
-          }
-        },
+  if eqb(a, b) {
+    (p, rk)
+  } else {
+    let ra = rocq_array::get::<u64>(&rk, a);
+    let rb = rocq_array::get::<u64>(&rk, b);
+    if ltb(ra, rb) {
+      let tmp = rocq_array::set::<u64>(p, a, b);
+      (tmp, rk)
+    } else {
+      if ltb(rb, ra) {
+        let tmp_1 = rocq_array::set::<u64>(p, b, a);
+        (tmp_1, rk)
+      } else {
+        let tmp_2 = rocq_array::set::<u64>(p, b, a);
+        let tmp_3 = rocq_array::set::<u64>(rk, a, add(ra, 1u64));
+        (tmp_2, tmp_3)
       }
-    },
+    }
   }
 }
 
@@ -822,12 +791,12 @@ pub fn union(p: Rc<Array<u64>>, rk: Rc<Array<u64>>, a: u64, b: u64) -> (Rc<Array
 // Variant: uncurried
 pub fn unite(p: Rc<Array<u64>>, rk: Rc<Array<u64>>, k: u64, l: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
   let f1 = find_1(p, k);
-  let v13 = Clone::clone(&f1);
-  let v16 = fst::<Rc<Array<u64>>, u64>(v13);
-  let f2 = find_1(v16, l);
-  let v24 = Clone::clone(&f2);
-  let v26 = fst::<Rc<Array<u64>>, u64>(v24);
-  union(v26, rk, snd::<Rc<Array<u64>>, u64>(f1), snd::<Rc<Array<u64>>, u64>(f2))
+  let f1_clone = Clone::clone(&f1);
+  let tmp = fst::<Rc<Array<u64>>, u64>(f1_clone);
+  let f2 = find_1(tmp, l);
+  let f2_clone = Clone::clone(&f2);
+  let tmp_1 = fst::<Rc<Array<u64>>, u64>(f2_clone);
+  union(tmp_1, rk, snd::<Rc<Array<u64>>, u64>(f1), snd::<Rc<Array<u64>>, u64>(f2))
 }
 
 // Rocq: Chesstournament.chesstournament_implem.uf_loop
@@ -839,27 +808,21 @@ pub fn uf_loop_1(ks: Rc<Array<u64>>, wins: Rc<Array<bool>>, ls: Rc<Array<u64>>, 
 // Rocq: Chesstournament.chesstournament_implem.uf_loop (local: uf_loop)
 // Variant: uncurried, lifted
 pub fn uf_loop(ks: Rc<Array<u64>>, wins: Rc<Array<bool>>, ls: Rc<Array<u64>>, m: u64, j: u64, p: Rc<Array<u64>>, rk: Rc<Array<u64>>, _Hp: (), _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(j, m);
-  match bdec(v16) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &wins;
-      let v23 = rocq_array::get::<bool>(&v20, j);
-      match v23 {
-        true => {
-          uf_loop(ks, wins, ls, m, add(j, 1u64), p, rk, (), ())
-        },
-        false => {
-          let v60 = &ks;
-          let v63 = rocq_array::get::<u64>(&v60, j);
-          let v64 = &ls;
-          let v67 = rocq_array::get::<u64>(&v64, j);
-          let u = unite(p, rk, v63, v67);
-          let v84 = add(j, 1u64);
-          let v87 = Clone::clone(&u);
-          let v89 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v87);
-          let v93 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(u);
-          uf_loop(ks, wins, ls, m, v84, v89, v93, (), ())
-        },
+      let tmp_1 = rocq_array::get::<bool>(&wins, j);
+      if tmp_1 {
+        uf_loop(ks, wins, ls, m, add(j, 1u64), p, rk, (), ())
+      } else {
+        let tmp_2 = rocq_array::get::<u64>(&ks, j);
+        let tmp_3 = rocq_array::get::<u64>(&ls, j);
+        let u = unite(p, rk, tmp_2, tmp_3);
+        let tmp_4 = add(j, 1u64);
+        let u_clone = Clone::clone(&u);
+        let tmp_5 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(u_clone);
+        let tmp_6 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(u);
+        uf_loop(ks, wins, ls, m, tmp_4, tmp_5, tmp_6, (), ())
       }
     },
     sumbool::right => {
@@ -881,15 +844,15 @@ pub fn rep_loop_1(n: u64, x: u64, p: Rc<Array<u64>>, rep: Rc<Array<u64>>) -> Rc<
 // Rocq: Chesstournament.chesstournament_implem.rep_loop (local: rep_loop)
 // Variant: uncurried, lifted
 pub fn rep_loop(n: u64, x: u64, p: Rc<Array<u64>>, rep: Rc<Array<u64>>, _Hp: (), _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(x, n);
-  match bdec(v13) {
+  let tmp = ltb(x, n);
+  match bdec(tmp) {
     sumbool::left => {
       let f = find_1(p, x);
-      let v30 = add(x, 1u64);
-      let v33 = Clone::clone(&f);
-      let v35 = fst::<Rc<Array<u64>>, u64>(v33);
-      let v46 = rocq_array::set::<u64>(rep, x, snd::<Rc<Array<u64>>, u64>(f));
-      rep_loop(n, v30, v35, v46, (), ())
+      let tmp_1 = add(x, 1u64);
+      let f_clone = Clone::clone(&f);
+      let tmp_2 = fst::<Rc<Array<u64>>, u64>(f_clone);
+      let tmp_3 = rocq_array::set::<u64>(rep, x, snd::<Rc<Array<u64>>, u64>(f));
+      rep_loop(n, tmp_1, tmp_2, tmp_3, (), ())
     },
     sumbool::right => {
       std::mem::drop(p);
@@ -907,33 +870,23 @@ pub fn deg_loop_1(rep: Rc<Array<u64>>, ks: Rc<Array<u64>>, wins: Rc<Array<bool>>
 // Rocq: Chesstournament.chesstournament_implem.deg_loop (local: deg_loop)
 // Variant: uncurried, lifted
 pub fn deg_loop(rep: Rc<Array<u64>>, ks: Rc<Array<u64>>, wins: Rc<Array<bool>>, ls: Rc<Array<u64>>, m: u64, j: u64, od: Rc<Array<u64>>, id: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v16 = ltb(j, m);
-  match bdec(v16) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &wins;
-      let v23 = rocq_array::get::<bool>(&v20, j);
-      match v23 {
-        true => {
-          let v25 = &ks;
-          let v28 = rocq_array::get::<u64>(&v25, j);
-          let v29 = &rep;
-          let a = rocq_array::get::<u64>(&v29, v28);
-          let v33 = &ls;
-          let v36 = rocq_array::get::<u64>(&v33, j);
-          let v37 = &rep;
-          let b = rocq_array::get::<u64>(&v37, v36);
-          let v48 = add(j, 1u64);
-          let v50 = &od;
-          let v53 = rocq_array::get::<u64>(&v50, a);
-          let v67 = rocq_array::set::<u64>(od, a, add(v53, 1u64));
-          let v69 = &id;
-          let v72 = rocq_array::get::<u64>(&v69, b);
-          let v86 = rocq_array::set::<u64>(id, b, add(v72, 1u64));
-          deg_loop(rep, ks, wins, ls, m, v48, v67, v86, ())
-        },
-        false => {
-          deg_loop(rep, ks, wins, ls, m, add(j, 1u64), od, id, ())
-        },
+      let tmp_1 = rocq_array::get::<bool>(&wins, j);
+      if tmp_1 {
+        let tmp_2 = rocq_array::get::<u64>(&ks, j);
+        let a = rocq_array::get::<u64>(&rep, tmp_2);
+        let tmp_3 = rocq_array::get::<u64>(&ls, j);
+        let b = rocq_array::get::<u64>(&rep, tmp_3);
+        let tmp_4 = add(j, 1u64);
+        let tmp_5 = rocq_array::get::<u64>(&od, a);
+        let tmp_6 = rocq_array::set::<u64>(od, a, add(tmp_5, 1u64));
+        let tmp_7 = rocq_array::get::<u64>(&id, b);
+        let tmp_8 = rocq_array::set::<u64>(id, b, add(tmp_7, 1u64));
+        deg_loop(rep, ks, wins, ls, m, tmp_4, tmp_6, tmp_8, ())
+      } else {
+        deg_loop(rep, ks, wins, ls, m, add(j, 1u64), od, id, ())
       }
     },
     sumbool::right => {
@@ -955,16 +908,15 @@ pub fn pre_loop_1(od: Rc<Array<u64>>, n: u64, u: u64, s: u64, st: Rc<Array<u64>>
 // Rocq: Chesstournament.chesstournament_implem.pre_loop (local: pre_loop)
 // Variant: uncurried, lifted
 pub fn pre_loop(od: Rc<Array<u64>>, n: u64, u: u64, s: u64, st: Rc<Array<u64>>, pos: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(u, n);
-  match bdec(v14) {
+  let tmp = ltb(u, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &od;
-      let v22 = rocq_array::get::<u64>(&v19, u);
-      let s_ = add(s, v22);
-      let v35 = add(u, 1u64);
-      let v50 = rocq_array::set::<u64>(st, add(u, 1u64), s_);
-      let v57 = rocq_array::set::<u64>(pos, u, s);
-      pre_loop(od, n, v35, s_, v50, v57, ())
+      let tmp_1 = rocq_array::get::<u64>(&od, u);
+      let s_ = add(s, tmp_1);
+      let tmp_2 = add(u, 1u64);
+      let tmp_3 = rocq_array::set::<u64>(st, add(u, 1u64), s_);
+      let tmp_4 = rocq_array::set::<u64>(pos, u, s);
+      pre_loop(od, n, tmp_2, s_, tmp_3, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(od);
@@ -982,31 +934,22 @@ pub fn fill_loop_1(rep: Rc<Array<u64>>, ks: Rc<Array<u64>>, wins: Rc<Array<bool>
 // Rocq: Chesstournament.chesstournament_implem.fill_loop (local: fill_loop)
 // Variant: uncurried, lifted
 pub fn fill_loop(rep: Rc<Array<u64>>, ks: Rc<Array<u64>>, wins: Rc<Array<bool>>, ls: Rc<Array<u64>>, m: u64, j: u64, pos: Rc<Array<u64>>, adj: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v16 = ltb(j, m);
-  match bdec(v16) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &wins;
-      let v23 = rocq_array::get::<bool>(&v20, j);
-      match v23 {
-        true => {
-          let v25 = &ks;
-          let v28 = rocq_array::get::<u64>(&v25, j);
-          let v29 = &rep;
-          let a = rocq_array::get::<u64>(&v29, v28);
-          let v33 = &pos;
-          let pa = rocq_array::get::<u64>(&v33, a);
-          let v44 = add(j, 1u64);
-          let v59 = rocq_array::set::<u64>(pos, a, add(pa, 1u64));
-          let v60 = &ls;
-          let v63 = rocq_array::get::<u64>(&v60, j);
-          let v64 = &rep;
-          let v67 = rocq_array::get::<u64>(&v64, v63);
-          let v74 = rocq_array::set::<u64>(adj, pa, v67);
-          fill_loop(rep, ks, wins, ls, m, v44, v59, v74, ())
-        },
-        false => {
-          fill_loop(rep, ks, wins, ls, m, add(j, 1u64), pos, adj, ())
-        },
+      let tmp_1 = rocq_array::get::<bool>(&wins, j);
+      if tmp_1 {
+        let tmp_2 = rocq_array::get::<u64>(&ks, j);
+        let a = rocq_array::get::<u64>(&rep, tmp_2);
+        let pa = rocq_array::get::<u64>(&pos, a);
+        let tmp_3 = add(j, 1u64);
+        let tmp_4 = rocq_array::set::<u64>(pos, a, add(pa, 1u64));
+        let tmp_5 = rocq_array::get::<u64>(&ls, j);
+        let tmp_6 = rocq_array::get::<u64>(&rep, tmp_5);
+        let tmp_7 = rocq_array::set::<u64>(adj, pa, tmp_6);
+        fill_loop(rep, ks, wins, ls, m, tmp_3, tmp_4, tmp_7, ())
+      } else {
+        fill_loop(rep, ks, wins, ls, m, add(j, 1u64), pos, adj, ())
       }
     },
     sumbool::right => {
@@ -1029,20 +972,16 @@ pub fn init_loop_1(id: Rc<Array<u64>>, n: u64, v: u64, q: Rc<Array<u64>>, t: u64
 // Rocq: Chesstournament.chesstournament_implem.init_loop (local: init_loop)
 // Variant: uncurried, lifted
 pub fn init_loop(id: Rc<Array<u64>>, n: u64, v: u64, q: Rc<Array<u64>>, t: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v13 = ltb(v, n);
-  match bdec(v13) {
+  let tmp = ltb(v, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &id;
-      let v21 = rocq_array::get::<u64>(&v18, v);
-      match eqb(v21, 0u64) {
-        true => {
-          let v37 = add(v, 1u64);
-          let v44 = rocq_array::set::<u64>(q, t, v);
-          init_loop(id, n, v37, v44, add(t, 1u64), ())
-        },
-        false => {
-          init_loop(id, n, add(v, 1u64), q, t, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&id, v);
+      if eqb(tmp_1, 0u64) {
+        let tmp_2 = add(v, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(q, t, v);
+        init_loop(id, n, tmp_2, tmp_3, add(t, 1u64), ())
+      } else {
+        init_loop(id, n, add(v, 1u64), q, t, ())
       }
     },
     sumbool::right => {
@@ -1067,26 +1006,21 @@ pub fn inner_1(adj: Rc<Array<u64>>, hi: u64, e: u64, d: Rc<Array<u64>>, q: Rc<Ar
 // Rocq: Chesstournament.chesstournament_implem.inner (local: inner)
 // Variant: uncurried, lifted
 pub fn inner(adj: Rc<Array<u64>>, hi: u64, e: u64, d: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let v14 = ltb(e, hi);
-  match bdec(v14) {
+  let tmp = ltb(e, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &adj;
-      let v = rocq_array::get::<u64>(&v18, e);
-      let v23 = &d;
-      let v26 = rocq_array::get::<u64>(&v23, v);
-      let dv = sub(v26, 1u64);
-      match eqb(dv, 0u64) {
-        true => {
-          let v50 = add(e, 1u64);
-          let v57 = rocq_array::set::<u64>(d, v, dv);
-          let v64 = rocq_array::set::<u64>(q, t, v);
-          inner(adj, hi, v50, v57, v64, add(t, 1u64), ())
-        },
-        false => {
-          let v100 = add(e, 1u64);
-          let v107 = rocq_array::set::<u64>(d, v, dv);
-          inner(adj, hi, v100, v107, q, t, ())
-        },
+      let v = rocq_array::get::<u64>(&adj, e);
+      let tmp_1 = rocq_array::get::<u64>(&d, v);
+      let dv = sub(tmp_1, 1u64);
+      if eqb(dv, 0u64) {
+        let tmp_2 = add(e, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(d, v, dv);
+        let tmp_4 = rocq_array::set::<u64>(q, t, v);
+        inner(adj, hi, tmp_2, tmp_3, tmp_4, add(t, 1u64), ())
+      } else {
+        let tmp_5 = add(e, 1u64);
+        let tmp_6 = rocq_array::set::<u64>(d, v, dv);
+        inner(adj, hi, tmp_5, tmp_6, q, t, ())
       }
     },
     sumbool::right => {
@@ -1105,24 +1039,20 @@ pub fn kahn_1(adj: Rc<Array<u64>>, st: Rc<Array<u64>>, h: u64, d: Rc<Array<u64>>
 // Rocq: Chesstournament.chesstournament_implem.kahn (local: kahn)
 // Variant: uncurried, lifted
 pub fn kahn(adj: Rc<Array<u64>>, st: Rc<Array<u64>>, h: u64, d: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H: ()) -> u64 {
-  let v14 = ltb(h, t);
-  match bdec(v14) {
+  let tmp = ltb(h, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &q;
-      let u = rocq_array::get::<u64>(&v18, h);
-      let v30 = add(u, 1u64);
-      let v31 = &st;
-      let v34 = rocq_array::get::<u64>(&v31, v30);
-      let v35 = &st;
-      let v38 = rocq_array::get::<u64>(&v35, u);
-      let v41 = Rc::clone(&adj);
-      let r = inner_1(v41, v34, v38, d, q, t);
-      let v60 = add(h, 1u64);
-      let v64 = Clone::clone(&r);
-      let v69 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(v64));
-      let v73 = Clone::clone(&r);
-      let v78 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(v73));
-      kahn(adj, st, v60, v69, v78, snd::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(r), ())
+      let u = rocq_array::get::<u64>(&q, h);
+      let tmp_1 = rocq_array::get::<u64>(&st, add(u, 1u64));
+      let tmp_2 = rocq_array::get::<u64>(&st, u);
+      let adj_clone = Rc::clone(&adj);
+      let r = inner_1(adj_clone, tmp_1, tmp_2, d, q, t);
+      let tmp_3 = add(h, 1u64);
+      let r_clone = Clone::clone(&r);
+      let tmp_4 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(r_clone));
+      let r_clone_1 = Clone::clone(&r);
+      let tmp_5 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(r_clone_1));
+      kahn(adj, st, tmp_3, tmp_4, tmp_5, snd::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(r), ())
     },
     sumbool::right => {
       std::mem::drop(adj);
@@ -1137,74 +1067,41 @@ pub fn kahn(adj: Rc<Array<u64>>, st: Rc<Array<u64>>, h: u64, d: Rc<Array<u64>>, 
 // Rocq: Chesstournament.chesstournament_implem.chess_impl
 // Variant: uncurried
 pub fn chess_impl(n: u64, ks: Rc<Array<u64>>, wins: Rc<Array<bool>>, ls: Rc<Array<u64>>) -> bool {
-  let v4 = &ks;
-  let m = rocq_array::length::<u64>(&v4);
+  let m = rocq_array::length::<u64>(&ks);
   let p0 = iota(n);
-  let v19 = rocq_array::make::<u64>(n, 0u64);
-  let v22 = Rc::clone(&ks);
-  let v25 = Rc::clone(&wins);
-  let v28 = Rc::clone(&ls);
-  let p1 = uf_loop_1(v22, v25, v28, m, 0u64, p0, v19);
-  let v47 = rocq_array::make::<u64>(n, 0u64);
-  let rep = rep_loop_1(n, 0u64, p1, v47);
-  let v66 = rocq_array::make::<u64>(n, 0u64);
-  let v73 = rocq_array::make::<u64>(n, 0u64);
-  let v76 = Rc::clone(&rep);
-  let v79 = Rc::clone(&ks);
-  let v82 = Rc::clone(&wins);
-  let v85 = Rc::clone(&ls);
-  let dg = deg_loop_1(v76, v79, v82, v85, m, 0u64, v66, v73);
-  let v98 = Clone::clone(&dg);
-  let v100 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v98);
-  let v119 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let v126 = rocq_array::make::<u64>(n, 0u64);
-  let sp = pre_loop_1(v100, n, 0u64, 0u64, v119, v126);
-  let v145 = Clone::clone(&sp);
-  let v147 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(v145);
-  let v154 = rocq_array::make::<u64>(m, 0u64);
-  let adj = fill_loop_1(rep, ks, wins, ls, m, 0u64, v147, v154);
-  let v175 = Clone::clone(&dg);
-  let v177 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(v175);
-  let v186 = rocq_array::make::<u64>(n, 0u64);
-  let qi = init_loop_1(v177, n, 0u64, v186, 0u64);
-  let v204 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(sp);
-  let v210 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(dg);
-  let v213 = Clone::clone(&qi);
-  let v215 = fst::<Rc<Array<u64>>, u64>(v213);
-  let t = kahn_1(adj, v204, 0u64, v210, v215, snd::<Rc<Array<u64>>, u64>(qi));
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let ks_clone = Rc::clone(&ks);
+  let wins_clone = Rc::clone(&wins);
+  let ls_clone = Rc::clone(&ls);
+  let p1 = uf_loop_1(ks_clone, wins_clone, ls_clone, m, 0u64, p0, tmp);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let rep = rep_loop_1(n, 0u64, p1, tmp_1);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let rep_clone = Rc::clone(&rep);
+  let ks_clone_1 = Rc::clone(&ks);
+  let wins_clone_1 = Rc::clone(&wins);
+  let ls_clone_1 = Rc::clone(&ls);
+  let dg = deg_loop_1(rep_clone, ks_clone_1, wins_clone_1, ls_clone_1, m, 0u64, tmp_2, tmp_3);
+  let dg_clone = Clone::clone(&dg);
+  let tmp_4 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(dg_clone);
+  let tmp_5 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  let tmp_6 = rocq_array::make::<u64>(n, 0u64);
+  let sp = pre_loop_1(tmp_4, n, 0u64, 0u64, tmp_5, tmp_6);
+  let sp_clone = Clone::clone(&sp);
+  let tmp_7 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(sp_clone);
+  let tmp_8 = rocq_array::make::<u64>(m, 0u64);
+  let adj = fill_loop_1(rep, ks, wins, ls, m, 0u64, tmp_7, tmp_8);
+  let dg_clone_1 = Clone::clone(&dg);
+  let tmp_9 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(dg_clone_1);
+  let tmp_10 = rocq_array::make::<u64>(n, 0u64);
+  let qi = init_loop_1(tmp_9, n, 0u64, tmp_10, 0u64);
+  let tmp_11 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(sp);
+  let tmp_12 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(dg);
+  let qi_clone = Clone::clone(&qi);
+  let tmp_13 = fst::<Rc<Array<u64>>, u64>(qi_clone);
+  let t = kahn_1(adj, tmp_11, 0u64, tmp_12, tmp_13, snd::<Rc<Array<u64>>, u64>(qi));
   eqb(t, n)
-}
-
-// Rocq: Chesstournament.chesstournament_implem.chess_impl
-pub fn chess_impl_curried(n: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> {
-  let v3 = {
-    move |ks: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> {
-      let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
-        move |wins: Rc<Array<bool>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-          let n = &v8;
-          let ks = &ks;
-          let v18 = Clone::clone(n);
-          let v20 = Rc::clone(ks);
-          let v23 = {
-            move |ls: Rc<Array<u64>>| -> bool {
-              let v33 = Clone::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&wins);
-              chess_impl(v33, v35, v37, ls)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> = Rc::new(v3);
-  v51
 }
 
 mod __rocq_reuse {
@@ -1356,12 +1253,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool> = __rocq_global_900.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_900: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<bool>>, Rc<Array<u64>>) -> bool> = chess_consistent(); }
-std::thread_local! { static __rocq_global_903: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<bool>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = chess_consistent_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1440,6 +1331,6 @@ fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let n = t.uint(); let m = t.uint();
     let mut ks = Vec::new(); let mut wins = Vec::new(); let mut ls = Vec::new();
     for _ in 0..m { ks.push(t.uint()); wins.push(t.next() == ">"); ls.push(t.uint()); }
-    if run()(n, ints(ks), array(wins, false), ints(ls)) { "consistent\n" } else { "inconsistent\n" }.into()
+    if chess_impl(n, ints(ks), array(wins, false), ints(ls)) { "consistent\n" } else { "inconsistent\n" }.into()
 }
 fn main() { entry(solve); }

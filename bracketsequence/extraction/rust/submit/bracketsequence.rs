@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -690,13 +689,6 @@ pub fn Mi() -> u64 {
   1000000007u64
 }
 
-// Rocq: Bracketsequence.bracketsequence_implem.bracketsequence
-pub fn bracketsequence() -> Rc<dyn Fn(Rc<Array<Rc<token<u64>>>>) -> u64> {
-  let v0: fn(Rc<Array<Rc<token<u64>>>>) -> u64 = bracketsequence_impl;
-  let v1: Rc<dyn Fn(Rc<Array<Rc<token<u64>>>>) -> u64> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -711,13 +703,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Bracketsequence.bracketsequence_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -729,25 +718,19 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
 // Rocq: Bracketsequence.bracketsequence_implem.idm
 pub fn idm(add_1: bool) -> u64 {
-  match add_1 {
-    true => {
-      0u64
-    },
-    false => {
-      1u64
-    },
+  if add_1 {
+    0u64
+  } else {
+    1u64
   }
 }
 
@@ -772,13 +755,10 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 // Rocq: Bracketsequence.bracketsequence_implem.opm
 // Variant: uncurried
 pub fn opm(add_1: bool, a: u64, v: u64) -> u64 {
-  match add_1 {
-    true => {
-      mod_(add(a, v), __rocq_global_92)
-    },
-    false => {
-      mod_(mul(a, v), __rocq_global_92)
-    },
+  if add_1 {
+    mod_(add(a, v), __rocq_global_92)
+  } else {
+    mod_(mul(a, v), __rocq_global_92)
   }
 }
 
@@ -791,67 +771,57 @@ pub fn loop__1(x: Rc<Array<Rc<token<u64>>>>, n: u64, i: u64, d: u64, add_1: bool
 // Rocq: Bracketsequence.bracketsequence_implem.loop (local: loop)
 // Variant: uncurried, lifted
 pub fn loop_(x: Rc<Array<Rc<token<u64>>>>, n: u64, i: u64, d: u64, add_1: bool, stk: Rc<Array<u64>>, _H: ()) -> u64 {
-  let v14 = ltb(i, n);
-  match bdec(v14) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &x;
-      let v21 = rocq_array::get::<Rc<token<u64>>>(&v18, i);
-      let (v22, v23) = __rocq_reuse::reset(v21, |__payload| Clone::clone(__payload));
+      let tmp_1 = rocq_array::get::<Rc<token<u64>>>(&x, i);
+      let (v22, v23) = __rocq_reuse::reset(tmp_1, |__payload| Clone::clone(__payload));
       std::mem::drop(v23);
       match v22 {
         token::Open => {
-          let v35 = add(i, 1u64);
-          let v43 = add(d, 1u64);
-          let v47 = negb(add_1);
-          let v70 = rocq_array::set::<u64>(stk, add(d, 1u64), idm(negb(add_1)));
-          loop_(x, n, v35, v43, v47, v70, ())
+          let tmp_2 = add(i, 1u64);
+          let tmp_3 = add(d, 1u64);
+          let tmp_4 = negb(add_1);
+          let tmp_5 = rocq_array::set::<u64>(stk, add(d, 1u64), idm(negb(add_1)));
+          loop_(x, n, tmp_2, tmp_3, tmp_4, tmp_5, ())
         },
         token::Close => {
-          match eqb(d, 0u64) {
-            true => {
-              loop_(x, n, add(i, 1u64), d, add_1, stk, ())
-            },
-            false => {
-              let v135 = add(i, 1u64);
-              let v143 = sub(d, 1u64);
-              let v147 = negb(add_1);
-              let v155 = sub(d, 1u64);
-              let v160 = negb(add_1);
-              let v168 = sub(d, 1u64);
-              let v169 = &stk;
-              let v172 = rocq_array::get::<u64>(&v169, v168);
-              let v173 = &stk;
-              let v176 = rocq_array::get::<u64>(&v173, d);
-              let v190 = rocq_array::set::<u64>(stk, v155, opm(v160, v172, v176));
-              loop_(x, n, v135, v143, v147, v190, ())
-            },
+          if eqb(d, 0u64) {
+            loop_(x, n, add(i, 1u64), d, add_1, stk, ())
+          } else {
+            let tmp_6 = add(i, 1u64);
+            let tmp_7 = sub(d, 1u64);
+            let tmp_8 = negb(add_1);
+            let tmp_9 = sub(d, 1u64);
+            let tmp_10 = negb(add_1);
+            let tmp_11 = rocq_array::get::<u64>(&stk, sub(d, 1u64));
+            let tmp_12 = rocq_array::get::<u64>(&stk, d);
+            let tmp_13 = rocq_array::set::<u64>(stk, tmp_9, opm(tmp_10, tmp_11, tmp_12));
+            loop_(x, n, tmp_6, tmp_7, tmp_8, tmp_13, ())
           }
         },
         token::Num(v214) => {
-          let v223 = add(i, 1u64);
-          let v225 = &stk;
-          let v228 = rocq_array::get::<u64>(&v225, d);
-          let v242 = rocq_array::set::<u64>(stk, d, opm(add_1, v228, v214));
-          loop_(x, n, v223, d, add_1, v242, ())
+          let tmp_14 = add(i, 1u64);
+          let tmp_15 = rocq_array::get::<u64>(&stk, d);
+          let tmp_16 = rocq_array::set::<u64>(stk, d, opm(add_1, tmp_15, v214));
+          loop_(x, n, tmp_14, d, add_1, tmp_16, ())
         },
       }
     },
     sumbool::right => {
       std::mem::drop(x);
-      let v266 = &stk;
-      let v269 = rocq_array::get::<u64>(&v266, d);
+      let tmp_17 = rocq_array::get::<u64>(&stk, d);
       std::mem::drop(stk);
-      v269
+      tmp_17
     },
   }
 }
 
 // Rocq: Bracketsequence.bracketsequence_implem.bracketsequence_impl
 pub fn bracketsequence_impl(x: Rc<Array<Rc<token<u64>>>>) -> u64 {
-  let v1 = &x;
-  let n = rocq_array::length::<Rc<token<u64>>>(&v1);
-  let v24 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  loop__1(x, n, 0u64, 0u64, true, v24)
+  let n = rocq_array::length::<Rc<token<u64>>>(&x);
+  let tmp = rocq_array::make::<u64>(add(n, 1u64), 0u64);
+  loop__1(x, n, 0u64, 0u64, true, tmp)
 }
 
 mod __rocq_reuse {
@@ -1002,13 +972,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<Rc<token<u64>>>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<Rc<token<u64>>>>) -> u64> = __rocq_global_261.with(Clone::clone);
-  v0
-}
 const __rocq_global_92: u64 = 1000000007u64;
-std::thread_local! { static __rocq_global_261: Rc<dyn Fn(Rc<Array<Rc<token<u64>>>>) -> u64> = bracketsequence(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1088,6 +1052,6 @@ fn solve(input: &str) -> String {
     let tokens = (0..n).map(|_| Rc::new(match t.next() {
         "(" => token::Open { }, ")" => token::Close { }, n => token::Num(n.parse().unwrap()),
     })).collect();
-    format!("{}\n", run()(array(tokens, Rc::new(token::Open { }))))
+    format!("{}\n", bracketsequence_impl(array(tokens, Rc::new(token::Open { }))))
 }
 fn main() { entry(solve); }

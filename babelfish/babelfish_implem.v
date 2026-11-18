@@ -577,7 +577,7 @@ Lemma query_answer : forall (english foreign : list String.string)
   (ok = true -> forall j, ((φ j) < (φ (PArray.length f)))%Z ->
      (t_slot t).[pos t f.[j]] = j + 1) ->
   exists o, repr (query e f (PArray.length f) ok t x) o
-            /\ answer english foreign xm o.
+            /\ answer foreign english xm o.
 Proof.
   intros english foreign e f ok t x xm Hnd Hlen He Hf Hx Hinv.
   pose proof (repr_len f foreign Hf) as Ln.
@@ -681,7 +681,7 @@ Proof.
   destruct (build_list
               (fun k o => repr r.[of_Z (Z.of_nat k)] o /\
                  forall xm, nth_error message k = Some xm ->
-                   answer english foreign xm o)
+                   answer foreign english xm o)
               (List.length message)) as (outl & Hol & Hon).
   { intros k Hk.
     pose proof (to_Z_bounded L) as BL.

@@ -21,4 +21,4 @@ archive = "ultraquicksort_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/ultraquicksort.ml"
-Rust = "extraction/rust/submit/ultraquicksort.rs"
+Rust = "extraction/rust/snapshots/ultraquicksort_extracted.rs.interface.json"

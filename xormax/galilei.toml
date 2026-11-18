@@ -21,4 +21,4 @@ archive = "xormax_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/xormax.ml"
-Rust = "extraction/rust/submit/xormax.rs"
+Rust = "extraction/rust/snapshots/xormax_extracted.rs.interface.json"

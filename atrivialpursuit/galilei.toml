@@ -21,4 +21,4 @@ archive = "atrivialpursuit_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/atrivialpursuit.ml"
-Rust = "extraction/rust/submit/atrivialpursuit.rs"
+Rust = "extraction/rust/snapshots/atrivialpursuit_extracted.rs.interface.json"

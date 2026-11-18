@@ -21,4 +21,4 @@ archive = "slowleak_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/slowleak.ml"
-Rust = "extraction/rust/submit/slowleak.rs"
+Rust = "extraction/rust/snapshots/slowleak_extracted.rs.interface.json"

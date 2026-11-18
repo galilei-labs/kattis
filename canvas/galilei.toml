@@ -21,4 +21,4 @@ archive = "canvas_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/canvas.ml"
-Rust = "extraction/rust/submit/canvas.rs"
+Rust = "extraction/rust/snapshots/canvas_extracted.rs.interface.json"

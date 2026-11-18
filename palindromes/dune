@@ -6,9 +6,11 @@
  (rocq.theory
   (name Palindromes.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Palindromes)
  (modules palindromes_implem)
- (theories Palindromes.spec Stdlib stdpp StdGalilei))
+  (theories Palindromes.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

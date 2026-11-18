@@ -783,7 +783,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -827,13 +826,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Intervalcover.intervalcover_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -852,24 +848,21 @@ pub fn wloop_1<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, 
 // Rocq: Intervalcover.intervalcover_implem.wloop (local: wloop)
 // Variant: uncurried, lifted
 pub fn wloop<St: Clone + 'static>(hi: u64, cont: Rc<dyn Fn(u64, St) -> bool>, f: Rc<dyn Fn(u64, St) -> St>, i: u64, s: St, _H: ()) -> St {
-  let v13 = ltb(i, hi);
-  match bdec(v13) {
+  let tmp = ltb(i, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v17: &Rc<dyn Fn(u64, St) -> bool> = &cont;
-      let v21 = Clone::clone(&s);
-      let v23 = v17(i, v21);
-      match v23 {
-        true => {
-          let v32 = add(i, 1u64);
-          let v33: &Rc<dyn Fn(u64, St) -> St> = &f;
-          let v38 = v33(i, s);
-          wloop::<St>(hi, cont, f, v32, v38, ())
-        },
-        false => {
-          std::mem::drop(f);
-          std::mem::drop(cont);
-          s
-        },
+      let cont_ref: &Rc<dyn Fn(u64, St) -> bool> = &cont;
+      let s_clone = Clone::clone(&s);
+      let tmp_1 = cont_ref(i, s_clone);
+      if tmp_1 {
+        let tmp_2 = add(i, 1u64);
+        let f_ref: &Rc<dyn Fn(u64, St) -> St> = &f;
+        let tmp_3 = f_ref(i, s);
+        wloop::<St>(hi, cont, f, tmp_2, tmp_3, ())
+      } else {
+        std::mem::drop(f);
+        std::mem::drop(cont);
+        s
       }
     },
     sumbool::right => {
@@ -895,13 +888,10 @@ pub fn iota_step(k: u64, P: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -946,45 +936,30 @@ pub fn merge_step(key: &Rc<Array<f64>>, A: &Rc<Array<u64>>, mid: u64, hi: u64, k
     (v11, v13) => {
       match v11 {
         (v16, v18) => {
-          match ltb(v16, mid_1) {
-            true => {
-              match leb(hi_1, v18) {
-                true => {
-                  let v46 = (add(v16, 1u64), v18);
-                  let v48 = A;
-                  let v58 = rocq_array::set::<u64>(v13, k_1, rocq_array::get::<u64>(&v48, v16));
-                  (v46, v58)
-                },
-                false => {
-                  let v67 = A;
-                  let a = rocq_array::get::<u64>(&v67, v16);
-                  let v71 = A;
-                  let b = rocq_array::get::<u64>(&v71, v18);
-                  let v76 = key;
-                  let v79 = rocq_array::get::<f64>(&v76, a);
-                  let v80 = key;
-                  let v83 = rocq_array::get::<f64>(&v80, b);
-                  match leb_1(v79, v83) {
-                    true => {
-                      let v102 = (add(v16, 1u64), v18);
-                      let v110 = rocq_array::set::<u64>(v13, k_1, a);
-                      (v102, v110)
-                    },
-                    false => {
-                      let v131 = (v16, add(v18, 1u64));
-                      let v139 = rocq_array::set::<u64>(v13, k_1, b);
-                      (v131, v139)
-                    },
-                  }
-                },
+          if ltb(v16, mid_1) {
+            if leb(hi_1, v18) {
+              let tmp = (add(v16, 1u64), v18);
+              let tmp_1 = rocq_array::set::<u64>(v13, k_1, rocq_array::get::<u64>(A, v16));
+              (tmp, tmp_1)
+            } else {
+              let a = rocq_array::get::<u64>(A, v16);
+              let b = rocq_array::get::<u64>(A, v18);
+              let tmp_2 = rocq_array::get::<f64>(key, a);
+              let tmp_3 = rocq_array::get::<f64>(key, b);
+              if leb_1(tmp_2, tmp_3) {
+                let tmp_4 = (add(v16, 1u64), v18);
+                let tmp_5 = rocq_array::set::<u64>(v13, k_1, a);
+                (tmp_4, tmp_5)
+              } else {
+                let tmp_6 = (v16, add(v18, 1u64));
+                let tmp_7 = rocq_array::set::<u64>(v13, k_1, b);
+                (tmp_6, tmp_7)
               }
-            },
-            false => {
-              let v166 = (v16, add(v18, 1u64));
-              let v168 = A;
-              let v178 = rocq_array::set::<u64>(v13, k_1, rocq_array::get::<u64>(&v168, v18));
-              (v166, v178)
-            },
+            }
+          } else {
+            let tmp_8 = (v16, add(v18, 1u64));
+            let tmp_9 = rocq_array::set::<u64>(v13, k_1, rocq_array::get::<u64>(A, v18));
+            (tmp_8, tmp_9)
           }
         },
       }
@@ -995,28 +970,23 @@ pub fn merge_step(key: &Rc<Array<f64>>, A: &Rc<Array<u64>>, mid: u64, hi: u64, k
 // Rocq: Intervalcover.intervalcover_implem.merge
 // Variant: uncurried
 pub fn merge(key: Rc<Array<f64>>, lo: u64, mid: u64, hi: u64, A: Rc<Array<u64>>, T: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v7 = {
-    move |_v8: u64, v9: ((u64, u64), Rc<Array<u64>>)| -> bool {
-      std::mem::drop(v9);
-      true
-    }
-  };
-  let v14: Rc<dyn Fn(u64, ((u64, u64), Rc<Array<u64>>)) -> bool> = Rc::new(v7);
-  let v15: Rc<dyn Fn(u64, ((u64, u64), Rc<Array<u64>>)) -> bool> = v14;
-  let v24 = {
+  let callback: Rc<dyn Fn(u64, ((u64, u64), Rc<Array<u64>>)) -> bool> = Rc::new(move |_v8: u64, v9: ((u64, u64), Rc<Array<u64>>)| -> bool {
+    std::mem::drop(v9);
+    true
+  });
+  let callback_1: Rc<dyn Fn(u64, ((u64, u64), Rc<Array<u64>>)) -> ((u64, u64), Rc<Array<u64>>)> = Rc::new({
     let __anf_capture_29 = mid;
     let __anf_capture_31 = hi;
     move |v33: u64, v34: ((u64, u64), Rc<Array<u64>>)| -> ((u64, u64), Rc<Array<u64>>) {
       let key = &key;
       let A = &A;
-      let v46 = merge_step(key, A, Clone::clone(&__anf_capture_29), Clone::clone(&__anf_capture_31), v33, v34);
-      v46
+      let tmp = merge_step(key, A, Clone::clone(&__anf_capture_29), Clone::clone(&__anf_capture_31), v33, v34);
+      tmp
     }
-  };
-  let v49: Rc<dyn Fn(u64, ((u64, u64), Rc<Array<u64>>)) -> ((u64, u64), Rc<Array<u64>>)> = Rc::new(v24);
-  let v55 = (lo, mid);
-  let v73 = loop_::<((u64, u64), Rc<Array<u64>>)>(hi, v15, v49, lo, (v55, T));
-  match v73 {
+  });
+  let tmp_1 = (lo, mid);
+  let tmp_2 = loop_::<((u64, u64), Rc<Array<u64>>)>(hi, callback, callback_1, lo, (tmp_1, T));
+  match tmp_2 {
     (v75, v77) => {
       match v75 {
         (_v80, _v82) => {
@@ -1033,9 +1003,9 @@ pub fn copy_step(k: u64, st: (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>
   match st {
     (v3, v5) => {
       let A = &v5;
-      let v10 = rocq_array::get::<u64>(&A, k);
-      let v18 = rocq_array::set::<u64>(v3, k, v10);
-      (v18, v5)
+      let tmp = rocq_array::get::<u64>(A, k);
+      let tmp_1 = rocq_array::set::<u64>(v3, k, tmp);
+      (tmp_1, v5)
     },
   }
 }
@@ -1043,18 +1013,15 @@ pub fn copy_step(k: u64, st: (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>
 // Rocq: Intervalcover.intervalcover_implem.merge_copy
 // Variant: uncurried
 pub fn merge_copy(key: Rc<Array<f64>>, lo: u64, mid: u64, hi: u64, A: Rc<Array<u64>>, T: Rc<Array<u64>>) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v17 = Rc::clone(&A);
-  let T_1 = merge(key, lo, mid, hi, v17, T);
-  let v22 = {
-    move |_v23: u64, v24: (Rc<Array<u64>>, Rc<Array<u64>>)| -> bool {
-      std::mem::drop(v24);
-      true
-    }
-  };
-  let v29: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> bool> = Rc::new(v22);
-  let v31: fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>) = copy_step;
-  let v32: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new(v31);
-  loop_::<(Rc<Array<u64>>, Rc<Array<u64>>)>(hi, v29, v32, lo, (A, T_1))
+  let A_clone = Rc::clone(&A);
+  let T_1 = merge(key, lo, mid, hi, A_clone, T);
+  let callback: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> bool> = Rc::new(move |_v23: u64, v24: (Rc<Array<u64>>, Rc<Array<u64>>)| -> bool {
+    std::mem::drop(v24);
+    true
+  });
+  let tmp: fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>) = copy_step;
+  let tmp_1: Rc<dyn Fn(u64, (Rc<Array<u64>>, Rc<Array<u64>>)) -> (Rc<Array<u64>>, Rc<Array<u64>>)> = Rc::new(tmp);
+  loop_::<(Rc<Array<u64>>, Rc<Array<u64>>)>(hi, callback, tmp_1, lo, (A, T_1))
 }
 
 // Rocq: Intervalcover.intervalcover_implem.msort_rec
@@ -1066,22 +1033,22 @@ pub fn msort_rec_1(key: Rc<Array<f64>>, lo: u64, hi: u64, A: Rc<Array<u64>>, T: 
 // Rocq: Intervalcover.intervalcover_implem.msort_rec (local: msort_rec)
 // Variant: uncurried, lifted
 pub fn msort_rec(key: Rc<Array<f64>>, lo: u64, hi: u64, A: Rc<Array<u64>>, T: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v17 = guard(1u64, lo, hi);
-  match bdec(v17) {
+  let tmp = guard(1u64, lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = sub(hi, lo);
-      let m = add(lo, div(v28, 2u64));
-      let v46 = Rc::clone(&key);
-      let v57 = msort_rec(v46, lo, m, A, T, ());
-      match &v57 {
+      let tmp_1 = sub(hi, lo);
+      let m = add(lo, div(tmp_1, 2u64));
+      let key_clone = Rc::clone(&key);
+      let tmp_2 = msort_rec(key_clone, lo, m, A, T, ());
+      match &tmp_2 {
         (T_1, A_1) => {
-          let v65 = ();
-          let v69 = Rc::clone(&key);
-          let v75 = Rc::clone(T_1);
-          let v76 = Rc::clone(A_1);
-          std::mem::drop(v57);
-          let v80 = msort_rec(v69, m, hi, v75, v76, v65);
-          match v80 {
+          let tmp_3 = ();
+          let key_clone_1 = Rc::clone(&key);
+          let T_clone = Rc::clone(T_1);
+          let A_clone = Rc::clone(A_1);
+          std::mem::drop(tmp_2);
+          let tmp_4 = msort_rec(key_clone_1, m, hi, T_clone, A_clone, tmp_3);
+          match tmp_4 {
             (v82, v84) => {
               merge_copy(key, lo, m, hi, v82, v84)
             },
@@ -1102,10 +1069,7 @@ pub fn scan_cont(ls: &Rc<Array<f64>>, P: &Rc<Array<u64>>, cur: f64, p: u64, st: 
   std::mem::drop(st);
   let cur_1 = cur;
   let p_1 = p;
-  let v8 = P;
-  let v11 = rocq_array::get::<u64>(&v8, p_1);
-  let v12 = ls;
-  leb_1(rocq_array::get::<f64>(&v12, v11), cur_1)
+  leb_1(rocq_array::get::<f64>(ls, rocq_array::get::<u64>(P, p_1)), cur_1)
 }
 
 // Rocq: Intervalcover.intervalcover_implem.scan_step
@@ -1119,17 +1083,12 @@ pub fn scan_step(rs: &Rc<Array<f64>>, P: &Rc<Array<u64>>, p: u64, st: (((u64, bo
         (v12, v14) => {
           match v12 {
             (_v17, v19) => {
-              let v21 = P;
-              let i = rocq_array::get::<u64>(&v21, p_1);
-              let v25 = rs;
-              let r = rocq_array::get::<f64>(&v25, i);
-              match leb_1(v14, r) {
-                true => {
-                  (((add(p_1, 1u64), true), r), i)
-                },
-                false => {
-                  (((add(p_1, 1u64), v19), v14), v9)
-                },
+              let i = rocq_array::get::<u64>(P, p_1);
+              let r = rocq_array::get::<f64>(rs, i);
+              if leb_1(v14, r) {
+                (((add(p_1, 1u64), true), r), i)
+              } else {
+                (((add(p_1, 1u64), v19), v14), v9)
               }
             },
           }
@@ -1142,13 +1101,10 @@ pub fn scan_step(rs: &Rc<Array<f64>>, P: &Rc<Array<u64>>, p: u64, st: (((u64, bo
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
@@ -1173,73 +1129,64 @@ pub fn sweep_1(ls: Rc<Array<f64>>, rs: Rc<Array<f64>>, b: f64, P: Rc<Array<u64>>
 // Rocq: Intervalcover.intervalcover_implem.sweep (local: sweep)
 // Variant: uncurried, lifted
 pub fn sweep(ls: Rc<Array<f64>>, rs: Rc<Array<f64>>, b: f64, P: Rc<Array<u64>>, n: u64, q: u64, cnt: u64, cur: f64, W: Rc<Array<u64>>, _H: ()) -> Rc<option<(Rc<Array<u64>>, u64)>> {
-  let v13 = Rc::clone(&ls);
-  let v16 = Rc::clone(&P);
-  let v19 = {
+  let ls_clone = Rc::clone(&ls);
+  let P_clone = Rc::clone(&P);
+  let callback: Rc<dyn Fn(u64, (((u64, bool), f64), u64)) -> bool> = Rc::new({
     let __anf_capture_24 = cur;
     move |v26: u64, v27: (((u64, bool), f64), u64)| -> bool {
-      let ls = &v13;
-      let P = &v16;
-      let v29 = Clone::clone(&__anf_capture_24);
-      scan_cont(ls, P, v29, v26, v27)
+      let ls = &ls_clone;
+      let P = &P_clone;
+      let tmp = Clone::clone(&__anf_capture_24);
+      scan_cont(ls, P, tmp, v26, v27)
     }
-  };
-  let v40: Rc<dyn Fn(u64, (((u64, bool), f64), u64)) -> bool> = Rc::new(v19);
-  let v41: Rc<dyn Fn(u64, (((u64, bool), f64), u64)) -> bool> = v40;
-  let v44 = Rc::clone(&rs);
-  let v47 = Rc::clone(&P);
-  let v48 = {
+  });
+  let rs_clone = Rc::clone(&rs);
+  let P_clone_1 = Rc::clone(&P);
+  let callback_1: Rc<dyn Fn(u64, (((u64, bool), f64), u64)) -> (((u64, bool), f64), u64)> = Rc::new({
     move |v53: u64, v54: (((u64, bool), f64), u64)| -> (((u64, bool), f64), u64) {
-      let rs = &v44;
-      let P = &v47;
-      let v62 = scan_step(rs, P, v53, v54);
-      v62
+      let rs = &rs_clone;
+      let P = &P_clone_1;
+      let tmp_1 = scan_step(rs, P, v53, v54);
+      tmp_1
     }
-  };
-  let v65: Rc<dyn Fn(u64, (((u64, bool), f64), u64)) -> (((u64, bool), f64), u64)> = Rc::new(v48);
-  let v73 = (q, false);
-  let v99 = loop_::<(((u64, bool), f64), u64)>(n, v41, v65, q, ((v73, cur), 0u64));
-  match v99 {
+  });
+  let tmp_2 = (q, false);
+  let tmp_3 = loop_::<(((u64, bool), f64), u64)>(n, callback, callback_1, q, ((tmp_2, cur), 0u64));
+  match tmp_3 {
     (v101, v103) => {
       match v101 {
         (v106, v108) => {
           match v106 {
             (v111, v113) => {
-              let v135 = orb(eqb(cnt, 0u64), ltb_1(cur, v108));
-              match andb(v113, v135) {
-                true => {
-                  let W_1 = rocq_array::set::<u64>(W, cnt, v103);
-                  match leb_1(b, v108) {
-                    true => {
-                      std::mem::drop(ls);
-                      std::mem::drop(rs);
-                      std::mem::drop(P);
-                      Rc::new(option::<(Rc<Array<u64>>, u64)>::Some((W_1, add(cnt, 1u64))))
-                    },
-                    false => {
-                      let v186 = adv(n, q, v111);
-                      match bdec(v186) {
-                        sumbool::left => {
-                          sweep(ls, rs, b, P, n, v111, add(cnt, 1u64), v108, W_1, ())
-                        },
-                        sumbool::right => {
-                          std::mem::drop(W_1);
-                          std::mem::drop(ls);
-                          std::mem::drop(rs);
-                          std::mem::drop(P);
-                          Rc::new(option::<(Rc<Array<u64>>, u64)>::None)
-                        },
-                      }
-                    },
-                  }
-                },
-                false => {
+              let tmp_4 = orb(eqb(cnt, 0u64), ltb_1(cur, v108));
+              if andb(v113, tmp_4) {
+                let W_1 = rocq_array::set::<u64>(W, cnt, v103);
+                if leb_1(b, v108) {
                   std::mem::drop(ls);
                   std::mem::drop(rs);
                   std::mem::drop(P);
-                  std::mem::drop(W);
-                  Rc::new(option::<(Rc<Array<u64>>, u64)>::None)
-                },
+                  Rc::new(option::<(Rc<Array<u64>>, u64)>::Some((W_1, add(cnt, 1u64))))
+                } else {
+                  let tmp_5 = adv(n, q, v111);
+                  match bdec(tmp_5) {
+                    sumbool::left => {
+                      sweep(ls, rs, b, P, n, v111, add(cnt, 1u64), v108, W_1, ())
+                    },
+                    sumbool::right => {
+                      std::mem::drop(W_1);
+                      std::mem::drop(ls);
+                      std::mem::drop(rs);
+                      std::mem::drop(P);
+                      Rc::new(option::<(Rc<Array<u64>>, u64)>::None)
+                    },
+                  }
+                }
+              } else {
+                std::mem::drop(ls);
+                std::mem::drop(rs);
+                std::mem::drop(P);
+                std::mem::drop(W);
+                Rc::new(option::<(Rc<Array<u64>>, u64)>::None)
               }
             },
           }
@@ -1252,36 +1199,31 @@ pub fn sweep(ls: Rc<Array<f64>>, rs: Rc<Array<f64>>, b: f64, P: Rc<Array<u64>>, 
 // Rocq: Intervalcover.intervalcover_implem.copy_out
 // Variant: uncurried
 pub fn copy_out(W: Rc<Array<u64>>, k: u64, O: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v3 = &W;
-  let v6 = rocq_array::get::<u64>(&v3, k);
+  let tmp = rocq_array::get::<u64>(&W, k);
   std::mem::drop(W);
-  rocq_array::set::<u64>(O, k, v6)
+  rocq_array::set::<u64>(O, k, tmp)
 }
 
 // Rocq: Intervalcover.intervalcover_implem.cover
 // Variant: uncurried
 pub fn cover(x: f64, y: f64, ls: Rc<Array<f64>>, rs: Rc<Array<f64>>) -> Rc<option<Rc<Array<u64>>>> {
-  let v4 = &ls;
-  let n = rocq_array::length::<f64>(&v4);
-  let v7 = {
-    move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
-      std::mem::drop(v9);
-      true
-    }
-  };
-  let v14: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v7);
-  let v16: fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>> = iota_step;
-  let v17: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v16);
-  let v27 = rocq_array::make::<u64>(n, 0u64);
-  let P = loop_::<Rc<Array<u64>>>(n, v14, v17, 0u64, v27);
-  let v48 = rocq_array::make::<u64>(n, 0u64);
-  let v51 = Rc::clone(&ls);
-  let v60 = msort_rec_1(v51, 0u64, n, P, v48);
-  match v60 {
+  let n = rocq_array::length::<f64>(&ls);
+  let callback: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v8: u64, v9: Rc<Array<u64>>| -> bool {
+    std::mem::drop(v9);
+    true
+  });
+  let tmp: fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>> = iota_step;
+  let tmp_1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(tmp);
+  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
+  let P = loop_::<Rc<Array<u64>>>(n, callback, tmp_1, 0u64, tmp_2);
+  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
+  let ls_clone = Rc::clone(&ls);
+  let tmp_4 = msort_rec_1(ls_clone, 0u64, n, P, tmp_3);
+  match tmp_4 {
     (v62, v64) => {
-      let v77 = rocq_array::make::<u64>(n, 0u64);
-      let v96 = sweep_1(ls, rs, y, v62, n, 0u64, 0u64, x, v77);
-      let (v97, v98) = __rocq_reuse::reset(v96, |__payload| Clone::clone(__payload));
+      let tmp_5 = rocq_array::make::<u64>(n, 0u64);
+      let tmp_6 = sweep_1(ls, rs, y, v62, n, 0u64, 0u64, x, tmp_5);
+      let (v97, v98) = __rocq_reuse::reset(tmp_6, |__payload| Clone::clone(__payload));
       std::mem::drop(v98);
       match v97 {
         option::Some(v103) => {
@@ -1289,29 +1231,24 @@ pub fn cover(x: f64, y: f64, ls: Rc<Array<f64>>, rs: Rc<Array<f64>>) -> Rc<optio
           let p = &v103;
           match p {
             (k, W) => {
-              let v112 = {
-                move |_v113: u64, v114: Rc<Array<u64>>| -> bool {
-                  std::mem::drop(v114);
-                  true
-                }
-              };
-              let v119: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(v112);
-              let v120: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = v119;
-              let v122 = Rc::clone(k);
-              let v123 = {
+              let callback_1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> bool> = Rc::new(move |_v113: u64, v114: Rc<Array<u64>>| -> bool {
+                std::mem::drop(v114);
+                true
+              });
+              let k_clone = Rc::clone(k);
+              let callback_2: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
                 move |v126: u64, v127: Rc<Array<u64>>| -> Rc<Array<u64>> {
-                  let v130 = Rc::clone(&v122);
-                  copy_out(v130, v126, v127)
+                  let tmp_7 = Rc::clone(&k_clone);
+                  copy_out(tmp_7, v126, v127)
                 }
-              };
-              let v138: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v123);
-              let v141 = 0u64;
-              let v143 = 0u64;
-              let v148 = rocq_array::make::<u64>(Clone::clone(W), v143);
-              let v149 = Clone::clone(W);
+              });
+              let tmp_8 = 0u64;
+              let tmp_9 = 0u64;
+              let tmp_10 = rocq_array::make::<u64>(Clone::clone(W), tmp_9);
+              let W_clone = Clone::clone(W);
               std::mem::drop(v103);
-              let v160 = loop_::<Rc<Array<u64>>>(v149, v120, v138, v141, v148);
-              Rc::new(option::<Rc<Array<u64>>>::Some(v160))
+              let tmp_11 = loop_::<Rc<Array<u64>>>(W_clone, callback_1, callback_2, tmp_8, tmp_10);
+              Rc::new(option::<Rc<Array<u64>>>::Some(tmp_11))
             },
           }
         },
@@ -1473,12 +1410,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(f64, f64, Rc<Array<f64>>, Rc<Array<f64>>) -> Rc<option<Rc<Array<u64>>>>> {
-  let v0: fn(f64, f64, Rc<Array<f64>>, Rc<Array<f64>>) -> Rc<option<Rc<Array<u64>>>> = cover;
-  let v1: Rc<dyn Fn(f64, f64, Rc<Array<f64>>, Rc<Array<f64>>) -> Rc<option<Rc<Array<u64>>>>> = Rc::new(v0);
-  v1
-}
-
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1563,7 +1494,7 @@ fn main() { submission_io::entry(|input| {
             left.push(t.next().parse::<f64>().unwrap());
             right.push(t.next().parse::<f64>().unwrap());
         }
-        let result = run()(a, b, submission_io::array(left, 0.0), submission_io::array(right, 0.0));
+        let result = cover(a, b, submission_io::array(left, 0.0), submission_io::array(right, 0.0));
         match result.as_ref() {
             option::None { .. } => writeln!(out, "impossible").unwrap(),
             option::Some(indices) => {

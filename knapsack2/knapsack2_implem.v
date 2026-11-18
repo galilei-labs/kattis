@@ -3,6 +3,7 @@
 From Knapsack2.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -51,6 +52,8 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
 
@@ -77,6 +80,7 @@ Qed.
 
 (* "No filling found yet" for a residue class. *)
 Definition inf : int := 9223372036854775807.
+Elpi complexity inf.
 
 (* The smallest of g.[i], ..., g.[n-1] and best. *)
 Fixpoint min_loop (g : array int) (n i best : int)
@@ -87,6 +91,8 @@ Fixpoint min_loop (g : array int) (n i best : int)
         (Acc_inv H (dec_step n i Hi))
   | right _ => best
   end.
+Elpi complexity min_loop.
+Arguments min_loop_cost : simpl never.
 
 (* Euclid's algorithm. *)
 Fixpoint gcd_loop (u v : int) (H : Acc (Zwf 0) (φ v)) {struct H} : int :=
@@ -94,10 +100,14 @@ Fixpoint gcd_loop (u v : int) (H : Acc (Zwf 0) (φ v)) {struct H} : int :=
   | left _ => u
   | right Hv => gcd_loop v (u mod v) (Acc_inv H (gcd_dec u v Hv))
   end.
+Elpi complexity gcd_loop.
+Arguments gcd_loop_cost : simpl never.
 
 (* x + a modulo m, for x < m and a' = a mod m. *)
 Definition nxt (m a' x : int) : int :=
   let y := x + a' in if y <? m then y else y - m.
+Elpi complexity nxt.
+Arguments nxt_cost : simpl never.
 
 (* The position of the smallest cell among x, x + a, ..., (L - j more
    steps) modulo m, p being the best one seen so far. *)
@@ -109,6 +119,8 @@ Fixpoint scan (A : array int) (m a' L j x p : int)
         (Acc_inv H (dec_step L j Hj))
   | right _ => p
   end.
+Elpi complexity scan.
+Arguments scan_cost : simpl never.
 
 (* One walk around a cycle of +a modulo m, from x whose cell holds cur:
    each next cell becomes min(itself, previous + a). *)
@@ -124,6 +136,8 @@ Fixpoint relax (m a a' L1 j x cur : int) (A : array int)
       else relax m a a' L1 (j + 1) y v A (Acc_inv H (dec_step L1 j Hj))
   | right _ => A
   end.
+Elpi complexity relax.
+Arguments relax_cost : simpl never.
 
 (* The cycles of +a modulo m are the classes modulo d = gcd(m, a), each
    of length L = m / d; class c is walked from its smallest cell. *)
@@ -139,12 +153,16 @@ Fixpoint classes (m a a' d L c : int) (A : array int)
         (Acc_inv H (dec_step d c Hc))
   | right _ => A
   end.
+Elpi complexity classes.
+Arguments classes_cost : simpl never.
 
 (* Close the table under adding an item of size a. *)
 Definition item (m a : int) (A : array int) : array int :=
   let a' := a mod m in
   let d := gcd_loop m a' (Zwf_well_founded 0 (φ a')) in
   classes m a a' d (m / d) 0 A (Zwf_well_founded 0 (gap d 0)).
+Elpi complexity item.
+Arguments item_cost : simpl never.
 
 Fixpoint items (g : array int) (n m i : int) (A : array int)
     (H : Acc (Zwf 0) (gap n i)) {struct H} : array int :=
@@ -152,6 +170,8 @@ Fixpoint items (g : array int) (n m i : int) (A : array int)
   | left Hi => items g n m (i + 1) (item m g.[i] A) (Acc_inv H (dec_step n i Hi))
   | right _ => A
   end.
+Elpi complexity items.
+Arguments items_cost : simpl never.
 
 (* Cell r of the table: the smallest fillable size congruent to r modulo
    the smallest item size m (inf when none). *)
@@ -161,8 +181,11 @@ Definition fillable_core (k : int) (g : array int) : bool :=
   let A := items g n m 0 (PArray.make m inf).[0 <- 0]
              (Zwf_well_founded 0 (gap n 0)) in
   A.[k mod m] <=? k.
+Elpi complexity fillable_core.
+Arguments fillable_core_cost : simpl never.
 
 Definition fillable_impl (k : uint) (g : array uint) : bool := fillable_core k g.
+Elpi complexity fillable_impl.
 
 (* Unfolding equations. *)
 Lemma min_loop_eq : forall g n i best H,
@@ -1047,7 +1070,6 @@ Proof.
   destruct Hv as [Hn Hks Hgs].
   exists (fillable_impl xk xg). split; [reflexivity|].
   unfold fillable_spec, fillable_impl, fillable_core.
-  apply bool_match_of_iff.
   pose proof (g_length gl xg Hg) as Hgl.
   assert (Hl1 : (1 <= (φ (@PArray.length int xg)) <= 20)%Z) by (unfold len in Hn; lia).
   set (m := min_loop xg (@PArray.length int xg) 1 (@PArray.get int xg 0)
@@ -1117,8 +1139,419 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition fillable : uint -> array uint -> bool := fillable_impl.
+Elpi complexity fillable.
 
 Definition fillable_correct : forall (k : N) (g : list N) (xk : uint) (xg : array uint),
   valid_input k g -> repr xk k -> repr xg g ->
   exists b : bool, repr (fillable xk xg) b /\ fillable_spec k g b
   := fillable_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Complexity                                                          *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+Arguments bdec_cost : simpl never.
+(* cbn (inside cost_simpl) must not unfold φ of a variable: the Acc index
+   of gcd_loop is φ v (the 10_problems pitfall), so φ is opaque to it here. *)
+Local Arguments Uint63.to_Z : simpl never.
+
+Ltac z0 f := repeat match goal with |- context [cost (f ?a ?b ?c)] => change (cost (f a b c)) with 0%nat end.
+Ltac z1 f := repeat match goal with |- context [cost (extract (f ?a ?b ?c) ?d ?e)] =>
+  change (cost (extract (f a b c) d e)) with 0%nat end.
+Ltac z2 f := repeat match goal with |- context [cost (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1)] =>
+  change (cost (extract (extract (f a b c) d e) d1 e1)) with 0%nat end.
+Ltac z3 f := repeat match goal with |- context [cost (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2)] =>
+  change (cost (extract (extract (extract (f a b c) d e) d1 e1) d2 e2)) with 0%nat end.
+
+Lemma gap_succ n i : (i <? n) = true -> (Z.to_nat (gap n (i + 1)) < Z.to_nat (gap n i))%nat.
+Proof.
+  intros H. rewrite ltb_spec in H.
+  assert (H1 : φ (i + 1) = (φ i + 1)%Z) by (zify; Z.to_euclidean_division_equations; lia).
+  unfold gap. rewrite H1. lia.
+Qed.
+
+Lemma min_loop_time g gC n nC i iC best bestC H HC :
+  (cost (extract (extract (extract (extract (min_loop_cost stepsCM g gC) n nC) i iC) best bestC) H HC) <= 30 * Z.to_nat (gap n i) + 10)%nat.
+Proof.
+  unfold min_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G g gC n nC i iC best bestC H HC)] =>
+    assert (HG : forall k i iC best bestC H HC, (Z.to_nat (gap n i) <= k)%nat ->
+       (cost (G g gC n nC i iC best bestC H HC) <= 30 * k + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' b' bC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB;
+      cost_destruct (bdec (i' <? n)); cost_simpl.
+    - exfalso. pose proof (gap_succ n i' e). lia.
+    - lia.
+    - pose proof (gap_succ n i' e).
+      assert (Hk' : (Z.to_nat (gap n (i' + 1)) <= k)%nat) by lia.
+      rewrite cost_if. destruct (g.[i'] <? b'); cost_simpl;
+      match goal with |- context [@cost ?T (?G' g gC n nC (i' + 1)%uint63 ?w ?bb ?bbC ?a ?e)] =>
+        have HI := (IH (i' + 1)%uint63 w bb bbC a e Hk' : (@cost T (G' g gC n nC (i' + 1)%uint63 w bb bbC a e) <= _)%nat) end;
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G g gC n nC i iC best bestC H HC)] =>
+    exact (HG _ i iC best bestC H HC (le_n _) : (@cost T (G g gC n nC i iC best bestC H HC) <= _)%nat) end.
+Qed.
+
+Lemma gcd_loop_time u uC v vC H HC :
+  (cost (extract (extract (gcd_loop_cost stepsCM u uC) v vC) H HC) <= 20 * Z.to_nat (φ v) + 10)%nat.
+Proof.
+  unfold gcd_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G u uC v vC H HC)] =>
+    assert (HG : forall k u uC v vC H HC, (Z.to_nat (φ v) <= k)%nat ->
+       (cost (G u uC v vC H HC) <= 20 * k + 10)%nat) end.
+  { clear H HC. induction k as [|k IH]; intros u' uC' v' vC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (v' =? 0) (bool_w (v' =? 0))) as HB;
+      cost_destruct (bdec (v' =? 0)); cost_simpl.
+    - lia.
+    - exfalso. pose proof (gcd_dec u' v' e) as [X0 X]. pose proof (to_Z_bounded (u' mod v')). lia.
+    - lia.
+    - pose proof (gcd_dec u' v' e) as [X0 X]. pose proof (to_Z_bounded (u' mod v')).
+      assert (Hk' : (Z.to_nat (φ (u' mod v')) <= k)%nat) by lia.
+      match goal with |- context [@cost ?T (?G' v' ?w1 (u' mod v')%uint63 ?w2 ?a ?ee)] =>
+        have HI := (IH v' w1 (u' mod v')%uint63 w2 a ee Hk' : (@cost T (G' v' w1 (u' mod v')%uint63 w2 a ee) <= _)%nat) end.
+      lia. }
+  match goal with |- context [@cost ?T (?G u uC v vC H HC)] =>
+    exact (HG _ u uC v vC H HC (le_n _) : (@cost T (G u uC v vC H HC) <= _)%nat) end.
+Qed.
+
+Lemma nxt_time m mC a aC x xC :
+  (cost (extract (extract (nxt_cost stepsCM m mC) a aC) x xC) <= 10)%nat.
+Proof.
+  unfold nxt_cost. cost_simpl. rewrite cost_if. destruct (x + a <? m); cost_simpl; lia.
+Qed.
+
+Ltac gen_nxt := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (nxt_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+    let Hc := fresh "Hnxt" in
+    have Hc := (nxt_time a aC b bC c cC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma scan_time A AC m mC a aC L LC j jC x xC p pC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (scan_cost stepsCM A AC) m mC) a aC) L LC) j jC) x xC) p pC) H HC) <= Z.to_nat (gap L j) * 60 + 10)%nat.
+Proof.
+  unfold scan_cost. cbn.
+  match goal with |- context [@cost ?T (?G A AC m mC a aC L LC j jC x xC p pC H HC)] =>
+    assert (HG : forall k j jC x xC p pC H HC, (Z.to_nat (gap L j) <= k)%nat ->
+       (cost (G A AC m mC a aC L LC j jC x xC p pC H HC) <= k * 60 + 10)%nat) end.
+  { induction k as [|k IH]; intros j' jC' x' xC' p' pC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (j' <? L) (bool_w (j' <? L))) as HB;
+      cost_destruct (bdec (j' <? L)); cost_simpl.
+    - exfalso. pose proof (gap_succ L j' e). lia.
+    - lia.
+    - pose proof (gap_succ L j' e).
+      assert (Hk' : (Z.to_nat (gap L (j' + 1)) <= k)%nat) by lia.
+      z0 nxt_cost; z1 nxt_cost. gen_nxt.
+      rewrite cost_if. destruct (A.[x'] <? A.[p']); cost_simpl;
+      match goal with |- context [@cost ?T (?G' A AC m mC a aC L LC (j' + 1)%uint63 ?w ?xx ?xxC ?pp ?ppC ?hh ?ee)] =>
+        have HI := (IH (j' + 1)%uint63 w xx xxC pp ppC hh ee Hk' : (@cost T (G' A AC m mC a aC L LC (j' + 1)%uint63 w xx xxC pp ppC hh ee) <= _)%nat) end.
+      all: lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G A AC m mC a aC L LC j jC x xC p pC H HC)] =>
+    exact (HG _ j jC x xC p pC H HC (le_n _) : (@cost T (G A AC m mC a aC L LC j jC x xC p pC H HC) <= _)%nat) end.
+Qed.
+
+Ltac set_simpl :=
+  repeat match goal with
+  | |- context [cost (extract (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g) ?h ?i)] =>
+      change (cost (extract (extract (extract (set_cost a b c) d e) f g) h i)) with 1%nat
+  | |- context [cost (extract (extract (set_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (set_cost a b c) d e) f g)) with 0%nat
+  | |- context [cost (extract (set_cost ?a ?b ?c) ?d ?e)] =>
+      change (cost (extract (set_cost a b c) d e)) with 0%nat
+  | |- context [cost (set_cost ?a ?b ?c)] =>
+      change (cost (set_cost a b c)) with 0%nat
+  end.
+
+Lemma relax_time m mC a aC a' a'C L1 L1C j jC x xC cur curC A AC H HC :
+  (cost (extract (extract (extract (extract (extract (extract (extract (extract (relax_cost stepsCM m mC) a aC) a' a'C) L1 L1C) j jC) x xC) cur curC) A AC) H HC) <= Z.to_nat (gap L1 j) * 60 + 10)%nat.
+Proof.
+  unfold relax_cost. cbn.
+  match goal with |- context [@cost ?T (?G m mC a aC a' a'C L1 L1C j jC x xC cur curC A AC H HC)] =>
+    assert (HG : forall k j jC x xC cur curC A AC H HC, (Z.to_nat (gap L1 j) <= k)%nat ->
+       (cost (G m mC a aC a' a'C L1 L1C j jC x xC cur curC A AC H HC) <= k * 60 + 10)%nat) end.
+  { induction k as [|k IH]; intros j' jC' x' xC' c' cC' A' AC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (j' <? L1) (bool_w (j' <? L1))) as HB;
+      cost_destruct (bdec (j' <? L1)); cost_simpl.
+    - exfalso. pose proof (gap_succ L1 j' e). lia.
+    - lia.
+    - pose proof (gap_succ L1 j' e).
+      assert (Hk' : (Z.to_nat (gap L1 (j' + 1)) <= k)%nat) by lia.
+      z0 nxt_cost; z1 nxt_cost. gen_nxt.
+      rewrite cost_if. destruct (c' + a <? A'.[nxt m a' x']); cost_simpl; set_simpl;
+      match goal with |- context [@cost ?T (?G' m mC a aC a' a'C L1 L1C (j' + 1)%uint63 ?w ?xx ?xxC ?cc ?ccC ?AA ?AAC ?hh ?ee)] =>
+        have HI := (IH (j' + 1)%uint63 w xx xxC cc ccC AA AAC hh ee Hk' : (@cost T (G' m mC a aC a' a'C L1 L1C (j' + 1)%uint63 w xx xxC cc ccC AA AAC hh ee) <= _)%nat) end;
+      lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G m mC a aC a' a'C L1 L1C j jC x xC cur curC A AC H HC)] =>
+    exact (HG _ j jC x xC cur curC A AC H HC (le_n _) : (@cost T (G m mC a aC a' a'C L1 L1C j jC x xC cur curC A AC H HC) <= _)%nat) end.
+Qed.
+
+Arguments scan_cost : simpl never.
+Arguments relax_cost : simpl never.
+
+Ltac z4 f := repeat match goal with |- context [cost (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3)] =>
+  change (cost (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3)) with 0%nat end.
+Ltac z5 f := repeat match goal with |- context [cost (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4)] =>
+  change (cost (extract (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3) d4 e4)) with 0%nat end.
+Ltac z6 f := repeat match goal with |- context [cost (extract (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5)] =>
+  change (cost (extract (extract (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5)) with 0%nat end.
+Ltac z7 f := repeat match goal with |- context [cost (extract (extract (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5) ?d6 ?e6)] =>
+  change (cost (extract (extract (extract (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5) d6 e6)) with 0%nat end.
+Ltac z8 f := repeat match goal with |- context [cost (extract (extract (extract (extract (extract (extract (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1) ?d2 ?e2) ?d3 ?e3) ?d4 ?e4) ?d5 ?e5) ?d6 ?e6) ?d7 ?e7)] =>
+  change (cost (extract (extract (extract (extract (extract (extract (extract (extract (f a b c) d e) d1 e1) d2 e2) d3 e3) d4 e4) d5 e5) d6 e6) d7 e7)) with 0%nat end.
+Ltac zall f := z0 f; z1 f; z2 f; z3 f; z4 f; z5 f; z6 f; z7 f; z8 f.
+
+Ltac gen_scan := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (extract (scan_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+    let Hc := fresh "Hscan" in
+    have Hc := (scan_time a aC b bC c cC d dC e eC f fC g gC h hC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+Ltac gen_relax := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (extract (extract (relax_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC) ?i ?iC =>
+    let Hc := fresh "Hrelax" in
+    have Hc := (relax_time a aC b bC c cC d dC e eC f fC g gC h hC i iC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma gap_L1 L : (1 <= φ L)%Z -> (Z.to_nat (gap (L - 1) 0) <= Z.to_nat (φ L))%nat.
+Proof.
+  intros H. assert (H1 : φ (L - 1) = (φ L - 1)%Z) by (zify; Z.to_euclidean_division_equations; lia).
+  unfold gap. rewrite H1. change (φ 0) with 0%Z. lia.
+Qed.
+
+Lemma gap_0 L : Z.to_nat (gap L 0) = Z.to_nat (φ L).
+Proof. unfold gap. change (φ 0) with 0%Z. rewrite Z.sub_0_r. reflexivity. Qed.
+
+Lemma classes_time m mC a aC a' a'C d dC L LC c cC A AC H HC :
+  (1 <= φ L)%Z ->
+  (cost (extract (extract (extract (extract (extract (extract (extract (classes_cost stepsCM m mC) a aC) a' a'C) d dC) L LC) c cC) A AC) H HC) <= Z.to_nat (gap d c) * (Z.to_nat (φ L) * 120 + 100) + 10)%nat.
+Proof.
+  intros HL1. remember (Z.to_nat (φ L)) as NL eqn:ENL.
+  unfold classes_cost. cbn.
+  match goal with |- context [@cost ?T (?G m mC a aC a' a'C d dC L LC c cC A AC H HC)] =>
+    assert (HG : forall k c cC A AC H HC, (Z.to_nat (gap d c) <= k)%nat ->
+       (cost (G m mC a aC a' a'C d dC L LC c cC A AC H HC) <= k * (NL * 120 + 100) + 10)%nat) end.
+  { induction k as [|k IH]; intros c' cC' A' AC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (c' <? d) (bool_w (c' <? d))) as HB;
+      cost_destruct (bdec (c' <? d)); cost_simpl.
+    - exfalso. pose proof (gap_succ d c' e). lia.
+    - lia.
+    - pose proof (gap_succ d c' e).
+      assert (Hk' : (Z.to_nat (gap d (c' + 1)) <= k)%nat) by lia.
+      zall scan_cost. gen_scan. rewrite gap_0 -ENL in Hscan.
+      destruct (A'.[scan A' m a' L 0 c' c' (Zwf_well_founded 0 (gap L 0))] =? inf); cost_simpl.
+      + match goal with |- context [@cost ?T (?G' m mC a aC a' a'C d dC L LC (c' + 1)%uint63 ?w ?AA ?AAC ?hh ?ee)] =>
+          have HI := (IH (c' + 1)%uint63 w AA AAC hh ee Hk' : (@cost T (G' m mC a aC a' a'C d dC L LC (c' + 1)%uint63 w AA AAC hh ee) <= _)%nat) end.
+        lia.
+      + zall relax_cost. gen_relax. pose proof (gap_L1 L HL1) as GL.
+        match goal with |- context [@cost ?T (?G' m mC a aC a' a'C d dC L LC (c' + 1)%uint63 ?w ?AA ?AAC ?hh ?ee)] =>
+          have HI := (IH (c' + 1)%uint63 w AA AAC hh ee Hk' : (@cost T (G' m mC a aC a' a'C d dC L LC (c' + 1)%uint63 w AA AAC hh ee) <= _)%nat) end.
+        rewrite -ENL in GL. clear -HB Hscan Hrelax GL HI. nia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G m mC a aC a' a'C d dC L LC c cC A AC H HC)] =>
+    exact (HG _ c cC A AC H HC (le_n _) : (@cost T (G m mC a aC a' a'C d dC L LC c cC A AC H HC) <= _)%nat) end.
+Qed.
+
+Arguments classes_cost : simpl never.
+Arguments gcd_loop_cost : simpl never.
+
+Ltac gen_gcd := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (gcd_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+    let Hc := fresh "Hgcd" in
+    have Hc := (gcd_loop_time a aC b bC c cC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+Ltac gen_classes HL := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (extract (extract (classes_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC) ?g ?gC) ?h ?hC =>
+    let Hc := fresh "Hclasses" in
+    have Hc := (classes_time a aC b bC c cC d dC e eC f fC g gC h hC HL : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma dl_arith (D L M : Z) : (1 <= D)%Z -> (0 <= L)%Z -> (D * L <= M)%Z -> (D <= M)%Z ->
+  (Z.to_nat D * (Z.to_nat L * 120 + 100) <= Z.to_nat M * 220)%nat.
+Proof.
+  intros H1 H2 H3 H4.
+  assert (E : (Z.to_nat D * (Z.to_nat L * 120 + 100) = Z.to_nat (D * L * 120 + D * 100))%nat).
+  { rewrite Z2Nat.inj_add; [nia|nia|]. rewrite !Z2Nat.inj_mul; try lia. }
+  rewrite E. replace (Z.to_nat M * 220)%nat with (Z.to_nat (M * 220)) by (rewrite Z2Nat.inj_mul; lia).
+  apply Z2Nat.inj_le; nia.
+Qed.
+
+Lemma item_time m mC a aC A AC :
+  (1 <= φ m)%Z ->
+  (cost (extract (extract (item_cost stepsCM m mC) a aC) A AC) <= Z.to_nat (φ m) * 300 + 100)%nat.
+Proof.
+  intros Hm. remember (Z.to_nat (φ m)) as M eqn:EM.
+  unfold item_cost. cost_simpl.
+  zall gcd_loop_cost. gen_gcd.
+  pose proof (to_Z_bounded a) as Ba. pose proof (to_Z_bounded m) as Bm.
+  assert (Ham : (φ (a mod m) < φ m)%Z).
+  { rewrite mod_spec. apply Z.mod_pos_bound. lia. }
+  pose proof (to_Z_bounded (a mod m)) as Bam.
+  pose proof (gcd_spec _ m (a mod m) (Zwf_well_founded 0 (φ (a mod m))) eq_refl) as Hg.
+  set D := gcd_loop m (a mod m) (Zwf_well_founded 0 (φ (a mod m))) in Hg *.
+  assert (HD1 : (1 <= φ D)%Z).
+  { rewrite Hg. pose proof (Z.gcd_nonneg (φ m) (φ (a mod m))).
+    destruct (Z.eq_dec (Z.gcd (φ m) (φ (a mod m))) 0) as [E|E]; [|lia].
+    apply Z.gcd_eq_0_l in E. lia. }
+  assert (HDm : (φ D <= φ m)%Z).
+  { rewrite Hg. apply Z.divide_pos_le; [lia|]. apply Z.gcd_divide_l. }
+  assert (HL : (φ (m / D) = φ m / φ D)%Z) by (rewrite div_spec; reflexivity).
+  assert (HL1 : (1 <= φ (m / D))%Z).
+  { rewrite HL. apply Z.div_le_lower_bound; lia. }
+  assert (HDL : (φ D * φ (m / D) <= φ m)%Z).
+  { rewrite HL. apply Z.mul_div_le. lia. }
+  zall classes_cost. gen_classes HL1. rewrite gap_0 in Hclasses.
+  pose proof (dl_arith (φ D) (φ (m / D)) (φ m) HD1 ltac:(lia) HDL HDm) as DA.
+  assert (Hg2 : (Z.to_nat (φ (a mod m)) <= M)%nat) by lia.
+  rewrite -EM in DA.
+  clear -Hgcd Hclasses DA Hg2. lia.
+Qed.
+
+Arguments item_cost : simpl never.
+Ltac gen_item HL := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (item_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC =>
+    let Hc := fresh "Hitem" in
+    have Hc := (item_time a aC b bC c cC HL : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma items_time g gC n nC m mC i iC A AC H HC :
+  (1 <= φ m)%Z ->
+  (cost (extract (extract (extract (extract (extract (items_cost stepsCM g gC) n nC) m mC) i iC) A AC) H HC) <= Z.to_nat (gap n i) * (Z.to_nat (φ m) * 300 + 200) + 10)%nat.
+Proof.
+  intros Hm. remember (Z.to_nat (φ m)) as M eqn:EM.
+  unfold items_cost. cbn.
+  match goal with |- context [@cost ?T (?G g gC n nC m mC i iC A AC H HC)] =>
+    assert (HG : forall k i iC A AC H HC, (Z.to_nat (gap n i) <= k)%nat ->
+       (cost (G g gC n nC m mC i iC A AC H HC) <= k * (M * 300 + 200) + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' A' AC' [h] HC' Hk;
+      cost_simpl;
+      pose proof (bdec_time (i' <? n) (bool_w (i' <? n))) as HB;
+      cost_destruct (bdec (i' <? n)); cost_simpl.
+    - exfalso. pose proof (gap_succ n i' e). lia.
+    - lia.
+    - pose proof (gap_succ n i' e).
+      assert (Hk' : (Z.to_nat (gap n (i' + 1)) <= k)%nat) by lia.
+      zall item_cost. gen_item Hm. rewrite -EM in Hitem.
+      match goal with |- context [@cost ?T (?G' g gC n nC m mC (i' + 1)%uint63 ?w ?AA ?AAC ?hh ?ee)] =>
+        have HI := (IH (i' + 1)%uint63 w AA AAC hh ee Hk' : (@cost T (G' g gC n nC m mC (i' + 1)%uint63 w AA AAC hh ee) <= _)%nat) end.
+      clear -HB Hitem HI. nia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G g gC n nC m mC i iC A AC H HC)] =>
+    exact (HG _ i iC A AC H HC (le_n _) : (@cost T (G g gC n nC m mC i iC A AC H HC) <= _)%nat) end.
+Qed.
+
+Arguments items_cost : simpl never.
+Arguments min_loop_cost : simpl never.
+
+Ltac gen_min := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (min_loop_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC =>
+    let Hc := fresh "Hmin" in
+    have Hc := (min_loop_time a aC b bC c cC d dC e eC : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+Ltac gen_items HL := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (extract (items_cost stepsCM ?a ?aC) ?b ?bC) ?c ?cC) ?d ?dC) ?e ?eC) ?f ?fC =>
+    let Hc := fresh "Hitems" in
+    have Hc := (items_time a aC b bC c cC d dC e eC f fC HL : (@cost T X <= _)%nat);
+    revert Hc; generalize (@cost T X); intros ? Hc end end.
+
+Lemma fillable_core_time k kC g gC :
+  (1 <= φ (min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1))))%Z ->
+  (cost (extract (fillable_core_cost stepsCM k kC) g gC) <=
+     Z.to_nat (φ (PArray.length g)) * (Z.to_nat (φ (min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1)))) * 300 + 250) + 100)%nat.
+Proof.
+  intros Hm.
+  remember (Z.to_nat (φ (PArray.length g))) as N eqn:EN.
+  remember (Z.to_nat (φ (min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1))))) as M eqn:EM.
+  unfold fillable_core_cost. cost_simpl.
+  zall min_loop_cost. gen_min.
+  zall items_cost. gen_items Hm.
+  set_simpl. zall make_cost.
+  repeat match goal with
+  | |- context [cost (extract (extract (make_cost ?a ?b ?c) ?d ?e) ?f ?g)] =>
+      change (cost (extract (extract (make_cost a b c) d e) f g)) with 1%nat
+  end.
+  rewrite gap_0 -EN -EM in Hitems.
+  assert (E1 : (Z.to_nat (gap (PArray.length g) 1) <= N)%nat) by (rewrite EN; unfold gap; lia).
+  clear -Hmin Hitems E1. nia.
+Qed.
+
+Lemma fold_max_ge (f : nat -> nat) (l : list nat) : forall acc,
+  (acc <= List.fold_left (fun a i => Nat.max a (f i)) l acc)%nat /\
+  (forall x, In x l -> f x <= List.fold_left (fun a i => Nat.max a (f i)) l acc)%nat.
+Proof.
+  induction l as [|y l IH]; intros acc; cbn [List.fold_left In].
+  - split; [lia | intros x []].
+  - destruct (IH (Nat.max acc (f y))) as [H1 H2]. split; [lia|].
+    intros x [<-|Hx]; [lia | apply H2, Hx].
+Qed.
+
+Lemma cell_le_max (t : array uint) (j : int) : (φ j < φ (PArray.length t))%Z ->
+  (Z.to_nat (φ t.[j]) <= max_size t)%nat.
+Proof.
+  intros Hj. unfold max_size.
+  destruct (fold_max_ge (fun i => size t.[of_Z (Z.of_nat i)]) (List.seq 0 (size t)) 0%nat) as [_ H2].
+  pose proof (to_Z_bounded j) as Bj.
+  specialize (H2 (Z.to_nat (φ j))). rewrite Z2Nat.id in H2; [lia|]. rewrite of_to_Z in H2.
+  apply H2. apply in_seq. unfold size, size_array. lia.
+Qed.
+
+Lemma m_facts (gl : list N) (g : array int) :
+  repr (g : array uint) gl -> (1 <= len gl <= 20)%N -> Forall (fun s => (1 <= s <= 1000)%N) gl ->
+  (1 <= φ (min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1))))%Z /\
+  (Z.to_nat (φ (min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1))))
+     <= max_size (g : array uint))%nat.
+Proof.
+  intros Hg Hn Hgs.
+  pose proof (g_length gl g Hg) as Hgl.
+  assert (Hl1 : (1 <= φ (PArray.length g) <= 20)%Z) by (unfold len in Hn; lia).
+  assert (Hmin : exists j, (φ j < φ (PArray.length g))%Z /\
+     g.[j] = min_loop g (PArray.length g) 1 g.[0] (Zwf_well_founded 0 (gap (PArray.length g) 1))).
+  { apply (min_loop_spec (fun x => exists j, (φ j < φ (PArray.length g))%Z /\ g.[j] = x)) with (zm := gap (PArray.length g) 1).
+    - intros i Hi. exists i. split; [exact Hi | reflexivity].
+    - reflexivity.
+    - exists 0. split; [change (φ 0) with 0%Z; lia | reflexivity]. }
+  destruct Hmin as (j & Hj & Ej). rewrite <- Ej.
+  destruct (g_cell gl g Hg Hn Hgs j Hj) as [Hb _].
+  split; [lia|]. exact (cell_le_max g j Hj).
+Qed.
+
+Arguments fillable_core_cost : simpl never.
+Arguments fillable_impl_cost : simpl never.
+
+Lemma final_arith (t : array uint) (M c : nat) :
+  (M <= max_size t)%nat -> (c <= Z.to_nat (φ (@PArray.length int t)) * (M * 300 + 250) + 100)%nat ->
+  (S (0 + S c) <= 600 * ((size t + 1) * (max_size t + 1)) + 200)%nat.
+Proof.
+  intros H1 H2. change (size t) with (Z.to_nat (φ (@PArray.length int t))).
+  remember (Z.to_nat (φ (@PArray.length int t))) as s. remember (max_size t) as G. nia.
+Qed.
+
+Theorem fillable_time : exists c1 c2 : nat,
+  forall (knapsack_size : N) (item_sizes : list N)
+  (knapsack_size_int : uint) (item_sizes_arr : array
+  uint),
+  valid_input knapsack_size item_sizes ->
+  repr knapsack_size_int knapsack_size ->
+  repr item_sizes_arr item_sizes ->
+  (cost2 fillable_cost knapsack_size_int item_sizes_arr <= c1 * ((size item_sizes_arr + 1) * (max_size item_sizes_arr + 1)) + c2)%nat.
+Proof.
+  exists 600%nat, 200%nat. intros k gl xk xg Hv Hk Hg.
+  destruct Hv as [Hn Hks Hgs].
+  destruct (m_facts gl xg Hg Hn Hgs) as [Hm1 HmG].
+  remember (600 * ((size xg + 1) * (max_size xg + 1)) + 200)%nat as R eqn:ER.
+  unfold cost2, fillable_cost, fillable_impl_cost. cost_simpl.
+  match goal with |- context [cost (fillable_core_cost stepsCM xk ?w)] =>
+    change (cost (fillable_core_cost stepsCM xk w)) with 0%nat end.
+  match goal with |- (S (0 + S (@cost ?T (extract (fillable_core_cost stepsCM xk ?w) xg ?w2))) <= _)%nat =>
+    pose proof (fillable_core_time xk w xg w2 Hm1) as Hc end.
+  subst R. eapply final_arith; [exact HmG | exact Hc].
+Qed.

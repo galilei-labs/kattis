@@ -7,5 +7,8 @@ Rust Extraction Inline ADT prod.
 Rust Extraction Inline Pos.compare.
 
 Rust Extraction NoInline exec.
+(* Keep decoder cleanup out of the recursive scanner, so LLVM can eliminate
+   the scanner's tail calls rather than retain one stack frame per command. *)
+Rust Extraction NoInline encode_machine.
 
 Rust Extract "selfbalancingbst_extracted.rs" run_commands.

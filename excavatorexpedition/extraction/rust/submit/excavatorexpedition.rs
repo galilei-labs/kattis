@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -683,26 +682,11 @@ pub fn MONE() -> u64 {
   9223372036854775807u64
 }
 
-// Rocq: Excavatorexpedition.excavatorexpedition_implem.excavator
-// Variant: uncurried
-pub fn excavator() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64 = excavator_impl;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Excavatorexpedition.excavatorexpedition_implem.excavator
-pub fn excavator_curried() -> Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> {
-  let v0: fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = excavator_impl_curried;
-  let v1: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Strings.PrimString.length
 pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let v2 = rocq_string::length(&v0);
+  let tmp = rocq_string::length(&v0);
   std::mem::drop(v0);
-  v2
+  tmp
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
@@ -719,13 +703,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -744,16 +725,14 @@ pub fn cnt_loop_1(xsrc: Rc<Array<u64>>, E: u64, k: u64, c: Rc<Array<u64>>) -> Rc
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.cnt_loop (local: cnt_loop)
 // Variant: uncurried, lifted
 pub fn cnt_loop(xsrc: Rc<Array<u64>>, E: u64, k: u64, c: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, E);
-  match bdec(v12) {
+  let tmp = ltb(k, E);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &xsrc;
-      let u = rocq_array::get::<u64>(&v16, k);
-      let v27 = add(k, 1u64);
-      let v29 = &c;
-      let v32 = rocq_array::get::<u64>(&v29, u);
-      let v46 = rocq_array::set::<u64>(c, u, add(v32, 1u64));
-      cnt_loop(xsrc, E, v27, v46, ())
+      let u = rocq_array::get::<u64>(&xsrc, k);
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&c, u);
+      let tmp_3 = rocq_array::set::<u64>(c, u, add(tmp_2, 1u64));
+      cnt_loop(xsrc, E, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(xsrc);
@@ -771,18 +750,15 @@ pub fn pre_loop_1(V: u64, i: u64, c: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.pre_loop (local: pre_loop)
 // Variant: uncurried, lifted
 pub fn pre_loop(V: u64, i: u64, c: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, V);
-  match bdec(v11) {
+  let tmp = ltb(i, V);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(i, 1u64);
-      let v30 = add(i, 1u64);
-      let v39 = add(i, 1u64);
-      let v40 = &c;
-      let v43 = rocq_array::get::<u64>(&v40, v39);
-      let v44 = &c;
-      let v47 = rocq_array::get::<u64>(&v44, i);
-      let v59 = rocq_array::set::<u64>(c, v30, add(v43, v47));
-      pre_loop(V, v22, v59, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = add(i, 1u64);
+      let tmp_3 = rocq_array::get::<u64>(&c, add(i, 1u64));
+      let tmp_4 = rocq_array::get::<u64>(&c, i);
+      let tmp_5 = rocq_array::set::<u64>(c, tmp_2, add(tmp_3, tmp_4));
+      pre_loop(V, tmp_1, tmp_5, ())
     },
     sumbool::right => {
       c
@@ -805,20 +781,17 @@ pub fn rfill_loop_1(xsrc: Rc<Array<u64>>, xdst: Rc<Array<u64>>, k: u64, c: Rc<Ar
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.rfill_loop (local: rfill_loop)
 // Variant: uncurried, lifted
 pub fn rfill_loop(xsrc: Rc<Array<u64>>, xdst: Rc<Array<u64>>, k: u64, c: Rc<Array<u64>>, adj: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(0u64, k);
-  match bdec(v15) {
+  let tmp = ltb(0u64, k);
+  match bdec(tmp) {
     sumbool::left => {
       let k1 = sub(k, 1u64);
-      let v27 = &xsrc;
-      let u = rocq_array::get::<u64>(&v27, k1);
-      let v32 = &c;
-      let v35 = rocq_array::get::<u64>(&v32, u);
-      let p = sub(v35, 1u64);
-      let v49 = rocq_array::set::<u64>(c, u, p);
-      let v50 = &xdst;
-      let v53 = rocq_array::get::<u64>(&v50, k1);
-      let v60 = rocq_array::set::<u64>(adj, p, v53);
-      rfill_loop(xsrc, xdst, k1, v49, v60, ())
+      let u = rocq_array::get::<u64>(&xsrc, k1);
+      let tmp_1 = rocq_array::get::<u64>(&c, u);
+      let p = sub(tmp_1, 1u64);
+      let tmp_2 = rocq_array::set::<u64>(c, u, p);
+      let tmp_3 = rocq_array::get::<u64>(&xdst, k1);
+      let tmp_4 = rocq_array::set::<u64>(adj, p, tmp_3);
+      rfill_loop(xsrc, xdst, k1, tmp_2, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(xsrc);
@@ -837,16 +810,14 @@ pub fn ind_loop_1(adj: Rc<Array<u64>>, E: u64, j: u64, d: Rc<Array<u64>>) -> Rc<
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.ind_loop (local: ind_loop)
 // Variant: uncurried, lifted
 pub fn ind_loop(adj: Rc<Array<u64>>, E: u64, j: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(j, E);
-  match bdec(v12) {
+  let tmp = ltb(j, E);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &adj;
-      let v = rocq_array::get::<u64>(&v16, j);
-      let v27 = add(j, 1u64);
-      let v29 = &d;
-      let v32 = rocq_array::get::<u64>(&v29, v);
-      let v46 = rocq_array::set::<u64>(d, v, add(v32, 1u64));
-      ind_loop(adj, E, v27, v46, ())
+      let v = rocq_array::get::<u64>(&adj, j);
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&d, v);
+      let tmp_3 = rocq_array::set::<u64>(d, v, add(tmp_2, 1u64));
+      ind_loop(adj, E, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(adj);
@@ -864,20 +835,16 @@ pub fn q0_loop_1(V: u64, x: u64, d: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64) -
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.q0_loop (local: q0_loop)
 // Variant: uncurried, lifted
 pub fn q0_loop(V: u64, x: u64, d: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v13 = ltb(x, V);
-  match bdec(v13) {
+  let tmp = ltb(x, V);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &d;
-      let v21 = rocq_array::get::<u64>(&v18, x);
-      match eqb(v21, 0u64) {
-        true => {
-          let v37 = add(x, 1u64);
-          let v44 = rocq_array::set::<u64>(q, t, x);
-          q0_loop(V, v37, d, v44, add(t, 1u64), ())
-        },
-        false => {
-          q0_loop(V, add(x, 1u64), d, q, t, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&d, x);
+      if eqb(tmp_1, 0u64) {
+        let tmp_2 = add(x, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(q, t, x);
+        q0_loop(V, tmp_2, d, tmp_3, add(t, 1u64), ())
+      } else {
+        q0_loop(V, add(x, 1u64), d, q, t, ())
       }
     },
     sumbool::right => {
@@ -890,46 +857,34 @@ pub fn q0_loop(V: u64, x: u64, d: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H:
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.wt
 // Variant: uncurried
 pub fn wt(xs: Rc<rocq_string::RocqString>, V: u64, v: u64) -> u64 {
-  match eqb(v, 0u64) {
-    true => {
+  if eqb(v, 0u64) {
+    std::mem::drop(xs);
+    0u64
+  } else {
+    let tmp = sub(V, 1u64);
+    if eqb(v, tmp) {
       std::mem::drop(xs);
       0u64
-    },
-    false => {
-      let v24 = sub(V, 1u64);
-      match eqb(v, v24) {
-        true => {
-          std::mem::drop(xs);
+    } else {
+      let c = get(xs, v);
+      if eqb(c, 88u64) {
+        1u64
+      } else {
+        if eqb(c, 46u64) {
+          __rocq_global_365
+        } else {
           0u64
-        },
-        false => {
-          let c = get(xs, v);
-          match eqb(c, 88u64) {
-            true => {
-              1u64
-            },
-            false => {
-              match eqb(c, 46u64) {
-                true => {
-                  __rocq_global_365
-                },
-                false => {
-                  0u64
-                },
-              }
-            },
-          }
-        },
+        }
       }
-    },
+    }
   }
 }
 
@@ -942,24 +897,17 @@ pub fn ltsb(v0: u64, v1: u64) -> bool {
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.relax1
 // Variant: uncurried
 pub fn relax1(xs: Rc<rocq_string::RocqString>, V: u64, du: u64, v: u64, dist: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  match eqb(du, __rocq_global_349) {
-    true => {
-      std::mem::drop(xs);
+  if eqb(du, __rocq_global_349) {
+    std::mem::drop(xs);
+    dist
+  } else {
+    let cand = add(du, wt(xs, V, v));
+    let tmp = rocq_array::get::<u64>(&dist, v);
+    if ltsb(tmp, cand) {
+      rocq_array::set::<u64>(dist, v, cand)
+    } else {
       dist
-    },
-    false => {
-      let cand = add(du, wt(xs, V, v));
-      let v30 = &dist;
-      let v34 = rocq_array::get::<u64>(&v30, v);
-      match ltsb(v34, cand) {
-        true => {
-          rocq_array::set::<u64>(dist, v, cand)
-        },
-        false => {
-          dist
-        },
-      }
-    },
+    }
   }
 }
 
@@ -972,28 +920,23 @@ pub fn relax_loop_1(xs: Rc<rocq_string::RocqString>, V: u64, adj: Rc<Array<u64>>
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.relax_loop (local: relax_loop)
 // Variant: uncurried, lifted
 pub fn relax_loop(xs: Rc<rocq_string::RocqString>, V: u64, adj: Rc<Array<u64>>, du: u64, hi: u64, j: u64, d: Rc<Array<u64>>, dist: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H: ()) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), u64) {
-  let v18 = ltb(j, hi);
-  match bdec(v18) {
+  let tmp = ltb(j, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = &adj;
-      let v = rocq_array::get::<u64>(&v22, j);
-      let v29 = Rc::clone(&xs);
-      let dist_ = relax1(v29, V, du, v, dist);
-      let v40 = &d;
-      let v43 = rocq_array::get::<u64>(&v40, v);
-      let e = sub(v43, 1u64);
-      match eqb(e, 0u64) {
-        true => {
-          let v67 = add(j, 1u64);
-          let v74 = rocq_array::set::<u64>(d, v, e);
-          let v81 = rocq_array::set::<u64>(q, t, v);
-          relax_loop(xs, V, adj, du, hi, v67, v74, dist_, v81, add(t, 1u64), ())
-        },
-        false => {
-          let v125 = add(j, 1u64);
-          let v132 = rocq_array::set::<u64>(d, v, e);
-          relax_loop(xs, V, adj, du, hi, v125, v132, dist_, q, t, ())
-        },
+      let v = rocq_array::get::<u64>(&adj, j);
+      let xs_clone = Rc::clone(&xs);
+      let dist_ = relax1(xs_clone, V, du, v, dist);
+      let tmp_1 = rocq_array::get::<u64>(&d, v);
+      let e = sub(tmp_1, 1u64);
+      if eqb(e, 0u64) {
+        let tmp_2 = add(j, 1u64);
+        let tmp_3 = rocq_array::set::<u64>(d, v, e);
+        let tmp_4 = rocq_array::set::<u64>(q, t, v);
+        relax_loop(xs, V, adj, du, hi, tmp_2, tmp_3, dist_, tmp_4, add(t, 1u64), ())
+      } else {
+        let tmp_5 = add(j, 1u64);
+        let tmp_6 = rocq_array::set::<u64>(d, v, e);
+        relax_loop(xs, V, adj, du, hi, tmp_5, tmp_6, dist_, q, t, ())
       }
     },
     sumbool::right => {
@@ -1013,22 +956,17 @@ pub fn kahn_loop_1(xs: Rc<rocq_string::RocqString>, V: u64, off: Rc<Array<u64>>,
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.kahn_loop (local: kahn_loop)
 // Variant: uncurried, lifted
 pub fn kahn_loop(xs: Rc<rocq_string::RocqString>, V: u64, off: Rc<Array<u64>>, adj: Rc<Array<u64>>, h: u64, d: Rc<Array<u64>>, dist: Rc<Array<u64>>, q: Rc<Array<u64>>, t: u64, _H: ()) -> Rc<Array<u64>> {
-  let v17 = ltb(h, t);
-  match bdec(v17) {
+  let tmp = ltb(h, t);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = &q;
-      let u = rocq_array::get::<u64>(&v21, h);
-      let v25 = &off;
-      let lo = rocq_array::get::<u64>(&v25, u);
-      let v30 = &dist;
-      let v33 = rocq_array::get::<u64>(&v30, u);
-      let v41 = add(u, 1u64);
-      let v42 = &off;
-      let v45 = rocq_array::get::<u64>(&v42, v41);
-      let v48 = Rc::clone(&xs);
-      let v53 = Rc::clone(&adj);
-      let v68 = relax_loop_1(v48, V, v53, v33, v45, lo, d, dist, q, t);
-      match v68 {
+      let u = rocq_array::get::<u64>(&q, h);
+      let lo = rocq_array::get::<u64>(&off, u);
+      let tmp_1 = rocq_array::get::<u64>(&dist, u);
+      let tmp_2 = rocq_array::get::<u64>(&off, add(u, 1u64));
+      let xs_clone = Rc::clone(&xs);
+      let adj_clone = Rc::clone(&adj);
+      let tmp_3 = relax_loop_1(xs_clone, V, adj_clone, tmp_1, tmp_2, lo, d, dist, q, t);
+      match tmp_3 {
         (v70, v72) => {
           match v70 {
             (v75, v77) => {
@@ -1056,60 +994,36 @@ pub fn kahn_loop(xs: Rc<rocq_string::RocqString>, V: u64, off: Rc<Array<u64>>, a
 // Rocq: Excavatorexpedition.excavatorexpedition_implem.excavator_impl
 // Variant: uncurried
 pub fn excavator_impl(xs: Rc<rocq_string::RocqString>, xsrc: Rc<Array<u64>>, xdst: Rc<Array<u64>>) -> u64 {
-  let v6 = Rc::clone(&xs);
-  let V = length(v6);
-  let v8 = &xsrc;
-  let E = rocq_array::length::<u64>(&v8);
-  let v27 = rocq_array::make::<u64>(add(V, 1u64), 0u64);
-  let v30 = Rc::clone(&xsrc);
-  let c = cnt_loop_1(v30, E, 0u64, v27);
+  let xs_clone = Rc::clone(&xs);
+  let V = length(xs_clone);
+  let E = rocq_array::length::<u64>(&xsrc);
+  let tmp = rocq_array::make::<u64>(add(V, 1u64), 0u64);
+  let xsrc_clone = Rc::clone(&xsrc);
+  let c = cnt_loop_1(xsrc_clone, E, 0u64, tmp);
   let c_1 = pre_loop_1(V, 0u64, c);
-  let v55 = rocq_array::make::<u64>(E, 0u64);
-  let v66 = rfill_loop_1(xsrc, xdst, E, c_1, v55);
-  match v66 {
+  let tmp_1 = rocq_array::make::<u64>(E, 0u64);
+  let tmp_2 = rfill_loop_1(xsrc, xdst, E, c_1, tmp_1);
+  match tmp_2 {
     (v68, v70) => {
       let off = &v70;
-      let v82 = rocq_array::make::<u64>(V, 0u64);
-      let v84 = Rc::clone(off);
-      let d = ind_loop_1(v84, E, 0u64, v82);
-      let v101 = rocq_array::make::<u64>(V, 0u64);
-      let v110 = Rc::clone(&d);
-      let v115 = q0_loop_1(V, 0u64, v110, v101, 0u64);
-      match v115 {
+      let tmp_3 = rocq_array::make::<u64>(V, 0u64);
+      let off_clone = Rc::clone(off);
+      let d = ind_loop_1(off_clone, E, 0u64, tmp_3);
+      let tmp_4 = rocq_array::make::<u64>(V, 0u64);
+      let d_clone = Rc::clone(&d);
+      let tmp_5 = q0_loop_1(V, 0u64, d_clone, tmp_4, 0u64);
+      match tmp_5 {
         (v117, v119) => {
-          let v126 = rocq_array::make::<u64>(V, __rocq_global_349);
-          let dist = rocq_array::set::<u64>(v126, 0u64, 0u64);
+          let tmp_6 = rocq_array::make::<u64>(V, __rocq_global_349);
+          let dist = rocq_array::set::<u64>(tmp_6, 0u64, 0u64);
           let dist_1 = kahn_loop_1(xs, V, v68, v70, 0u64, d, dist, v117, v119);
-          let v167 = sub(V, 1u64);
-          let v168 = &dist_1;
-          let v171 = rocq_array::get::<u64>(&v168, v167);
+          let tmp_7 = rocq_array::get::<u64>(&dist_1, sub(V, 1u64));
           std::mem::drop(dist_1);
-          v171
+          tmp_7
         },
       }
     },
   }
-}
-
-// Rocq: Excavatorexpedition.excavatorexpedition_implem.excavator_impl
-pub fn excavator_impl_curried(xs: Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> {
-  let v3 = {
-    move |xsrc: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-      let xs = &xs;
-      let v8 = Rc::clone(xs);
-      let v11 = {
-        move |xdst: Rc<Array<u64>>| -> u64 {
-          let v19 = Rc::clone(&v8);
-          let v21 = Rc::clone(&xsrc);
-          excavator_impl(v19, v21, xdst)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1260,15 +1174,8 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = __rocq_global_706.with(Clone::clone);
-  v0
-}
 const __rocq_global_349: u64 = 4611686018427387904u64;
 const __rocq_global_365: u64 = 9223372036854775807u64;
-std::thread_local! { static __rocq_global_706: Rc<dyn Fn(Rc<rocq_string::RocqString>, Rc<Array<u64>>, Rc<Array<u64>>) -> u64> = excavator(); }
-std::thread_local! { static __rocq_global_709: Rc<dyn Fn(Rc<rocq_string::RocqString>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> u64>>> = excavator_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1348,6 +1255,6 @@ fn solve(input: &str) -> String {
     let sites = string(t.next()); assert_eq!(rocq_string::length(&sites), v);
     let mut src = Vec::new(); let mut dst = Vec::new();
     for _ in 0..e { src.push(t.uint()); dst.push(t.uint()); }
-    format!("{}\n", decoded(run()(sites, ints(src), ints(dst))))
+    format!("{}\n", decoded(excavator_impl(sites, ints(src), ints(dst))))
 }
 fn main() { entry(solve); }

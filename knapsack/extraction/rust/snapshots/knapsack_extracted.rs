@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -20,21 +19,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint
 
 pub type uint = u64;
 
-// Rocq: Knapsack.knapsack_implem.knapsack
-// Variant: uncurried
-pub fn knapsack() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> {
-  let v0: fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>) = knapsack_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Knapsack.knapsack_implem.knapsack
-pub fn knapsack_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>> = knapsack_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
@@ -49,13 +33,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Knapsack.knapsack_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -74,25 +55,19 @@ pub fn item_loop_1(v: u64, w: u64, base: u64, k: u64, row: Rc<Array<u64>>, dec: 
 // Rocq: Knapsack.knapsack_implem.item_loop (local: item_loop)
 // Variant: uncurried, lifted
 pub fn item_loop(v: u64, w: u64, base: u64, k: u64, row: Rc<Array<u64>>, dec: Rc<Array<bool>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<bool>>) {
-  let v14 = ltb(w, k);
-  match bdec(v14) {
+  let tmp = ltb(w, k);
+  match bdec(tmp) {
     sumbool::left => {
       let c = sub(k, 1u64);
-      let v32 = sub(c, w);
-      let v33 = &row;
-      let v37 = rocq_array::get::<u64>(&v33, v32);
-      let cand = add(v37, v);
-      let v43 = &row;
-      let v47 = rocq_array::get::<u64>(&v43, c);
-      match ltb(v47, cand) {
-        true => {
-          let v59 = rocq_array::set::<u64>(row, c, cand);
-          let v74 = rocq_array::set::<bool>(dec, add(base, c), true);
-          item_loop(v, w, base, c, v59, v74, ())
-        },
-        false => {
-          item_loop(v, w, base, c, row, dec, ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&row, sub(c, w));
+      let cand = add(tmp_1, v);
+      let tmp_2 = rocq_array::get::<u64>(&row, c);
+      if ltb(tmp_2, cand) {
+        let tmp_3 = rocq_array::set::<u64>(row, c, cand);
+        let tmp_4 = rocq_array::set::<bool>(dec, add(base, c), true);
+        item_loop(v, w, base, c, tmp_3, tmp_4, ())
+      } else {
+        item_loop(v, w, base, c, row, dec, ())
       }
     },
     sumbool::right => {
@@ -109,16 +84,16 @@ pub fn mul(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
 }
 
 // Rocq: Knapsack.knapsack_implem.items_loop
@@ -130,19 +105,17 @@ pub fn items_loop_1(xv: Rc<Array<u64>>, xw: Rc<Array<u64>>, n: u64, C1: u64, i: 
 // Rocq: Knapsack.knapsack_implem.items_loop (local: items_loop)
 // Variant: uncurried, lifted
 pub fn items_loop(xv: Rc<Array<u64>>, xw: Rc<Array<u64>>, n: u64, C1: u64, i: u64, row: Rc<Array<u64>>, dec: Rc<Array<bool>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<bool>>) {
-  let v15 = ltb(i, n);
-  match bdec(v15) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &xv;
-      let v23 = rocq_array::get::<u64>(&v20, i);
-      let v24 = &xw;
-      let v27 = rocq_array::get::<u64>(&v24, i);
-      let rd = item_loop_1(v23, v27, mul(i, C1), C1, row, dec);
-      let v54 = add(i, 1u64);
-      let v57 = Clone::clone(&rd);
-      let v59 = fst::<Rc<Array<u64>>, Rc<Array<bool>>>(v57);
-      let v63 = snd::<Rc<Array<u64>>, Rc<Array<bool>>>(rd);
-      items_loop(xv, xw, n, C1, v54, v59, v63, ())
+      let tmp_1 = rocq_array::get::<u64>(&xv, i);
+      let tmp_2 = rocq_array::get::<u64>(&xw, i);
+      let rd = item_loop_1(tmp_1, tmp_2, mul(i, C1), C1, row, dec);
+      let tmp_3 = add(i, 1u64);
+      let rd_clone = Clone::clone(&rd);
+      let tmp_4 = fst::<Rc<Array<u64>>, Rc<Array<bool>>>(rd_clone);
+      let tmp_5 = snd::<Rc<Array<u64>>, Rc<Array<bool>>>(rd);
+      items_loop(xv, xw, n, C1, tmp_3, tmp_4, tmp_5, ())
     },
     sumbool::right => {
       std::mem::drop(xv);
@@ -161,25 +134,19 @@ pub fn walk_1(xw: Rc<Array<u64>>, dec: Rc<Array<bool>>, C1: u64, i: u64, c: u64,
 // Rocq: Knapsack.knapsack_implem.walk (local: walk)
 // Variant: uncurried, lifted
 pub fn walk(xw: Rc<Array<u64>>, dec: Rc<Array<bool>>, C1: u64, i: u64, c: u64, k: u64, out: Rc<Array<u64>>, _H: ()) -> (u64, Rc<Array<u64>>) {
-  let v17 = ltb(0u64, i);
-  match bdec(v17) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
       let j = sub(i, 1u64);
-      let v40 = add(mul(j, C1), c);
-      let v41 = &dec;
-      let v44 = rocq_array::get::<bool>(&v41, v40);
-      match v44 {
-        true => {
-          let v47 = &xw;
-          let v50 = rocq_array::get::<u64>(&v47, j);
-          let v55 = sub(c, v50);
-          let v63 = add(k, 1u64);
-          let v70 = rocq_array::set::<u64>(out, k, j);
-          walk(xw, dec, C1, j, v55, v63, v70, ())
-        },
-        false => {
-          walk(xw, dec, C1, j, c, k, out, ())
-        },
+      let tmp_1 = rocq_array::get::<bool>(&dec, add(mul(j, C1), c));
+      if tmp_1 {
+        let tmp_2 = rocq_array::get::<u64>(&xw, j);
+        let tmp_3 = sub(c, tmp_2);
+        let tmp_4 = add(k, 1u64);
+        let tmp_5 = rocq_array::set::<u64>(out, k, j);
+        walk(xw, dec, C1, j, tmp_3, tmp_4, tmp_5, ())
+      } else {
+        walk(xw, dec, C1, j, c, k, out, ())
       }
     },
     sumbool::right => {
@@ -199,13 +166,12 @@ pub fn copy_loop_1(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, m: u64, j: u64) -> 
 // Rocq: Knapsack.knapsack_implem.copy_loop (local: copy_loop)
 // Variant: uncurried, lifted
 pub fn copy_loop(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, m: u64, j: u64, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(j, m);
-  match bdec(v12) {
+  let tmp = ltb(j, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &src;
-      let v19 = rocq_array::get::<u64>(&v16, j);
-      let v26 = rocq_array::set::<u64>(dst, j, v19);
-      copy_loop(src, v26, m, add(j, 1u64), ())
+      let tmp_1 = rocq_array::get::<u64>(&src, j);
+      let tmp_2 = rocq_array::set::<u64>(dst, j, tmp_1);
+      copy_loop(src, tmp_2, m, add(j, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(src);
@@ -217,48 +183,25 @@ pub fn copy_loop(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, m: u64, j: u64, _H: (
 // Rocq: Knapsack.knapsack_implem.knapsack_impl
 // Variant: uncurried
 pub fn knapsack_impl(Cw: u64, xv: Rc<Array<u64>>, xw: Rc<Array<u64>>) -> (u64, Rc<Array<u64>>) {
-  let v3 = &xv;
-  let n = rocq_array::length::<u64>(&v3);
+  let n = rocq_array::length::<u64>(&xv);
   let C1 = add(Cw, 1u64);
-  let v22 = rocq_array::make::<u64>(C1, 0u64);
-  let v35 = rocq_array::make::<bool>(mul(n, C1), false);
-  let v40 = Rc::clone(&xw);
-  let rd = items_loop_1(xv, v40, n, C1, 0u64, v22, v35);
-  let v54 = Clone::clone(&rd);
-  let v56 = fst::<Rc<Array<u64>>, Rc<Array<bool>>>(v54);
-  let v57 = &v56;
-  let bestv = rocq_array::get::<u64>(&v57, Cw);
-  std::mem::drop(v56);
-  let v65 = snd::<Rc<Array<u64>>, Rc<Array<bool>>>(rd);
-  let v74 = rocq_array::make::<u64>(n, 0u64);
-  let ko = walk_1(xw, v65, C1, n, Cw, 0u64, v74);
-  let v92 = Clone::clone(&ko);
-  let k = fst::<u64, Rc<Array<u64>>>(v92);
-  let v99 = snd::<u64, Rc<Array<u64>>>(ko);
-  let v106 = rocq_array::make::<u64>(k, 0u64);
-  let v117 = copy_loop_1(v99, v106, k, 0u64);
-  (bestv, v117)
-}
-
-// Rocq: Knapsack.knapsack_implem.knapsack_impl
-pub fn knapsack_impl_curried(Cw: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>> {
-  let v3 = {
-    move |xv: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> {
-      let Cw = &Cw;
-      let v8 = Clone::clone(Cw);
-      let v11 = {
-        move |xw: Rc<Array<u64>>| -> (u64, Rc<Array<u64>>) {
-          let v19 = Clone::clone(&v8);
-          let v21 = Rc::clone(&xv);
-          knapsack_impl(v19, v21, xw)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>> = Rc::new(v3);
-  v31
+  let tmp = rocq_array::make::<u64>(C1, 0u64);
+  let tmp_1 = rocq_array::make::<bool>(mul(n, C1), false);
+  let xw_clone = Rc::clone(&xw);
+  let rd = items_loop_1(xv, xw_clone, n, C1, 0u64, tmp, tmp_1);
+  let rd_clone = Clone::clone(&rd);
+  let tmp_2 = fst::<Rc<Array<u64>>, Rc<Array<bool>>>(rd_clone);
+  let bestv = rocq_array::get::<u64>(&tmp_2, Cw);
+  std::mem::drop(tmp_2);
+  let tmp_3 = snd::<Rc<Array<u64>>, Rc<Array<bool>>>(rd);
+  let tmp_4 = rocq_array::make::<u64>(n, 0u64);
+  let ko = walk_1(xw, tmp_3, C1, n, Cw, 0u64, tmp_4);
+  let ko_clone = Clone::clone(&ko);
+  let k = fst::<u64, Rc<Array<u64>>>(ko_clone);
+  let tmp_5 = snd::<u64, Rc<Array<u64>>>(ko);
+  let tmp_6 = rocq_array::make::<u64>(k, 0u64);
+  let tmp_7 = copy_loop_1(tmp_5, tmp_6, k, 0u64);
+  (bestv, tmp_7)
 }
 
 mod __rocq_reuse {
@@ -409,10 +352,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> = __rocq_global_404.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_404: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)> = knapsack(); }
-std::thread_local! { static __rocq_global_407: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> (u64, Rc<Array<u64>>)>>> = knapsack_curried(); }

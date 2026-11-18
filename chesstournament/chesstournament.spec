@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Player count: $2 \le n \le 50{,}000$; Match count: $1 \le m \le 250{,}000$.
+    - Player count: $2 \le n \le 5 \times 10^{4}$; Match count: $1 \le m \le 2.5 \times 10^{5}$.
     - At most one match per pair; every player appears in at least one
       match. *)
 
@@ -51,23 +51,23 @@ From StdGalilei Require Import repr.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side.  The m match lines "K s L" are three parallel
+(* The m match lines "K s L" are three parallel
   lists, one per
    column; the symbol s is a bool: true for '>', false for
      '='. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The j-th element of l (default beyond the end). *)
+(** The entry at zero-based index [j] in [l], or [default] beyond the end. *)
 Definition at_ {A} (default : A) (l : list A) (j : N) : A :=
   nth (N.to_nat j) l default.
 
-(** Matches j1 and j2 are between the same two players,
-    in either order. *)
+(** Matches [j1] and [j2] involve the same pair of players, regardless of their
+    order. *)
 Definition same_pair
   (first_players second_players : list N) (j1 j2 : N)
   : Prop :=
@@ -76,9 +76,8 @@ Definition same_pair
   (at_ 0 first_players j1 = at_ 0 second_players j2 /\
    at_ 0 second_players j1 = at_ 0 first_players j2).
 
-(** The skill levels skills (one integer per player)
-    explain match j: K beat L iff K is strictly more
-    skilled, a draw iff the skills are equal. *)
+(** The player skill levels [skills] agree with match [j]: the winner has strictly
+    greater skill, and a draw requires equal skill. *)
 Definition explains (skills : N -> Z)
   (first_players : list N)
     (wins : list bool) (second_players : list N)
@@ -102,9 +101,9 @@ Definition consistent (first_players : list N)
 Record valid_input (player_count : N)
   (first_players : list N)
     (wins : list bool) (second_players : list N) : Prop := {
-  (* 2 <= N <= 50 000 *)
+  (* 2 <= N <= 5 * 10^4 *)
   vi_n : 2 <= player_count <= 50000;
-  (* 1 <= M <= 250 000 *)
+  (* 1 <= M <= 2.5 * 10^5 *)
   vi_m : 1 <= len first_players <= 250000;
   (* the following M lines each consist of an integer K, a
     symbol and
@@ -139,10 +138,7 @@ Definition chess_consistent_spec (player_count : N)
     (wins : list bool) (second_players : list N)
       (output : bool)
     : Prop :=
-  match output with
-  | true => consistent first_players wins second_players
-  | false => ~ consistent first_players wins second_players
-  end.
+  output = true <-> consistent first_players wins second_players.
 
 (** ** Interface *)
 
@@ -155,6 +151,15 @@ Definition chess_consistent_spec (player_count : N)
     - Output [output]: The output is true exactly when numerical skill levels can satisfy every equality and strict-order relation. *)
 Program chess_consistent :
   uint -> array uint -> array bool -> array uint -> bool.
+
+(** [@example chess_consistent]
+    - Sample: 1
+    - Input [player_count]: 3
+    - Input [first_players]: [0; 1; 0]
+    - Input [wins]: [true; false; false]
+    - Input [second_players]: [1; 2; 2]
+    - Output [output]: false
+*)
 
 (** ** Bridge *)
 

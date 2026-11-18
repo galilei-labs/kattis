@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -13,13 +12,6 @@ pub enum sumbool {
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 pub type uint = u64;
-
-// Rocq: Xormax.xormax_implem.xormax
-pub fn xormax() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: fn(Rc<Array<u64>>) -> u64 = xormax_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
@@ -41,13 +33,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Xormax.xormax_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -78,27 +67,19 @@ pub fn reduce_1(b: Rc<Array<u64>>, c: u64, i: u64) -> Rc<Array<u64>> {
 // Rocq: Xormax.xormax_implem.reduce (local: reduce)
 // Variant: uncurried, lifted
 pub fn reduce(b: Rc<Array<u64>>, c: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v13 = ltb(0u64, i);
-  match bdec(v13) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
-      let v31 = lsr(c, sub(i, 1u64));
-      match eqb(v31, 0u64) {
-        true => {
-          reduce(b, c, sub(i, 1u64), ())
-        },
-        false => {
-          let v69 = sub(i, 1u64);
-          let v70 = &b;
-          let bk = rocq_array::get::<u64>(&v70, v69);
-          match eqb(bk, 0u64) {
-            true => {
-              rocq_array::set::<u64>(b, sub(i, 1u64), c)
-            },
-            false => {
-              reduce(b, lxor(c, bk), sub(i, 1u64), ())
-            },
-          }
-        },
+      let tmp_1 = lsr(c, sub(i, 1u64));
+      if eqb(tmp_1, 0u64) {
+        reduce(b, c, sub(i, 1u64), ())
+      } else {
+        let bk = rocq_array::get::<u64>(&b, sub(i, 1u64));
+        if eqb(bk, 0u64) {
+          rocq_array::set::<u64>(b, sub(i, 1u64), c)
+        } else {
+          reduce(b, lxor(c, bk), sub(i, 1u64), ())
+        }
       }
     },
     sumbool::right => {
@@ -116,14 +97,13 @@ pub fn build_1(x: Rc<Array<u64>>, n: u64, j: u64, b: Rc<Array<u64>>) -> Rc<Array
 // Rocq: Xormax.xormax_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(x: Rc<Array<u64>>, n: u64, j: u64, b: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(j, n);
-  match bdec(v12) {
+  let tmp = ltb(j, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(j, 1u64);
-      let v25 = &x;
-      let v28 = rocq_array::get::<u64>(&v25, j);
-      let v37 = reduce_1(b, v28, 63u64);
-      build(x, n, v23, v37, ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x, j);
+      let tmp_3 = reduce_1(b, tmp_2, 63u64);
+      build(x, n, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -141,22 +121,17 @@ pub fn greedy_1(b: Rc<Array<u64>>, r: u64, i: u64) -> u64 {
 // Rocq: Xormax.xormax_implem.greedy (local: greedy)
 // Variant: uncurried, lifted
 pub fn greedy(b: Rc<Array<u64>>, r: u64, i: u64, _H: ()) -> u64 {
-  let v13 = ltb(0u64, i);
-  match bdec(v13) {
+  let tmp = ltb(0u64, i);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = sub(i, 1u64);
-      let v26 = &b;
-      let v29 = rocq_array::get::<u64>(&v26, v25);
-      let r_ = lxor(r, v29);
-      let v41 = match ltb(r, r_) {
-        true => {
-          r_
-        },
-        false => {
-          r
-        },
+      let tmp_1 = rocq_array::get::<u64>(&b, sub(i, 1u64));
+      let r_ = lxor(r, tmp_1);
+      let tmp_2 = if ltb(r, r_) {
+        r_
+      } else {
+        r
       };
-      greedy(b, v41, sub(i, 1u64), ())
+      greedy(b, tmp_2, sub(i, 1u64), ())
     },
     sumbool::right => {
       std::mem::drop(b);
@@ -167,10 +142,9 @@ pub fn greedy(b: Rc<Array<u64>>, r: u64, i: u64, _H: ()) -> u64 {
 
 // Rocq: Xormax.xormax_implem.xormax_impl
 pub fn xormax_impl(x: Rc<Array<u64>>) -> u64 {
-  let v2 = &x;
-  let v3 = rocq_array::length::<u64>(&v2);
-  let v14 = rocq_array::make::<u64>(63u64, 0u64);
-  let b = build_1(x, v3, 0u64, v14);
+  let tmp = rocq_array::length::<u64>(&x);
+  let tmp_1 = rocq_array::make::<u64>(63u64, 0u64);
+  let b = build_1(x, tmp, 0u64, tmp_1);
   greedy_1(b, 0u64, 63u64)
 }
 
@@ -322,9 +296,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>) -> u64> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = __rocq_global_274.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_274: Rc<dyn Fn(Rc<Array<u64>>) -> u64> = xormax(); }

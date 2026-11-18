@@ -2,8 +2,10 @@
 
 (** ** Description *)
 
-(** Partition a sequence of weights into two groups whose sizes differ by at
-    most one, minimizing the difference between their total weights.
+(** Divide all the people at a picnic into two tug-of-war teams. Every
+    person must join exactly one team, and the team sizes may differ by at
+    most one person. Make the teams' total weights as close as possible,
+    and report the two totals with the smaller first.
 
     [@kattis tugofwar]
     - Difficulty: 5.3
@@ -11,7 +13,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Weight count: $1 \le n \le 100$, each an integer in $[1, 450]$. *)
+    - Weight count: $1 \le n \le 100$; each integer weight: $1 \le w_i \le 450$. *)
 
 (** ** Examples *)
 
@@ -36,28 +38,37 @@ Output:
                     one, so that the total weights of the two teams are as
                     nearly equal as possible, and returns the two totals,
                     the lesser first.
+                    It runs in at most c1 * (n + 1)^2 * (S + 1) + c2 steps
+                    of the cost model on a valid input, n the number of
+                    people and S the total weight ([sizes]; the reachability
+                    table over team sizes and partial sums, one pass per
+                    person), for two constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
-(* Math side. Person k has weight weights_k; a division
+(* Person k has weight weights_k; a division
    into two teams is a list assignment of booleans,
    assignment_k telling whether person k is on the first
    team. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The [sum] of the elements of l. *)
-Definition sum (l : list N) : N := fold_right N.add 0 l.
+(** The sum of the entries in [l], with value zero for an empty list. *)
+Fixpoint sum (l : list N) : N :=
+  match l with
+  | [] => 0
+  | weight :: rest => weight + sum rest
+  end.
 
-(** The [weights] of the people that assignment puts on
-    the first [team]. *)
+(** The weights of the people that [assignment] places on the first team. *)
 Definition team (weights : list N) (assignment : list bool)
   : list N :=
   map fst (filter snd (combine weights assignment)).
@@ -68,9 +79,8 @@ Definition other_team (weights : list N)
   : list N :=
   team weights (map negb assignment).
 
-(** assignment puts each person on one [team] or the
-    other, and the numbers of people on the two teams do
-    not differ by more than 1. *)
+(** [assignment] assigns each person to one of two teams whose sizes differ by at
+    most one. *)
 Definition division (weights : list N)
   (assignment : list bool) : Prop :=
   len assignment = len weights /\
@@ -97,8 +107,9 @@ Record valid_input (weights : list N) : Prop := {
 (** ** Correctness *)
 
 (** [@requirement]
-    The output gives the group totals in ascending order for a partition whose group
-    sizes differ by at most one and whose total-weight difference is minimal. *)
+    The output gives the two team weights, smaller first, assigning every
+    person to one team, with team sizes differing by at most one and the
+    difference between total weights as small as possible. *)
 Definition tugofwar_spec
   (weights : list N)
   (output : N * N)
@@ -117,13 +128,25 @@ Definition tugofwar_spec
             %Z
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((n+1)^2(W+1))$ steps, where $n$ is the number of weights and $W$ their sum. *)
+Definition tugofwar_time_spec (c1 c2 n_weights total_weights steps : nat) : Prop :=
+  (steps <= c1 * ((n_weights + 1) * (n_weights + 1) * (total_weights + 1)) + c2)%nat.
+
 (** ** Interface *)
 
-(** Partition a sequence of weights into two groups whose sizes differ by at most one,
+(** Form two tug-of-war teams with sizes differing by at most one person,
     minimizing the difference between their total weights.
-    - Input [weights]: Weights to partition into two balanced groups.
-    - Output [output]: The output gives the group totals in ascending order for a partition whose group sizes differ by at most one and whose total-weight difference is minimal. *)
+    - Input [weights]: Weight of each person, who must be assigned to exactly one team.
+    - Output [output]: Team weight totals, smaller first, for an optimal division. *)
 Program tugofwar : array uint -> uint * uint.
+
+(** [@example tugofwar]
+    - Sample: 1
+    - Input [weights]: [100; 90; 200]
+    - Output [output]: (190, 200)
+*)
 
 (** ** Bridge *)
 
@@ -137,6 +160,19 @@ Specification tugofwar_correct :
   exists output : N * N,
     repr (tugofwar weights_arr) output /\
     tugofwar_spec weights output.
+
+(** ** Complexity *)
+
+(** [@hide] [tugofwar_cost] is the cost translation of [tugofwar] (the judge
+    recomputes it and compares) ... *)
+Complexity tugofwar_cost for tugofwar.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1)^2 * (S + 1) + c2 steps of the cost model on a valid input, n the number of people and S the total weight ([sizes]; the reachability table over team sizes and partial sums, one pass per person), for two constants
+    quantified before the inputs, on every valid input. [@requirement tugofwar_time_spec] *)
+Specification tugofwar_time : exists c1 c2 : nat,
+  forall (weights : list N) (weights_arr : array uint),
+  valid_input weights -> repr weights_arr weights ->
+  tugofwar_time_spec c1 c2 (size weights_arr) (sizes weights_arr) (cost1 tugofwar_cost weights_arr).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

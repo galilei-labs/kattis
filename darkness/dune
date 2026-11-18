@@ -6,9 +6,11 @@
  (rocq.theory
   (name Darkness.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Darkness)
  (modules darkness_implem)
- (theories Darkness.spec Stdlib stdpp StdGalilei))
+  (theories Darkness.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

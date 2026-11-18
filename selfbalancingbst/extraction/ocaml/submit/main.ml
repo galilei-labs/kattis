@@ -7,10 +7,9 @@
 (*   output  one line per r / g / z command: the number, or "-" when   *)
 (*           the extracted function returns None (cursor unset).       *)
 (*                                                                     *)
-(* Columns as the spec header says: ids, ops (character code), xs, ys, *)
-(* an absent argument as 0.  The arguments of a line are the integers   *)
-(* up to its end of line.  Untrusted wrapper: read, convert, call once,*)
-(* print.  Negative values go through Uint63.of_int and are read back  *)
+(* Characters select named operation constructors; each constructor   *)
+(* carries exactly its required arguments. The wrapper reads, converts,*)
+(* calls once, and prints. Negative values go through Uint63.of_int    *)
 (* with [snd (Uint63.to_int2 _)].                                      *)
 (* ------------------------------------------------------------------ *)
 
@@ -36,22 +35,15 @@ let () =
     done;
     if neg then - !v else !v
   in
-  (* true when an integer starts at pos on the current line *)
-  let int_ahead () =
+  let argument () =
     skip_blank ();
-    !pos < len &&
-    (let c = String.unsafe_get data !pos in
-     (c >= '0' && c <= '9') ||
-     (c = '-' && !pos + 1 < len &&
-      let d = String.unsafe_get data (!pos + 1) in d >= '0' && d <= '9'))
+    Uint63.of_int (read_int ())
   in
   skip_ws ();
   let q = if !pos < len then read_int () else 0 in
   let q = max q 0 in
-  let ids = Array.make q Uint63.zero in
-  let ops = Array.make q Uint63.zero in
-  let xs = Array.make q Uint63.zero in
-  let ys = Array.make q Uint63.zero in
+  let default = (Uint63.zero, GetSize) in
+  let commands = Array.make q default in
   let n = ref 0 in
   (try
      while !n < q do
@@ -60,23 +52,32 @@ let () =
        let id = read_int () in
        skip_ws ();
        if !pos >= len then raise Exit;
-       let op = Char.code (String.unsafe_get data !pos) in
-       incr pos;
-       let x = if int_ahead () then read_int () else 0 in
-       let y = if int_ahead () then read_int () else 0 in
-       let i = !n in
-       ids.(i) <- Uint63.of_int id;
-       ops.(i) <- Uint63.of_int op;
-       xs.(i) <- Uint63.of_int x;
-       ys.(i) <- Uint63.of_int y;
+        let op = String.unsafe_get data !pos in
+        incr pos;
+        let operation = match op with
+          | 'a' -> CopyFrom (argument ())
+          | '?' -> FindKey (argument ())
+          | 'l' -> LowerBound (argument ())
+          | 'u' -> UpperBound (argument ())
+          | 'i' -> let key = argument () in let value = argument () in Insert (key, value)
+          | 'e' -> Erase
+          | 'f' -> First
+          | 'b' -> Last
+          | '>' -> NextKey
+          | '<' -> PreviousKey
+          | 'k' -> SelectRank (argument ())
+          | 'r' -> GetRank
+          | 'g' -> GetValue
+          | 's' -> SetValue (argument ())
+          | 'z' -> GetSize
+          | _ -> invalid_arg "unknown command"
+        in
+        commands.(!n) <- (Uint63.of_int id, operation);
        incr n
      done
    with Exit -> ());
   let n = !n in
-  let col a = Arr.of_array (Array.sub a 0 n) Uint63.zero in
-  let out =
-    run_commands (col ids) (col ops) (col xs) (col ys)
-  in
+  let out = run_commands (Arr.of_array (Array.sub commands 0 n) default) in
   let buf = Buffer.create (1 lsl 16) in
   let m = Arr.length_to_int (Arr.length out) in
   for i = 0 to m - 1 do

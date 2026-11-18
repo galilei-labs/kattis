@@ -6,9 +6,11 @@
  (rocq.theory
   (name Stringmultimatching.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Stringmultimatching)
  (modules stringmultimatching_implem)
- (theories Stringmultimatching.spec Stdlib stdpp StdGalilei))
+  (theories Stringmultimatching.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

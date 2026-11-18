@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules securitybadge_extracted_marray)
- (theories Securitybadge Securitybadge.spec Stdlib stdpp StdGalilei))
+ (theories Securitybadge Securitybadge.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name securitybadge_extraction)

@@ -21,4 +21,4 @@ archive = "bilateral_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/bilateral.ml"
-Rust = "extraction/rust/submit/bilateral.rs"
+Rust = "extraction/rust/snapshots/bilateral_extracted.rs.interface.json"

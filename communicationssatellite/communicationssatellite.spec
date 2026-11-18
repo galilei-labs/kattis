@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Circle count: $1 \le n \le 2{,}000$ with no overlaps.
-    - Integer center coordinates in $[-1{,}000, 1{,}000]$; radii in $[1, 100]$. *)
+    - Circle count: $1 \le n \le 2 \times 10^{3}$ with no overlaps.
+    - Integer center coordinates: $-10^{3} \le x_i, y_i \le 10^{3}$; radii: $1 \le r_i \le 100$. *)
 
 (** ** Examples *)
 
@@ -44,22 +44,26 @@ Output:
                     structure.  The result is the minimum total beam length
                     of a compliant design, with absolute or relative error
                     below 10^-6.
+                    It runs in at most c1 * (n + 1)^2 + c2 steps of the cost
+                    model on a valid input, n the number of antennas (Prim's
+                    algorithm in its dense form), for two constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Floats Reals.
 From Stdlib Require Import Relation_Operators.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope R_scope.
 
-(* Math side.  The coordinates are signed
+(* The coordinates are signed
   (sint), the radii positive
    (uint) ; all geometry is exact, in R. *)
 
 (** ** Definitions *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
@@ -89,10 +93,11 @@ Definition beam_length (segment : beam) : R :=
   sqrt (sqdist (fst segment) (snd segment)).
 
 (** The sum of all beam lengths in the design. *)
-Definition total_length (design : list beam) : R :=
-  fold_right
-    (fun segment subtotal => beam_length segment + subtotal)
-    0 design.
+Fixpoint total_length (design : list beam) : R :=
+  match design with
+  | [] => 0
+  | segment :: rest => beam_length segment + total_length rest
+  end.
 
 Section Dishes.
 
@@ -129,8 +134,8 @@ Definition joins_two_dishes (segment : beam) : Prop :=
   exists i j, is_dish i /\ is_dish j /\ i <> j /\
     on_circle i (fst segment) /\ on_circle j (snd segment).
 
-(** Two beams neither cross nor attach to each other :
-    they share no point. *)
+(** The two closed beam segments have no common point: they neither cross nor meet
+    at an endpoint. *)
 Definition apart (segment segment' : beam) : Prop :=
   forall location, on_beam segment location
     -> ~ on_beam segment' location.
@@ -151,8 +156,8 @@ Definition meets (segment : beam) (i : N) : Prop :=
   exists location, on_beam segment location /\
     sqdist location (centre i) <= radius i ^ 2.
 
-(** Dishes i and j are directly connected : they touch,
-    or one beam meets both. *)
+(** Dishes [i] and [j] are directly connected: they touch, or a single beam meets
+    both. *)
 Definition linked (design : list beam) (i j : N) : Prop :=
   is_dish i /\ is_dish j /\
   (touch i j \/
@@ -173,8 +178,8 @@ Definition compliant (design : list beam) : Prop :=
     /\ ForallOrdPairs apart design /\
   Forall occludes_no_dish design /\ connected design.
 
-(** best_cost is the least total beam length of a
-    compliant design, and is reached. *)
+(** [best_cost] is the least total beam length of a compliant design, and is
+    reached. *)
 Definition minimum_cost (best_cost : R) : Prop :=
   (exists design, compliant design
     /\ total_length design = best_cost) /\
@@ -187,13 +192,13 @@ End Dishes.
 Record valid_input (x_coordinates y_coordinates : list Z)
   (radii : list N)
   : Prop := {
-  (* 1 <= N <= 2000, the number of dish antennas *)
+  (* 1 <= N <= 2 * 10^3, the number of dish antennas *)
   vi_n : (1 <= len x_coordinates <= 2000)%N;
   (* N lines, each of which contains three integers X, Y and
     R *)
   vi_len_ys : len y_coordinates = len x_coordinates;
   vi_len_rs : len radii = len x_coordinates;
-  (* -1000 <= X, Y <= 1000 *)
+  (* -10^3 <= X, Y <= 10^3 *)
   vi_xs : Forall (fun x_coordinate =>
     (-1000 <= x_coordinate <= 1000)%Z)
             x_coordinates;
@@ -226,6 +231,12 @@ Definition communicationssatellite_spec
     radii best_cost /\
     within_tolerance output best_cost.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n^2)$ steps, where $n$ is the number of satellites. *)
+Definition communicationssatellite_time_spec (c1 c2 n_x_coordinates steps : nat) : Prop :=
+  (steps <= c1 * ((n_x_coordinates + 1) * (n_x_coordinates + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Connect nonoverlapping circles with straight segments of minimum total length. Segments
@@ -237,6 +248,14 @@ Definition communicationssatellite_spec
     - Output [output]: The output approximates the minimum total length of a valid connection of the circles, within the specified absolute or relative tolerance. *)
 Program communicationssatellite :
   array sint -> array sint -> array uint -> float.
+
+(** [@example communicationssatellite]
+    - Sample: 1
+    - Input [x_coordinates]: [3; 0; 4; 9]%Z
+    - Input [y_coordinates]: [4; 0; -2; 4]%Z
+    - Input [radii]: [3; 2; 2; 1]
+    - Output [output]: fval 2.47213595%float
+*)
 
 (** ** Bridge *)
 
@@ -261,12 +280,31 @@ Specification communicationssatellite_correct :
         y_coordinates radii
         output.
 
+(** ** Complexity *)
+
+(** [@hide] [communicationssatellite_cost] is the cost translation of [communicationssatellite] (the judge
+    recomputes it and compares) ... *)
+Complexity communicationssatellite_cost for communicationssatellite.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1)^2 + c2 steps of the cost model on a valid input, n the number of antennas (Prim's algorithm in its dense form), for two constants
+    quantified before the inputs, on every valid input. [@requirement communicationssatellite_time_spec] *)
+Specification communicationssatellite_time : exists c1 c2 : nat,
+  forall (x_coordinates y_coordinates : list Z)
+  (radii : list N)
+  (x_coordinates_arr y_coordinates_arr : array sint)
+  (radii_arr : array uint),
+  valid_input x_coordinates y_coordinates radii ->
+  repr x_coordinates_arr x_coordinates ->
+  repr y_coordinates_arr y_coordinates
+  -> repr radii_arr radii ->
+  communicationssatellite_time_spec c1 c2 (size x_coordinates_arr) (cost3 communicationssatellite_cost x_coordinates_arr y_coordinates_arr radii_arr).
+
 (** [@hide] The kernel primitives (int, array, float,
     string) and their axioms. *)
 Allowed Primitive Axioms.
 
 (** [@hide] The four classical axioms Stdlib's reals
-    rest on: the math side is over R. *)
+    rest on: the specification is over R. *)
 Allowed Axioms ClassicalDedekindReals.sig_forall_dec
   ClassicalDedekindReals.sig_not_dec Classical_Prop.classic
   FunctionalExtensionality.functional_extensionality_dep.

@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -671,21 +670,6 @@ pub type uint = u64;
 
 pub type sint = u64;
 
-// Rocq: Plot.plot_implem.plot
-// Variant: uncurried
-pub fn plot() -> Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>> = plot_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Plot.plot_implem.plot
-pub fn plot_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = plot_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -694,13 +678,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Plot.plot_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -725,14 +706,13 @@ pub fn horner_loop_1(y: Rc<Array<u64>>, len: u64, x: u64, j: u64, h: u64) -> u64
 // Rocq: Plot.plot_implem.horner_loop (local: horner_loop)
 // Variant: uncurried, lifted
 pub fn horner_loop(y: Rc<Array<u64>>, len: u64, x: u64, j: u64, h: u64, _H: ()) -> u64 {
-  let v13 = ltb(j, len);
-  match bdec(v13) {
+  let tmp = ltb(j, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(j, 1u64);
-      let v31 = mul(h, x);
-      let v32 = &y;
-      let v35 = rocq_array::get::<u64>(&v32, j);
-      horner_loop(y, len, x, v24, add(v31, v35), ())
+      let tmp_1 = add(j, 1u64);
+      let tmp_2 = mul(h, x);
+      let tmp_3 = rocq_array::get::<u64>(&y, j);
+      horner_loop(y, len, x, tmp_1, add(tmp_2, tmp_3), ())
     },
     sumbool::right => {
       std::mem::drop(y);
@@ -750,14 +730,14 @@ pub fn eval_loop_1(y: Rc<Array<u64>>, len: u64, x: u64, d: Rc<Array<u64>>) -> Rc
 // Rocq: Plot.plot_implem.eval_loop (local: eval_loop)
 // Variant: uncurried, lifted
 pub fn eval_loop(y: Rc<Array<u64>>, len: u64, x: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(x, len);
-  match bdec(v12) {
+  let tmp = ltb(x, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(x, 1u64);
-      let v31 = Rc::clone(&y);
-      let v40 = horner_loop_1(v31, len, x, 0u64, 0u64);
-      let v47 = rocq_array::set::<u64>(d, x, v40);
-      eval_loop(y, len, v23, v47, ())
+      let tmp_1 = add(x, 1u64);
+      let y_clone = Rc::clone(&y);
+      let tmp_2 = horner_loop_1(y_clone, len, x, 0u64, 0u64);
+      let tmp_3 = rocq_array::set::<u64>(d, x, tmp_2);
+      eval_loop(y, len, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(y);
@@ -781,18 +761,15 @@ pub fn diff_inner_1(lo: u64, i: u64, d: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Plot.plot_implem.diff_inner (local: diff_inner)
 // Variant: uncurried, lifted
 pub fn diff_inner(lo: u64, i: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(lo, i);
-  match bdec(v11) {
+  let tmp = ltb(lo, i);
+  match bdec(tmp) {
     sumbool::left => {
-      let v16 = &d;
-      let v19 = rocq_array::get::<u64>(&v16, i);
-      let v27 = sub(i, 1u64);
-      let v28 = &d;
-      let v31 = rocq_array::get::<u64>(&v28, v27);
-      let v = sub(v19, v31);
-      let v44 = sub(i, 1u64);
-      let v51 = rocq_array::set::<u64>(d, i, v);
-      diff_inner(lo, v44, v51, ())
+      let tmp_1 = rocq_array::get::<u64>(&d, i);
+      let tmp_2 = rocq_array::get::<u64>(&d, sub(i, 1u64));
+      let v = sub(tmp_1, tmp_2);
+      let tmp_3 = sub(i, 1u64);
+      let tmp_4 = rocq_array::set::<u64>(d, i, v);
+      diff_inner(lo, tmp_3, tmp_4, ())
     },
     sumbool::right => {
       d
@@ -809,12 +786,12 @@ pub fn diff_outer_1(len: u64, s: u64, d: Rc<Array<u64>>) -> Rc<Array<u64>> {
 // Rocq: Plot.plot_implem.diff_outer (local: diff_outer)
 // Variant: uncurried, lifted
 pub fn diff_outer(len: u64, s: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(s, len);
-  match bdec(v11) {
+  let tmp = ltb(s, len);
+  match bdec(tmp) {
     sumbool::left => {
-      let v22 = add(s, 1u64);
-      let v38 = diff_inner_1(s, sub(len, 1u64), d);
-      diff_outer(len, v22, v38, ())
+      let tmp_1 = add(s, 1u64);
+      let tmp_2 = diff_inner_1(s, sub(len, 1u64), d);
+      diff_outer(len, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       d
@@ -825,23 +802,10 @@ pub fn diff_outer(len: u64, s: u64, d: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>>
 // Rocq: Plot.plot_implem.plot_impl
 // Variant: uncurried
 pub fn plot_impl(_n: u64, y: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v2 = &y;
-  let len = rocq_array::length::<u64>(&v2);
-  let v13 = rocq_array::make::<u64>(len, 0u64);
-  let d = eval_loop_1(y, len, 0u64, v13);
+  let len = rocq_array::length::<u64>(&y);
+  let tmp = rocq_array::make::<u64>(len, 0u64);
+  let d = eval_loop_1(y, len, 0u64, tmp);
   diff_outer_1(len, 0u64, d)
-}
-
-// Rocq: Plot.plot_implem.plot_impl
-pub fn plot_impl_curried(n: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v3 = {
-    move |y: Rc<Array<u64>>| -> Rc<Array<u64>> {
-      let v9 = Clone::clone(&n);
-      plot_impl(v9, y)
-    }
-  };
-  let v15: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new(v3);
-  v15
 }
 
 mod __rocq_reuse {
@@ -993,12 +957,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = __rocq_global_281.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_281: Rc<dyn Fn(u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = plot(); }
-std::thread_local! { static __rocq_global_284: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<u64>>>> = plot_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1074,6 +1032,6 @@ const STACK_MIB: usize = 256;
 use kattis_io::*;
 
 fn solve(input: &str) -> String {
-    let mut t = Tokens::new(input); let n = t.uint(); format!("{}\n", numbers(values(&run()(n, t.signed_ints(n+1))).into_iter().map(decoded)))
+    let mut t = Tokens::new(input); let n = t.uint(); format!("{}\n", numbers(values(&plot_impl(n, t.signed_ints(n+1))).into_iter().map(decoded)))
 }
 fn main() { entry(solve); }

@@ -6,9 +6,11 @@
  (rocq.theory
   (name Polygonarea.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Polygonarea)
  (modules polygonarea_implem)
- (theories Polygonarea.spec Stdlib stdpp StdGalilei))
+  (theories Polygonarea.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

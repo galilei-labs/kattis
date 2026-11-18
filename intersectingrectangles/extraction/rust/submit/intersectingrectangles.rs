@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -699,110 +698,99 @@ pub type sint = u64;
 
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.sweep
 pub fn sweep_curried_1() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>>> {
-  let v0 = {
-    move |n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> {
-      let v8: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = sweep_curried(n);
-      let v9: &Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = &v8;
-      let v12: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = v9(y1);
-      std::mem::drop(v8);
-      let v13: &Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = &v12;
-      let v16: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = v13(y2);
-      std::mem::drop(v12);
-      let v17: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = &v16;
-      let v20: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = v17(t);
-      std::mem::drop(v16);
-      v20
-    }
-  };
-  let v23: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new(v0);
-  let v27 = {
+  let callback: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new(move |n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> {
+    let tmp: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = sweep_curried(n);
+    let tmp_1: &Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = &tmp;
+    let tmp_2: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = tmp_1(y1);
+    std::mem::drop(tmp);
+    let tmp_3: &Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = &tmp_2;
+    let tmp_4: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = tmp_3(y2);
+    std::mem::drop(tmp_2);
+    let tmp_5: &Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = &tmp_4;
+    let tmp_6: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = tmp_5(t);
+    std::mem::drop(tmp_4);
+    tmp_6
+  });
+  let callback_1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>>> = Rc::new({
     move |n: u64| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> {
-      let v28 = &v23;
-      let v31: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v28);
-      let v35 = {
+      let v28 = &callback;
+      let tmp_7: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v28);
+      let callback_2: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = Rc::new({
         move |y1: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> {
-          let v36 = &v31;
+          let v36 = &tmp_7;
           let n = &n;
-          let v41: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v36);
-          let v44 = Clone::clone(n);
-          let v47 = {
+          let tmp_8: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v36);
+          let n_clone = Clone::clone(n);
+          let callback_3: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = Rc::new({
             move |y2: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> {
-              let v48 = &v41;
-              let n = &v44;
+              let v48 = &tmp_8;
+              let n = &n_clone;
               let y1 = &y1;
-              let v55: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v48);
-              let v58 = Clone::clone(n);
-              let v60 = Rc::clone(y1);
-              let v63 = {
+              let tmp_9: Rc<dyn Fn(u64, Rc<Array<u64>>, Rc<Array<u64>>, Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::clone(v48);
+              let n_clone_1 = Clone::clone(n);
+              let y1_clone = Rc::clone(y1);
+              let callback_4: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new({
                 move |t: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> {
-                  let v64 = &v55;
-                  let v74 = Clone::clone(&v58);
-                  let v76 = Rc::clone(&v60);
-                  let v78 = Rc::clone(&y2);
-                  let v81: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = v64(v74, v76, v78, t);
-                  v81
+                  let v64 = &tmp_9;
+                  let tmp_10 = Clone::clone(&n_clone_1);
+                  let tmp_11 = Rc::clone(&y1_clone);
+                  let y2_clone = Rc::clone(&y2);
+                  let tmp_12: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = v64(tmp_10, tmp_11, y2_clone, t);
+                  tmp_12
                 }
-              };
-              let v84: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new(v63);
-              v84
+              });
+              callback_4
             }
-          };
-          let v88: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = Rc::new(v47);
-          v88
+          });
+          callback_3
         }
-      };
-      let v92: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = Rc::new(v35);
-      v92
+      });
+      callback_2
     }
-  };
-  let v96: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>>> = Rc::new(v27);
-  v96
+  });
+  callback_1
 }
 
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.sweep (local: sweep)
 // Variant: lifted
 pub fn sweep_curried(n: u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> {
-  let v3 = {
+  let callback: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = Rc::new({
     move |y1: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> {
       let n = &n;
-      let v8 = Clone::clone(n);
-      let v11 = {
+      let n_clone = Clone::clone(n);
+      let callback_1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = Rc::new({
         move |y2: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> {
-          let n = &v8;
+          let n = &n_clone;
           let y1 = &y1;
-          let v18 = Clone::clone(n);
-          let v20 = Rc::clone(y1);
-          let v23 = {
+          let n_clone_1 = Clone::clone(n);
+          let y1_clone = Rc::clone(y1);
+          let callback_2: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new({
             move |t: Rc<tree>| -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> {
-              let n = &v18;
-              let y1 = &v20;
+              let n = &n_clone_1;
+              let y1 = &y1_clone;
               let y2 = &y2;
-              let v32 = Clone::clone(n);
-              let v34 = Rc::clone(y1);
-              let v36 = Rc::clone(y2);
-              let v39 = {
+              let n_clone_2 = Clone::clone(n);
+              let y1_clone_1 = Rc::clone(y1);
+              let y2_clone = Rc::clone(y2);
+              let callback_3: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = Rc::new({
                 move |s: Rc<tree>| -> Rc<option<Rc<tree>>> {
-                  let v51 = Clone::clone(&v32);
-                  let v53 = Rc::clone(&v34);
-                  let v55 = Rc::clone(&v36);
-                  let v57 = Rc::clone(&t);
-                  sweep(v51, v53, v55, v57, s)
+                  let tmp = Clone::clone(&n_clone_2);
+                  let tmp_1 = Rc::clone(&y1_clone_1);
+                  let tmp_2 = Rc::clone(&y2_clone);
+                  let t_clone = Rc::clone(&t);
+                  sweep(tmp, tmp_1, tmp_2, t_clone, s)
                 }
-              };
-              let v63: Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>> = Rc::new(v39);
-              v63
+              });
+              callback_3
             }
-          };
-          let v67: Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>> = Rc::new(v23);
-          v67
+          });
+          callback_2
         }
-      };
-      let v71: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>> = Rc::new(v11);
-      v71
+      });
+      callback_1
     }
-  };
-  let v75: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>> = Rc::new(v3);
-  v75
+  });
+  callback
 }
 
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.sweep (local: sweep)
@@ -817,17 +805,17 @@ pub fn sweep(n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>, s: Rc<
       Rc::new(option::<Rc<tree>>::Some(s))
     },
     tree::Node(v22, _v24, v26, v28, _v30) => {
-      let v37 = Rc::clone(&y1);
-      let v40 = Rc::clone(&y2);
-      let v45 = sweep(n, v37, v40, v22, s);
-      let (v46, v47) = __rocq_reuse::reset(v45, |__payload| Clone::clone(__payload));
+      let y1_clone = Rc::clone(&y1);
+      let y2_clone = Rc::clone(&y2);
+      let tmp = sweep(n, y1_clone, y2_clone, v22, s);
+      let (v46, v47) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
       match v46 {
         option::Some(v52) => {
           std::mem::drop(v47);
-          let v59 = Rc::clone(&y1);
-          let v62 = Rc::clone(&y2);
-          let v67 = step(n, v59, v62, v26, v52);
-          let (v68, v69) = __rocq_reuse::reset(v67, |__payload| Clone::clone(__payload));
+          let y1_clone_1 = Rc::clone(&y1);
+          let y2_clone_1 = Rc::clone(&y2);
+          let tmp_1 = step(n, y1_clone_1, y2_clone_1, v26, v52);
+          let (v68, v69) = __rocq_reuse::reset(tmp_1, |__payload| Clone::clone(__payload));
           match v68 {
             option::Some(v74) => {
               std::mem::drop(v69);
@@ -852,21 +840,6 @@ pub fn sweep(n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>, s: Rc<
   }
 }
 
-// Rocq: Intersectingrectangles.intersectingrectangles_implem.intersecting_rectangles
-// Variant: uncurried
-pub fn intersecting_rectangles() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool = intersecting_rectangles_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Intersectingrectangles.intersectingrectangles_implem.intersecting_rectangles
-pub fn intersecting_rectangles_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> = intersecting_rectangles_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
 // Variant: uncurried
 pub fn ltb(v0: u64, v1: u64) -> bool {
@@ -875,13 +848,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -900,8 +870,8 @@ pub fn ltsb(v0: u64, v1: u64) -> bool {
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.height
 // Variant: borrowed
 pub fn height(t: &Rc<tree>) -> u64 {
-  let v1 = t;
-  match &**v1 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       0u64
     },
@@ -914,22 +884,19 @@ pub fn height(t: &Rc<tree>) -> u64 {
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.hmax
 // Variant: uncurried
 pub fn hmax(a: u64, b: u64) -> u64 {
-  match ltb(a, b) {
-    true => {
-      b
-    },
-    false => {
-      a
-    },
+  if ltb(a, b) {
+    b
+  } else {
+    a
   }
 }
 
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.node
 // Variant: uncurried
 pub fn node(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
-  let v9 = height(&l);
-  let v13 = height(&r);
-  Rc::new(tree::Node(l, k, v, r, add(hmax(v9, v13), 1u64)))
+  let tmp = height(&l);
+  let tmp_1 = height(&r);
+  Rc::new(tree::Node(l, k, v, r, add(hmax(tmp, tmp_1), 1u64)))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -943,88 +910,76 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 pub fn bal(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> Rc<tree> {
   let hl = height(&l);
   let hr = height(&r);
-  let v21 = add(hr, 2u64);
-  match ltb(v21, hl) {
-    true => {
-      match &*l {
-        tree::Leaf => {
-          node(l, k, v, r)
-        },
-        tree::Node(i, lr, lv, lk, _ll) => {
-          let v54 = height(lk);
-          let v57 = height(i);
-          match leb(v54, v57) {
-            true => {
-              let v74 = node(Rc::clone(lk), k, v, r);
-              let v76 = Rc::clone(i);
-              let v78 = Clone::clone(lr);
-              let v79 = Clone::clone(lv);
-              std::mem::drop(l);
-              node(v76, v78, v79, v74)
-            },
-            false => {
-              match &**lk {
-                tree::Leaf => {
-                  node(l, k, v, r)
-                },
-                tree::Node(i_1, lrr, lrv, lrk, _lrl) => {
-                  let v119 = node(Rc::clone(i), Clone::clone(lr), Clone::clone(lv), Rc::clone(i_1));
-                  let v129 = node(Rc::clone(lrk), k, v, r);
-                  let v133 = Clone::clone(lrr);
-                  let v134 = Clone::clone(lrv);
-                  std::mem::drop(l);
-                  node(v119, v133, v134, v129)
-                },
-              }
-            },
-          }
-        },
-      }
-    },
-    false => {
-      let v159 = add(hl, 2u64);
-      match ltb(v159, hr) {
-        true => {
-          match &*r {
+  let tmp = add(hr, 2u64);
+  if ltb(tmp, hl) {
+    match &*l {
+      tree::Leaf => {
+        node(l, k, v, r)
+      },
+      tree::Node(i, lr, lv, lk, _ll) => {
+        let tmp_1 = height(lk);
+        let tmp_2 = height(i);
+        if leb(tmp_1, tmp_2) {
+          let tmp_3 = node(Rc::clone(lk), k, v, r);
+          let i_clone = Rc::clone(i);
+          let lr_clone = Clone::clone(lr);
+          let lv_clone = Clone::clone(lv);
+          std::mem::drop(l);
+          node(i_clone, lr_clone, lv_clone, tmp_3)
+        } else {
+          match &**lk {
             tree::Leaf => {
               node(l, k, v, r)
             },
-            tree::Node(i, rr, rv, rk, _rl) => {
-              let v192 = height(i);
-              let v195 = height(rk);
-              match leb(v192, v195) {
-                true => {
-                  let v213 = node(l, k, v, Rc::clone(i));
-                  let v216 = Clone::clone(rr);
-                  let v218 = Clone::clone(rv);
-                  let v219 = Rc::clone(rk);
-                  std::mem::drop(r);
-                  node(v213, v216, v218, v219)
-                },
-                false => {
-                  match &**i {
-                    tree::Leaf => {
-                      node(l, k, v, r)
-                    },
-                    tree::Node(i_1, rlr, rlv, rlk, _rll) => {
-                      let v257 = node(l, k, v, Rc::clone(i_1));
-                      let v267 = node(Rc::clone(rlk), Clone::clone(rr), Clone::clone(rv), Rc::clone(rk));
-                      let v271 = Clone::clone(rlr);
-                      let v272 = Clone::clone(rlv);
-                      std::mem::drop(r);
-                      node(v257, v271, v272, v267)
-                    },
-                  }
-                },
-              }
+            tree::Node(i_1, lrr, lrv, lrk, _lrl) => {
+              let tmp_4 = node(Rc::clone(i), Clone::clone(lr), Clone::clone(lv), Rc::clone(i_1));
+              let tmp_5 = node(Rc::clone(lrk), k, v, r);
+              let lrr_clone = Clone::clone(lrr);
+              let lrv_clone = Clone::clone(lrv);
+              std::mem::drop(l);
+              node(tmp_4, lrr_clone, lrv_clone, tmp_5)
             },
           }
-        },
-        false => {
+        }
+      },
+    }
+  } else {
+    let tmp_6 = add(hl, 2u64);
+    if ltb(tmp_6, hr) {
+      match &*r {
+        tree::Leaf => {
           node(l, k, v, r)
         },
+        tree::Node(i, rr, rv, rk, _rl) => {
+          let tmp_7 = height(i);
+          let tmp_8 = height(rk);
+          if leb(tmp_7, tmp_8) {
+            let tmp_9 = node(l, k, v, Rc::clone(i));
+            let rr_clone = Clone::clone(rr);
+            let rv_clone = Clone::clone(rv);
+            let rk_clone = Rc::clone(rk);
+            std::mem::drop(r);
+            node(tmp_9, rr_clone, rv_clone, rk_clone)
+          } else {
+            match &**i {
+              tree::Leaf => {
+                node(l, k, v, r)
+              },
+              tree::Node(i_1, rlr, rlv, rlk, _rll) => {
+                let tmp_10 = node(l, k, v, Rc::clone(i_1));
+                let tmp_11 = node(Rc::clone(rlk), Clone::clone(rr), Clone::clone(rv), Rc::clone(rk));
+                let rlr_clone = Clone::clone(rlr);
+                let rlv_clone = Clone::clone(rlv);
+                std::mem::drop(r);
+                node(tmp_10, rlr_clone, rlv_clone, tmp_11)
+              },
+            }
+          }
+        },
       }
-    },
+    } else {
+      node(l, k, v, r)
+    }
   }
 }
 
@@ -1040,27 +995,21 @@ pub fn insert(k: u64, v: u64, t: Rc<tree>) -> Rc<tree> {
   let (v3, v4) = __rocq_reuse::reset(t, |__payload| Clone::clone(__payload));
   match v3 {
     tree::Leaf => {
-      let v15 = __rocq_reuse::rebuild(v4, tree::Leaf);
-      let v18 = Rc::new(tree::Leaf);
-      Rc::new(tree::Node(v15, k, v, v18, 1u64))
+      let tmp = __rocq_reuse::rebuild(v4, tree::Leaf);
+      let tmp_1 = Rc::new(tree::Leaf);
+      Rc::new(tree::Node(tmp, k, v, tmp_1, 1u64))
     },
     tree::Node(v36, v38, v40, v42, v44) => {
-      match ltsb(k, v38) {
-        true => {
+      if ltsb(k, v38) {
+        std::mem::drop(v4);
+        bal(insert(k, v, v36), v38, v40, v42)
+      } else {
+        if ltsb(v38, k) {
           std::mem::drop(v4);
-          bal(insert(k, v, v36), v38, v40, v42)
-        },
-        false => {
-          match ltsb(v38, k) {
-            true => {
-              std::mem::drop(v4);
-              bal(v36, v38, v40, insert(k, v, v42))
-            },
-            false => {
-              __rocq_reuse::rebuild(v4, tree::Node(v36, k, v, v42, v44))
-            },
-          }
-        },
+          bal(v36, v38, v40, insert(k, v, v42))
+        } else {
+          __rocq_reuse::rebuild(v4, tree::Node(v36, k, v, v42, v44))
+        }
       }
     },
   }
@@ -1075,17 +1024,15 @@ pub fn build_1(x1: Rc<Array<u64>>, x2: Rc<Array<u64>>, n: u64, i: u64, t: Rc<tre
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.build (local: build)
 // Variant: uncurried, lifted
 pub fn build(x1: Rc<Array<u64>>, x2: Rc<Array<u64>>, n: u64, i: u64, t: Rc<tree>, _H: ()) -> Rc<tree> {
-  let v13 = ltb(i, n);
-  match bdec(v13) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(i, 1u64);
-      let v26 = &x2;
-      let v29 = rocq_array::get::<u64>(&v26, i);
-      let v35 = add(n, i);
-      let v37 = &x1;
-      let v41 = rocq_array::get::<u64>(&v37, i);
-      let v47 = insert_1(v41, i, t);
-      build(x1, x2, n, v24, insert_1(v29, v35, v47), ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&x2, i);
+      let tmp_3 = add(n, i);
+      let tmp_4 = rocq_array::get::<u64>(&x1, i);
+      let tmp_5 = insert_1(tmp_4, i, t);
+      build(x1, x2, n, tmp_1, insert_1(tmp_2, tmp_3, tmp_5), ())
     },
     sumbool::right => {
       std::mem::drop(x1);
@@ -1114,28 +1061,22 @@ pub fn between_1(lo: u64, hi: u64, t: &Rc<tree>) -> bool {
 pub fn between(lo: u64, hi: u64, t: &Rc<tree>) -> bool {
   let lo_1 = lo;
   let hi_1 = hi;
-  let v5 = t;
-  match &**v5 {
+  let tmp = t;
+  match &**tmp {
     tree::Leaf => {
       false
     },
     tree::Node(i0, r, _i, k, _l) => {
-      let v23 = Clone::clone(r);
-      match lesb(v23, lo_1) {
-        true => {
-          between(lo_1, hi_1, k)
-        },
-        false => {
-          let v41 = Clone::clone(r);
-          match lesb(hi_1, v41) {
-            true => {
-              between(lo_1, hi_1, i0)
-            },
-            false => {
-              true
-            },
-          }
-        },
+      let r_clone = Clone::clone(r);
+      if lesb(r_clone, lo_1) {
+        between(lo_1, hi_1, k)
+      } else {
+        let r_clone_1 = Clone::clone(r);
+        if lesb(hi_1, r_clone_1) {
+          between(lo_1, hi_1, i0)
+        } else {
+          true
+        }
       }
     },
   }
@@ -1162,13 +1103,13 @@ pub fn remove_min(l: Rc<tree>, k: u64, v: u64, r: Rc<tree>) -> ((u64, u64), Rc<t
       ((k, v), r)
     },
     tree::Node(i, lr, lv, lk, _ll) => {
-      let v32 = Rc::clone(i);
-      let v34 = Clone::clone(lr);
-      let v36 = Clone::clone(lv);
-      let v37 = Rc::clone(lk);
+      let i_clone = Rc::clone(i);
+      let lr_clone = Clone::clone(lr);
+      let lv_clone = Clone::clone(lv);
+      let lk_clone = Rc::clone(lk);
       std::mem::drop(l);
-      let v39 = remove_min(v32, v34, v36, v37);
-      match v39 {
+      let tmp = remove_min(i_clone, lr_clone, lv_clone, lk_clone);
+      match tmp {
         (v41, v43) => {
           match v41 {
             (v46, v48) => {
@@ -1196,13 +1137,13 @@ pub fn merge(l: Rc<tree>, r: Rc<tree>) -> Rc<tree> {
           l
         },
         tree::Node(i_1, rr, rv, rk, _rl) => {
-          let v32 = Rc::clone(i_1);
-          let v34 = Clone::clone(rr);
-          let v36 = Clone::clone(rv);
-          let v37 = Rc::clone(rk);
+          let i_clone = Rc::clone(i_1);
+          let rr_clone = Clone::clone(rr);
+          let rv_clone = Clone::clone(rv);
+          let rk_clone = Rc::clone(rk);
           std::mem::drop(r);
-          let v39 = remove_min_1(v32, v34, v36, v37);
-          match v39 {
+          let tmp = remove_min_1(i_clone, rr_clone, rv_clone, rk_clone);
+          match tmp {
             (v41, v43) => {
               match v41 {
                 (v46, v48) => {
@@ -1233,20 +1174,14 @@ pub fn remove(k: u64, t: Rc<tree>) -> Rc<tree> {
     },
     tree::Node(v17, v19, v21, v23, _v25) => {
       std::mem::drop(v3);
-      match ltsb(k, v19) {
-        true => {
-          bal(remove(k, v17), v19, v21, v23)
-        },
-        false => {
-          match ltsb(v19, k) {
-            true => {
-              bal(v17, v19, v21, remove(k, v23))
-            },
-            false => {
-              merge(v17, v23)
-            },
-          }
-        },
+      if ltsb(k, v19) {
+        bal(remove(k, v17), v19, v21, v23)
+      } else {
+        if ltsb(v19, k) {
+          bal(v17, v19, v21, remove(k, v23))
+        } else {
+          merge(v17, v23)
+        }
       }
     },
   }
@@ -1255,49 +1190,36 @@ pub fn remove(k: u64, t: Rc<tree>) -> Rc<tree> {
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.step
 // Variant: uncurried
 pub fn step(n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, v: u64, s: Rc<tree>) -> Rc<option<Rc<tree>>> {
-  match ltb(v, n) {
-    true => {
-      let v12 = &y1;
-      let lo = rocq_array::get::<u64>(&v12, v);
-      let v16 = &y2;
-      let hi = rocq_array::get::<u64>(&v16, v);
-      match between_1(lo, hi, &s) {
-        true => {
-          std::mem::drop(y1);
-          std::mem::drop(y2);
-          std::mem::drop(s);
-          Rc::new(option::<Rc<tree>>::None)
-        },
-        false => {
-          std::mem::drop(y1);
-          std::mem::drop(y2);
-          let v46 = insert_1(lo, 0u64, s);
-          Rc::new(option::<Rc<tree>>::Some(insert_1(hi, 0u64, v46)))
-        },
-      }
-    },
-    false => {
-      let i = sub(v, n);
-      let v70 = &y1;
-      let lo = rocq_array::get::<u64>(&v70, i);
-      let v74 = &y2;
-      let hi = rocq_array::get::<u64>(&v74, i);
-      let v84 = remove_1(lo, s);
-      let s_ = remove_1(hi, v84);
-      match between_1(lo, hi, &s_) {
-        true => {
-          std::mem::drop(y1);
-          std::mem::drop(y2);
-          std::mem::drop(s_);
-          Rc::new(option::<Rc<tree>>::None)
-        },
-        false => {
-          std::mem::drop(y1);
-          std::mem::drop(y2);
-          Rc::new(option::<Rc<tree>>::Some(s_))
-        },
-      }
-    },
+  if ltb(v, n) {
+    let lo = rocq_array::get::<u64>(&y1, v);
+    let hi = rocq_array::get::<u64>(&y2, v);
+    if between_1(lo, hi, &s) {
+      std::mem::drop(y1);
+      std::mem::drop(y2);
+      std::mem::drop(s);
+      Rc::new(option::<Rc<tree>>::None)
+    } else {
+      std::mem::drop(y1);
+      std::mem::drop(y2);
+      let tmp = insert_1(lo, 0u64, s);
+      Rc::new(option::<Rc<tree>>::Some(insert_1(hi, 0u64, tmp)))
+    }
+  } else {
+    let i = sub(v, n);
+    let lo = rocq_array::get::<u64>(&y1, i);
+    let hi = rocq_array::get::<u64>(&y2, i);
+    let tmp_1 = remove_1(lo, s);
+    let s_ = remove_1(hi, tmp_1);
+    if between_1(lo, hi, &s_) {
+      std::mem::drop(y1);
+      std::mem::drop(y2);
+      std::mem::drop(s_);
+      Rc::new(option::<Rc<tree>>::None)
+    } else {
+      std::mem::drop(y1);
+      std::mem::drop(y2);
+      Rc::new(option::<Rc<tree>>::Some(s_))
+    }
   }
 }
 
@@ -1319,17 +1241,17 @@ pub fn sweep_1(n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>, s: R
       Rc::new(option::<Rc<tree>>::Some(s))
     },
     tree::Node(v22, _v24, v26, v28, _v30) => {
-      let v37 = Rc::clone(&y1);
-      let v40 = Rc::clone(&y2);
-      let v45 = sweep_1(n, v37, v40, v22, s);
-      let (v46, v47) = __rocq_reuse::reset(v45, |__payload| Clone::clone(__payload));
+      let y1_clone = Rc::clone(&y1);
+      let y2_clone = Rc::clone(&y2);
+      let tmp = sweep_1(n, y1_clone, y2_clone, v22, s);
+      let (v46, v47) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
       match v46 {
         option::Some(v52) => {
           std::mem::drop(v47);
-          let v59 = Rc::clone(&y1);
-          let v62 = Rc::clone(&y2);
-          let v67 = step(n, v59, v62, v26, v52);
-          let (v68, v69) = __rocq_reuse::reset(v67, |__payload| Clone::clone(__payload));
+          let y1_clone_1 = Rc::clone(&y1);
+          let y2_clone_1 = Rc::clone(&y2);
+          let tmp_1 = step(n, y1_clone_1, y2_clone_1, v26, v52);
+          let (v68, v69) = __rocq_reuse::reset(tmp_1, |__payload| Clone::clone(__payload));
           match v68 {
             option::Some(v74) => {
               std::mem::drop(v69);
@@ -1357,11 +1279,10 @@ pub fn sweep_1(n: u64, y1: Rc<Array<u64>>, y2: Rc<Array<u64>>, t: Rc<tree>, s: R
 // Rocq: Intersectingrectangles.intersectingrectangles_implem.intersecting_rectangles_impl
 // Variant: uncurried
 pub fn intersecting_rectangles_impl(x1: Rc<Array<u64>>, y1: Rc<Array<u64>>, x2: Rc<Array<u64>>, y2: Rc<Array<u64>>) -> bool {
-  let v4 = &x1;
-  let n = rocq_array::length::<u64>(&v4);
+  let n = rocq_array::length::<u64>(&x1);
   let ev = build_1(x1, x2, n, 0u64, Rc::new(tree::Leaf));
-  let v37 = sweep_2(n, y1, y2, ev, Rc::new(tree::Leaf));
-  let (v38, v39) = __rocq_reuse::reset(v37, |__payload| Clone::clone(__payload));
+  let tmp = sweep_2(n, y1, y2, ev, Rc::new(tree::Leaf));
+  let (v38, v39) = __rocq_reuse::reset(tmp, |__payload| Clone::clone(__payload));
   std::mem::drop(v39);
   match v38 {
     option::Some(v44) => {
@@ -1372,38 +1293,6 @@ pub fn intersecting_rectangles_impl(x1: Rc<Array<u64>>, y1: Rc<Array<u64>>, x2: 
       true
     },
   }
-}
-
-// Rocq: Intersectingrectangles.intersectingrectangles_implem.intersecting_rectangles_impl
-pub fn intersecting_rectangles_impl_curried(x1: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> {
-  let v3 = {
-    move |y1: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> {
-      let x1 = &x1;
-      let v8 = Rc::clone(x1);
-      let v11 = {
-        move |x2: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> bool> {
-          let x1 = &v8;
-          let y1 = &y1;
-          let v18 = Rc::clone(x1);
-          let v20 = Rc::clone(y1);
-          let v23 = {
-            move |y2: Rc<Array<u64>>| -> bool {
-              let v33 = Rc::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&x2);
-              intersecting_rectangles_impl(v33, v35, v37, y2)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> bool> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>> = Rc::new(v3);
-  v51
 }
 
 mod __rocq_reuse {
@@ -1554,14 +1443,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = __rocq_global_698.with(Clone::clone);
-  v0
-}
 std::thread_local! { static __rocq_global_617: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<tree>) -> Rc<dyn Fn(Rc<tree>) -> Rc<option<Rc<tree>>>>>>>> = sweep_curried_1(); }
-std::thread_local! { static __rocq_global_698: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> bool> = intersecting_rectangles(); }
-std::thread_local! { static __rocq_global_701: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> bool>>>> = intersecting_rectangles_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1641,7 +1523,7 @@ fn solve(input: &str) -> String {
     while let Some(n) = t.optional() {
         let n: u64 = n.parse().unwrap(); let mut x1 = Vec::new(); let mut y1 = Vec::new(); let mut x2 = Vec::new(); let mut y2 = Vec::new();
         for _ in 0..n { x1.push(t.int()); y1.push(t.int()); x2.push(t.int()); y2.push(t.int()); }
-        out.push_str(if run()(ints(x1), ints(y1), ints(x2), ints(y2)) { "1\n" } else { "0\n" });
+        out.push_str(if intersecting_rectangles_impl(ints(x1), ints(y1), ints(x2), ints(y2)) { "1\n" } else { "0\n" });
     }
     out
 }

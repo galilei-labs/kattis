@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules segmentintersection_extracted_marray)
- (theories Segmentintersection Segmentintersection.spec Stdlib stdpp StdGalilei))
+ (theories Segmentintersection Segmentintersection.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name segmentintersection_extraction)

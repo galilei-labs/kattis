@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -690,21 +689,6 @@ pub fn P() -> u64 {
   1000003u64
 }
 
-// Rocq: Helpfulcurrents.helpfulcurrents_implem.helpfulcurrents
-// Variant: uncurried
-pub fn helpfulcurrents() -> Rc<dyn Fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> {
-  let v0: fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>> = helpfulcurrents_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Helpfulcurrents.helpfulcurrents_implem.helpfulcurrents
-pub fn helpfulcurrents_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>> = helpfulcurrents_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -719,13 +703,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -738,21 +719,18 @@ pub fn sub(v0: u64, v1: u64) -> u64 {
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
 pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let v5 = rocq_string::get(&v0, v1);
+  let tmp = rocq_string::get(&v0, v1);
   std::mem::drop(v0);
-  v5
+  tmp
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -764,13 +742,10 @@ pub fn add(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -778,26 +753,20 @@ pub fn negb(b: bool) -> bool {
 // Variant: uncurried
 pub fn addm(a: u64, b: u64) -> u64 {
   let s = add(a, b);
-  match ltb(s, __rocq_global_93) {
-    true => {
-      s
-    },
-    false => {
-      sub(s, __rocq_global_93)
-    },
+  if ltb(s, __rocq_global_93) {
+    s
+  } else {
+    sub(s, __rocq_global_93)
   }
 }
 
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.orf
 // Variant: uncurried
 pub fn orf(a: u64, b: u64) -> u64 {
-  match eqb(a, 0u64) {
-    true => {
-      b
-    },
-    false => {
-      a
-    },
+  if eqb(a, 0u64) {
+    b
+  } else {
+    a
   }
 }
 
@@ -810,67 +779,50 @@ pub fn pass1_1(s: Rc<rocq_string::RocqString>, sb: Rc<rocq_string::RocqString>, 
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.pass1 (local: pass1)
 // Variant: uncurried, lifted
 pub fn pass1(s: Rc<rocq_string::RocqString>, sb: Rc<rocq_string::RocqString>, Ym: u64, Xm: u64, xim: u64, y: u64, x: u64, wv: u64, wf: u64, cv: Rc<Array<u64>>, cf: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v19 = ltb(x, Xm);
-  match bdec(v19) {
+  let tmp = ltb(x, Xm);
+  match bdec(tmp) {
     sumbool::left => {
-      let v26 = Rc::clone(&s);
-      let c = get(v26, x);
+      let s_clone = Rc::clone(&s);
+      let c = get(s_clone, x);
       let st = andb(eqb(add(y, 1u64), Ym), eqb(x, xim));
-      let sv = match st {
-        true => {
-          1u64
-        },
-        false => {
-          0u64
-        },
+      let sv = if st {
+        1u64
+      } else {
+        0u64
       };
-      let v81 = ltb(add(y, 1u64), Ym);
-      let v87 = Rc::clone(&sb);
-      let v105 = andb(v81, negb(eqb(get(v87, x), 64u64)));
-      let north = andb(v105, negb(eqb(c, 35u64)));
-      let nv = match &north {
-        true => {
-          let v125 = &cv;
-          rocq_array::get::<u64>(&v125, x)
-        },
-        false => {
-          0u64
-        },
+      let tmp_1 = ltb(add(y, 1u64), Ym);
+      let sb_clone = Rc::clone(&sb);
+      let tmp_2 = andb(tmp_1, negb(eqb(get(sb_clone, x), 64u64)));
+      let north = andb(tmp_2, negb(eqb(c, 35u64)));
+      let nv = if north {
+        rocq_array::get::<u64>(&cv, x)
+      } else {
+        0u64
       };
-      let nf = match &north {
-        true => {
-          let v138 = &cf;
-          rocq_array::get::<u64>(&v138, x)
-        },
-        false => {
-          0u64
-        },
+      let nf = if north {
+        rocq_array::get::<u64>(&cf, x)
+      } else {
+        0u64
       };
-      let v156 = addm(sv, nv);
-      let av = addm(v156, wv);
-      let v168 = orf(sv, nf);
-      let af = orf(v168, wf);
+      let tmp_3 = addm(sv, nv);
+      let av = addm(tmp_3, wv);
+      let tmp_4 = orf(sv, nf);
+      let af = orf(tmp_4, wf);
       let w = eqb(c, 62u64);
-      let v188 = add(x, 1u64);
-      let v190 = match &w {
-        true => {
-          av
-        },
-        false => {
-          0u64
-        },
+      let tmp_5 = add(x, 1u64);
+      let tmp_6 = if w {
+        av
+      } else {
+        0u64
       };
-      let v199 = match &w {
-        true => {
-          af
-        },
-        false => {
-          0u64
-        },
+      let tmp_7 = if w {
+        af
+      } else {
+        0u64
       };
-      let v213 = rocq_array::set::<u64>(cv, x, av);
-      let v220 = rocq_array::set::<u64>(cf, x, af);
-      pass1(s, sb, Ym, Xm, xim, y, v188, v190, v199, v213, v220, ())
+      let tmp_8 = rocq_array::set::<u64>(cv, x, av);
+      let tmp_9 = rocq_array::set::<u64>(cf, x, af);
+      pass1(s, sb, Ym, Xm, xim, y, tmp_5, tmp_6, tmp_7, tmp_8, tmp_9, ())
     },
     sumbool::right => {
       std::mem::drop(s);
@@ -889,55 +841,41 @@ pub fn pass2_1(s: Rc<rocq_string::RocqString>, x: u64, ev: u64, ef: u64, cv: Rc<
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.pass2 (local: pass2)
 // Variant: uncurried, lifted
 pub fn pass2(s: Rc<rocq_string::RocqString>, x: u64, ev: u64, ef: u64, cv: Rc<Array<u64>>, cf: Rc<Array<u64>>, av: u64, af: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)) {
-  let v18 = ltb(0u64, x);
-  match bdec(v18) {
+  let tmp = ltb(0u64, x);
+  match bdec(tmp) {
     sumbool::left => {
       let x_ = sub(x, 1u64);
-      let v33 = Rc::clone(&s);
-      let c = get(v33, x_);
-      let v38 = &cv;
-      let v42 = rocq_array::get::<u64>(&v38, x_);
-      let bv = addm(v42, ev);
-      let v48 = &cf;
-      let v52 = rocq_array::get::<u64>(&v48, x_);
-      let bf = orf(v52, ef);
+      let s_clone = Rc::clone(&s);
+      let c = get(s_clone, x_);
+      let tmp_1 = rocq_array::get::<u64>(&cv, x_);
+      let bv = addm(tmp_1, ev);
+      let tmp_2 = rocq_array::get::<u64>(&cf, x_);
+      let bf = orf(tmp_2, ef);
       let e = eqb(c, 60u64);
       let k = eqb(c, 64u64);
-      let v74 = match &e {
-        true => {
-          bv
-        },
-        false => {
-          0u64
-        },
+      let tmp_3 = if e {
+        bv
+      } else {
+        0u64
       };
-      let v83 = match &e {
-        true => {
-          bf
-        },
-        false => {
-          0u64
-        },
+      let tmp_4 = if e {
+        bf
+      } else {
+        0u64
       };
-      let v97 = rocq_array::set::<u64>(cv, x_, bv);
-      let v104 = rocq_array::set::<u64>(cf, x_, bf);
-      let v106 = match &k {
-        true => {
-          bv
-        },
-        false => {
-          av
-        },
+      let tmp_5 = rocq_array::set::<u64>(cv, x_, bv);
+      let tmp_6 = rocq_array::set::<u64>(cf, x_, bf);
+      let tmp_7 = if k {
+        bv
+      } else {
+        av
       };
-      let v113 = match &k {
-        true => {
-          bf
-        },
-        false => {
-          af
-        },
+      let tmp_8 = if k {
+        bf
+      } else {
+        af
       };
-      pass2(s, x_, v74, v83, v97, v104, v106, v113, ())
+      pass2(s, x_, tmp_3, tmp_4, tmp_5, tmp_6, tmp_7, tmp_8, ())
     },
     sumbool::right => {
       std::mem::drop(s);
@@ -948,16 +886,25 @@ pub fn pass2(s: Rc<rocq_string::RocqString>, x: u64, ev: u64, ef: u64, cv: Rc<Ar
 
 // Rocq: Corelib.Init.Datatypes.fst
 pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
-  let v3 = Clone::clone((&(&p).0));
+  let p_0_clone = Clone::clone(&p.0);
   std::mem::drop(p);
-  v3
+  p_0_clone
 }
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
-  let v3 = Clone::clone((&(&p).1));
+  let p_1_clone = Clone::clone(&p.1);
   std::mem::drop(p);
-  v3
+  p_1_clone
+}
+
+// Rocq: Helpfulcurrents.helpfulcurrents_implem.pass2r
+// Variant: uncurried
+pub fn pass2r(s: Rc<rocq_string::RocqString>, Xm: u64, r1: (Rc<Array<u64>>, Rc<Array<u64>>), av: u64, af: u64) -> ((Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)) {
+  let r1_clone = Clone::clone(&r1);
+  let tmp = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(r1_clone);
+  let tmp_1 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(r1);
+  pass2_1(s, Xm, 0u64, 0u64, tmp, tmp_1, av, af)
 }
 
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.rows
@@ -969,26 +916,21 @@ pub fn rows_1(m: Rc<Array<Rc<rocq_string::RocqString>>>, Ym: u64, Xm: u64, xim: 
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.rows (local: rows)
 // Variant: uncurried, lifted
 pub fn rows(m: Rc<Array<Rc<rocq_string::RocqString>>>, Ym: u64, Xm: u64, xim: u64, k: u64, cv: Rc<Array<u64>>, cf: Rc<Array<u64>>, av: u64, af: u64, _H: ()) -> (u64, u64) {
-  let v19 = ltb(0u64, k);
-  match bdec(v19) {
+  let tmp = ltb(0u64, k);
+  match bdec(tmp) {
     sumbool::left => {
       let y = sub(k, 1u64);
-      let v31 = &m;
-      let s = rocq_array::get::<Rc<rocq_string::RocqString>>(&v31, y);
-      let v36 = &m;
-      let v39 = rocq_array::get::<Rc<rocq_string::RocqString>>(&v36, k);
-      let v48 = Rc::clone(&s);
-      let r1 = pass1_1(v48, v39, Ym, Xm, xim, y, 0u64, 0u64, 0u64, cv, cf);
-      let v77 = Clone::clone(&r1);
-      let v79 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(v77);
-      let v83 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(r1);
-      let r2 = pass2_1(s, Xm, 0u64, 0u64, v79, v83, av, af);
-      let v104 = Clone::clone(&r2);
-      let v109 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(v104));
-      let v113 = Clone::clone(&r2);
-      let v118 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(v113));
-      let v122 = Clone::clone(&r2);
-      rows(m, Ym, Xm, xim, y, v109, v118, fst::<u64, u64>(snd::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(v122)), snd::<u64, u64>(snd::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(r2)), ())
+      let s = rocq_array::get::<Rc<rocq_string::RocqString>>(&m, y);
+      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&m, k);
+      let s_clone = Rc::clone(&s);
+      let r1 = pass1_1(s_clone, tmp_1, Ym, Xm, xim, y, 0u64, 0u64, 0u64, cv, cf);
+      let r2 = pass2r(s, Xm, r1, av, af);
+      let r2_clone = Clone::clone(&r2);
+      let tmp_2 = fst::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(r2_clone));
+      let r2_clone_1 = Clone::clone(&r2);
+      let tmp_3 = snd::<Rc<Array<u64>>, Rc<Array<u64>>>(fst::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(r2_clone_1));
+      let r2_clone_2 = Clone::clone(&r2);
+      rows(m, Ym, Xm, xim, y, tmp_2, tmp_3, fst::<u64, u64>(snd::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(r2_clone_2)), snd::<u64, u64>(snd::<(Rc<Array<u64>>, Rc<Array<u64>>), (u64, u64)>(r2)), ())
     },
     sumbool::right => {
       std::mem::drop(m);
@@ -1002,52 +944,17 @@ pub fn rows(m: Rc<Array<Rc<rocq_string::RocqString>>>, Ym: u64, Xm: u64, xim: u6
 // Rocq: Helpfulcurrents.helpfulcurrents_implem.helpfulcurrents_impl
 // Variant: uncurried
 pub fn helpfulcurrents_impl(Ym: u64, Xm: u64, xim: u64, m: Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>> {
-  let v11 = rocq_array::make::<u64>(Xm, 0u64);
-  let v18 = rocq_array::make::<u64>(Xm, 0u64);
-  let r = rows_1(m, Ym, Xm, xim, Ym, v11, v18, 0u64, 0u64);
-  let v45 = Clone::clone(&r);
-  let v47 = snd::<u64, u64>(v45);
-  match eqb(v47, 0u64) {
-    true => {
-      std::mem::drop(r);
-      Rc::new(option::<u64>::None)
-    },
-    false => {
-      Rc::new(option::<u64>::Some(fst::<u64, u64>(r)))
-    },
+  let tmp = rocq_array::make::<u64>(Xm, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(Xm, 0u64);
+  let r = rows_1(m, Ym, Xm, xim, Ym, tmp, tmp_1, 0u64, 0u64);
+  let r_clone = Clone::clone(&r);
+  let tmp_2 = snd::<u64, u64>(r_clone);
+  if eqb(tmp_2, 0u64) {
+    std::mem::drop(r);
+    Rc::new(option::<u64>::None)
+  } else {
+    Rc::new(option::<u64>::Some(fst::<u64, u64>(r)))
   }
-}
-
-// Rocq: Helpfulcurrents.helpfulcurrents_implem.helpfulcurrents_impl
-pub fn helpfulcurrents_impl_curried(Ym: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>> {
-  let v3 = {
-    move |Xm: u64| -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>> {
-      let Ym = &Ym;
-      let v8 = Clone::clone(Ym);
-      let v11 = {
-        move |xim: u64| -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> {
-          let Ym = &v8;
-          let Xm = &Xm;
-          let v18 = Clone::clone(Ym);
-          let v20 = Clone::clone(Xm);
-          let v23 = {
-            move |m: Rc<Array<Rc<rocq_string::RocqString>>>| -> Rc<option<u64>> {
-              let v33 = Clone::clone(&v18);
-              let v35 = Clone::clone(&v20);
-              let v37 = Clone::clone(&xim);
-              helpfulcurrents_impl(v33, v35, v37, m)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>> = Rc::new(v3);
-  v51
 }
 
 mod __rocq_reuse {
@@ -1198,14 +1105,7 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> {
-  let v0: Rc<dyn Fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> = __rocq_global_516.with(Clone::clone);
-  v0
-}
 const __rocq_global_93: u64 = 1000003u64;
-std::thread_local! { static __rocq_global_516: Rc<dyn Fn(u64, u64, u64, Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>> = helpfulcurrents(); }
-std::thread_local! { static __rocq_global_519: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<rocq_string::RocqString>>>) -> Rc<option<u64>>>>>> = helpfulcurrents_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1282,7 +1182,7 @@ use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let y = t.uint(); let x = t.uint(); let xi = t.uint();
-    let result = run()(y, x, xi, words(&mut t, y));
+    let result = helpfulcurrents_impl(y, x, xi, words(&mut t, y));
     match result.as_ref() { option::None { } => "begin repairs\n".into(), option::Some(n) => format!("{n}\n") }
 }
 fn main() { entry(solve); }

@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules cuboidslicinggame_extracted_marray)
- (theories Cuboidslicinggame Cuboidslicinggame.spec Stdlib stdpp StdGalilei))
+ (theories Cuboidslicinggame Cuboidslicinggame.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name cuboidslicinggame_extraction)

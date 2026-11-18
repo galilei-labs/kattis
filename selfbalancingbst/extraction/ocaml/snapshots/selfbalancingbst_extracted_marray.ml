@@ -39,6 +39,52 @@ type uint = Uint63.t
 
 type sint = Uint63.t
 
+type ('u, 's) operation =
+| CopyFrom of 'u
+| FindKey of 's
+| LowerBound of 's
+| UpperBound of 's
+| Insert of 's * 's
+| Erase
+| First
+| Last
+| NextKey
+| PreviousKey
+| SelectRank of 's
+| GetRank
+| GetValue
+| SetValue of 's
+| GetSize
+
+type machine_command = uint * (uint, sint) operation
+
+(** val encode_operation :
+    'a2 -> ('a1 -> 'a2) -> ('a1, 'a2) operation -> (uint * 'a2) * 'a2 **)
+
+let encode_operation zero source = function
+| CopyFrom id -> (((Uint63.of_int (97)), (source id)), zero)
+| FindKey k -> (((Uint63.of_int (63)), k), zero)
+| LowerBound k -> (((Uint63.of_int (108)), k), zero)
+| UpperBound k -> (((Uint63.of_int (117)), k), zero)
+| Insert (k, v) -> (((Uint63.of_int (105)), k), v)
+| Erase -> (((Uint63.of_int (101)), zero), zero)
+| First -> (((Uint63.of_int (102)), zero), zero)
+| Last -> (((Uint63.of_int (98)), zero), zero)
+| NextKey -> (((Uint63.of_int (62)), zero), zero)
+| PreviousKey -> (((Uint63.of_int (60)), zero), zero)
+| SelectRank k -> (((Uint63.of_int (107)), k), zero)
+| GetRank -> (((Uint63.of_int (114)), zero), zero)
+| GetValue -> (((Uint63.of_int (103)), zero), zero)
+| SetValue v -> (((Uint63.of_int (115)), v), zero)
+| GetSize -> (((Uint63.of_int (122)), zero), zero)
+
+(** val encode_machine : machine_command -> ((uint * uint) * sint) * sint **)
+
+let encode_machine = function
+| (id, op) ->
+  let (p, y) = encode_operation (Uint63.of_int (0)) (fun id0 -> id0) op in
+  let (code, x) = p in (((id, code), x), y)
+
 type color =
 | Red
 | Black
@@ -434,19 +480,25 @@ let bdec = function
 | true -> true
 | false -> false
 
-(** val is_out : Uint63.t -> bool **)
+(** val output_command : machine_command -> bool **)
 
-let is_out op =
-  (||) ((||) (eqb op (Uint63.of_int (114))) (eqb op (Uint63.of_int (103))))
-    (eqb op (Uint63.of_int (122)))
+let output_command = function
+| (_, op) ->
+  (match op with
+   | GetRank -> true
+   | GetValue -> true
+   | GetSize -> true
+   | _ -> false)
 
 (** val count_loop :
-    Uint63.t Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t **)
+    machine_command Marray.t -> Uint63.t -> Uint63.t -> Uint63.t -> Uint63.t **)
 
 let rec count_loop ops q j acc =
   if bdec (ltb j q)
   then count_loop ops q (add j (Uint63.of_int (1)))
-         (if is_out (get ops j) then add acc (Uint63.of_int (1)) else acc)
+         (if output_command (get ops j)
+          then add acc (Uint63.of_int (1))
+          else acc)
   else acc
 
 (** val on_cur :
@@ -561,35 +613,30 @@ let exec t c o p id op x y =
                                                                     o), p)
 
 (** val run_loop :
-    Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t Marray.t -> Uint63.t
-    Marray.t -> Uint63.t -> Uint63.t -> tree Marray.t -> Uint63.t option
-    Marray.t -> Uint63.t option Marray.t -> Uint63.t -> Uint63.t option
-    Marray.t **)
+    machine_command Marray.t -> Uint63.t -> Uint63.t -> tree Marray.t ->
+    Uint63.t option Marray.t -> Uint63.t option Marray.t -> Uint63.t ->
+    Uint63.t option Marray.t **)
 
-let rec run_loop ids ops xs ys q j t c o p =
+let rec run_loop commands q j t c o p =
   if bdec (ltb j q)
-  then let (p0, p') =
-         exec t c o p (get ids j) (get ops j) (get xs j) (get ys j)
-       in
-       let (p1, o') = p0 in
-       let (t', c') = p1 in
-       run_loop ids ops xs ys q (add j (Uint63.of_int (1))) t' c' o' p'
+  then let (p0, y) = encode_machine (get commands j) in
+       let (p1, x) = p0 in
+       let (id, op) = p1 in
+       let (p2, p') = exec t c o p id op x y in
+       let (p3, o') = p2 in
+       let (t', c') = p3 in
+       run_loop commands q (add j (Uint63.of_int (1))) t' c' o' p'
   else o
 
-(** val run_impl :
-    uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t -> sint
-    option Marray.t **)
+(** val run_impl : machine_command Marray.t -> sint option Marray.t **)
 
-let run_impl ids ops xs ys =
-  let q = length ids in
-  let n = count_loop ops q (Uint63.of_int (0)) (Uint63.of_int (0)) in
-  run_loop ids ops xs ys q (Uint63.of_int (0))
-    (make (Uint63.of_int (1001)) Leaf) (make (Uint63.of_int (1001)) None)
-    (make n None) (Uint63.of_int (0))
+let run_impl commands =
+  let q = length commands in
+  let n = count_loop commands q (Uint63.of_int (0)) (Uint63.of_int (0)) in
+  run_loop commands q (Uint63.of_int (0)) (make (Uint63.of_int (1001)) Leaf)
+    (make (Uint63.of_int (1001)) None) (make n None) (Uint63.of_int (0))
 
-(** val run_commands :
-    uint Marray.t -> uint Marray.t -> sint Marray.t -> sint Marray.t -> sint
-    option Marray.t **)
+(** val run_commands : machine_command Marray.t -> sint option Marray.t **)
 
 let run_commands =
   run_impl

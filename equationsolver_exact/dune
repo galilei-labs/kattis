@@ -6,9 +6,11 @@
  (rocq.theory
   (name EquationsolverExact.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name EquationsolverExact)
  (modules equationsolver_exact_implem)
- (theories EquationsolverExact.spec Stdlib stdpp StdGalilei Flocq))
+  (theories EquationsolverExact.spec Stdlib stdpp StdGalilei Flocq)
+  (generate_project_file))

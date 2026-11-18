@@ -21,4 +21,4 @@ archive = "worstweather_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/worstweather.ml"
-Rust = "extraction/rust/submit/worstweather.rs"
+Rust = "extraction/rust/snapshots/worstweather_extracted.rs.interface.json"

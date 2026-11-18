@@ -6,9 +6,11 @@
  (rocq.theory
   (name Bitwise.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Bitwise)
  (modules bitwise_implem)
- (theories Bitwise.spec Stdlib stdpp StdGalilei))
+  (theories Bitwise.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

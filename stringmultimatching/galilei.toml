@@ -21,4 +21,4 @@ archive = "stringmultimatching_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/stringmultimatching.ml"
-Rust = "extraction/rust/submit/stringmultimatching.rs"
+Rust = "extraction/rust/snapshots/stringmultimatching_extracted.rs.interface.json"

@@ -40,6 +40,7 @@ From Polymul2.spec Require Import Prelude.
 From Stdlib Require Import ZArith NArith List Uint63 PArray Floats Reals Lra Lia ZifyUint63 Zwf.
 From Stdlib Require Sint63.
 From StdGalilei Require Import repr repr_float.
+From KattisLib Require Import Cost.
 From Flocq Require Core.Core IEEE754.BinarySingleNaN IEEE754.PrimFloat.
 Import ListNotations.
 
@@ -54,8 +55,8 @@ Ltac zc := repeat (first [rewrite Nat2Z.inj_add | rewrite Nat2Z.inj_mul
 
 (* The spec states the product by evaluation ([polymul_spec]: the length,
    and p(x) = a(x) * b(x) at every integer x).  The code and its proof
-   produce the coefficients by the convolution formula, stated here as the
-   spec of 2026-10 did ([coeff], [sum_below], [prod_coeff]); [pzconv] is
+   produce the coefficients by the convolution formula
+   ([coeff], [sum_below], [prod_coeff]); [pzconv] is
    the same convolution written structurally on the lists, [eval_pzconv]
    says it evaluates to the product, [nth_pzconv] that its cells are the
    [prod_coeff]. *)
@@ -4371,3 +4372,474 @@ Definition polymul_correct : forall (a b : list Z) (x y : array sint),
   valid_input a b -> repr x a -> repr y b ->
   exists p : list Z, repr (polymul x y) p /\ polymul_spec a b p
   := polymul_impl_correct.
+
+(* Cost translations of main's six-limb Stockham FFT implementation. *)
+Elpi complexity sumbool.
+Elpi complexity bdec.
+Elpi complexity wloop.
+Elpi complexity loop.
+Elpi complexity lg_find.
+Elpi complexity log2up.
+Elpi complexity tw_cell.
+Elpi complexity tw_stage.
+Elpi complexity build_tw.
+Elpi complexity bfly.
+Elpi complexity fft_stage.
+Elpi complexity fft.
+Elpi complexity KOFF.
+Elpi complexity limb.
+Elpi complexity load.
+Elpi complexity copy_out.
+Elpi complexity NL.
+Elpi complexity fwd_all.
+Elpi complexity cacc.
+Elpi complexity andb.
+Elpi complexity pterm.
+Elpi complexity pcell.
+Elpi complexity products.
+Elpi complexity MAGIC.
+Elpi complexity MAGICI.
+Elpi complexity toint.
+Elpi complexity accum.
+Elpi complexity polymul_impl.
+Elpi complexity polymul.
+
+From Stdlib Require Import ssreflect.
+Arguments Uint63.to_Z : simpl never.
+Arguments wloop : simpl never.
+Arguments loop : simpl never.
+Arguments wloop_cost : simpl never.
+Arguments loop_cost : simpl never.
+Arguments Zwf_well_founded : simpl never.
+Open Scope nat_scope.
+Definition zn (x : int) := Z.to_nat (to_Z x).
+Lemma bdec_time b bC : cost (bdec_cost stepsCM b bC) <= 2.
+Proof. destruct bC; cost_simpl; lia. Qed.
+Ltac bound_bdec :=
+  repeat match goal with |- context [@cost ?T (bdec_cost stepsCM ?b ?w)] =>
+    let H := fresh "Hbdec" in
+    have H := (bdec_time b w : (@cost T (bdec_cost stepsCM b w) <= _)%nat);
+    let C := fresh "branch_cost" in
+    set (C := @cost T (bdec_cost stepsCM b w)) in *; clearbody C end.
+
+Lemma wloop_time St StC K hi hiC f fC i iC s sC H HC :
+  (forall j jC t tC, (j <? hi)%uint63 = true ->
+    cost (fC j jC) + cost (extract (fC j jC) t tC) <= K) ->
+  cost (extract (extract (extract (extract (extract
+    (@wloop_cost stepsCM St StC) hi hiC) f fC) i iC) s sC) H HC)
+  <= (K+30) * Z.to_nat (gap hi i)+20.
+Proof.
+  intro HF. unfold wloop_cost. cbn.
+  match goal with |- context [@cost ?A (?G _ _ _ _ _ _ _ _ _ _)] =>
+    assert (HG : forall N i ic s sc H hc, Z.to_nat (gap hi i) <= N ->
+      cost (G hi hiC f fC i ic s sc H hc) <= (K+30)*N+20) end.
+  { induction N as [|N IH]; intros i' ic s' sc [g] hc HN;
+      match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end;
+      cost_simpl; bound_bdec; cost_destruct (bdec (i' <? hi)%uint63); cost_simpl.
+    - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in HN. lia.
+    - lia.
+    - pose proof (dec_step _ _ e) as [D E].
+      match goal with |- context [@cost ?A (?G ?hi ?hc ?f ?fc ?i ?ic ?s ?sc ?h ?hc0)] =>
+        have HI := (IH i ic s sc h hc0 ltac:(lia)
+          : (@cost A (G hi hc f fc i ic s sc h hc0) <= _)%nat) end.
+      match goal with |- context [extract (fC ?i ?ic) ?s ?sc] =>
+        have Hbody := HF i ic s sc e end.
+      match type of HI with (?C <= _)%nat =>
+        let c := fresh "recursive_cost" in set (c := C) in *; clearbody c end.
+      cbv delta [CostM] in *.
+      clear IH HF. destruct (fC i' ic) as [c fc] eqn:Efc.
+      cbn [cost extract] in Hbody |- *.
+      nia.
+    - lia. }
+  exact (HG _ _ _ _ _ _ _ (le_n _)).
+Qed.
+
+Lemma loop_time St StC K hi hiC f fC i iC s sC :
+  (forall j jC t tC, (j <? hi)%uint63 = true ->
+    cost (fC j jC)+cost (extract (fC j jC) t tC) <= K) ->
+  cost (extract (extract (extract (extract
+    (@loop_cost stepsCM St StC) hi hiC) f fC) i iC) s sC)
+  <= (K+30)*Z.to_nat(gap hi i)+30.
+Proof.
+  intro HF. unfold loop_cost. cbn -[wloop_cost].
+  have HB := wloop_time St StC K hi hiC f fC i iC s sC
+    (Zwf_well_founded 0 (gap hi i)) erased_I HF.
+  cost_simpl.
+  repeat match goal with |- context [@cost ?T ?c] =>
+    change (@cost T c) with 0%nat end.
+  lia.
+Qed.
+
+Ltac zeros := repeat match goal with |- context [@cost ?T ?c] =>
+  change (@cost T c) with 0%nat end.
+Ltac set_simpl :=
+  repeat match goal with |- context [@cost ?T ?c] =>
+    first [change (@cost T c) with 0%nat
+          | lazymatch c with
+            | extract (extract (extract (set_cost _ _ _) _ _) _ _) _ _ =>
+              change (@cost T c) with 1%nat
+            | extract (extract (make_cost _ _ _) _ _) _ _ =>
+              change (@cost T c) with 1%nat end] end.
+Ltac split_pair :=
+  once match goal with |- context [match ?t as _ return _ with (_,_) => _ end] =>
+    cost_destruct_prep t; let p := fresh "p" in let E := fresh "Epair" in
+    remember t as p eqn:E;
+    match goal with w : prod_cost _ _ _ _ _ p |- _ => destruct w end;
+    cbn [fst snd] in *; cost_simpl end.
+Ltac gen_loop K body :=
+  zeros;
+  match goal with |- context [@cost ?T
+    (extract (extract (extract (extract (@loop_cost stepsCM ?St ?StC) ?hi ?hc) ?f ?fc) ?i ?ic) ?s ?sc)] =>
+    let HF := fresh "Hbody" in
+    assert (HF : forall j jc t tc, (j <? hi)%uint63 = true ->
+      cost (fc j jc)+cost (extract (fc j jc) t tc) <= K) by
+      (intros; match goal with |- (_ <= ?rhs)%nat =>
+         let b := fresh "body_budget" in let E := fresh "Hbodybudget" in
+         remember rhs as b eqn:E end; body);
+    let HB := fresh "Hloop" in
+    pose proof (loop_time St StC K hi hc f fc i ic s sc HF) as HB;
+    match type of HB with (?C <= _)%nat =>
+      let c := fresh "loop_cost_bound" in set (c := C) in *; clearbody c end;
+    clear HF end.
+
+Lemma tw_cell_time m mc hm hmc bc bcc bs bsc k kc st stc :
+  cost (extract (extract (extract (extract (extract
+    (tw_cell_cost stepsCM m mc) hm hmc) bc bcc) bs bsc) k kc) st stc) <= 100.
+Proof.
+  destruct stc. unfold tw_cell_cost. cost_simpl.
+  rewrite cost_if. lazymatch goal with |- context [if ?b then _ else _] => destruct b end;
+    cost_simpl; set_simpl; lia.
+Qed.
+
+Ltac cost_head f c := lazymatch c with
+  | extract ?g _ _ => cost_head f g
+  | f stepsCM _ _ => idtac end.
+Ltac instantiate_bound lemma c := lazymatch c with
+  | extract ?g ?a ?ac => let p := instantiate_bound lemma g in constr:(p a ac)
+  | ?f stepsCM ?a ?ac => constr:(lemma a ac) end.
+Ltac bound_named f lemma := zeros;
+  repeat match goal with |- context [@cost ?T ?c] => cost_head f c;
+    let B := fresh "Hcost" in let q := instantiate_bound lemma c in
+    have B := (q : (@cost T c <= _)%nat);
+    let C := fresh "helper_cost" in set (C := @cost T c) in *; clearbody C end.
+Ltac destruct_pairs := repeat match goal with
+  w : prod_cost _ _ _ _ _ _ |- _ => destruct w end.
+Arguments tw_cell_cost : simpl never.
+
+Lemma tw_stage_time s sc st stc :
+  cost (extract (tw_stage_cost stepsCM s sc) st stc)
+  <= 200*zn (1 << s)%uint63+100.
+Proof.
+  destruct_pairs. unfold tw_stage_cost. cost_simpl.
+  gen_loop 100 ltac:(bound_named tw_cell_cost tw_cell_time; lia).
+  split_pair. unfold gap, zn in *. change (to_Z 0%uint63) with 0%Z in *.
+  repeat match goal with H : context [(?z-0)%Z] |- _ => rewrite Z.sub_0_r in H end.
+  lia.
+Qed.
+
+Local Notation "f @@ [ a ; ac ]" := (extract f a ac)
+  (at level 10, left associativity).
+Lemma shift_bound x : zn (1 << x)%uint63 <= 2 ^ zn x.
+Proof.
+  unfold zn. rewrite lsl_spec. change (to_Z 1%uint63) with 1%Z. rewrite Z.mul_1_l.
+  pose proof (Z2Nat.inj_pow 2 (to_Z x) ltac:(lia)
+    ltac:(pose proof (to_Z_bounded x); lia)) as E.
+  change (Z.to_nat (2 ^ to_Z x) = 2 ^ Z.to_nat (to_Z x))%nat in E. rewrite <- E.
+  apply Z2Nat.inj_le.
+  - apply Z.mod_pos_bound. rewrite wB_val. lia.
+  - apply Z.pow_nonneg. lia.
+  - apply Z.mod_le; [apply Z.pow_nonneg; lia|rewrite wB_val; lia].
+Qed.
+Lemma gap0 x : Z.to_nat (gap x 0%uint63) = zn x.
+Proof. unfold gap, zn. change (to_Z 0%uint63) with 0%Z. rewrite Z.sub_0_r. reflexivity. Qed.
+Ltac norm_gaps := repeat match goal with
+  H : context [Z.to_nat (gap ?x 0%uint63)] |- _ => rewrite gap0 in H end.
+Arguments tw_stage_cost : simpl never.
+Lemma build_tw_time lg lgc N Nc :
+  cost ((build_tw_cost stepsCM lg lgc) @@ [N;Nc])
+  <= 500*(2^zn lg+1)*(zn lg+1).
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold build_tw_cost. cost_simpl; set_simpl.
+  gen_loop (200*2^zn lg+100) ltac:(
+    bound_named tw_stage_cost tw_stage_time;
+    match goal with H : (?j <? lg)%uint63 = true |- _ =>
+      have Hj := proj1 (Uint63.ltb_spec _ _) H;
+      have Hs := shift_bound j;
+      assert (He : 2^zn j <= 2^zn lg) by
+        (apply Nat.pow_le_mono_r; unfold zn; lia) end;
+    nia).
+  split_pair; split_pair; split_pair; set_simpl.
+  assert (Hg : Z.to_nat (gap lg 1%uint63) <= zn lg) by
+    (unfold gap, zn; change (to_Z 1%uint63) with 1%Z; lia).
+  nia.
+Qed.
+
+Lemma bfly_time sh shc m mc half halfc neg negc sre srec sim simc tre trec tim timc j jc st stc :
+  cost ((bfly_cost stepsCM sh shc) @@ [m;mc] @@ [half;halfc] @@ [neg;negc]
+    @@ [sre;srec] @@ [sim;simc] @@ [tre;trec] @@ [tim;timc] @@ [j;jc] @@ [st;stc]) <= 300.
+Proof.
+  destruct_pairs. destruct negc; unfold bfly_cost; cost_simpl; set_simpl; lia.
+Qed.
+Arguments bfly_cost : simpl never.
+Lemma fft_stage_time lg lgc half halfc neg negc tre trec tim timc s sc st stc :
+  cost ((fft_stage_cost stepsCM lg lgc) @@ [half;halfc] @@ [neg;negc]
+    @@ [tre;trec] @@ [tim;timc] @@ [s;sc] @@ [st;stc]) <= 400*zn half+100.
+Proof.
+  destruct_pairs.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold fft_stage_cost. cost_simpl.
+  gen_loop 300 ltac:(bound_named bfly_cost bfly_time; lia).
+  split_pair. norm_gaps. lia.
+Qed.
+Arguments fft_stage_cost : simpl never.
+Lemma fft_time lg lgc half halfc neg negc tre trec tim timc re rec im imc :
+  cost ((fft_cost stepsCM lg lgc) @@ [half;halfc] @@ [neg;negc]
+    @@ [tre;trec] @@ [tim;timc] @@ [re;rec] @@ [im;imc])
+  <= 600*(zn half+1)*(zn lg+1).
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold fft_cost. cost_simpl; set_simpl.
+  gen_loop (400*zn half+100) ltac:(bound_named fft_stage_cost fft_stage_time; lia).
+  split_pair; split_pair; split_pair; set_simpl. norm_gaps. nia.
+Qed.
+
+Lemma limb_time c cc i ic : cost ((limb_cost stepsCM c cc) @@ [i;ic]) <= 50.
+Proof. unfold limb_cost, KOFF_cost. cost_simpl. lia. Qed.
+Arguments limb_cost : simpl never.
+Lemma load_time x xc n nc N Nc i ic :
+  cost ((load_cost stepsCM x xc) @@ [n;nc] @@ [N;Nc] @@ [i;ic]) <= 200*zn n+100.
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold load_cost. cost_simpl; set_simpl.
+  gen_loop 100 ltac:(cost_simpl; set_simpl; bound_named limb_cost limb_time; lia).
+  norm_gaps. lia.
+Qed.
+Lemma copy_out_time N Nc off offc yr yrc yi yic st stc :
+  cost ((copy_out_cost stepsCM N Nc) @@ [off;offc] @@ [yr;yrc] @@ [yi;yic] @@ [st;stc])
+  <= 200*zn N+100.
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold copy_out_cost. cost_simpl.
+  gen_loop 100 ltac:(destruct_pairs; cost_simpl; set_simpl; lia).
+  norm_gaps. lia.
+Qed.
+Arguments fft_cost : simpl never.
+Arguments load_cost : simpl never.
+Arguments copy_out_cost : simpl never.
+Lemma add_bound a b : zn (a+b)%uint63 <= zn a+zn b.
+Proof.
+  unfold zn. rewrite Uint63.add_spec.
+  pose proof (Z.mod_le (to_Z a+to_Z b) wB
+    ltac:(pose proof(to_Z_bounded a); pose proof(to_Z_bounded b); lia)
+    ltac:(rewrite wB_val; lia)) as H.
+  pose proof (to_Z_bounded a). pose proof (to_Z_bounded b).
+  rewrite <- (Z2Nat.inj_add (to_Z a) (to_Z b) ltac:(lia) ltac:(lia)).
+  apply Z2Nat.inj_le; [apply Z.mod_pos_bound; rewrite wB_val; lia|lia|exact H].
+Qed.
+Lemma fwd_all_time x xc n nc lg lgc half halfc tre trec tim timc :
+  cost ((fwd_all_cost stepsCM x xc) @@ [n;nc] @@ [lg;lgc] @@ [half;halfc]
+    @@ [tre;trec] @@ [tim;timc])
+  <= (10*1000)*(zn n+(zn half+1)*(zn lg+1)+zn half+1).
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold fwd_all_cost, NL_cost. cost_simpl; set_simpl.
+  gen_loop (1000*(zn n+(zn half+1)*(zn lg+1)+zn half+1)) ltac:(
+    cost_simpl; set_simpl;
+    bound_named load_cost load_time; bound_named fft_cost fft_time;
+    split_pair; bound_named copy_out_cost copy_out_time;
+    have HA := add_bound half half; nia).
+  norm_gaps. change (zn NL) with 6 in *. nia.
+Qed.
+
+Lemma cacc_time ar arc ai aic br brc bi bic st stc :
+  cost ((cacc_cost stepsCM ar arc) @@ [ai;aic] @@ [br;brc] @@ [bi;bic] @@ [st;stc]) <= 50.
+Proof. destruct_pairs. unfold cacc_cost. cost_simpl. lia. Qed.
+Arguments cacc_cost : simpl never.
+Lemma pterm_time w wc N Nc k kc AR ARc AI AIc BR BRc BI BIc i ic st stc :
+  cost ((pterm_cost stepsCM w wc) @@ [N;Nc] @@ [k;kc] @@ [AR;ARc] @@ [AI;AIc]
+    @@ [BR;BRc] @@ [BI;BIc] @@ [i;ic] @@ [st;stc]) <= 200.
+Proof.
+  unfold pterm_cost, andb_cost. cost_simpl.
+  repeat (rewrite cost_if;
+    lazymatch goal with |- context [if ?b then _ else _] => destruct b end; cost_simpl);
+    bound_named cacc_cost cacc_time; lia.
+Qed.
+Arguments pterm_cost : simpl never.
+Lemma pcell_time g gc N Nc AR ARc AI AIc BR BRc BI BIc k kc st stc :
+  cost ((pcell_cost stepsCM g gc) @@ [N;Nc] @@ [AR;ARc] @@ [AI;AIc]
+    @@ [BR;BRc] @@ [BI;BIc] @@ [k;kc] @@ [st;stc]) <= 4000.
+Proof.
+  destruct_pairs. unfold pcell_cost, NL_cost. cost_simpl.
+  gen_loop 200 ltac:(bound_named pterm_cost pterm_time; lia).
+  split_pair.
+  gen_loop 200 ltac:(bound_named pterm_cost pterm_time; lia).
+  split_pair; set_simpl. norm_gaps. change (zn NL) with 6 in *. lia.
+Qed.
+Arguments pcell_cost : simpl never.
+Lemma products_time g gc N Nc AR ARc AI AIc BR BRc BI BIc :
+  cost ((products_cost stepsCM g gc) @@ [N;Nc] @@ [AR;ARc] @@ [AI;AIc]
+    @@ [BR;BRc] @@ [BI;BIc]) <= 5000*zn N+100.
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold products_cost. cost_simpl; set_simpl.
+  gen_loop 4000 ltac:(bound_named pcell_cost pcell_time; lia).
+  norm_gaps. lia.
+Qed.
+Lemma toint_time z zc : cost (toint_cost stepsCM z zc) <= 50.
+Proof. unfold toint_cost, MAGIC_cost, MAGICI_cost. cost_simpl. split_pair. lia. Qed.
+Arguments toint_cost : simpl never.
+Lemma accum_time g gc L Lc invN invNc yr yrc yi yic R Rc :
+  cost ((accum_cost stepsCM g gc) @@ [L;Lc] @@ [invN;invNc] @@ [yr;yrc]
+    @@ [yi;yic] @@ [R;Rc]) <= 300*zn L+100.
+Proof.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold accum_cost. cost_simpl.
+  gen_loop 200 ltac:(cost_simpl; set_simpl; bound_named toint_cost toint_time; lia).
+  norm_gaps. lia.
+Qed.
+
+Arguments lg_find : simpl never.
+Lemma lg_find_time L Lc k kc H Hc :
+  cost ((lg_find_cost stepsCM L Lc) @@ [k;kc] @@ [H;Hc])
+  <= 50*Z.to_nat(gap 62%uint63 k)+50.
+Proof.
+  unfold lg_find_cost. cbn.
+  match goal with |- context [@cost ?A (?G _ _ _ _ _ _)] =>
+    assert (HG : forall N k kc H hc, Z.to_nat(gap 62%uint63 k)<=N ->
+      cost (G L Lc k kc H hc)<=50*N+50) end.
+  { induction N as [|N IH]; intros k' kc' [g] hc HN;
+      match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end;
+      cost_simpl; bound_bdec; cost_destruct (bdec (k' <? 62)%uint63); cost_simpl.
+    - exfalso. have D := proj1 (Uint63.ltb_spec _ _) e. unfold gap in HN.
+      change (to_Z 62%uint63) with 62%Z in HN.
+      change (to_Z 62%uint63) with 62%Z in D. lia.
+    - lia.
+    - rewrite cost_if. lazymatch goal with |- context [if ?b then _ else _] => destruct b end;
+        cost_simpl; [lia|].
+      have D := dec_step _ _ e. destruct D as [D E].
+      match goal with |- context [@cost ?A (?G ?l ?lc ?k ?kc ?h ?hc)] =>
+        have HI := (IH k kc h hc ltac:(lia)
+          : (@cost A (G l lc k kc h hc) <= _)%nat) end.
+      lia.
+    - lia. }
+  exact (HG _ _ _ _ _ (le_n _)).
+Qed.
+Arguments lg_find_cost : simpl never.
+Lemma log2up_time L Lc : cost (log2up_cost stepsCM L Lc) <= 4000.
+Proof.
+  unfold log2up_cost. cost_simpl. bound_named lg_find_cost lg_find_time.
+  match goal with H : context [Z.to_nat (gap 62%uint63 0%uint63)] |- _ =>
+    change (Z.to_nat (gap 62%uint63 0%uint63)) with 62 in H end. lia.
+Qed.
+Arguments log2up_cost : simpl never.
+Arguments build_tw_cost : simpl never.
+Arguments fwd_all_cost : simpl never.
+Arguments products_cost : simpl never.
+Arguments accum_cost : simpl never.
+
+Lemma polymul_time_raw x y :
+  let na := @PArray.length@{Set} int x in
+  let nb := @PArray.length@{Set} int y in
+  let L := (na+nb-1)%uint63 in
+  let lg := log2up L in
+  let half := (1 << (lg-1))%uint63 in
+  cost2 polymul_cost x y <=
+    (1000*1000)*((zn na+zn nb+zn L+zn half+2^zn lg+1)*(zn lg+1))+(20*1000).
+Proof.
+  cbv zeta.
+  match goal with |- (_ <= ?rhs)%nat => remember rhs as budget eqn:Hbudget end.
+  unfold cost2, polymul_cost, polymul_impl_cost. cost_simpl; set_simpl.
+  bound_named log2up_cost log2up_time.
+  bound_named build_tw_cost build_tw_time. split_pair.
+  bound_named fwd_all_cost fwd_all_time. split_pair; split_pair.
+  gen_loop (1000*100*(
+    zn (@PArray.length@{Set} int x+@PArray.length@{Set} int y-1)%uint63+
+    (zn (1 << (log2up (@PArray.length@{Set} int x+@PArray.length@{Set} int y-1)%uint63-1))%uint63+1)*
+    (zn (log2up (@PArray.length@{Set} int x+@PArray.length@{Set} int y-1)%uint63)+1)+1))
+    ltac:(cost_simpl; set_simpl;
+      bound_named products_cost products_time; split_pair;
+      bound_named fft_cost fft_time; split_pair;
+      bound_named accum_cost accum_time;
+      match goal with H : context [(?half+?half)%uint63] |- _ =>
+        have HA := add_bound half half end;
+      cbv delta [sint uint] in *;
+      clear - Hcost3 Hcost4 Hcost5 HA Hbodybudget;
+      nia).
+  set_simpl. norm_gaps. change (zn NL) with 6 in *.
+  cbv delta [sint uint] in *.
+  assert (Hpow : 1 <= 2^zn (log2up
+    (@PArray.length@{Set} int x+@PArray.length@{Set} int y-1)%uint63)) by
+    (have H := Nat.pow_nonzero 2 (zn (log2up
+      (@PArray.length@{Set} int x+@PArray.length@{Set} int y-1)%uint63)) ltac:(lia); lia).
+  clear - Hcost Hcost0 Hcost1 Hcost2 Hloop Hbudget Hpow.
+  nia.
+Qed.
+
+Theorem polymul_time : exists c1 c2 : nat,
+  forall (first_coeffs second_coeffs : list Z)
+         (first_coeffs_arr second_coeffs_arr : array sint),
+  valid_input first_coeffs second_coeffs ->
+  repr first_coeffs_arr first_coeffs ->
+  repr second_coeffs_arr second_coeffs ->
+  Nat.le (cost2 polymul_cost first_coeffs_arr second_coeffs_arr)
+    (Nat.add (Nat.mul c1
+      ((Cost.size first_coeffs_arr+Cost.size second_coeffs_arr)*
+       (Nat.log2(Cost.size first_coeffs_arr+Cost.size second_coeffs_arr)+1))%nat) c2).
+Proof.
+  exists (20*1000*1000), (20*1000). intros a b x y Hv Hx Hy.
+  have Lx := repr_sint_length x a Hx. have Ly := repr_sint_length y b Hy.
+  destruct Hv as [Ha Hb _ _ _]. unfold len in Ha, Hb.
+  assert (Lxset : to_Z (@PArray.length@{Set} int x) = Z.of_nat(List.length a)) by exact Lx.
+  assert (Lyset : to_Z (@PArray.length@{Set} int y) = Z.of_nat(List.length b)) by exact Ly.
+  assert (Hxlen : (2 <= to_Z (@PArray.length@{Set} int x) <= 131072)%Z) by lia.
+  assert (Hylen : (2 <= to_Z (@PArray.length@{Set} int y) <= 131072)%Z) by lia.
+  have HR := polymul_time_raw x y. cbv zeta in HR.
+  cbv delta [sint uint] in *.
+  change (Cost.size x) with (zn (@PArray.length@{Set} int x)).
+  change (Cost.size y) with (zn (@PArray.length@{Set} int y)).
+  set (na := @PArray.length@{Set} int x) in *.
+  set (nb := @PArray.length@{Set} int y) in *.
+  set (L := (na+nb-1)%uint63) in *.
+  assert (HL : to_Z L = (to_Z na+to_Z nb-1)%Z).
+  { unfold L. rewrite Uint63.sub_spec Uint63.add_spec.
+    change (to_Z 1%uint63) with 1%Z.
+    rewrite (Z.mod_small (to_Z na+to_Z nb) wB ltac:(rewrite wB_val; lia)).
+    rewrite (Z.mod_small (to_Z na+to_Z nb-1) wB ltac:(rewrite wB_val; lia)). reflexivity. }
+  destruct (log2up_spec L ltac:(rewrite HL; lia)) as [HG HP].
+  set (lg := log2up L) in *.
+  set (half := (1 << (lg-1))%uint63) in *.
+  set (Ssum := (zn na+zn nb)%nat).
+  assert (HS : (4 <= Ssum)%nat) by (unfold Ssum, zn; lia).
+  assert (HLnat : (zn L <= Ssum)%nat) by (unfold Ssum, zn; lia).
+  assert (HPnat : (2^zn lg < 2*Ssum)%nat).
+  { assert (HE : Z.of_nat (2^zn lg) = (2^to_Z lg)%Z).
+    { rewrite Nat2Z.inj_pow. unfold zn. rewrite (Z2Nat.id (to_Z lg) ltac:(lia)). reflexivity. }
+    unfold zn in HE. unfold Ssum, zn. lia. }
+  assert (Hhalf : (zn half <= 2^zn lg)%nat).
+  { unfold half. eapply Nat.le_trans; [apply shift_bound|].
+    apply Nat.pow_le_mono_r; [lia|]. unfold zn. rewrite Uint63.sub_spec.
+    change (to_Z 1%uint63) with 1%Z.
+    rewrite (Z.mod_small (to_Z lg-1) wB ltac:(rewrite wB_val; lia)). lia. }
+  set (ell := Nat.log2 Ssum).
+  assert (Hlog : (Ssum < 2^(S ell))%nat) by
+    (have H := Nat.log2_spec Ssum ltac:(lia); exact (proj2 H)).
+  assert (HGnat : (zn lg <= ell+1)%nat).
+  { destruct (Nat.le_gt_cases (zn lg) (ell+1)) as [Hle|Hgt]; [exact Hle|].
+    assert (Hpow : (2^(S(S ell)) <= 2^zn lg)%nat) by (apply Nat.pow_le_mono_r; lia).
+    rewrite !Nat.pow_succ_r' in Hpow. rewrite Nat.pow_succ_r' in Hlog.
+    clear - Hpow Hlog HPnat. nia. }
+  assert (HW : (zn na+zn nb+zn L+zn half+2^zn lg+1 <= 7*Ssum)%nat) by
+    (unfold Ssum in *; lia).
+  assert (HB : ((zn na+zn nb+zn L+zn half+2^zn lg+1)*(zn lg+1)
+    <= 14*(Ssum*(ell+1)))%nat).
+  { eapply Nat.le_trans with (m := ((7*Ssum)*(2*(ell+1)))%nat);
+      [apply Nat.mul_le_mono; [exact HW|lia]|]. nia. }
+  fold Ssum. fold ell.
+  clear - HR HB.
+  eapply Nat.le_trans; [exact HR|].
+  nia.
+Qed.
+
+Print Assumptions polymul_correct.
+Print Assumptions polymul_time.

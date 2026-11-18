@@ -6,9 +6,11 @@
  (rocq.theory
   (name Hashing.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Hashing)
  (modules hashing_implem)
- (theories Hashing.spec Stdlib stdpp StdGalilei))
+  (theories Hashing.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

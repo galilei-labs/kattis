@@ -12,8 +12,8 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Vertex count: $1 \le n \le 1{,}000$; Edge count: $0 \le m \le 5{,}000$; Query count: $1 \le q \le 100$.
-    - Edge weights in $[-2{,}000, 2{,}000]$. *)
+    - Vertex count: $1 \le n \le 10^{3}$; Edge count: $0 \le m \le 5 \times 10^{3}$; Query count: $1 \le q \le 100$.
+    - Edge weights: $-2 \times 10^{3} \le w_i \le 2 \times 10^{3}$. *)
 
 (** ** Examples *)
 
@@ -57,21 +57,30 @@ Impossible
                     arbitrarily short paths from source to it, and Dist
                     distance when distance is the minimum distance from
                     source to it.
+                    It runs in at most c1 * ((n + 1) * (m + 1) + q) + c2
+                    steps of the cost model on a valid input, n the number
+                    of nodes, m of edges and q of queries (Bellman-Ford,
+                    then one breadth-first search, then the queries), for
+                    two constants c1, c2.
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Z_scope.
 
 (** ** Definitions *)
 
-(** One [output] line per query, the same inductive on
-    both sides: the machine [answer] carries a sint, the
-    math [answer] a Z. *)
+(** A query result: [Dist distance] gives a finite shortest distance, [Impossible]
+    denotes an unreachable vertex, and [MinusInfinity] denotes costs unbounded
+    below. Distances use [sint] in machine results and [Z] in mathematical results. *)
 Inductive answer (D : Type) : Type :=
 | Dist (distance : D)
 | Impossible
 | MinusInfinity.
+
+(** [@hide] Constructor argument declarations and the representation relation
+    between machine and mathematical answers. *)
 Arguments Dist {D} distance.
 Arguments Impossible {D}.
 Arguments MinusInfinity {D}.
@@ -86,19 +95,25 @@ Instance repr_answer A M `{Repr A M} : Repr (answer A)
              | _, _ => False
              end.
 
+(** [@hide] The cost translation of [answer], for the bound below. *)
+Elpi complexity answer.
+
 (* Math side. The edge list is three parallel lists, one
    per column of the input lines "u v w". *)
 
-(** The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The j-th element of l (fallback past the end). *)
+(** The entry at zero-based index [j] in [l], or [fallback] beyond the end. *)
 Definition get {A} (l : list A) (fallback : A) (j : N) : A
   :=
   nth (N.to_nat j) l fallback.
 
-(** A walk from start to target with the given total edge weight. Vertices and edges may repeat; an empty walk has weight zero. *)
+(** [walk edge_sources edge_targets edge_weights source target cost] means that
+    a directed walk from [source] to [target] has total weight [cost], using the
+    graph given by the parallel edge lists. Vertices and edges may repeat; an
+    empty walk has weight zero. *)
 Inductive walk (edge_sources edge_targets : list N)
   (edge_weights : list Z)
     : N -> N -> Z -> Prop :=
@@ -113,14 +128,14 @@ Inductive walk (edge_sources edge_targets : list N)
       (get edge_sources 0%N j)
       target (get edge_weights 0 j + cost).
 
-(** There is a path from [source] to target. *)
+(** Some walk leads from [source] to [target]. *)
 Definition reachable edge_sources edge_targets edge_weights
     (source target : N) : Prop :=
   exists cost, walk edge_sources edge_targets edge_weights
     source target cost.
 
-(** There are arbitrarily short paths from [source] to
-    target. *)
+(** For every integer bound, some walk from [source] to [target] has weight below
+    that bound. *)
 Definition arbitrarily_short edge_sources edge_targets
   edge_weights
     (source target : N) : Prop :=
@@ -129,8 +144,8 @@ Definition arbitrarily_short edge_sources edge_targets
       target cost /\
     cost < bound.
 
-(** distance is the minimum distance from [source] to
-    target: some path has weight distance, none less. *)
+(** A walk from [source] to [target] attains [distance], and no such walk has
+    smaller weight. *)
 Definition min_distance edge_sources edge_targets
   edge_weights
     (source target : N) (distance : Z) : Prop :=
@@ -144,9 +159,9 @@ Definition min_distance edge_sources edge_targets
 Record valid_input (node_count source : N)
   (edge_sources edge_targets : list N)
     (edge_weights : list Z) (queries : list N) : Prop := {
-  (* 1 <= n <= 1000 *)
+  (* 1 <= n <= 10^3 *)
   vi_n : (1 <= node_count <= 1000)%N;
-  (* 0 <= m <= 5000, m lines "u v w" *)
+  (* 0 <= m <= 5 * 10^3, m lines "u v w" *)
   vi_m : (len edge_sources <= 5000)%N;
   vi_vs : len edge_targets = len edge_sources;
   vi_ws : len edge_weights = len edge_sources;
@@ -163,7 +178,7 @@ Record valid_input (node_count source : N)
   (* ... and the node number given on each query line *)
   vi_qs : Forall (fun target => (target < node_count)%N)
     queries;
-  (* -2000 <= w <= 2000 *)
+  (* -2 * 10^3 <= w <= 2 * 10^3 *)
   vi_w : Forall (fun weight => -2000 <= weight <= 2000)
     edge_weights;
 }.
@@ -196,6 +211,12 @@ Definition shortestpath3_spec
          source target
          distance).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O((V+1)(E+1)+q)$ steps, where $V$ is the node count, $E$ the edge count, and $q$ the number of queries. *)
+Definition shortestpath3_time_spec (c1 c2 n_node_count n_edge_sources n_queries steps : nat) : Prop :=
+  (steps <= c1 * ((n_node_count + 1) * (n_edge_sources + 1) + n_queries) + c2)%nat.
+
 (** ** Interface *)
 
 (** Answer shortest-path queries from one source in a directed weighted graph,
@@ -211,6 +232,30 @@ Program shortestpath3 :
   uint -> uint -> array uint -> array uint -> array sint ->
     array uint ->
   array (answer sint).
+
+(** [@example shortestpath3]
+    - Sample: 1
+    - Case: 1
+    - Input [node_count]: 5
+    - Input [source]: 0
+    - Input [edge_sources]: [0; 1; 2; 0]
+    - Input [edge_targets]: [1; 2; 1; 3]
+    - Input [edge_weights]: [999; -2; 1; 2]%Z
+    - Input [queries]: [1; 3; 4]
+    - Output [output]: [MinusInfinity; Dist 2; Impossible]%Z
+*)
+
+(** [@example shortestpath3]
+    - Sample: 1
+    - Case: 2
+    - Input [node_count]: 2
+    - Input [source]: 0
+    - Input [edge_sources]: [0]
+    - Input [edge_targets]: [1]
+    - Input [edge_weights]: [-100]%Z
+    - Input [queries]: [1]
+    - Output [output]: [Dist (-100)]%Z
+*)
 
 (** ** Bridge *)
 
@@ -243,6 +288,33 @@ Specification shortestpath3_correct :
     shortestpath3_spec node_count source edge_sources
       edge_targets
       edge_weights queries output.
+
+(** ** Complexity *)
+
+(** [@hide] [shortestpath3_cost] is the cost translation of [shortestpath3] (the judge
+    recomputes it and compares) ... *)
+Complexity shortestpath3_cost for shortestpath3.
+
+(** [@fold complexity bound] ... and runs in at most c1 * ((n + 1) * (m + 1) + q) + c2 steps of the cost model on a valid input, n the number of nodes, m of edges and q of queries (Bellman-Ford, then one breadth-first search, then the queries), for two constants
+    quantified before the inputs, on every valid input. [@requirement shortestpath3_time_spec] *)
+Specification shortestpath3_time : exists c1 c2 : nat,
+  forall (node_count source : N) (edge_sources edge_targets
+  : list N )
+  (edge_weights : list Z) (queries : list N)
+  (node_count_int source_int : uint)
+  (edge_sources_arr edge_targets_arr : array uint)
+  (edge_weights_arr : array sint ) (queries_arr :
+  array uint ),
+  valid_input node_count source edge_sources edge_targets
+  edge_weights
+  queries ->
+  repr node_count_int node_count -> repr source_int source
+  ->
+  repr edge_sources_arr edge_sources -> repr
+  edge_targets_arr edge_targets ->
+  repr edge_weights_arr edge_weights -> repr queries_arr
+  queries ->
+  shortestpath3_time_spec c1 c2 (size node_count_int) (size edge_sources_arr) (size queries_arr) (cost6 shortestpath3_cost node_count_int source_int edge_sources_arr edge_targets_arr edge_weights_arr queries_arr).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

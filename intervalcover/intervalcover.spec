@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Interval count: $1 \le n \le 20{,}000$; each left endpoint is no greater than its right
+    - Interval count: $1 \le n \le 2 \times 10^{4}$; each left endpoint is no greater than its right
       endpoint.
     - Input coordinates have at most six digits after the decimal point. *)
 
@@ -59,30 +59,30 @@ impossible
                     target_right], any one of them when several exist, or
                     None when no selection does ; the harness prints the
                     count then the indices, or "impossible"
+                    It runs in at most c1 * (n + 1) * (log2 n + 1) + c2
+                    steps of the cost model on a valid input, n the number
+                    of intervals (the sort; the sweep is linear), for two
+                    constants c1, c2.
 *)
 
 From Stdlib Require Import ZArith NArith List Uint63 PArray
   Floats Reals.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. A float input is read as the real it denotes
-    (repr_float), and the reals are compared exactly : this problem
-    does no arithmetic on them, so there is no rounding and no
-    tolerance. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The i-th endpoint, for i < len endpoints (0 outside, never relied
-    on). *)
+(** The entry at zero-based index [i] in [endpoints], or zero beyond the end. *)
 Definition get_list_R (endpoints : list R) (i : N) : R :=
   nth (N.to_nat i) endpoints 0%R.
 
-(** The k-th index listed in chosen, for k < len chosen (0 outside,
-    never relied on). *)
+(** The entry at zero-based index [k] in [chosen], or zero beyond the end. *)
 Definition get_list_N (chosen : list N) (k : N) : N :=
   nth (N.to_nat k) chosen 0.
 
@@ -92,12 +92,12 @@ Definition indices_valid (lefts : list R)
   forall k, k < len chosen ->
     get_list_N chosen k < len lefts.
 
-(** point lies in the closed interval [low, high]. *)
+(** [point] lies between [low] and [high], inclusive. *)
 Definition inside (low high point : R) : Prop :=
   (low <= point <= high)%R.
 
-(** Every point of [target_left, target_right] lies in one of the listed
-    intervals. *)
+(** Every point between [target_left] and [target_right], inclusive, belongs to at
+    least one listed interval. *)
 Definition covers (target_left target_right : R)
   (lefts rights : list R)
     (chosen : list N) : Prop :=
@@ -107,8 +107,8 @@ Definition covers (target_left target_right : R)
              (get_list_R rights (get_list_N chosen k))
                point.
 
-(** chosen is a selection of intervals covering [target_left,
-    target_right]. *)
+(** [chosen] lists valid interval indices whose intervals cover the entire closed
+    target interval. Repeated indices are not excluded by this predicate. *)
 Definition covering (target_left target_right : R)
   (lefts rights : list R)
     (chosen : list N) : Prop :=
@@ -121,7 +121,7 @@ Record valid_input (target_left target_right : R)
     : Prop := {
   (* A <= B (target_left, target_right) *)
   vi_target : (target_left <= target_right)%R;
-  (* 1 <= n <= 20 000 *)
+  (* 1 <= n <= 2 * 10^4 *)
   vi_length : 1 <= len lefts <= 2 * 10 ^ 4;
   (* one right endpoint per left endpoint *)
   vi_lengths : len rights = len lefts;
@@ -157,6 +157,12 @@ Definition cover_spec (target_left target_right : R)
         len chosen <= len chosen'
   end.
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(n \log(n+1))$ steps, where $n$ is the number of candidate intervals. *)
+Definition cover_time_spec (c1 c2 n_lefts steps : nat) : Prop :=
+  (steps <= c1 * ((n_lefts + 1) * (Nat.log2 (n_lefts) + 1)) + c2)%nat.
+
 (** ** Interface *)
 
 (** Find a smallest subset of given closed intervals whose union covers a target interval,
@@ -169,6 +175,46 @@ Definition cover_spec (target_left target_right : R)
 Program cover :
   float -> float -> array float -> array float ->
     option (array uint).
+
+(** [@example cover]
+    - Sample: 1
+    - Case: 1
+    - Input [target_left]: fval (-0.5)%float
+    - Input [target_right]: 1%R
+    - Input [lefts]: [fval (-0.9)%float; fval (-0.2)%float; fval (-0.7)%float]
+    - Input [rights]: [fval (-0.1)%float; 2; 1]%R
+    - Output [output]: Some [2]
+*)
+
+(** [@example cover]
+    - Sample: 1
+    - Case: 2
+    - Input [target_left]: 0%R
+    - Input [target_right]: 1%R
+    - Input [lefts]: [0; fval 0.25%float; fval 0.75%float]%R
+    - Input [rights]: [fval 0.25%float; fval 0.75%float; fval 0.999%float]
+    - Output [output]: None
+*)
+
+(** [@example cover]
+    - Sample: 1
+    - Case: 3
+    - Input [target_left]: 0%R
+    - Input [target_right]: 1%R
+    - Input [lefts]: [0; fval 0.25%float; fval 0.75%float]%R
+    - Input [rights]: [fval 0.25%float; fval 0.75%float; 1]%R
+    - Output [output]: Some [0; 1; 2]
+*)
+
+(** [@example cover]
+    - Sample: 1
+    - Case: 4
+    - Input [target_left]: 1%R
+    - Input [target_right]: 1%R
+    - Input [lefts]: [1]%R
+    - Input [rights]: [1]%R
+    - Output [output]: Some [0]
+*)
 
 (** ** Bridge *)
 
@@ -190,6 +236,25 @@ Specification cover_correct :
         output /\
       cover_spec target_left target_right lefts rights
         output.
+
+(** ** Complexity *)
+
+(** [@hide] [cover_cost] is the cost translation of [cover] (the judge
+    recomputes it and compares) ... *)
+Complexity cover_cost for cover.
+
+(** [@fold complexity bound] ... and runs in at most c1 * (n + 1) * (log2 n + 1) + c2 steps of the cost model on a valid input, n the number of intervals (the sort; the sweep is linear), for two constants
+    quantified before the inputs, on every valid input. [@requirement cover_time_spec] *)
+Specification cover_time : exists c1 c2 : nat,
+  forall (target_left target_right : R) (lefts rights : list
+  R)
+  (target_left_float target_right_float : float)
+  (lefts_arr rights_arr : array float),
+  valid_input target_left target_right lefts rights ->
+  repr target_left_float target_left ->
+  repr target_right_float target_right ->
+  repr lefts_arr lefts -> repr rights_arr rights ->
+  cover_time_spec c1 c2 (size lefts_arr) (cost4 cover_cost target_left_float target_right_float lefts_arr rights_arr).
 
 (** [@hide] The kernel primitives (int, array, float, string) and their
     axioms. *)

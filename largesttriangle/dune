@@ -6,9 +6,11 @@
  (rocq.theory
   (name Largesttriangle.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Largesttriangle)
  (modules largesttriangle_implem)
- (theories Largesttriangle.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Largesttriangle.spec Stdlib stdpp StdGalilei Flocq KattisLib)
+  (generate_project_file))

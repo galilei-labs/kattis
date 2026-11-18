@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules polymul2_extracted_marray)
- (theories Polymul2 Polymul2.spec Stdlib stdpp StdGalilei Flocq))
+ (theories Polymul2 Polymul2.spec Stdlib stdpp StdGalilei KattisLib Flocq))
 
 (library
  (name polymul2_extraction)

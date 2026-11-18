@@ -6,9 +6,11 @@
  (rocq.theory
   (name Dimensionalanalysis.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei)
+   (generate_project_file)))
 
 (rocq.theory
  (name Dimensionalanalysis)
  (modules dimensionalanalysis_implem)
- (theories Dimensionalanalysis.spec Stdlib stdpp StdGalilei))
+  (theories Dimensionalanalysis.spec Stdlib stdpp StdGalilei)
+  (generate_project_file))

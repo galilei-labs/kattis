@@ -1,13 +1,15 @@
 (* Implementation of relatives (relatives.spec): Euler's phi function by
-   trial division, as the steering asks.
+   trial division.
 
    Code.  [relatives n] returns 0 for n <= 1 and otherwise runs the loop
-   [outer p m res] from p = 2, m = n, res = n: while p * p <= m (and p < m,
+   [outer p m res] from p = 2, m = n, res = n: while p <= m / p (and p < m,
    which the first test implies on every input but keeps the termination
    measure m - p honest), if p divides m then res := res / p * (p - 1) and
    every factor p is divided out of m ([divout]); then p := p + 1.  When the
    loop stops, a remaining m > 1 is a prime and res := res / m * (m - 1).
    Pure Uint63 arithmetic, no array, no Z; every value stays below n.
+   The guard uses division instead of p * p so the square-root cutoff
+   cannot overflow.
 
    Termination: both loops recurse structurally on an erased
    [Acc (Zwf 0) _] proof (measure m for [divout], m - p for [outer]), as in
@@ -27,6 +29,7 @@
 From Relatives.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf Znumtheory Bool.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Unset Lia Cache.
@@ -268,6 +271,9 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
+Elpi complexity andb.
 
 Lemma divout_dec : forall p m : int,
   ((m mod p =? 0) && ((0 <? m) && (1 <? p))) = true ->
@@ -288,6 +294,8 @@ Fixpoint divout (p m : int) (H : Acc (Zwf 0) (φ m)) {struct H} : int :=
   | left Hc => divout p (m / p) (Acc_inv H (divout_dec p m Hc))
   | right _ => m
   end.
+Elpi complexity divout.
+Arguments divout_cost : simpl never.
 
 Lemma divout_eq : forall p m H,
   divout p m H =
@@ -313,7 +321,7 @@ Lemma divout_le : forall p m H, ((φ (divout p m H)) <= (φ m))%Z.
 Proof. intros p m H. exact (divout_le_aux _ p m H eq_refl). Qed.
 
 Lemma outer_dec : forall p m m' : int,
-  ((p * p <=? m) && (p <? m)) = true -> ((φ m') <= (φ m))%Z ->
+  ((p <=? m / p) && (p <? m)) = true -> ((φ m') <= (φ m))%Z ->
   Zwf 0 ((φ m') - (φ (p + 1))) ((φ m) - (φ p)).
 Proof.
   intros p m m' Hc Hm. apply andb_prop in Hc as [_ Hc]. rewrite ltb_spec in Hc.
@@ -324,7 +332,7 @@ Qed.
 
 (* trial division from p on, m what remains of n, res the running count *)
 Fixpoint outer (p m res : int) (H : Acc (Zwf 0) ((φ m) - (φ p))%Z) {struct H} : int :=
-  match bdec ((p * p <=? m) && (p <? m)) with
+  match bdec ((p <=? m / p) && (p <? m)) with
   | left Hc =>
       if m mod p =? 0 then
         let m' := divout p m (Zwf_well_founded 0 (φ m)) in
@@ -334,10 +342,12 @@ Fixpoint outer (p m res : int) (H : Acc (Zwf 0) ((φ m) - (φ p))%Z) {struct H} 
         outer (p + 1) m res (Acc_inv H (outer_dec p m m Hc (Z.le_refl _)))
   | right _ => if 1 <? m then res / m * (m - 1) else res
   end.
+Elpi complexity outer.
+Arguments outer_cost : simpl never.
 
 Lemma outer_eq : forall p m res H,
   outer p m res H =
-  match bdec ((p * p <=? m) && (p <? m)) with
+  match bdec ((p <=? m / p) && (p <? m)) with
   | left Hc =>
       if m mod p =? 0 then
         let m' := divout p m (Zwf_well_founded 0 (φ m)) in
@@ -352,6 +362,7 @@ Proof. intros. destruct H. reflexivity. Qed.
 Definition relatives_impl (n : uint) : uint :=
   if n <=? 1 then 0
   else outer 2 n n (Zwf_well_founded 0 ((φ n) - (φ 2))%Z).
+Elpi complexity relatives_impl.
 
 End Program.
 
@@ -430,7 +441,6 @@ Proof.
   destruct (bdec _) as [Hc | Hc].
   - pose proof Hc as Hc'. apply andb_prop in Hc' as [Hc1 Hc2].
     rewrite ltb_spec in Hc2. rewrite leb_spec in Hc1.
-    assert (Hpp : (φ (p * p))%uint63 = (φ p) * (φ p)) by (rewrite mul_spec; apply Z.mod_small, sq_small; lia).
     assert (Hp1 : (φ (p + 1))%uint63 = (φ p) + 1) by sia.
     destruct (Uint63.eqb (m mod p) 0) eqn:Emod.
     + (* p divides m: p is a prime factor *)
@@ -504,8 +514,9 @@ Proof.
     { assert (H2p : 2 * (φ p) <= (φ p) * (φ p)) by (apply Z.mul_le_mono_nonneg_r; lia).
       apply andb_false_iff in Hc as [Hc | Hc].
       - apply Bool.not_true_iff_false in Hc. rewrite leb_spec in Hc.
-        destruct (Z_lt_le_dec (φ p) (φ m)) as [Hlt | Hge]; [| lia].
-        rewrite mul_spec, Z.mod_small in Hc by (apply sq_small; lia). lia.
+        rewrite div_spec in Hc.
+        pose proof (Z.div_mod (φ m) (φ p) ltac:(lia)).
+        pose proof (Z.mod_pos_bound (φ m) (φ p) ltac:(lia)). nia.
       - apply Bool.not_true_iff_false in Hc. rewrite ltb_spec in Hc. lia. }
     destruct (1 <? m)%uint63 eqn:E1.
     + rewrite ltb_spec in E1. change (φ 1) with 1 in E1.
@@ -672,8 +683,226 @@ End Proofs.
 (* ------------------------------------------------------------------ *)
 
 Definition relatives : uint -> uint := relatives_impl.
+Elpi complexity relatives.
 
 Definition relatives_correct : forall (n : N) (x : uint),
   valid_input n -> repr x n ->
   exists c : N, repr (relatives x) c /\ relatives_spec n c
   := relatives_impl_correct.
+
+(* Cost proofs for main's loops, with the overflow-free trial guard.
+   The logarithmic potential pays for every successful division across all
+   divout calls; the square-root potential pays for increments of p. *)
+From Stdlib Require Import Arith ssreflect.
+Arguments Uint63.to_Z : simpl never.
+Arguments andb_cost : simpl never.
+Arguments divout : simpl never.
+Arguments outer : simpl never.
+Arguments Zwf_well_founded : simpl never.
+Open Scope uint63_scope.
+Open Scope nat_scope.
+
+Definition Nof (x : int) : nat := Z.to_nat (φ x).
+
+Lemma phi_Nof x : φ x = Z.of_nat (Nof x).
+Proof. unfold Nof. pose proof (to_Z_bounded x). lia. Qed.
+
+Lemma Nof_div a b : Nof (a / b)%uint63 = Nof a / Nof b.
+Proof.
+  unfold Nof. rewrite Uint63.div_spec.
+  pose proof (to_Z_bounded a). pose proof (to_Z_bounded b).
+  apply Z2Nat.inj_div; lia.
+Qed.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Lemma andb_time b bC c cC :
+  (cost (extract (andb_cost stepsCM b bC) c cC) <= 3)%nat.
+Proof. unfold andb_cost. destruct bC; destruct cC; cbn; lia. Qed.
+
+Ltac z0 f := repeat match goal with |- context [cost (f ?a ?b ?c)] => change (cost (f a b c)) with 0%nat end.
+Ltac z1 f := repeat match goal with |- context [cost (extract (f ?a ?b ?c) ?d ?e)] =>
+  change (cost (extract (f a b c) d e)) with 0%nat end.
+Ltac z2 f := repeat match goal with |- context [cost (extract (extract (f ?a ?b ?c) ?d ?e) ?d1 ?e1)] =>
+  change (cost (extract (extract (f a b c) d e) d1 e1)) with 0%nat end.
+
+Ltac bound_andb :=
+  z0 andb_cost;
+  repeat match goal with |- context [@cost ?T (extract (andb_cost stepsCM ?b ?bC) ?c ?cC)] =>
+    let H := fresh "Handb" in
+    have H := (andb_time b bC c cC : (@cost T (extract (andb_cost stepsCM b bC) c cC) <= _)%nat);
+    let C := fresh "test_cost" in
+    set (C := @cost T (extract (andb_cost stepsCM b bC) c cC)) in *; clearbody C end.
+
+Ltac bound_bdec :=
+  repeat match goal with |- context [@cost ?T (bdec_cost stepsCM ?b ?w)] =>
+    let H := fresh "Hbdec" in
+    have H := (bdec_time b w : (@cost T (bdec_cost stepsCM b w) <= _)%nat);
+    let C := fresh "branch_cost" in
+    set (C := @cost T (bdec_cost stepsCM b w)) in *; clearbody C end.
+
+Lemma divout_pi : forall k p m H H', Nof m <= k -> divout p m H = divout p m H'.
+Proof.
+  induction k as [|k IH]; intros p m H H' Hk; rewrite !divout_eq;
+    destruct (bdec _) as [E|E]; [|reflexivity| |reflexivity];
+    pose proof (divout_dec p m E) as [_ D]; rewrite !phi_Nof in D.
+  - lia.
+  - apply IH. lia.
+Qed.
+
+Lemma divout_div p m H H' :
+  ((m mod p =? 0) && ((0 <? m) && (1 <? p)))%uint63 = true ->
+  divout p m H = divout p (m / p)%uint63 H'.
+Proof.
+  intros E. rewrite divout_eq. destruct (bdec _) as [E'|E']; [|congruence].
+  apply (divout_pi _ _ _ _ _ (le_n _)).
+Qed.
+
+Lemma divout_nodiv p m H :
+  ((m mod p =? 0) && ((0 <? m) && (1 <? p)))%uint63 = false -> divout p m H = m.
+Proof. intros E. rewrite divout_eq. destruct (bdec _) as [E'|E']; [congruence|reflexivity]. Qed.
+
+Lemma div_facts p m :
+  ((m mod p =? 0) && ((0 <? m) && (1 <? p)))%uint63 = true ->
+  (Nof (m / p) < Nof m /\ Nat.log2 (Nof (m / p)) + 1 <= Nat.log2 (Nof m))%nat.
+Proof.
+  intros E. apply andb_prop in E as [E E1]. apply andb_prop in E1 as [Hm Hp].
+  apply Uint63.ltb_spec in Hm, Hp. change (φ 0) with 0%Z in Hm.
+  change (φ 1) with 1%Z in Hp. apply Uint63.eqb_spec in E.
+  assert (He : (φ m mod φ p = 0)%Z) by (rewrite <- Uint63.mod_spec, E; reflexivity).
+  pose proof (Z.div_mod (φ m) (φ p) ltac:(lia)).
+  pose proof (Z.div_pos (φ m) (φ p) ltac:(lia) ltac:(lia)).
+  assert (Hq : (0 < φ (m / p)%uint63)%Z) by (rewrite Uint63.div_spec; nia).
+  rewrite !phi_Nof in Hp, Hm, Hq. rewrite Nof_div in Hq |- *.
+  pose proof (Nat.Div0.mul_div_le (Nof m) (Nof p)) as Hmul.
+  revert Hq Hmul. generalize (Nof m / Nof p)%nat. intros q Hq Hmul.
+  assert (L : (2 * q <= Nof m)%nat) by nia. split; [lia|].
+  assert (L2 : Nat.log2 (2 * q) = S (Nat.log2 q)) by (apply Nat.log2_double; lia).
+  pose proof (Nat.log2_le_mono _ _ L). lia.
+Qed.
+
+Lemma divout_time p pC m mC H HC :
+  (cost (extract (extract (divout_cost stepsCM p pC) m mC) H HC)
+     + 100 * Nat.log2 (Nof (divout p m H)) <= 100 * Nat.log2 (Nof m) + 100)%nat.
+Proof.
+  unfold divout_cost. cbn.
+  match goal with |- context [@cost ?T (?G p pC m mC H HC)] =>
+    assert (HG : forall k m mC H HC, (Nof m <= k)%nat -> forall Lm Lr,
+       Lm = Nat.log2 (Nof m) -> Lr = Nat.log2 (Nof (divout p m H)) ->
+       (cost (G p pC m mC H HC) + 100 * Lr <= 100 * Lm + 100)%nat) end.
+  { induction k as [|k IH]; intros m' mC' [g] HC' Hk Lm Lr HLm HLr;
+      cost_simpl; bound_bdec; bound_andb;
+      pose proof (bdec_time ((m' mod p =? 0) && ((0 <? m') && (1 <? p)))%uint63
+        (bool_w _)) as HB;
+      cost_destruct (bdec ((m' mod p =? 0) && ((0 <? m') && (1 <? p)))%uint63); cost_simpl.
+    - exfalso. pose proof (divout_dec p m' e) as [_ D]. rewrite !phi_Nof in D. lia.
+    - assert (Lr = Lm) by (rewrite HLr HLm; do 2 f_equal; apply divout_nodiv; exact e). lia.
+    - destruct (div_facts p m' e) as [D1 D2].
+      assert (Hk' : (Nof (m' / p) <= k)%nat) by lia.
+      match goal with |- context [@cost ?T (?G' p pC (m' / p)%uint63 ?w ?h ?hc)] =>
+        assert (HLr' : Lr = Nat.log2 (Nof (divout p (m' / p)%uint63 h)))
+          by (rewrite HLr; do 2 f_equal; apply divout_div; exact e);
+        have HI := (IH (m' / p)%uint63 w h hc Hk' _ Lr eq_refl HLr'
+                    : (@cost T (G' p pC (m' / p)%uint63 w h hc) + _ <= _)%nat) end.
+      lia.
+    - assert (Lr = Lm) by (rewrite HLr HLm; do 2 f_equal; apply divout_nodiv; exact e). lia. }
+  match goal with |- context [@cost ?T (?G p pC m mC H HC)] =>
+    exact (HG _ m mC H HC (le_n _) _ _ eq_refl eq_refl
+           : (@cost T (G p pC m mC H HC) + _ <= _)%nat) end.
+Qed.
+
+Lemma cont_sq (p m : int) : (2 <= φ p)%Z ->
+  ((p <=? m / p) && (p <? m))%uint63 = true -> (Nof p * Nof p <= Nof m)%nat.
+Proof.
+  intros Hp E. apply andb_prop in E as [E _]. apply Uint63.leb_spec in E.
+  rewrite Uint63.div_spec in E. pose proof (to_Z_bounded m) as Hm.
+  pose proof (Z.mul_div_le (φ m) (φ p) ltac:(lia)) as Hdiv.
+  rewrite !phi_Nof in Hp, E, Hm, Hdiv. nia.
+Qed.
+
+Lemma succ_p (p m : int) : ((p <=? m / p) && (p <? m))%uint63 = true ->
+  Nof (p + 1)%uint63 = S (Nof p).
+Proof.
+  intros E. apply andb_prop in E as [_ E]. apply Uint63.ltb_spec in E.
+  pose proof (to_Z_bounded p). pose proof (to_Z_bounded m).
+  unfold Nof. rewrite Uint63.add_spec. change (φ 1) with 1%Z.
+  rewrite Z.mod_small; lia.
+Qed.
+
+Ltac gen_divout :=
+  try match goal with |- context [@cost ?T (?G ?p ?pC ?m ?mC ?h ?hC)] =>
+    change (@cost T (G p pC m mC h hC)) with
+      (cost (extract (extract (divout_cost stepsCM p pC) m mC) h hC)) end;
+  z0 divout_cost; z1 divout_cost;
+  repeat match goal with |- context [@cost ?T (extract (extract (divout_cost stepsCM ?p ?pC) ?m ?mC) ?h ?hC)] =>
+    let H := fresh "Hdivout" in
+    have H := (divout_time p pC m mC h hC : (@cost T (extract (extract (divout_cost stepsCM p pC) m mC) h hC) + _ <= _)%nat);
+    let C := fresh "strip_cost" in
+    set (C := @cost T (extract (extract (divout_cost stepsCM p pC) m mC) h hC)) in *; clearbody C end.
+
+Lemma outer_time p pC m mC res resC H HC : (2 <= φ p)%Z ->
+  (cost (extract (extract (extract (outer_cost stepsCM p pC) m mC) res resC) H HC)
+   <= 500 * (Nat.sqrt (Nof m) + 1 - Nof p) + 100 * Nat.log2 (Nof m) + 100)%nat.
+Proof.
+  unfold outer_cost. cbn -[divout_cost].
+  match goal with |- context [@cost ?T (?G p pC m mC res resC H HC)] =>
+    assert (HG : forall k p pC m mC res resC H HC, (Z.to_nat (φ m - φ p)%Z <= k)%nat ->
+       (2 <= φ p)%Z -> forall Sq Lm D, Sq = Nat.sqrt (Nof m) -> Lm = Nat.log2 (Nof m) -> D = Nof p ->
+       (cost (G p pC m mC res resC H HC) <= 500 * (Sq + 1 - D) + 100 * Lm + 100)%nat) end.
+  { induction k as [|k IH]; intros p' pC' m' mC' res' resC' [g] HC' Hk Hp Sq Lm D HSq HLm HD;
+      cost_simpl; bound_bdec; bound_andb;
+      pose proof (bdec_time ((p' <=? m' / p') && (p' <? m'))%uint63 (bool_w _)) as HB;
+      cost_destruct (bdec ((p' <=? m' / p') && (p' <? m'))%uint63); cost_simpl.
+    - exfalso. pose proof e as E. apply andb_prop in E as [_ E]. apply Uint63.ltb_spec in E. lia.
+    - cost_destruct (1 <? m')%uint63; cost_simpl; lia.
+    - pose proof (cont_sq p' m' Hp e) as Csq.
+      pose proof (Nat.sqrt_le_mono _ _ Csq) as Csq'. rewrite Nat.sqrt_square in Csq'.
+      pose proof (succ_p p' m' e) as Sd.
+      cost_destruct (m' mod p' =? 0)%uint63; cost_simpl.
+      + gen_divout.
+        set (r := divout p' m' (Zwf_well_founded 0 (φ m'))) in *.
+        pose proof (divout_le p' m' (Zwf_well_founded 0 (φ m'))) as Rle. fold r in Rle.
+        pose proof (outer_dec p' m' r e Rle) as [Z1 Z2].
+        assert (Hk' : (Z.to_nat (φ r - φ (p' + 1)%uint63)%Z <= k)%nat) by lia.
+        assert (Hp' : (2 <= φ (p' + 1)%uint63)%Z) by (rewrite phi_Nof; rewrite Sd; rewrite phi_Nof in Hp; lia).
+        assert (Sr : (Nat.sqrt (Nof r) <= Nat.sqrt (Nof m'))%nat).
+        { apply Nat.sqrt_le_mono. rewrite !phi_Nof in Rle. lia. }
+        match goal with |- context [@cost ?T (?G' (p' + 1)%uint63 ?w r ?mmC ?rr ?rrC ?h ?hC)] =>
+          have HI := (IH (p' + 1)%uint63 w r mmC rr rrC h hC Hk' Hp' _ _ _ eq_refl eq_refl eq_refl
+                      : (@cost T (G' (p' + 1)%uint63 w r mmC rr rrC h hC) <= _)%nat) end.
+        rewrite Sd in HI. lia.
+      + pose proof (outer_dec p' m' m' e (Z.le_refl _)) as [Z1 Z2].
+        assert (Hk' : (Z.to_nat (φ m' - φ (p' + 1)%uint63)%Z <= k)%nat) by lia.
+        assert (Hp' : (2 <= φ (p' + 1)%uint63)%Z) by (rewrite phi_Nof; rewrite Sd; rewrite phi_Nof in Hp; lia).
+        match goal with |- context [@cost ?T (?G' (p' + 1)%uint63 ?w m' ?mmC ?rr ?rrC ?h ?hC)] =>
+          have HI := (IH (p' + 1)%uint63 w m' mmC rr rrC h hC Hk' Hp' _ _ _ eq_refl eq_refl eq_refl
+                      : (@cost T (G' (p' + 1)%uint63 w m' mmC rr rrC h hC) <= _)%nat) end.
+        rewrite Sd in HI. lia.
+    - cost_destruct (1 <? m')%uint63; cost_simpl; lia. }
+  intro Hp.
+  match goal with |- context [@cost ?T (?G p pC m mC res resC H HC)] =>
+    exact (HG _ p pC m mC res resC H HC (le_n _) Hp _ _ _ eq_refl eq_refl eq_refl
+      : (@cost T (G p pC m mC res resC H HC) <= _)%nat) end.
+Qed.
+
+Theorem relatives_time : exists c1 c2 : nat, forall number_int : uint,
+  (cost1 relatives_cost number_int <= c1 * (Nat.sqrt (size number_int) + Nat.log2 (size number_int) + 1) + c2)%nat.
+Proof.
+  exists 500%nat, 500%nat. intros x.
+  remember (Nat.sqrt (size x)) as Sq eqn:ESq. remember (Nat.log2 (size x)) as L eqn:EL.
+  unfold cost1, relatives_cost, relatives_impl_cost. cost_simpl.
+  cost_destruct (x <=? 1)%uint63; cost_simpl; [lia|].
+  match goal with |- context [@cost ?T (?G ?p ?pC ?m ?mC ?r ?rC ?h ?hC)] =>
+    change (@cost T (G p pC m mC r rC h hC)) with
+      (cost (extract (extract (extract (outer_cost stepsCM p pC) m mC) r rC) h hC)) end.
+  z0 outer_cost; z1 outer_cost; z2 outer_cost.
+  match goal with |- context [@cost ?T (extract (extract (extract (outer_cost stepsCM 2%uint63 ?pC) x ?mC) x ?rC) ?h ?hC)] =>
+    have HI := (outer_time 2%uint63 pC x mC x rC h hC ltac:(change (φ 2) with 2%Z; lia)
+      : (@cost T (extract (extract (extract (outer_cost stepsCM 2%uint63 pC) x mC) x rC) h hC) <= _)%nat) end.
+  change (Nof 2) with 2%nat in HI. change (Nof x) with (size x) in HI.
+  rewrite <- ESq, <- EL in HI. lia.
+Qed.
+
+Print Assumptions relatives_correct.
+Print Assumptions relatives_time.

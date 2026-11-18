@@ -21,4 +21,4 @@ archive = "loopycabdrivers_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/loopycabdrivers.ml"
-Rust = "extraction/rust/submit/loopycabdrivers.rs"
+Rust = "extraction/rust/snapshots/loopycabdrivers_extracted.rs.interface.json"

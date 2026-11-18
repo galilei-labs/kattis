@@ -6,9 +6,11 @@
  (rocq.theory
   (name Cardhand.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei)))
+   (theories Stdlib stdpp StdGalilei KattisLib)
+   (generate_project_file)))
 
 (rocq.theory
  (name Cardhand)
  (modules cardhand_implem)
- (theories Cardhand.spec Stdlib stdpp StdGalilei))
+  (theories Cardhand.spec Stdlib stdpp StdGalilei KattisLib)
+  (generate_project_file))

@@ -1104,7 +1104,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -1125,21 +1124,6 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint::IntegerTag>; };
 
 pub type uint = u64;
-
-// Rocq: Numbersetshard.numbersetshard_implem.numbersets
-// Variant: uncurried
-pub fn numbersets() -> Rc<dyn Fn(u64, u64, u64) -> u64> {
-  let v0: fn(u64, u64, u64) -> u64 = numbersets_impl;
-  let v1: Rc<dyn Fn(u64, u64, u64) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Numbersetshard.numbersetshard_implem.numbersets
-pub fn numbersets_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = numbersets_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> = Rc::new(v0);
-  v1
-}
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
 // Variant: uncurried
@@ -1167,13 +1151,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Numbersetshard.numbersetshard_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -1204,13 +1185,13 @@ pub fn mark_1(c: Rc<Array<bool>>, i: u64, cnt: u64, t: u64, j: u64) -> Rc<Array<
 // Rocq: Numbersetshard.numbersetshard_implem.mark (local: mark)
 // Variant: uncurried, lifted
 pub fn mark(c: Rc<Array<bool>>, i: u64, cnt: u64, t: u64, j: u64, _H: ()) -> Rc<Array<bool>> {
-  let v13 = ltb(t, cnt);
-  match bdec(v13) {
+  let tmp = ltb(t, cnt);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = rocq_array::set::<bool>(c, j, true);
-      let v33 = add(t, 1u64);
-      let v39 = add(j, i);
-      mark(v25, i, cnt, v33, v39, ())
+      let tmp_1 = rocq_array::set::<bool>(c, j, true);
+      let tmp_2 = add(t, 1u64);
+      let tmp_3 = add(j, i);
+      mark(tmp_1, i, cnt, tmp_2, tmp_3, ())
     },
     sumbool::right => {
       c
@@ -1235,28 +1216,22 @@ pub fn sieve_1(c: Rc<Array<bool>>, w: u64, n: u64, i: u64) -> Rc<Array<bool>> {
 // Rocq: Numbersetshard.numbersetshard_implem.sieve (local: sieve)
 // Variant: uncurried, lifted
 pub fn sieve(c: Rc<Array<bool>>, w: u64, n: u64, i: u64, _H: ()) -> Rc<Array<bool>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = mul(i, i);
-      match leb(v23, w) {
-        true => {
-          let v29 = &c;
-          let v31 = i;
-          let v32 = Clone::clone(&(v29)[v31]);
-          let c_ = match v32 {
-            true => {
-              c
-            },
-            false => {
-              mark_from(c, w, i)
-            },
-          };
-          sieve(c_, w, n, add(i, 1u64), ())
-        },
-        false => {
+      let tmp_1 = mul(i, i);
+      if leb(tmp_1, w) {
+        let c_ref = &c;
+        let tmp_2 = i;
+        let tmp_3 = Clone::clone(&(c_ref)[tmp_2]);
+        let c_ = if tmp_3 {
           c
-        },
+        } else {
+          mark_from(c, w, i)
+        };
+        sieve(c_, w, n, add(i, 1u64), ())
+      } else {
+        c
       }
     },
     sumbool::right => {
@@ -1274,11 +1249,11 @@ pub fn iota_1(par: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Array<u64>> {
 // Rocq: Numbersetshard.numbersetshard_implem.iota (local: iota)
 // Variant: uncurried, lifted
 pub fn iota(par: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let v11 = ltb(i, n);
-  match bdec(v11) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v21 = rocq_array::set::<u64>(par, i, i);
-      iota(v21, n, add(i, 1u64), ())
+      let tmp_1 = rocq_array::set::<u64>(par, i, i);
+      iota(tmp_1, n, add(i, 1u64), ())
     },
     sumbool::right => {
       par
@@ -1295,8 +1270,8 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 // Rocq: Numbersetshard.numbersetshard_implem.first_off
 // Variant: uncurried
 pub fn first_off(a: u64, q: u64) -> u64 {
-  let v9 = mod_(a, q);
-  mod_(sub(q, v9), q)
+  let tmp = mod_(a, q);
+  mod_(sub(q, tmp), q)
 }
 
 // Rocq: Numbersetshard.numbersetshard_implem.find
@@ -1308,81 +1283,69 @@ pub fn find_1(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, x: u64) -> (u64, Rc<Array
 // Rocq: Numbersetshard.numbersetshard_implem.find (local: find)
 // Variant: uncurried, lifted
 pub fn find(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, x: u64, _H: ()) -> (u64, Rc<Array<u64>>) {
-  let v4 = &par;
-  let v6 = x;
-  let y = Clone::clone(&(v4)[v6]);
-  match eqb(y, x) {
-    true => {
-      std::mem::drop(rk);
-      (x, par)
-    },
-    false => {
-      let v23 = &par;
-      let v25 = y;
-      let z = Clone::clone(&(v23)[v25]);
-      let v29 = &rk;
-      let v31 = x;
-      let v32 = Clone::clone(&(v29)[v31]);
-      let v33 = &rk;
-      let v35 = z;
-      let v36 = Clone::clone(&(v33)[v35]);
-      let v42 = ltb(v32, v36);
-      match bdec(v42) {
-        sumbool::left => {
-          let v52 = rocq_array::set::<u64>(par, x, z);
-          find(v52, rk, z, ())
-        },
-        sumbool::right => {
-          std::mem::drop(rk);
-          (x, par)
-        },
-      }
-    },
+  let par_ref = &par;
+  let tmp = x;
+  let y = Clone::clone(&(par_ref)[tmp]);
+  if eqb(y, x) {
+    std::mem::drop(rk);
+    (x, par)
+  } else {
+    let par_ref_1 = &par;
+    let tmp_1 = y;
+    let z = Clone::clone(&(par_ref_1)[tmp_1]);
+    let rk_ref = &rk;
+    let tmp_2 = x;
+    let tmp_3 = Clone::clone(&(rk_ref)[tmp_2]);
+    let rk_ref_1 = &rk;
+    let tmp_4 = z;
+    let tmp_5 = Clone::clone(&(rk_ref_1)[tmp_4]);
+    let tmp_6 = ltb(tmp_3, tmp_5);
+    match bdec(tmp_6) {
+      sumbool::left => {
+        let tmp_7 = rocq_array::set::<u64>(par, x, z);
+        find(tmp_7, rk, z, ())
+      },
+      sumbool::right => {
+        std::mem::drop(rk);
+        (x, par)
+      },
+    }
   }
 }
 
 // Rocq: Numbersetshard.numbersetshard_implem.union
 // Variant: uncurried
 pub fn union(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, u: u64, v: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v9 = Rc::clone(&rk);
-  let v12 = find_1(par, v9, u);
-  match v12 {
+  let rk_clone = Rc::clone(&rk);
+  let tmp = find_1(par, rk_clone, u);
+  match tmp {
     (v14, v16) => {
-      let v23 = Rc::clone(&rk);
-      let v26 = find_1(v16, v23, v);
-      match v26 {
+      let rk_clone_1 = Rc::clone(&rk);
+      let tmp_1 = find_1(v16, rk_clone_1, v);
+      match tmp_1 {
         (v28, v30) => {
-          match eqb(v14, v28) {
-            true => {
-              (v30, rk)
-            },
-            false => {
-              let v47 = &rk;
-              let v49 = v14;
-              let ku = Clone::clone(&(v47)[v49]);
-              let v51 = &rk;
-              let v53 = v28;
-              let kv = Clone::clone(&(v51)[v53]);
-              match ltb(ku, kv) {
-                true => {
-                  let v69 = rocq_array::set::<u64>(v30, v14, v28);
-                  (v69, rk)
-                },
-                false => {
-                  match ltb(kv, ku) {
-                    true => {
-                      let v91 = rocq_array::set::<u64>(v30, v28, v14);
-                      (v91, rk)
-                    },
-                    false => {
-                      let v105 = rocq_array::set::<u64>(v30, v14, v28);
-                      let v120 = rocq_array::set::<u64>(rk, v28, add(kv, 1u64));
-                      (v105, v120)
-                    },
-                  }
-                },
+          if eqb(v14, v28) {
+            (v30, rk)
+          } else {
+            let rk_ref = &rk;
+            let tmp_2 = v14;
+            let ku = Clone::clone(&(rk_ref)[tmp_2]);
+            let rk_ref_1 = &rk;
+            let tmp_3 = v28;
+            let kv = Clone::clone(&(rk_ref_1)[tmp_3]);
+            if ltb(ku, kv) {
+              let tmp_4 = rocq_array::set::<u64>(v30, v14, v28);
+              (tmp_4, rk)
+            } else {
+              if ltb(kv, ku) {
+                let tmp_5 = rocq_array::set::<u64>(v30, v28, v14);
+                (tmp_5, rk)
+              } else {
+                let tmp_6 = rocq_array::set::<u64>(v30, v14, v28);
+                let tmp_7 = rocq_array::set::<u64>(rk, v28, add(kv, 1u64));
+                (tmp_6, tmp_7)
               }
-            },
+            }
           }
         },
       }
@@ -1399,16 +1362,16 @@ pub fn ulink_1(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, q: u64, cnt: u64, t: u64
 // Rocq: Numbersetshard.numbersetshard_implem.ulink (local: ulink)
 // Variant: uncurried, lifted
 pub fn ulink(par: Rc<Array<u64>>, rk: Rc<Array<u64>>, q: u64, cnt: u64, t: u64, o: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v14 = ltb(t, cnt);
-  match bdec(v14) {
+  let tmp = ltb(t, cnt);
+  match bdec(tmp) {
     sumbool::left => {
-      let v24 = add(o, q);
-      let v33 = union(par, rk, o, v24);
-      match v33 {
+      let tmp_1 = add(o, q);
+      let tmp_2 = union(par, rk, o, tmp_1);
+      match tmp_2 {
         (v35, v37) => {
-          let v46 = add(t, 1u64);
-          let v52 = add(o, q);
-          ulink(v35, v37, q, cnt, v46, v52, ())
+          let tmp_3 = add(t, 1u64);
+          let tmp_4 = add(o, q);
+          ulink(v35, v37, q, cnt, tmp_3, tmp_4, ())
         },
       }
     },
@@ -1427,23 +1390,20 @@ pub fn uprimes_1(c: Rc<Array<bool>>, a: u64, w: u64, n: u64, par: Rc<Array<u64>>
 // Rocq: Numbersetshard.numbersetshard_implem.uprimes (local: uprimes)
 // Variant: uncurried, lifted
 pub fn uprimes(c: Rc<Array<bool>>, a: u64, w: u64, n: u64, par: Rc<Array<u64>>, rk: Rc<Array<u64>>, q: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(q, n);
-  match bdec(v15) {
+  let tmp = ltb(q, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v19 = &c;
-      let v21 = q;
-      let v22 = Clone::clone(&(v19)[v21]);
-      let v23 = match v22 {
-        true => {
-          (par, rk)
-        },
-        false => {
-          let o0 = first_off(a, q);
-          let v50 = div(sub(w, o0), q);
-          ulink_1(par, rk, q, v50, 0u64, o0)
-        },
+      let c_ref = &c;
+      let tmp_1 = q;
+      let tmp_2 = Clone::clone(&(c_ref)[tmp_1]);
+      let tmp_3 = if tmp_2 {
+        (par, rk)
+      } else {
+        let o0 = first_off(a, q);
+        let tmp_4 = div(sub(w, o0), q);
+        ulink_1(par, rk, q, tmp_4, 0u64, o0)
       };
-      match v23 {
+      match tmp_3 {
         (v70, v72) => {
           uprimes(c, a, w, n, v70, v72, add(q, 1u64), ())
         },
@@ -1465,22 +1425,19 @@ pub fn count_1(par: Rc<Array<u64>>, n: u64, o: u64, acc: u64) -> u64 {
 // Rocq: Numbersetshard.numbersetshard_implem.count (local: count)
 // Variant: uncurried, lifted
 pub fn count(par: Rc<Array<u64>>, n: u64, o: u64, acc: u64, _H: ()) -> u64 {
-  let v12 = ltb(o, n);
-  match bdec(v12) {
+  let tmp = ltb(o, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(o, 1u64);
-      let v25 = &par;
-      let v27 = o;
-      let v29 = Clone::clone(&(v25)[v27]);
-      let v34 = match eqb(v29, o) {
-        true => {
-          add(acc, 1u64)
-        },
-        false => {
-          acc
-        },
+      let tmp_1 = add(o, 1u64);
+      let par_ref = &par;
+      let tmp_2 = o;
+      let tmp_3 = Clone::clone(&(par_ref)[tmp_2]);
+      let tmp_4 = if eqb(tmp_3, o) {
+        add(acc, 1u64)
+      } else {
+        acc
       };
-      count(par, n, v23, v34, ())
+      count(par, n, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(par);
@@ -1494,39 +1451,18 @@ pub fn count(par: Rc<Array<u64>>, n: u64, o: u64, acc: u64, _H: ()) -> u64 {
 pub fn numbersets_impl(x: u64, y: u64, z: u64) -> u64 {
   let w = sub(y, x);
   let n = add(w, 1u64);
-  let v24 = rocq_array::make::<bool>(n, false);
-  let c = sieve_1(v24, w, n, 2u64);
-  let v43 = rocq_array::make::<u64>(n, 0u64);
-  let par0 = iota_1(v43, n, 0u64);
+  let tmp = rocq_array::make::<bool>(n, false);
+  let c = sieve_1(tmp, w, n, 2u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let par0 = iota_1(tmp_1, n, 0u64);
   let rk0 = rocq_array::make::<u64>(n, 0u64);
-  let v75 = uprimes_1(c, x, w, n, par0, rk0, z);
-  match v75 {
+  let tmp_2 = uprimes_1(c, x, w, n, par0, rk0, z);
+  match tmp_2 {
     (v77, v79) => {
       std::mem::drop(v79);
       count_1(v77, n, 0u64, 0u64)
     },
   }
-}
-
-// Rocq: Numbersetshard.numbersetshard_implem.numbersets_impl
-pub fn numbersets_impl_curried(x: u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> {
-  let v3 = {
-    move |y: u64| -> Rc<dyn Fn(u64) -> u64> {
-      let x = &x;
-      let v8 = Clone::clone(x);
-      let v11 = {
-        move |z: u64| -> u64 {
-          let v19 = Clone::clone(&v8);
-          let v21 = Clone::clone(&y);
-          numbersets_impl(v19, v21, z)
-        }
-      };
-      let v27: Rc<dyn Fn(u64) -> u64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -1678,12 +1614,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(u64, u64, u64) -> u64> {
-  let v0: Rc<dyn Fn(u64, u64, u64) -> u64> = __rocq_global_646.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_646: Rc<dyn Fn(u64, u64, u64) -> u64> = numbersets(); }
-std::thread_local! { static __rocq_global_649: Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> Rc<dyn Fn(u64) -> u64>>> = numbersets_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1760,7 +1690,7 @@ use kattis_io::*;
 
 fn solve(input: &str) -> String {
     let mut t = Tokens::new(input); let cases = t.uint(); let mut out = String::new();
-    for i in 1..=cases { out.push_str(&format!("Case #{i}: {}\n", run()(t.uint(), t.uint(), t.uint()))); }
+    for i in 1..=cases { out.push_str(&format!("Case #{i}: {}\n", numbersets_impl(t.uint(), t.uint(), t.uint()))); }
     out
 }
 fn main() { entry(solve); }

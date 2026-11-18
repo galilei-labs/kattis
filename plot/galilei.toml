@@ -21,4 +21,4 @@ archive = "plot_extractions.zip"
 
 [extraction.interface]
 OCaml = "extraction/ocaml/submit/plot.ml"
-Rust = "extraction/rust/submit/plot.rs"
+Rust = "extraction/rust/snapshots/plot_extracted.rs.interface.json"

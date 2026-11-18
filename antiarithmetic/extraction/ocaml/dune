@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules antiarithmetic_extracted_marray)
- (theories Antiarithmetic Antiarithmetic.spec Stdlib stdpp StdGalilei))
+ (theories Antiarithmetic Antiarithmetic.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name antiarithmetic_extraction)

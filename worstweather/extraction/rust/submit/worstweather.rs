@@ -653,7 +653,6 @@ pub fn cat(left: &Rc<RocqString>, right: &Rc<RocqString>) -> Rc<RocqString> {
 
 }
 
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -678,21 +677,6 @@ pub type sint = u64;
 
 pub type uint = u64;
 
-// Rocq: Worstweather.worstweather_implem.worstweather
-// Variant: uncurried
-pub fn worstweather() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>>> {
-  let v0: fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>> = worstweather_impl;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>>> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Worstweather.worstweather_implem.worstweather
-pub fn worstweather_curried() -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>>> {
-  let v0: fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>> = worstweather_impl_curried;
-  let v1: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
 // Variant: uncurried
 pub fn add(v0: u64, v1: u64) -> u64 {
@@ -713,13 +697,10 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Worstweather.worstweather_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
@@ -738,8 +719,8 @@ pub fn lg_loop_1(x: u64, k: u64) -> u64 {
 // Rocq: Worstweather.worstweather_implem.lg_loop (local: lg_loop)
 // Variant: uncurried, lifted
 pub fn lg_loop(x: u64, k: u64, _H: ()) -> u64 {
-  let v12 = ltb(1u64, x);
-  match bdec(v12) {
+  let tmp = ltb(1u64, x);
+  match bdec(tmp) {
     sumbool::left => {
       lg_loop(div(x, 2u64), add(k, 1u64), ())
     },
@@ -757,13 +738,10 @@ pub fn lg(x: u64) -> u64 {
 // Rocq: Worstweather.worstweather_implem.imax
 // Variant: uncurried
 pub fn imax(a: u64, b: u64) -> u64 {
-  match ltb(a, b) {
-    true => {
-      b
-    },
-    false => {
-      a
-    },
+  if ltb(a, b) {
+    b
+  } else {
+    a
   }
 }
 
@@ -776,20 +754,16 @@ pub fn row_loop_1(base: u64, prev: u64, half: u64, lim: u64, i: u64, T: Rc<Array
 // Rocq: Worstweather.worstweather_implem.row_loop (local: row_loop)
 // Variant: uncurried, lifted
 pub fn row_loop(base: u64, prev: u64, half: u64, lim: u64, i: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v14 = ltb(i, lim);
-  match bdec(v14) {
+  let tmp = ltb(i, lim);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = add(i, 1u64);
-      let v31 = add(base, i);
-      let v38 = add(prev, i);
-      let v39 = &T;
-      let v42 = rocq_array::get::<u64>(&v39, v38);
-      let v50 = add(prev, i);
-      let v54 = add(v50, half);
-      let v55 = &T;
-      let v58 = rocq_array::get::<u64>(&v55, v54);
-      let v70 = rocq_array::set::<u64>(T, v31, imax(v42, v58));
-      row_loop(base, prev, half, lim, v25, v70, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = add(base, i);
+      let tmp_3 = rocq_array::get::<u64>(&T, add(prev, i));
+      let tmp_4 = add(prev, i);
+      let tmp_5 = rocq_array::get::<u64>(&T, add(tmp_4, half));
+      let tmp_6 = rocq_array::set::<u64>(T, tmp_2, imax(tmp_3, tmp_5));
+      row_loop(base, prev, half, lim, tmp_1, tmp_6, ())
     },
     sumbool::right => {
       T
@@ -824,12 +798,12 @@ pub fn rows_loop_1(n: u64, L: u64, k: u64, T: Rc<Array<u64>>) -> Rc<Array<u64>> 
 // Rocq: Worstweather.worstweather_implem.rows_loop (local: rows_loop)
 // Variant: uncurried, lifted
 pub fn rows_loop(n: u64, L: u64, k: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(k, L);
-  match bdec(v12) {
+  let tmp = ltb(k, L);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(k, 1u64);
-      let v97 = row_loop_1(mul(k, n), mul(sub(k, 1u64), n), lsl(1u64, sub(k, 1u64)), add(sub(n, lsl(1u64, k)), 1u64), 0u64, T);
-      rows_loop(n, L, v23, v97, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = row_loop_1(mul(k, n), mul(sub(k, 1u64), n), lsl(1u64, sub(k, 1u64)), add(sub(n, lsl(1u64, k)), 1u64), 0u64, T);
+      rows_loop(n, L, tmp_1, tmp_2, ())
     },
     sumbool::right => {
       T
@@ -846,14 +820,13 @@ pub fn copy_loop_1(rs: Rc<Array<u64>>, n: u64, i: u64, T: Rc<Array<u64>>) -> Rc<
 // Rocq: Worstweather.worstweather_implem.copy_loop (local: copy_loop)
 // Variant: uncurried, lifted
 pub fn copy_loop(rs: Rc<Array<u64>>, n: u64, i: u64, T: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let v12 = ltb(i, n);
-  match bdec(v12) {
+  let tmp = ltb(i, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = add(i, 1u64);
-      let v24 = &rs;
-      let v27 = rocq_array::get::<u64>(&v24, i);
-      let v34 = rocq_array::set::<u64>(T, i, v27);
-      copy_loop(rs, n, v23, v34, ())
+      let tmp_1 = add(i, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&rs, i);
+      let tmp_3 = rocq_array::set::<u64>(T, i, tmp_2);
+      copy_loop(rs, n, tmp_1, tmp_3, ())
     },
     sumbool::right => {
       std::mem::drop(rs);
@@ -865,9 +838,9 @@ pub fn copy_loop(rs: Rc<Array<u64>>, n: u64, i: u64, T: Rc<Array<u64>>, _H: ()) 
 // Rocq: Worstweather.worstweather_implem.build
 // Variant: uncurried
 pub fn build(rs: Rc<Array<u64>>, n: u64, L: u64) -> Rc<Array<u64>> {
-  let v21 = rocq_array::make::<u64>(mul(L, n), 0u64);
-  let v30 = copy_loop_1(rs, n, 0u64, v21);
-  rows_loop_1(n, L, 1u64, v30)
+  let tmp = rocq_array::make::<u64>(mul(L, n), 0u64);
+  let tmp_1 = copy_loop_1(rs, n, 0u64, tmp);
+  rows_loop_1(n, L, 1u64, tmp_1)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltsb
@@ -885,20 +858,16 @@ pub fn lb_loop_1(ys: Rc<Array<u64>>, key: u64, lo: u64, hi: u64) -> u64 {
 // Rocq: Worstweather.worstweather_implem.lb_loop (local: lb_loop)
 // Variant: uncurried, lifted
 pub fn lb_loop(ys: Rc<Array<u64>>, key: u64, lo: u64, hi: u64, _H: ()) -> u64 {
-  let v12 = ltb(lo, hi);
-  match bdec(v12) {
+  let tmp = ltb(lo, hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v23 = sub(hi, lo);
-      let mid = add(lo, div(v23, 2u64));
-      let v37 = &ys;
-      let v41 = rocq_array::get::<u64>(&v37, mid);
-      match ltsb(v41, key) {
-        true => {
-          lb_loop(ys, key, add(mid, 1u64), hi, ())
-        },
-        false => {
-          lb_loop(ys, key, lo, mid, ())
-        },
+      let tmp_1 = sub(hi, lo);
+      let mid = add(lo, div(tmp_1, 2u64));
+      let tmp_2 = rocq_array::get::<u64>(&ys, mid);
+      if ltsb(tmp_2, key) {
+        lb_loop(ys, key, add(mid, 1u64), hi, ())
+      } else {
+        lb_loop(ys, key, lo, mid, ())
       }
     },
     sumbool::right => {
@@ -924,153 +893,106 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Variant: uncurried
 pub fn rmq(T: Rc<Array<u64>>, n: u64, l: u64, r: u64) -> u64 {
   let k = lg(sub(r, l));
-  let v26 = add(mul(k, n), l);
-  let v27 = &T;
-  let v30 = rocq_array::get::<u64>(&v27, v26);
-  let v56 = add(mul(k, n), sub(r, lsl(1u64, k)));
-  let v57 = &T;
-  let v60 = rocq_array::get::<u64>(&v57, v56);
+  let tmp = rocq_array::get::<u64>(&T, add(mul(k, n), l));
+  let tmp_1 = rocq_array::get::<u64>(&T, add(mul(k, n), sub(r, lsl(1u64, k))));
   std::mem::drop(T);
-  imax(v30, v60)
+  imax(tmp, tmp_1)
 }
 
 // Rocq: Worstweather.worstweather_implem.below
 // Variant: uncurried
 pub fn below(T: Rc<Array<u64>>, n: u64, lo: u64, j: u64, v: u64) -> bool {
-  match ltb(lo, j) {
-    true => {
-      ltb(rmq(T, n, lo, j), v)
-    },
-    false => {
-      std::mem::drop(T);
-      true
-    },
+  if ltb(lo, j) {
+    ltb(rmq(T, n, lo, j), v)
+  } else {
+    std::mem::drop(T);
+    true
   }
 }
 
 // Rocq: Worstweather.worstweather_implem.answer_query
 // Variant: uncurried
 pub fn answer_query(ys: Rc<Array<u64>>, rs: Rc<Array<u64>>, T: Rc<Array<u64>>, n: u64, Y: u64, X: u64) -> answer {
-  let v9 = Rc::clone(&ys);
-  let i = lower_bound(v9, n, Y);
-  let v18 = Rc::clone(&ys);
-  let j = lower_bound(v18, n, X);
-  let yk = match ltb(i, n) {
-    true => {
-      let v32 = &ys;
-      let v36 = rocq_array::get::<u64>(&v32, i);
-      eqb(v36, Y)
-    },
-    false => {
-      false
-    },
+  let ys_clone = Rc::clone(&ys);
+  let i = lower_bound(ys_clone, n, Y);
+  let ys_clone_1 = Rc::clone(&ys);
+  let j = lower_bound(ys_clone_1, n, X);
+  let yk = if ltb(i, n) {
+    let tmp = rocq_array::get::<u64>(&ys, i);
+    eqb(tmp, Y)
+  } else {
+    false
   };
-  let xk = match ltb(j, n) {
-    true => {
-      let v56 = &ys;
-      let v60 = rocq_array::get::<u64>(&v56, j);
-      eqb(v60, X)
-    },
-    false => {
-      false
-    },
+  let xk = if ltb(j, n) {
+    let tmp_1 = rocq_array::get::<u64>(&ys, j);
+    eqb(tmp_1, X)
+  } else {
+    false
   };
-  let lo = match &yk {
-    true => {
-      add(i, 1u64)
-    },
-    false => {
-      i
-    },
+  let lo = if yk {
+    add(i, 1u64)
+  } else {
+    i
   };
-  match &yk {
-    true => {
-      match xk {
-        true => {
-          let v91 = &rs;
-          let v94 = rocq_array::get::<u64>(&v91, j);
-          let v95 = &rs;
-          let v98 = rocq_array::get::<u64>(&v95, i);
-          match leb(v94, v98) {
-            true => {
-              let v106 = &rs;
-              let v109 = rocq_array::get::<u64>(&v106, j);
-              match below(T, n, lo, j, v109) {
-                true => {
-                  let v128 = sub(j, i);
-                  let v134 = sub(X, Y);
-                  match eqb(v128, v134) {
-                    true => {
-                      std::mem::drop(ys);
-                      std::mem::drop(rs);
-                      answer::Ans_true
-                    },
-                    false => {
-                      std::mem::drop(ys);
-                      std::mem::drop(rs);
-                      answer::Ans_maybe
-                    },
-                  }
-                },
-                false => {
-                  std::mem::drop(ys);
-                  std::mem::drop(rs);
-                  answer::Ans_false
-                },
-              }
-            },
-            false => {
-              std::mem::drop(ys);
-              std::mem::drop(rs);
-              std::mem::drop(T);
-              answer::Ans_false
-            },
+  if yk {
+    if xk {
+      let tmp_2 = rocq_array::get::<u64>(&rs, j);
+      let tmp_3 = rocq_array::get::<u64>(&rs, i);
+      if leb(tmp_2, tmp_3) {
+        let tmp_4 = rocq_array::get::<u64>(&rs, j);
+        if below(T, n, lo, j, tmp_4) {
+          let tmp_5 = sub(j, i);
+          let tmp_6 = sub(X, Y);
+          if eqb(tmp_5, tmp_6) {
+            std::mem::drop(ys);
+            std::mem::drop(rs);
+            answer::Ans_true
+          } else {
+            std::mem::drop(ys);
+            std::mem::drop(rs);
+            answer::Ans_maybe
           }
-        },
-        false => {
-          let v167 = &rs;
-          let v170 = rocq_array::get::<u64>(&v167, i);
-          match below(T, n, lo, j, v170) {
-            true => {
-              std::mem::drop(ys);
-              std::mem::drop(rs);
-              answer::Ans_maybe
-            },
-            false => {
-              std::mem::drop(ys);
-              std::mem::drop(rs);
-              answer::Ans_false
-            },
-          }
-        },
-      }
-    },
-    false => {
-      match xk {
-        true => {
-          let v199 = &rs;
-          let v202 = rocq_array::get::<u64>(&v199, j);
-          match below(T, n, lo, j, v202) {
-            true => {
-              std::mem::drop(ys);
-              std::mem::drop(rs);
-              answer::Ans_maybe
-            },
-            false => {
-              std::mem::drop(ys);
-              std::mem::drop(rs);
-              answer::Ans_false
-            },
-          }
-        },
-        false => {
+        } else {
           std::mem::drop(ys);
           std::mem::drop(rs);
-          std::mem::drop(T);
-          answer::Ans_maybe
-        },
+          answer::Ans_false
+        }
+      } else {
+        std::mem::drop(ys);
+        std::mem::drop(rs);
+        std::mem::drop(T);
+        answer::Ans_false
       }
-    },
+    } else {
+      let tmp_7 = rocq_array::get::<u64>(&rs, i);
+      if below(T, n, lo, j, tmp_7) {
+        std::mem::drop(ys);
+        std::mem::drop(rs);
+        answer::Ans_maybe
+      } else {
+        std::mem::drop(ys);
+        std::mem::drop(rs);
+        answer::Ans_false
+      }
+    }
+  } else {
+    if xk {
+      let tmp_8 = rocq_array::get::<u64>(&rs, j);
+      if below(T, n, lo, j, tmp_8) {
+        std::mem::drop(ys);
+        std::mem::drop(rs);
+        answer::Ans_maybe
+      } else {
+        std::mem::drop(ys);
+        std::mem::drop(rs);
+        answer::Ans_false
+      }
+    } else {
+      std::mem::drop(ys);
+      std::mem::drop(rs);
+      std::mem::drop(T);
+      answer::Ans_maybe
+    }
   }
 }
 
@@ -1083,19 +1005,17 @@ pub fn q_loop_1(ys: Rc<Array<u64>>, rs: Rc<Array<u64>>, T: Rc<Array<u64>>, qy: R
 // Rocq: Worstweather.worstweather_implem.q_loop (local: q_loop)
 // Variant: uncurried, lifted
 pub fn q_loop(ys: Rc<Array<u64>>, rs: Rc<Array<u64>>, T: Rc<Array<u64>>, qy: Rc<Array<u64>>, qx: Rc<Array<u64>>, n: u64, m: u64, k: u64, out: Rc<Array<answer>>, _H: ()) -> Rc<Array<answer>> {
-  let v17 = ltb(k, m);
-  match bdec(v17) {
+  let tmp = ltb(k, m);
+  match bdec(tmp) {
     sumbool::left => {
-      let v28 = add(k, 1u64);
-      let v30 = &qy;
-      let v33 = rocq_array::get::<u64>(&v30, k);
-      let v34 = &qx;
-      let v37 = rocq_array::get::<u64>(&v34, k);
-      let v40 = Rc::clone(&ys);
-      let v43 = Rc::clone(&rs);
-      let v46 = Rc::clone(&T);
-      let v60 = rocq_array::set::<answer>(out, k, answer_query(v40, v43, v46, n, v33, v37));
-      q_loop(ys, rs, T, qy, qx, n, m, v28, v60, ())
+      let tmp_1 = add(k, 1u64);
+      let tmp_2 = rocq_array::get::<u64>(&qy, k);
+      let tmp_3 = rocq_array::get::<u64>(&qx, k);
+      let ys_clone = Rc::clone(&ys);
+      let rs_clone = Rc::clone(&rs);
+      let T_clone = Rc::clone(&T);
+      let tmp_4 = rocq_array::set::<answer>(out, k, answer_query(ys_clone, rs_clone, T_clone, n, tmp_2, tmp_3));
+      q_loop(ys, rs, T, qy, qx, n, m, tmp_1, tmp_4, ())
     },
     sumbool::right => {
       std::mem::drop(ys);
@@ -1111,47 +1031,13 @@ pub fn q_loop(ys: Rc<Array<u64>>, rs: Rc<Array<u64>>, T: Rc<Array<u64>>, qy: Rc<
 // Rocq: Worstweather.worstweather_implem.worstweather_impl
 // Variant: uncurried
 pub fn worstweather_impl(ys: Rc<Array<u64>>, rs: Rc<Array<u64>>, qy: Rc<Array<u64>>, qx: Rc<Array<u64>>) -> Rc<Array<answer>> {
-  let v4 = &ys;
-  let n = rocq_array::length::<u64>(&v4);
-  let v6 = &qy;
-  let m = rocq_array::length::<u64>(&v6);
+  let n = rocq_array::length::<u64>(&ys);
+  let m = rocq_array::length::<u64>(&qy);
   let L = add(lg(n), 1u64);
-  let v23 = Rc::clone(&rs);
-  let T = build(v23, n, L);
-  let v38 = rocq_array::make::<answer>(m, answer::Ans_false);
-  q_loop_1(ys, rs, T, qy, qx, n, m, 0u64, v38)
-}
-
-// Rocq: Worstweather.worstweather_implem.worstweather_impl
-pub fn worstweather_impl_curried(ys: Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>> {
-  let v3 = {
-    move |rs: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>> {
-      let ys = &ys;
-      let v8 = Rc::clone(ys);
-      let v11 = {
-        move |qy: Rc<Array<u64>>| -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>> {
-          let ys = &v8;
-          let rs = &rs;
-          let v18 = Rc::clone(ys);
-          let v20 = Rc::clone(rs);
-          let v23 = {
-            move |qx: Rc<Array<u64>>| -> Rc<Array<answer>> {
-              let v33 = Rc::clone(&v18);
-              let v35 = Rc::clone(&v20);
-              let v37 = Rc::clone(&qy);
-              worstweather_impl(v33, v35, v37, qx)
-            }
-          };
-          let v43: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>> = Rc::new(v23);
-          v43
-        }
-      };
-      let v47: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>> = Rc::new(v11);
-      v47
-    }
-  };
-  let v51: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>> = Rc::new(v3);
-  v51
+  let rs_clone = Rc::clone(&rs);
+  let T = build(rs_clone, n, L);
+  let tmp = rocq_array::make::<answer>(m, answer::Ans_false);
+  q_loop_1(ys, rs, T, qy, qx, n, m, 0u64, tmp)
 }
 
 mod __rocq_reuse {
@@ -1303,12 +1189,6 @@ mod tests {
 
 }
 
-pub fn run() -> Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>>> {
-  let v0: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>>> = __rocq_global_719.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_719: Rc<dyn Fn(Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>, Rc<Array<u64>>) -> Rc<Array<answer>>> = worstweather(); }
-std::thread_local! { static __rocq_global_722: Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<dyn Fn(Rc<Array<u64>>) -> Rc<Array<answer>>>>>> = worstweather_curried(); }
 mod kattis_io {
 use super::STACK_MIB;
 // I/O and representation bridges only; algorithms remain in extracted code.
@@ -1389,7 +1269,7 @@ fn solve(input: &str) -> String {
         let n: u64 = n.parse().unwrap(); if n == 0 { break; }
         let [ys,rs] = columns(&mut t,n,true); let m = t.uint(); let [qy,qx] = columns(&mut t,m,true);
         if !out.is_empty() { out.push('\n'); }
-        out.push_str(&lines(values(&run()(ys,rs,qy,qx)).into_iter().map(|item| match item {
+        out.push_str(&lines(values(&worstweather_impl(ys,rs,qy,qx)).into_iter().map(|item| match item {
             answer::Ans_true { } => "true", answer::Ans_maybe { } => "maybe", answer::Ans_false { } => "false",
         })));
     }

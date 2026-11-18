@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_arrays_bigint)
  (extracted_modules suffixsorting_extracted_arrays_bigint)
- (theories Suffixsorting Suffixsorting.spec Stdlib stdpp StdGalilei))
+ (theories Suffixsorting Suffixsorting.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name suffixsorting_extraction)

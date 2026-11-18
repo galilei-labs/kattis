@@ -6,9 +6,11 @@
  (rocq.theory
   (name Roadtimes.spec)
   (modules Prelude)
-  (theories Stdlib stdpp StdGalilei Flocq)))
+   (theories Stdlib stdpp StdGalilei Flocq)
+   (generate_project_file)))
 
 (rocq.theory
  (name Roadtimes)
  (modules roadtimes_implem)
- (theories Roadtimes.spec Stdlib stdpp StdGalilei Flocq))
+  (theories Roadtimes.spec Stdlib stdpp StdGalilei Flocq)
+  (generate_project_file))

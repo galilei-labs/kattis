@@ -12,7 +12,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - At most $25{,}143$ dictionary words, each with $1\text{ to }16$ lowercase letters.
+    - At most $2.5143 \times 10^{4}$ dictionary words; word length: $1 \le \ell \le 16$ lowercase letters.
     - At most $10$ query pairs. *)
 
 (** ** Examples *)
@@ -65,22 +65,21 @@ Open Scope N_scope.
 
 (** ** Definitions *)
 
-(** Math side. A word is a String.string; a letter is compared by its
-    code. The number of elements of l. *)
+(** The number of elements of [l]. *)
 Definition len {A} (l : list A) : N :=
   N.of_nat (List.length l).
 
-(** The number of letters of word. *)
+(** The number of characters in [word]. *)
 Definition slen (word : string) : N :=
   N.of_nat (String.length word).
 
-(** Every letter of word is a lower case letter, 'a' to 'z'. *)
+(** Every character of [word] is a lowercase English letter. *)
 Definition lower (word : string) : Prop :=
   forall k letter, String.get k word = Some letter ->
     97 <= N_of_ascii letter <= 122.
 
-(** word and word' are a doublet: they have the same length and differ
-    at exactly one position. *)
+(** [word] and [word'] have equal length and differ at exactly one character
+    position. *)
 Definition doublet (word word' : string) : Prop :=
   String.length word = String.length word' /\
   exists k, (k < String.length word)%nat /\
@@ -88,9 +87,8 @@ Definition doublet (word word' : string) : Prop :=
     forall j, (j < String.length word)%nat -> j <> k ->
       String.get j word = String.get j word'.
 
-(** chain is a sequence of dictionary words that begins with start_word,
-    ends with end_word, and in which each pair of adjacent words is
-    a doublet. *)
+(** [chain] begins with [start_word], ends with [end_word], and consists of
+    dictionary words with each adjacent pair satisfying [doublet]. *)
 Definition is_chain (dictionary : list string)
   (start_word end_word : string)
     (chain : list string) : Prop :=
@@ -101,7 +99,8 @@ Definition is_chain (dictionary : list string)
     nth_error chain (S k) = Some word' ->
       doublet word word'.
 
-(** Some shortest word chain between the endpoints, or None exactly when no chain exists. *)
+(** A shortest dictionary-word chain between the endpoints, or [None] exactly
+    when no chain exists. *)
 Definition answer (dictionary : list string)
   (start_word end_word : string)
     (chain_option : option (list string)) : Prop :=
@@ -119,7 +118,7 @@ Definition answer (dictionary : list string)
 Record valid_input
   (dictionary start_words end_words : list string)
     : Prop := {
-  (* a dictionary of up to 25 143 words *)
+  (* a dictionary of up to 2.5143 * 10^4 words *)
   vi_dict_len : len dictionary <= 25143;
   (* words not exceeding 16 letters each; one per line,
      the dictionary being terminated by an empty line, so
@@ -137,7 +136,7 @@ Record valid_input
      "not exceeding 16 letters" is said of the
      dictionary's words), so the bound is the
      representability limit of PrimString.string,
-     PrimString.max_length = 16777211. Human : we may
+     PrimString.max_length = 2^24 - 5. Human : we may
      also assume they are not more than 16 letters long
      as that seems reasonnable *)
   vi_src_len : Forall (fun word => slen word <= 16777211)
@@ -172,6 +171,14 @@ Program doublets :
   array PrimString.string -> array PrimString.string ->
   array PrimString.string ->
     array (option (array PrimString.string)).
+
+(** [@example doublets]
+    - Sample: 1
+    - Input [dictionary]: ["booster"; "rooster"; "roaster"; "coasted"; "roasted"; "coastal"; "postal"]%string
+    - Input [start_words]: ["booster"; "coastal"]%string
+    - Input [end_words]: ["roasted"; "postal"]%string
+    - Output [output]: [Some ["booster"; "rooster"; "roaster"; "roasted"]; None]%string
+*)
 
 (** ** Bridge *)
 

@@ -11,7 +11,7 @@
     - Memory limit: 1024 MB
 
     **Kattis Bounds**
-    - Coordinate absolute values are at most $10{,}000$. *)
+    - Coordinate absolute values are at most $10^{4}$. *)
 
 (** ** Examples *)
 
@@ -47,9 +47,12 @@ none
                     end_x end_y] from (start_x,start_y) to (end_x,end_y), its
                     endpoints distinct, the one with the smaller x first (the
                     smaller y on a tie).
+                    It runs in at most a constant number c of steps of the
+                    cost model (straight-line code).
 *)
 From Stdlib Require Import ZArith NArith List Uint63 PArray.
 From StdGalilei Require Import repr.
+From KattisLib Require Import Cost.
 Import ListNotations.
 Open Scope Z_scope.
 
@@ -60,6 +63,9 @@ Inductive inter (A : Type) : Type :=
 | Empty
 | Point (x y denominator : A)
 | Segment (start_x start_y end_x end_y : A).
+
+(** [@hide] Constructor argument declarations and the representation relation
+    between machine and mathematical intersections. *)
 Arguments Empty {A}.
 Arguments Point {A} x y denominator.
 Arguments Segment {A} start_x start_y end_x end_y.
@@ -78,13 +84,15 @@ Instance repr_inter A M `{Repr A M} : Repr (inter A)
     | _, _ => False
     end.
 
+(** [@hide] The cost translation of [inter], for the bound below. *)
+Elpi complexity inter.
+
 (* Math side. *)
 
-(** The rational point (point_x/denominator,
-    point_y/denominator), denominator > 0, lies on the
-    closed segment from (start_x,start_y) to
-    (end_x,end_y): collinear with both ends and inside
-    their box. *)
+(** For positive [denominator], the rational point with numerators [point_x] and
+    [point_y] lies on the closed segment from [(start_x, start_y)] to
+    [(end_x, end_y)]. Denominator positivity is a precondition, not part of this
+    predicate. *)
 Definition on_seg (start_x start_y end_x end_y point_x
   point_y denominator : Z)
     : Prop :=
@@ -95,9 +103,8 @@ Definition on_seg (start_x start_y end_x end_y point_x
   Z.min start_y end_y * denominator <= point_y
     <= Z.max start_y end_y * denominator.
 
-(** The rational point (point_x/denominator,
-    point_y/denominator), denominator > 0, belongs to the
-    answer. *)
+(** For positive [denominator], the rational point with numerators [point_x] and
+    [point_y] belongs to the represented intersection. *)
 Definition denotes (answer : inter Z)
   (point_x point_y denominator : Z)
     : Prop :=
@@ -126,7 +133,7 @@ Definition well_formed (answer : inter Z) : Prop :=
 
 (** [@inside intersect_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
 Record valid_input (x1 y1 x2 y2 x3 y3 x4 y4 : Z) : Prop := {
-  (* Coordinates have absolute value at most 10000. *)
+  (* Coordinates have absolute value at most 10^4. *)
   vi_coords : Forall
     (fun coordinate => Z.abs coordinate <= 10000)
                 [x1; y1; x2; y2; x3; y3; x4; y4];
@@ -147,6 +154,12 @@ Definition intersect_spec
      on_seg x1 y1 x2 y2 point_x point_y denominator /\
      on_seg x3 y3 x4 y4 point_x point_y denominator).
 
+(** ** Complexity *)
+
+(** [@requirement] Runs in $O(1)$ steps, independently of the coordinate values. *)
+Definition intersect_time_spec (c steps : nat) : Prop :=
+  (steps <= c)%nat.
+
 (** ** Interface *)
 
 (** Compute the exact intersection of two closed line segments: no intersection, one
@@ -163,6 +176,76 @@ Definition intersect_spec
 Program intersect :
   sint -> sint -> sint -> sint -> sint -> sint -> sint ->
     sint -> inter sint.
+
+(** [@example intersect]
+    - Sample: 1
+    - Case: 1
+    - Input [x1]: (-10)%Z
+    - Input [y1]: 0%Z
+    - Input [x2]: 10%Z
+    - Input [y2]: 0%Z
+    - Input [x3]: 0%Z
+    - Input [y3]: (-10)%Z
+    - Input [x4]: 0%Z
+    - Input [y4]: 10%Z
+    - Output [output]: (Point 0 0 1)%Z
+*)
+
+(** [@example intersect]
+    - Sample: 1
+    - Case: 2
+    - Input [x1]: (-10)%Z
+    - Input [y1]: 0%Z
+    - Input [x2]: 10%Z
+    - Input [y2]: 0%Z
+    - Input [x3]: (-5)%Z
+    - Input [y3]: 0%Z
+    - Input [x4]: 5%Z
+    - Input [y4]: 0%Z
+    - Output [output]: (Segment (-5) 0 5 0)%Z
+*)
+
+(** [@example intersect]
+    - Sample: 1
+    - Case: 3
+    - Input [x1]: 1%Z
+    - Input [y1]: 1%Z
+    - Input [x2]: 1%Z
+    - Input [y2]: 1%Z
+    - Input [x3]: 1%Z
+    - Input [y3]: 1%Z
+    - Input [x4]: 2%Z
+    - Input [y4]: 1%Z
+    - Output [output]: (Point 1 1 1)%Z
+*)
+
+(** [@example intersect]
+    - Sample: 1
+    - Case: 4
+    - Input [x1]: 1%Z
+    - Input [y1]: 1%Z
+    - Input [x2]: 1%Z
+    - Input [y2]: 1%Z
+    - Input [x3]: 2%Z
+    - Input [y3]: 1%Z
+    - Input [x4]: 2%Z
+    - Input [y4]: 1%Z
+    - Output [output]: Empty
+*)
+
+(** [@example intersect]
+    - Sample: 1
+    - Case: 5
+    - Input [x1]: 1871%Z
+    - Input [y1]: 5789%Z
+    - Input [x2]: 216%Z
+    - Input [y2]: (-517)%Z
+    - Input [x3]: 189%Z
+    - Input [y3]: (-518)%Z
+    - Input [x4]: 3851%Z
+    - Input [y4]: 1895%Z
+    - Output [output]: (Point 4227160607 (-9486462835) 19099057)%Z
+*)
 
 (** ** Bridge *)
 
@@ -184,6 +267,17 @@ Specification intersect_correct :
       y3_int x4_int y4_int)
       output /\
     intersect_spec x1 y1 x2 y2 x3 y3 x4 y4 output.
+
+(** ** Complexity *)
+
+(** [@hide] [intersect_cost] is the cost translation of [intersect] (the judge
+    recomputes it and compares) ... *)
+Complexity intersect_cost for intersect.
+
+(** [@fold complexity bound] ... and runs in at most a constant number c of steps of the cost model (straight-line code), for a constant
+    quantified before the inputs. [@requirement intersect_time_spec] *)
+Specification intersect_time : exists c : nat, forall x1_int y1_int x2_int y2_int x3_int y3_int x4_int y4_int : sint,
+  intersect_time_spec c (cost8 intersect_cost x1_int y1_int x2_int y2_int x3_int y3_int x4_int y4_int).
 
 (** [@hide] The permitted kernel primitives and their
     axioms. *)

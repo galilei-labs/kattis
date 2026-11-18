@@ -10,11 +10,19 @@
    Termination: [sd_loop] recurses structurally on an erased
    [Acc (Zwf 0) (gap n p)] proof, gap n p = n + 1 - p (the template's
    device); the test [p <? n] makes the decrease unconditional (p + 1
-   cannot wrap) and, with the contract's bound, keeps p * p exact. *)
+   cannot wrap) and, with the contract's bound, keeps p * p exact.
+
+   Cost: Elpi complexity on sumbool, andb, bdec, sd_loop, pascal_impl,
+   pascal (callee first).  sd_loop from p costs at most
+   (sqrt n + 1 - p) * 50 + 50 steps when n <= 10^9 (sd_loop_time, by
+   induction on a nat bound of gap n p); pascal_time with c1 = 50,
+   c2 = 100.  The bound needs n <= 10^9: for larger words p * p wraps and
+   the loop overruns sqrt n. *)
 
 From Pascal.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
 
 Open Scope uint63_scope.
 
@@ -31,8 +39,12 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity andb.
+Elpi complexity bdec.
 
 Definition gap (n p : int) : Z := ((φ n) + 1 - (φ p))%Z.
+Arguments gap : simpl never.
 
 Lemma dec_step : forall n p : int,
   ((p <? n) && (p * p <=? n))%bool = true -> Zwf 0 (gap n (p + 1)) (gap n p).
@@ -56,6 +68,8 @@ Fixpoint sd_loop (n p : int) (H : Acc (Zwf 0) (gap n p)) {struct H} : int :=
       else sd_loop n (p + 1) (Acc_inv H (dec_step n p Hc))
   | right _ => n
   end.
+Elpi complexity sd_loop.
+Arguments sd_loop_cost : simpl never.
 
 Lemma sd_loop_eq : forall n p H,
   sd_loop n p H =
@@ -69,6 +83,8 @@ Proof. intros. destruct H. reflexivity. Qed.
 
 Definition pascal_impl (n : uint) : uint :=
   n - n / sd_loop n 2 (Zwf_well_founded 0 (gap n 2)).
+Elpi complexity pascal_impl.
+Arguments pascal_impl_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: Frane's loop stops at the largest proper divisor          *)
@@ -252,8 +268,102 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition pascal : uint -> uint := pascal_impl.
+Elpi complexity pascal.
 
 Definition pascal_correct : forall (n : N) (x : uint),
   valid_input n -> repr x n ->
   exists c : N, repr (pascal x) c /\ pascal_spec n c
   := pascal_impl_correct.
+
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Definition Nof (x : int) : nat := Z.to_nat (φ x).
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Arguments sd_loop : simpl never.
+Arguments Zwf_well_founded : simpl never.
+
+Lemma sqrt_ge D m : (D * D <= m)%nat -> (D <= Nat.sqrt m)%nat.
+Proof.
+  intros H. pose proof (Nat.sqrt_le_mono _ _ H) as H1. rewrite Nat.sqrt_square in H1. exact H1.
+Qed.
+
+(* one more turn of the loop: the measure drops, p grows by one and stays
+   below sqrt n *)
+Lemma step_facts n p : (φ n <= 1000000000)%Z ->
+  ((p <? n) && (p * p <=? n))%bool = true ->
+  and (Z.to_nat (gap n (p + 1)) + 1 = Z.to_nat (gap n p))%nat
+  (and (Nof (p + 1) = Nof p + 1)%nat (Nof p <= Nat.sqrt (Nof n))%nat).
+Proof.
+  intros Hn E. pose proof (dec_step n p E) as [Z1 Z2].
+  apply andb_prop in E. destruct E as [E1 E2]. rewrite ltb_spec in E1.
+  rewrite leb_spec (sq_exact p n E1 Hn) in E2.
+  pose proof (to_Z_bounded p) as Bp. pose proof (to_Z_bounded n) as Bn.
+  assert (Hp1 : φ (p + 1) = (φ p + 1)%Z) by sia.
+  unfold gap in *. unfold Nof. rewrite Hp1.
+  split; [lia|]. split; [lia|].
+  apply sqrt_ge. rewrite <- Z2Nat.inj_mul by lia. apply Z2Nat.inj_le; lia.
+Qed.
+
+Ltac kill_andb b := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with context [bool_w b] =>
+    let H := fresh in assert (H : @cost T X = 0%nat) by (destruct b; reflexivity);
+    rewrite H; clear H end end.
+
+Lemma sd_loop_time n nC p pC H HC : (φ n <= 1000000000)%Z ->
+  (cost (extract (extract (sd_loop_cost stepsCM n nC) p pC) H HC)
+   <= (Nat.sqrt (Nof n) + 1 - Nof p) * 50 + 50)%nat.
+Proof.
+  intros Hn. unfold sd_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G n nC p pC H HC)] =>
+    assert (HG : forall k p pC H HC, (Z.to_nat (gap n p) <= k)%nat ->
+       forall Sq P, Sq = Nat.sqrt (Nof n) -> P = Nof p ->
+       (cost (G n nC p pC H HC) <= (Sq + 1 - P) * 50 + 50)%nat) end.
+  { induction k as [|k IH]; intros p' pC' [g] HC' Hk Sq P HSq HP;
+      cost_simpl;
+      match goal with |- context [cost (bdec_cost stepsCM ?b ?w)] => pose proof (bdec_time b w) as HB end;
+      cost_destruct (bdec ((p' <? n) && (p' * p' <=? n))); cost_simpl; kill_andb (p' <? n).
+    - exfalso. pose proof (andb_prop _ _ e) as [e1 _]. rewrite ltb_spec in e1.
+      unfold gap in Hk. lia.
+    - lia.
+    - cost_destruct_eqn (n mod p' =? 0) E3; cost_simpl.
+      + lia.
+      + destruct (step_facts n p' Hn e) as (F1 & F2 & F3).
+        assert (Hk' : (Z.to_nat (gap n (p' + 1)) <= k)%nat) by lia.
+        match goal with |- context [@cost ?T (?G' n ?nc (p' + 1)%uint63 ?w ?h ?hc)] =>
+          have HI := (IH (p' + 1)%uint63 w h hc Hk' _ _ HSq eq_refl
+                      : (@cost T (G' n nc (p' + 1)%uint63 w h hc) <= _)%nat) end.
+        rewrite F2 in HI. rewrite <- HP, <- HSq in F3. lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G n nC p pC H HC)] =>
+    exact (HG _ p pC H HC (le_n _) _ _ eq_refl eq_refl
+           : (@cost T (G n nC p pC H HC) <= _)%nat) end.
+Qed.
+
+Theorem pascal_time : exists c1 c2 : nat,
+  forall (number : N) (number_int : uint),
+  valid_input number -> repr number_int number ->
+  (cost1 pascal_cost number_int <= c1 * (Nat.sqrt (size number_int) + 1) + c2)%nat.
+Proof.
+  exists 50%nat, 100%nat. intros number x [Hv] Hx.
+  assert (E : Nof x = size x) by reflexivity.
+  remember (Nat.sqrt (size x)) as Sq eqn:ESq.
+  assert (Hn : (φ x <= 1000000000)%Z).
+  { unfold repr, repr_uint in Hx. subst number. lia. }
+  pose proof (sd_loop_time x (witness x) 2 (int_val stepsCM 2) (Zwf_well_founded 0 (gap x 2)) erased_I Hn)
+    as HL.
+  rewrite E -ESq in HL. change (Nof 2) with 2%nat in HL.
+  unfold cost1, pascal_cost, pascal_impl_cost. cost_simpl.
+  change (cost (sd_loop_cost stepsCM x (witness x))) with 0%nat.
+  change (cost (extract (sd_loop_cost stepsCM x (witness x)) 2%uint63 (int_val stepsCM 2))) with 0%nat.
+  revert HL. generalize (cost (extract (extract (sd_loop_cost stepsCM x (witness x)) 2%uint63
+    (int_val stepsCM 2)) (Zwf_well_founded 0 (gap x 2)) erased_I)). intros c HL.
+  lia.
+Qed.

@@ -34,6 +34,7 @@ From Gcpc.spec Require Import Prelude.
 From StdGalilei Require Import repr.
 From Stdlib Require Import ZArith NArith List Uint63 PArray ZifyUint63 Lia Zwf.
 From Stdlib Require Import Permutation.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 Open Scope uint63_scope.
@@ -99,8 +100,11 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
 
 Definition gap (m j : int) : Z := ((φ m) - (φ j))%Z.
+Arguments gap : simpl never.
 
 Lemma dec_step : forall m i : int,
   (i <? m) = true -> Zwf 0 (gap m (i + 1)) (gap m i).
@@ -118,16 +122,23 @@ Qed.
 Inductive tree : Set :=
 | Leaf : tree
 | Node : tree -> int -> tree -> int -> int -> tree.
+Elpi complexity tree.
 
 Definition height (t : tree) : int :=
   match t with Leaf => 0 | Node _ _ _ _ h => h end.
+Elpi complexity height.
+Arguments height_cost : simpl never.
 
 Definition size (t : tree) : int :=
   match t with Leaf => 0 | Node _ _ _ s _ => s end.
+Elpi complexity size.
+Arguments size_cost : simpl never.
 
 Definition mk (l : tree) (k : int) (r : tree) : tree :=
   Node l k r (size l + size r + 1)
     (if height l <? height r then height r + 1 else height l + 1).
+Elpi complexity mk.
+Arguments mk_cost : simpl never.
 
 (* The rebalancing of OCaml's Set.bal: l and r differ in height by at most
    3 on entry. *)
@@ -155,6 +166,8 @@ Definition bal (l : tree) (k : int) (r : tree) : tree :=
              end
     end
   else mk l k r.
+Elpi complexity bal.
+Arguments bal_cost : simpl never.
 
 Fixpoint insert (x : int) (t : tree) : tree :=
   match t with
@@ -164,6 +177,8 @@ Fixpoint insert (x : int) (t : tree) : tree :=
       else if k <? x then bal l k (insert x r)
       else t
   end.
+Elpi complexity insert.
+Arguments insert_cost : simpl never.
 
 (* The minimum of Node l k r, and the tree without it. *)
 Fixpoint remove_min (l : tree) (k : int) (r : tree) : int * tree :=
@@ -172,6 +187,8 @@ Fixpoint remove_min (l : tree) (k : int) (r : tree) : int * tree :=
   | Node ll lk lr _ _ =>
       let (m, l') := remove_min ll lk lr in (m, bal l' k r)
   end.
+Elpi complexity remove_min.
+Arguments remove_min_cost : simpl never.
 
 Definition merge (l r : tree) : tree :=
   match l, r with
@@ -179,6 +196,8 @@ Definition merge (l r : tree) : tree :=
   | _, Leaf => l
   | _, Node rl rk rr _ _ => let (m, r') := remove_min rl rk rr in bal l m r'
   end.
+Elpi complexity merge.
+Arguments merge_cost : simpl never.
 
 Fixpoint delete (x : int) (t : tree) : tree :=
   match t with
@@ -188,6 +207,8 @@ Fixpoint delete (x : int) (t : tree) : tree :=
       else if k <? x then bal l k (delete x r)
       else merge l r
   end.
+Elpi complexity delete.
+Arguments delete_cost : simpl never.
 
 (* The number of keys below q (OS-RANK). *)
 Fixpoint count_lt (q : int) (t : tree) : int :=
@@ -196,6 +217,8 @@ Fixpoint count_lt (q : int) (t : tree) : int :=
   | Node l k r _ _ =>
       if k <? q then size l + 1 + count_lt q r else count_lt q l
   end.
+Elpi complexity count_lt.
+Arguments count_lt_cost : simpl never.
 
 (* ------------------------------------------------------------------ *)
 (* The tree through its in-order list                                  *)
@@ -656,6 +679,9 @@ Qed.
 Definition KD : int := 17592186044416.        (* 2^44 *)
 Definition KE : int := 131072.                (* 2^17 *)
 Definition K0 : int := 2305825417027649536.   (* (2^17 - 1) * 2^44 *)
+Elpi complexity KD.
+Elpi complexity KE.
+Elpi complexity K0.
 
 (* Teams k .. n1 - 1 receive their initial key K0 + k (score (0, 0)),
    in [keys] and in the tree. *)
@@ -668,6 +694,8 @@ Fixpoint init_loop (n1 k : int) (keys : array int) (T : tree)
         (Acc_inv H (dec_step n1 k Hk))
   | right _ => (keys, T)
   end.
+Elpi complexity init_loop.
+Arguments init_loop_cost : simpl never.
 
 Lemma init_loop_eq : forall n1 k keys T H,
   init_loop n1 k keys T H =
@@ -696,6 +724,8 @@ Fixpoint ev_loop (xt xp : array int) (m j : int) (keys : array int) (T : tree)
         (Acc_inv H (dec_step m j Hj))
   | right _ => out
   end.
+Elpi complexity ev_loop.
+Arguments ev_loop_cost : simpl never.
 
 Lemma ev_loop_eq : forall xt xp m j keys T out H,
   ev_loop xt xp m j keys T out H =
@@ -719,6 +749,7 @@ Definition gcpc_impl (n : uint) (xt xp : array uint) : array uint :=
   let (keys, T) :=
     init_loop n1 1 (PArray.make n1 0) Leaf (Zwf_well_founded 0 (gap n1 1)) in
   ev_loop xt xp m 0 keys T (PArray.make m 0) (Zwf_well_founded 0 (gap m 0)).
+Elpi complexity gcpc_impl.
 
 (* ------------------------------------------------------------------ *)
 (* Prop side: the encoding of a score                                  *)
@@ -947,12 +978,24 @@ Proof.
   rewrite filter_app, length_app. simpl. destruct (nth j t 0 =? a)%N; simpl; lia.
 Qed.
 
+Lemma penalty_fold : forall team teams penalties,
+  penalty team teams penalties =
+  fold_right N.add 0%N
+    (map (fun '(event_team, event_penalty) =>
+      if (event_team =? team)%N then event_penalty else 0%N)
+      (combine teams penalties)).
+Proof.
+  intros team teams. induction teams as [|a teams IH]; intros [|event_penalty penalties];
+    cbn [penalty combine map fold_right]; try reflexivity.
+  rewrite IH. reflexivity.
+Qed.
+
 Lemma penalty_step : forall j a, (j < List.length t)%nat ->
   penalty a (firstn (S j) t) (firstn (S j) p)
   = (penalty a (firstn j t) (firstn j p) + if (nth j t 0 =? a)%N then nth j p 0 else 0)%N.
 Proof.
   intros j a Hj. destruct vi_facts as (_ & _ & Hpl & _).
-  unfold penalty. rewrite (firstn_S_app t j), (firstn_S_app p j) by lia.
+  rewrite !penalty_fold. rewrite (firstn_S_app t j), (firstn_S_app p j) by lia.
   rewrite combine_app_eq by (rewrite !length_firstn; lia).
   rewrite map_app, fold_right_app. cbn [combine map fold_right].
   rewrite (fold_add (_ + 0)%N). lia.
@@ -1291,9 +1334,640 @@ Qed.
 (* ------------------------------------------------------------------ *)
 
 Definition gcpc : uint -> array uint -> array uint -> array uint := gcpc_impl.
+Elpi complexity gcpc.
 
 Definition gcpc_correct :
   forall (n : N) (t p : list N) (xn : uint) (xt xp : array uint),
   valid_input n t p -> repr xn n -> repr xt t -> repr xp p ->
   exists o : list N, repr (gcpc xn xt xp) o /\ gcpc_spec n t p o
   := gcpc_impl_correct.
+
+(* ------------------------------------------------------------------ *)
+(* Cost: the bound gcpc_time                                           *)
+(* ------------------------------------------------------------------ *)
+
+(* The cost twins of the tree functions are bounded by the depth of their
+   argument (height/size/mk/bal: constants; insert, delete, count_lt,
+   remove_min, merge: linear in the depth).  The balance invariant [avl]
+   (heights stored right, children's depths differ by at most 2, as in
+   OCaml's Set) is preserved by bal / insert / remove_min / merge / delete
+   and bounds the depth by 3 log2 (cnt + 1) + 2.  The two loops are bounded
+   by induction on their gap, the tree having at most n keys (exactly n in
+   the event loop, by the correctness invariant [Inv]). *)
+
+Lemma height_time t (tC : tree_cost stepsCM t) : (cost (height_cost stepsCM t tC) <= 2)%nat.
+Proof. destruct tC; unfold height_cost; cost_simpl; lia. Qed.
+Lemma size_time t (tC : tree_cost stepsCM t) : (cost (size_cost stepsCM t tC) <= 2)%nat.
+Proof. destruct tC; unfold size_cost; cost_simpl; lia. Qed.
+
+Lemma mk_time l lC k kC r rC : (cost (mk_cost stepsCM l lC) = 0 /\
+  cost (extract (mk_cost stepsCM l lC) k kC) = 0 /\
+  cost (extract (extract (mk_cost stepsCM l lC) k kC) r rC) <= 30)%nat.
+Proof.
+  unfold mk_cost. split; [reflexivity|]. split; [reflexivity|]. cost_simpl.
+  pose proof (height_time l lC). pose proof (height_time r rC).
+  pose proof (size_time l lC). pose proof (size_time r rC).
+  cost_destruct (height l <? height r); cost_simpl; lia.
+Qed.
+
+Ltac mk_bounds :=
+  repeat match goal with
+  | |- context [@cost ?T ?m] =>
+      lazymatch m with
+      | extract (extract (mk_cost _ ?l ?lC) ?k ?kC) ?r ?rC =>
+          let c := fresh "c" in let Hc := fresh "Hc" in
+          destruct (mk_time l lC k kC r rC) as (_ & _ & Hc); cost_align Hc;
+          set (c := @cost T m) in *; clearbody c
+      | extract (mk_cost _ ?l ?lC) ?k ?kC => change (@cost T m) with 0%nat
+      | mk_cost _ ?l ?lC => change (@cost T m) with 0%nat
+      | height_cost _ ?l ?lC =>
+          let c := fresh "c" in let Hc := fresh "Hc" in
+          pose proof (height_time l lC) as Hc; cost_align Hc;
+          set (c := @cost T m) in *; clearbody c
+      end
+  end.
+
+Lemma bal_time l lC k kC r rC : (call_cost3 (bal_cost stepsCM) l lC k kC r rC <= 200)%nat.
+Proof.
+  unfold bal_cost.
+  destruct lC as [| ll llC lk lkC lr lrC ls lsC lh lhC]; [| destruct lrC];
+  destruct rC as [| rl rlC rk rkC rr rrC rs rsC rh rhC]; try destruct rlC;
+  cost_simpl; mk_bounds.
+  all: repeat (match goal with |- context [if ?b then _ else _] => cost_destruct b end; cost_simpl; mk_bounds).
+  all: lia.
+Qed.
+
+Ltac bal_bounds :=
+  repeat match goal with
+  | |- context [@cost ?T ?m] =>
+      lazymatch m with
+      | extract (extract (bal_cost _ ?l ?lC) ?k ?kC) ?r ?rC =>
+          let c := fresh "c" in let Hc := fresh "Hc" in
+          pose proof (bal_time l lC k kC r rC) as Hc; unfold call_cost3, call_cost2 in Hc;
+          change (cost (bal_cost stepsCM l lC)) with 0%nat in Hc;
+          change (cost (extract (bal_cost stepsCM l lC) k kC)) with 0%nat in Hc;
+          cost_align Hc;
+          set (c := @cost T m) in *; clearbody c
+      | extract (bal_cost _ ?l ?lC) ?k ?kC => change (@cost T m) with 0%nat
+      | bal_cost _ ?l ?lC => change (@cost T m) with 0%nat
+      end
+  end.
+Ltac tbounds := mk_bounds; bal_bounds; mk_bounds.
+
+Ltac name_costs H :=
+  repeat match type of H with
+  | context [@cost ?T ?m] => let c := fresh "ci" in set (c := @cost T m) in *; clearbody c
+  end.
+
+Fixpoint depth (t : tree) : nat :=
+  match t with Leaf => 0 | Node l _ r _ _ => S (Nat.max (depth l) (depth r)) end.
+
+Lemma insert_time x xC t tC : (call_cost2 (insert_cost stepsCM) x xC t tC <= depth t * 250 + 50)%nat.
+Proof.
+  unfold call_cost2. change (cost (insert_cost stepsCM x xC)) with 0%nat.
+  induction tC as [| l lC IHl k kC r rC IHr s sC h hC].
+  - unfold insert_cost. cost_simpl. tbounds. lia.
+  - unfold insert_cost in *. cost_simpl. cbn in IHl, IHr. cost_align IHl. cost_align IHr. name_costs IHl. name_costs IHr. tbounds.
+    repeat (match goal with |- context [if ?b then _ else _] => cost_destruct b end; cost_simpl; tbounds).
+    all: cbn [depth]; try lia.
+Qed.
+
+Lemma remove_min_time l lC k kC r rC :
+  (call_cost3 (remove_min_cost stepsCM) l lC k kC r rC <= depth l * 250 + 50)%nat.
+Proof.
+  revert k kC r rC.
+  induction lC as [| ll llC IHl lk lkC lr lrC IHr s sC h hC]; intros k kC r rC.
+  - unfold remove_min_cost. cost_simpl. tbounds. lia.
+  - specialize (IHl lk lkC lr lrC). unfold call_cost3, call_cost2, remove_min_cost in *.
+    cost_simpl. cbn in IHl. cost_align IHl. name_costs IHl. tbounds. clear IHr.
+    cost_destruct_witness (remove_min ll lk lr) as [m mC l' l'C] eqn:E. cost_simpl. tbounds. cbn [depth]. lia.
+Qed.
+
+Ltac rm_bounds :=
+  repeat match goal with
+  | |- context [@cost ?T ?m] =>
+      lazymatch m with
+      | extract (extract (remove_min_cost _ ?l ?lC) ?k ?kC) ?r ?rC =>
+          let Hc := fresh "Hc" in
+          pose proof (remove_min_time l lC k kC r rC) as Hc; unfold call_cost3, call_cost2 in Hc;
+          cost_align Hc; name_costs Hc
+      end
+  end.
+
+Lemma merge_time l lC r rC :
+  (call_cost2 (merge_cost stepsCM) l lC r rC <= depth r * 250 + 400)%nat.
+Proof.
+  unfold call_cost2, merge_cost.
+  destruct lC as [| ll llC lk lkC lr lrC ls lsC lh lhC];
+  destruct rC as [| rl rlC rk rkC rr rrC rs rsC rh rhC];
+  cost_simpl; tbounds; rm_bounds; try lia.
+  cost_destruct_witness (remove_min rl rk rr) as [m mC r' r'C] eqn:E. cost_simpl. tbounds. cbn [depth]. lia.
+Qed.
+
+Lemma delete_time x xC t tC : (call_cost2 (delete_cost stepsCM) x xC t tC <= depth t * 260 + 500)%nat.
+Proof.
+  unfold call_cost2. change (cost (delete_cost stepsCM x xC)) with 0%nat.
+  induction tC as [| l lC IHl k kC r rC IHr s sC h hC].
+  - unfold delete_cost. cost_simpl. tbounds. lia.
+  - unfold delete_cost in *. cost_simpl. cbn in IHl, IHr. cost_align IHl. cost_align IHr. name_costs IHl. name_costs IHr. tbounds.
+    repeat (match goal with |- context [if ?b then _ else _] => cost_destruct b end; cost_simpl; tbounds).
+    all: cbn [depth]; try lia.
+    pose proof (merge_time l lC r rC) as Hm. unfold call_cost2 in Hm. cost_align Hm. name_costs Hm. lia.
+Qed.
+
+Lemma count_lt_time q qC t tC : (call_cost2 (count_lt_cost stepsCM) q qC t tC <= depth t * 50 + 50)%nat.
+Proof.
+  unfold call_cost2. change (cost (count_lt_cost stepsCM q qC)) with 0%nat.
+  induction tC as [| l lC IHl k kC r rC IHr s sC h hC].
+  - unfold count_lt_cost. cost_simpl. lia.
+  - unfold count_lt_cost in *. cost_simpl. cbn in IHl, IHr.
+    pose proof (size_time l lC) as Hs. cost_align Hs. name_costs Hs.
+    cost_destruct (k <? q); cost_simpl; cost_align IHl; cost_align IHr; name_costs IHl; name_costs IHr; cbn [depth]; lia.
+Qed.
+
+Fixpoint avl (t : tree) : Prop :=
+  match t with
+  | Leaf => True
+  | Node l _ r _ h =>
+      avl l /\ avl r /\ (depth l <= depth r + 2)%nat /\ (depth r <= depth l + 2)%nat /\
+      φ h = Z.of_nat (S (Nat.max (depth l) (depth r)))
+  end.
+
+Lemma height_avl : forall t, avl t -> φ (height t) = Z.of_nat (depth t).
+Proof. intros [| l k r s h] H; [reflexivity|]. simpl in H |- *. tauto. Qed.
+
+Lemma hplus : forall t (c : int), avl t -> (depth t < 1000)%nat -> (φ c <= 2)%Z ->
+  φ (height t + c) = (Z.of_nat (depth t) + φ c)%Z.
+Proof.
+  intros t c H Hd Hc. rewrite add_spec, height_avl by exact H. apply Z.mod_small.
+  pose proof (to_Z_bounded c). rewrite wB_val. lia.
+Qed.
+
+Lemma mk_avl : forall l k r, avl l -> avl r ->
+  (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (depth l < 1000)%nat -> (depth r < 1000)%nat -> avl (mk l k r).
+Proof.
+  intros l k r Hl Hr H1 H2 H3 H4. simpl. do 4 (split; [assumption|]).
+  pose proof (height_avl l Hl). pose proof (height_avl r Hr).
+  destruct (height l <? height r) eqn:E.
+  - rewrite ltb_true in E. rewrite hplus by (auto; change (φ 1) with 1%Z; lia).
+    change (φ 1) with 1%Z. lia.
+  - rewrite ltb_false in E. rewrite hplus by (auto; change (φ 1) with 1%Z; lia).
+    change (φ 1) with 1%Z. lia.
+Qed.
+
+Lemma depth_mk : forall l k r, depth (mk l k r) = S (Nat.max (depth l) (depth r)).
+Proof. reflexivity. Qed.
+
+Lemma cmp2 : forall a b, avl a -> avl b -> (depth a < 1000)%nat -> (depth b < 1000)%nat ->
+  (height a + 2 <? height b) = Nat.ltb (depth a + 2) (depth b).
+Proof.
+  intros a b Ha Hb Da Db. destruct (Nat.ltb_spec (depth a + 2) (depth b)) as [E|E].
+  - apply ltb_true. rewrite hplus by (auto; change (φ 2) with 2%Z; lia).
+    rewrite height_avl by exact Hb. change (φ 2) with 2%Z. lia.
+  - apply ltb_false. rewrite hplus by (auto; change (φ 2) with 2%Z; lia).
+    rewrite height_avl by exact Hb. change (φ 2) with 2%Z. lia.
+Qed.
+
+Lemma cmple : forall a b, avl a -> avl b ->
+  (height a <=? height b) = Nat.leb (depth a) (depth b).
+Proof.
+  intros a b Ha Hb. pose proof (height_avl a Ha). pose proof (height_avl b Hb).
+  destruct (Nat.leb_spec (depth a) (depth b)) as [E|E].
+  - apply leb_spec. lia.
+  - apply Bool.not_true_iff_false. rewrite leb_spec. lia.
+Qed.
+
+Lemma bal_avl : forall l k r, avl l -> avl r ->
+  (depth l <= depth r + 3)%nat -> (depth r <= depth l + 3)%nat ->
+  (depth l < 999)%nat -> (depth r < 999)%nat ->
+  avl (bal l k r) /\
+  (Nat.max (depth l) (depth r) <= depth (bal l k r) <= S (Nat.max (depth l) (depth r)))%nat /\
+  ((depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+   depth (bal l k r) = S (Nat.max (depth l) (depth r))).
+Proof.
+  intros l k r Hl Hr H1 H2 H3 H4. unfold bal.
+  rewrite (cmp2 r l Hr Hl) by lia. rewrite (cmp2 l r Hl Hr) by lia.
+  destruct (Nat.ltb_spec (depth r + 2) (depth l)) as [E1|E1].
+  - destruct l as [| ll lk lr ls lh]; [simpl in E1; lia|].
+    simpl in Hl. destruct Hl as (Hll & Hlr & B1 & B2 & _).
+    simpl depth in *.
+    rewrite (cmple lr ll Hlr Hll).
+    destruct (Nat.leb_spec (depth lr) (depth ll)) as [E2|E2].
+    + assert (avl (mk lr k r)) by (apply mk_avl; auto; lia).
+      split; [apply mk_avl; auto; rewrite ?depth_mk; lia|].
+      rewrite ?depth_mk; simpl depth; lia.
+    + destruct lr as [| lrl lrk lrr lrs lrh]; [simpl in E2; lia|].
+      simpl in Hlr. destruct Hlr as (Hlrl & Hlrr & C1 & C2 & _).
+      simpl depth in *.
+      assert (avl (mk ll lk lrl)) by (apply mk_avl; auto; lia).
+      assert (avl (mk lrr k r)) by (apply mk_avl; auto; lia).
+      split; [apply mk_avl; auto; rewrite ?depth_mk; lia|].
+      rewrite ?depth_mk; simpl depth; lia.
+  - destruct (Nat.ltb_spec (depth l + 2) (depth r)) as [E3|E3].
+    + destruct r as [| rl rk rr rs rh]; [simpl in E3; lia|].
+      simpl in Hr. destruct Hr as (Hrl & Hrr & B1 & B2 & _).
+      simpl depth in *.
+      rewrite (cmple rl rr Hrl Hrr).
+      destruct (Nat.leb_spec (depth rl) (depth rr)) as [E2|E2].
+      * assert (avl (mk l k rl)) by (apply mk_avl; auto; lia).
+        split; [apply mk_avl; auto; rewrite ?depth_mk; lia|].
+        rewrite ?depth_mk; simpl depth; lia.
+      * destruct rl as [| rll rlk rlr rls rlh]; [simpl in E2; lia|].
+        simpl in Hrl. destruct Hrl as (Hrll & Hrlr & C1 & C2 & _).
+        simpl depth in *.
+        assert (avl (mk l k rll)) by (apply mk_avl; auto; lia).
+        assert (avl (mk rlr rk rr)) by (apply mk_avl; auto; lia).
+        split; [apply mk_avl; auto; rewrite ?depth_mk; lia|].
+        rewrite ?depth_mk; simpl depth; lia.
+    + split; [apply mk_avl; auto; lia|]. rewrite ?depth_mk; simpl depth; lia.
+Qed.
+
+Lemma insert_avl : forall x t, avl t -> (depth t < 900)%nat ->
+  avl (insert x t) /\ (depth t <= depth (insert x t) <= S (depth t))%nat.
+Proof.
+  intros x t. induction t as [| l IHl k r IHr s h]; intros Ht Hd.
+  - split; [apply mk_avl; simpl; auto; lia | simpl; lia].
+  - simpl in Ht. destruct Ht as (Hl & Hr & B1 & B2 & Hh). simpl depth in Hd.
+    simpl insert. destruct (x <? k).
+    + destruct (IHl Hl ltac:(lia)) as [A D].
+      destruct (bal_avl (insert x l) k r A Hr ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & D1 & D2).
+      split; [exact A'|]. simpl depth.
+      destruct (Nat.le_gt_cases (depth (insert x l)) (depth r + 2)); [rewrite D2 by lia|]; lia.
+    + destruct (k <? x).
+      * destruct (IHr Hr ltac:(lia)) as [A D].
+        destruct (bal_avl l k (insert x r) Hl A ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & D1 & D2).
+        split; [exact A'|]. simpl depth.
+        destruct (Nat.le_gt_cases (depth (insert x r)) (depth l + 2)); [rewrite D2 by lia|]; lia.
+      * split; [simpl; auto | lia].
+Qed.
+
+Lemma remove_min_avl : forall l k r, avl l -> avl r ->
+  (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (depth l < 900)%nat -> (depth r < 900)%nat ->
+  avl (snd (remove_min l k r)) /\
+  (Nat.max (depth l) (depth r) <= depth (snd (remove_min l k r)) <= S (Nat.max (depth l) (depth r)))%nat.
+Proof.
+  intros l. induction l as [| ll IH lk lr _ ls lh]; intros k r Hl Hr B1 B2 D1 D2.
+  - simpl. split; [exact Hr|]. simpl in *. lia.
+  - simpl in Hl. destruct Hl as (Hll & Hlr & C1 & C2 & _). simpl depth in *.
+    destruct (IH lk lr Hll Hlr C1 C2 ltac:(lia) ltac:(lia)) as [A D].
+    simpl remove_min. destruct (remove_min ll lk lr) as [m l'] eqn:E. cbn [snd] in A, D |- *.
+    destruct (bal_avl l' k r A Hr ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & E1 & E2).
+    split; [exact A'|].
+    destruct (Nat.le_gt_cases (depth r) (depth l' + 2)); [rewrite E2 by lia|]; lia.
+Qed.
+
+Lemma merge_avl : forall l r, avl l -> avl r ->
+  (depth l <= depth r + 2)%nat -> (depth r <= depth l + 2)%nat ->
+  (depth l < 900)%nat -> (depth r < 900)%nat ->
+  avl (merge l r) /\
+  (Nat.max (depth l) (depth r) <= depth (merge l r) <= S (Nat.max (depth l) (depth r)))%nat.
+Proof.
+  intros l r Hl Hr B1 B2 D1 D2.
+  destruct l as [| ll lk lr ls lh]; [split; [exact Hr | simpl; lia]|].
+  destruct r as [| rl rk rr rs rh]; [split; [exact Hl | simpl; lia]|].
+  pose proof Hr as Hr0. simpl in Hr. destruct Hr as (Hrl & Hrr & C1 & C2 & _).
+  assert (DR : depth (Node rl rk rr rs rh) = S (Nat.max (depth rl) (depth rr))) by reflexivity.
+  set (L := Node ll lk lr ls lh) in *.
+  destruct (remove_min_avl rl rk rr Hrl Hrr C1 C2 ltac:(lia) ltac:(lia)) as [A D].
+  change (merge L (Node rl rk rr rs rh)) with (let (m, r') := remove_min rl rk rr in bal L m r').
+  destruct (remove_min rl rk rr) as [m r'] eqn:E. cbn [snd] in A, D.
+  destruct (bal_avl L m r' Hl A ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & E1 & E2).
+  split; [exact A'|]. rewrite DR.
+  destruct (Nat.le_gt_cases (depth L) (depth r' + 2)); [rewrite E2 by lia|]; lia.
+Qed.
+
+Lemma delete_avl : forall x t, avl t -> (depth t < 900)%nat ->
+  avl (delete x t) /\ (depth t <= S (depth (delete x t)) /\ depth (delete x t) <= depth t)%nat.
+Proof.
+  intros x t. induction t as [| l IHl k r IHr s h]; intros Ht Hd.
+  - split; [exact I | simpl; lia].
+  - simpl in Ht. destruct Ht as (Hl & Hr & B1 & B2 & Hh). simpl depth in Hd.
+    simpl delete. destruct (x <? k).
+    + destruct (IHl Hl ltac:(lia)) as [A D].
+      destruct (bal_avl (delete x l) k r A Hr ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & D1 & D2).
+      split; [exact A'|]. simpl depth.
+      destruct (Nat.le_gt_cases (depth r) (depth (delete x l) + 2)); [rewrite D2 by lia|]; lia.
+    + destruct (k <? x).
+      * destruct (IHr Hr ltac:(lia)) as [A D].
+        destruct (bal_avl l k (delete x r) Hl A ltac:(lia) ltac:(lia) ltac:(lia) ltac:(lia)) as (A' & D1 & D2).
+        split; [exact A'|]. simpl depth.
+        destruct (Nat.le_gt_cases (depth l) (depth (delete x r) + 2)); [rewrite D2 by lia|]; lia.
+      * destruct (merge_avl l r Hl Hr B1 B2 ltac:(lia) ltac:(lia)) as [A D].
+        split; [exact A|]. simpl depth. lia.
+Qed.
+
+Definition cnt (t : tree) : nat := List.length (elements t).
+
+Lemma cnt_node : forall l k r s h, cnt (Node l k r s h) = (cnt l + cnt r + 1)%nat.
+Proof. intros. unfold cnt. simpl. rewrite length_app. simpl. lia. Qed.
+
+Lemma avl_pow : forall t, avl t -> (2 ^ (depth t / 3) <= cnt t + 1)%nat.
+Proof.
+  induction t as [| l IHl k r IHr s h]; intros Ht; [simpl; lia|].
+  simpl in Ht. destruct Ht as (Hl & Hr & B1 & B2 & _).
+  specialize (IHl Hl). specialize (IHr Hr). rewrite cnt_node. simpl depth.
+  set (d := S (Nat.max (depth l) (depth r))).
+  destruct (Nat.lt_ge_cases d 3) as [Hd|Hd].
+  - rewrite Nat.div_small by exact Hd. simpl. lia.
+  - assert (Q : (d / 3 = S ((d - 3) / 3))%nat).
+    { replace d with ((d - 3) + 1 * 3)%nat at 1 by lia. rewrite Nat.div_add by lia. lia. }
+    rewrite Q, Nat.pow_succ_r'.
+    assert (Ml : (2 ^ ((d - 3) / 3) <= 2 ^ (depth l / 3))%nat \/ (2 ^ ((d - 3) / 3) <= 2 ^ (depth r / 3))%nat).
+    { destruct (Nat.le_ge_cases (depth l) (depth r)).
+      - right. apply Nat.pow_le_mono_r; [lia|]. apply Nat.Div0.div_le_mono; lia.
+      - left. apply Nat.pow_le_mono_r; [lia|]. apply Nat.Div0.div_le_mono; lia. }
+    assert (Ml2 : (2 ^ ((d - 3) / 3) <= 2 ^ (depth l / 3))%nat /\ (2 ^ ((d - 3) / 3) <= 2 ^ (depth r / 3))%nat).
+    { split; apply Nat.pow_le_mono_r; try lia; apply Nat.Div0.div_le_mono; lia. }
+    lia.
+Qed.
+
+Lemma avl_depth_log : forall t, avl t -> (depth t <= 3 * Nat.log2 (cnt t + 1) + 2)%nat.
+Proof.
+  intros t Ht. pose proof (avl_pow t Ht) as P.
+  assert (L : (depth t / 3 <= Nat.log2 (cnt t + 1))%nat).
+  { apply Nat.log2_le_pow2; [lia | exact P]. }
+  pose proof (Nat.div_mod (depth t) 3 ltac:(lia)). pose proof (Nat.mod_upper_bound (depth t) 3 ltac:(lia)).
+  lia.
+Qed.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Ltac op_bounds :=
+  repeat match goal with
+  | |- context [@cost ?T ?m] =>
+      lazymatch m with
+      | extract (extract (extract (set_cost _ _ _) _ _) _ _) _ _ => change (@cost T m) with 1%nat
+      | extract (extract (set_cost _ _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (set_cost _ _ _) _ _ => change (@cost T m) with 0%nat
+      | set_cost _ _ _ => change (@cost T m) with 0%nat
+      | insert_cost _ _ _ => change (@cost T m) with 0%nat
+      | delete_cost _ _ _ => change (@cost T m) with 0%nat
+      | count_lt_cost _ _ _ => change (@cost T m) with 0%nat
+      | extract (insert_cost _ ?x ?xC) ?t ?tC =>
+          let Hc := fresh "Hc" in
+          pose proof (insert_time x xC t tC) as Hc; unfold call_cost2 in Hc;
+          change (cost (insert_cost stepsCM x xC)) with 0%nat in Hc;
+          cost_align Hc; name_costs Hc
+      | extract (delete_cost _ ?x ?xC) ?t ?tC =>
+          let Hc := fresh "Hc" in
+          pose proof (delete_time x xC t tC) as Hc; unfold call_cost2 in Hc;
+          change (cost (delete_cost stepsCM x xC)) with 0%nat in Hc;
+          cost_align Hc; name_costs Hc
+      | extract (count_lt_cost _ ?x ?xC) ?t ?tC =>
+          let Hc := fresh "Hc" in
+          pose proof (count_lt_time x xC t tC) as Hc; unfold call_cost2 in Hc;
+          change (cost (count_lt_cost stepsCM x xC)) with 0%nat in Hc;
+          cost_align Hc; name_costs Hc
+      end
+  end.
+
+Lemma init_time n1 n1C (N D : nat) :
+  φ n1 = Z.of_nat (N + 1) -> (D < 899)%nat ->
+  (forall T, avl T -> (cnt T <= N)%nat -> (depth T <= D)%nat) ->
+  forall k kC keys keysC T TC H HC,
+  (1 <= φ k)%Z -> avl T -> ok T -> sorted (elements T) -> (Z.of_nat (cnt T) + 1 <= φ k)%Z ->
+  (cost (extract (extract (extract (extract (init_loop_cost stepsCM n1 n1C) k kC) keys keysC) T TC) H HC)
+    <= Z.to_nat (gap n1 k) * (D * 260 + 400) + 10)%nat.
+Proof.
+  intros Hn1 HD HDT. unfold init_loop_cost. cbn.
+  match goal with |- forall k kC keys keysC T TC H HC, _ -> _ -> _ -> _ -> _ -> (@cost ?Ty (?G n1 n1C k kC keys keysC T TC H HC) <= _)%nat =>
+    enough (HG : forall m k kC keys keysC T TC H HC, (Z.to_nat (gap n1 k) <= m)%nat ->
+       (1 <= φ k)%Z -> avl T -> ok T -> sorted (elements T) -> (Z.of_nat (cnt T) + 1 <= φ k)%Z ->
+       (@cost Ty (G n1 n1C k kC keys keysC T TC H HC) <= m * (D * 260 + 400) + 10)%nat)
+      by (intros; apply HG; auto) end.
+  induction m as [|m IH]; intros k kC keys keysC T TC [g] HC Hm Hk1 HA HO HS HC1;
+    cost_simpl;
+    pose proof (bdec_time (k <? n1) (bool_w (k <? n1))) as HB;
+    cost_destruct (bdec (k <? n1)); cost_simpl.
+  - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hm. lia.
+  - lia.
+  - op_bounds.
+    pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+    assert (Hk' : φ (k + 1) = (φ k + 1)%Z) by (rewrite add_spec; change (φ 1) with 1%Z; apply Z.mod_small; rewrite wB_val; lia).
+    assert (HcT : (cnt T <= N)%nat) by lia.
+    pose proof (HDT T HA HcT) as HdT.
+    assert (Hb : (nel T + 1 < wB)%Z) by (unfold nel; fold (cnt T); rewrite wB_val; lia).
+    destruct (insert_spec (2305825417027649536 + k) T HO HS Hb) as [HO' HE'].
+    destruct (insert_avl (2305825417027649536 + k) T HA ltac:(lia)) as [HA' _].
+    assert (HcT' : (cnt (insert (2305825417027649536 + k) T) <= S (cnt T))%nat)
+      by (unfold cnt; rewrite HE'; apply ins_length).
+    match goal with |- context [@cost ?Ty (?G' n1 n1C ?k' ?w1 ?ks ?w2 ?T' ?w3 ?h ?e)] =>
+      pose proof (IH k' w1 ks w2 T' w3 h e : _ -> _ -> _ -> _ -> _ -> _ -> (@cost Ty (G' n1 n1C k' w1 ks w2 T' w3 h e) <= _)%nat) as HI end.
+    specialize (HI ltac:(unfold gap in *; lia) ltac:(lia) HA' HO' ltac:(rewrite HE'; apply ins_sorted; exact HS) ltac:(lia)).
+    lia.
+  - lia.
+Qed.
+
+
+Lemma cnt_inv : forall n t p xt j keys T out, Inv n t p xt j keys T out -> cnt T = N.to_nat n.
+Proof.
+  intros n t p xt j keys T out (_ & _ & _ & _ & HP & _).
+  unfold cnt. pose proof (Permutation.Permutation_length HP) as L.
+  pose proof (length_map to_Z (elements T)). match type of L with _ = Datatypes.length (map ?f ?l) => pose proof (length_map f l) end. pose proof (teams_length n). lia.
+Qed.
+
+Lemma ev_time (n : N) (t p : list N) (xt xp : array uint) :
+  valid_input n t p -> repr xt t -> repr xp p ->
+  forall xtC xpC mC (D : nat), (D < 899)%nat ->
+  (forall T, avl T -> (cnt T <= N.to_nat n)%nat -> (depth T <= D)%nat) ->
+  forall j jC keys keysC T TC out outC H HC,
+  (φ j <= φ (PArray.length xt))%Z -> Inv n t p xt j keys T out -> avl T ->
+  (cost (extract (extract (extract (extract (extract (extract (extract
+     (ev_loop_cost stepsCM xt xtC) xp xpC) (PArray.length xt) mC) j jC) keys keysC) T TC) out outC) H HC)
+    <= Z.to_nat (gap (PArray.length xt) j) * (D * 600 + 700) + 10)%nat.
+Proof.
+  intros Hv Ht Hp xtC xpC mC D HD HDT. unfold ev_loop_cost. cbn.
+  match goal with |- forall j jC keys keysC T TC out outC H HC, _ -> _ -> _ -> (@cost ?Ty (?G xt xtC xp xpC ?m mC j jC keys keysC T TC out outC H HC) <= _)%nat =>
+    enough (HG : forall z j jC keys keysC T TC out outC H HC, (Z.to_nat (gap m j) <= z)%nat ->
+       (φ j <= φ m)%Z -> Inv n t p xt j keys T out -> avl T ->
+       (@cost Ty (G xt xtC xp xpC m mC j jC keys keysC T TC out outC H HC) <= z * (D * 600 + 700) + 10)%nat)
+      by (intros; apply HG; auto) end.
+  induction z as [|z IH]; intros j jC keys keysC T TC out outC [g] HC Hz Hjm HI HA;
+    cost_simpl;
+    match goal with |- context [bdec ?b] => pose proof (bdec_time b (bool_w b)) as HB; cost_destruct (bdec b) end; cost_simpl.
+  - exfalso. pose proof (proj1 (Uint63.ltb_spec _ _) e). unfold gap in Hz. lia.
+  - lia.
+  - op_bounds.
+    pose proof (proj1 (Uint63.ltb_spec _ _) e) as Hlt.
+    pose proof (alength_bound xt) as Bx.
+    assert (Hj' : φ (j + 1) = (φ j + 1)%Z) by (rewrite add_spec; change (φ 1) with 1%Z; apply Z.mod_small; rewrite wB_val; lia).
+    pose proof (cnt_inv _ _ _ _ _ _ _ _ HI) as Hcn.
+    pose proof (HDT T HA ltac:(lia)) as HdT.
+    pose proof (step_inv n t p Hv xt xp Ht Hp j keys T out Hlt HI) as HI'.
+    destruct (delete_avl (keys.[xt.[j]]) T HA ltac:(lia)) as (HA1 & _ & HD1).
+    destruct (insert_avl (keys.[xt.[j]] - KD + xp.[j] * KE) _ HA1 ltac:(lia)) as (HA2 & _).
+    pose proof (cnt_inv _ _ _ _ _ _ _ _ HI') as Hcn'.
+    pose proof (HDT _ HA2 ltac:(lia)) as HdT'.
+    match goal with |- context [@cost ?Ty (?G' xt xtC xp xpC ?m' mC ?k' ?w1 ?ks ?w2 ?T' ?w3 ?o ?w4 ?h ?e)] =>
+      pose proof (IH k' w1 ks w2 T' w3 o w4 h e : _ -> _ -> _ -> _ -> (@cost Ty (G' xt xtC xp xpC m' mC k' w1 ks w2 T' w3 o w4 h e) <= _)%nat) as HIH end.
+    specialize (HIH ltac:(unfold gap in *; lia) ltac:(lia) HI' HA2).
+    match type of Hc0 with context [depth ?X] => assert (E0 : (depth X <= D)%nat) by (eapply Nat.le_trans; [exact HD1 | exact HdT]) end.
+    match type of Hc1 with context [depth ?X] => assert (E1 : (depth X <= D)%nat) by exact HdT' end.
+    clear -HIH E0 E1 Hc Hc0 Hc1 HB HdT. lia.
+  - lia.
+Qed.
+
+Lemma log_small : forall a, (Z.of_nat a <= 100001)%Z -> (Nat.log2 a <= 16)%nat.
+Proof.
+  intros a H. transitivity (Nat.log2 100001).
+  - apply Nat.log2_le_mono. apply Nat2Z.inj_le. exact H.
+  - vm_compute. lia.
+Qed.
+
+Lemma init_loop_avl : forall (N : nat) (n1 : int), φ n1 = Z.of_nat (N + 1) -> (Z.of_nat N <= 100000)%Z ->
+  forall z (k : int) (keys : array int) (T : tree) (H : Acc (Zwf 0) (gap n1 k)),
+  gap n1 k = z -> (1 <= φ k)%Z -> avl T -> ok T -> sorted (elements T) ->
+  (Z.of_nat (cnt T) + 1 <= φ k)%Z ->
+  avl (snd (init_loop n1 k keys T H)).
+Proof.
+  intros N n1 Hn1 HN z. induction z as [z IH] using (well_founded_ind (Zwf_well_founded 0)).
+  intros k keys T H Hz Hk HA HO HS HC.
+  rewrite init_loop_eq.
+  destruct (bdec (k <? n1)) as [Hlt | Hge].
+  - pose proof Hlt as Hlt'. rewrite ltb_true in Hlt'.
+    assert (Hk1 : φ (k + 1) = (φ k + 1)%Z)
+      by (rewrite add_spec; change (φ 1) with 1%Z; apply Z.mod_small; rewrite wB_val; lia).
+    assert (Hb : (nel T + 1 < wB)%Z) by (unfold nel; fold (cnt T); rewrite wB_val; lia).
+    destruct (insert_spec (K0 + k) T HO HS Hb) as [HO' HE'].
+    pose proof (avl_depth_log T HA) as Hd.
+    assert (Hl : (Nat.log2 (cnt T + 1) <= 16)%nat) by (apply log_small; lia).
+    destruct (insert_avl (K0 + k) T HA ltac:(lia)) as [HA' _].
+    assert (HcT' : (cnt (insert (K0 + k) T) <= S (cnt T))%nat)
+      by (unfold cnt; rewrite HE'; apply ins_length).
+    cbv zeta. eapply IH; [ | reflexivity | lia | exact HA' | exact HO' | | lia ].
+    + rewrite <- Hz. apply dec_step. exact Hlt.
+    + rewrite HE'. apply ins_sorted. exact HS.
+  - exact HA.
+Qed.
+
+Lemma init_facts : forall (n : N) (t p : list N) (xn : uint) (xt : array uint),
+  valid_input n t p -> repr xn n -> repr xt t ->
+  Inv n t p xt 0 (fst (init_loop (xn + 1) 1 (PArray.make (xn + 1) 0) Leaf (Zwf_well_founded 0 (gap (xn + 1) 1))))
+    (snd (init_loop (xn + 1) 1 (PArray.make (xn + 1) 0) Leaf (Zwf_well_founded 0 (gap (xn + 1) 1))))
+    (PArray.make (PArray.length xt) 0) /\
+  avl (snd (init_loop (xn + 1) 1 (PArray.make (xn + 1) 0) Leaf (Zwf_well_founded 0 (gap (xn + 1) 1)))).
+Proof.
+  intros n t p xn xt Hv Hn Ht.
+  destruct (vi_facts n t p Hv) as (Hnb & Hm & Hpl & _).
+  assert (Hxn : (φ xn) = Z.of_N n).
+  { unfold repr, repr_uint in Hn. pose proof (to_Z_bounded xn). lia. }
+  assert (Hn1 : (φ (xn + 1)) = (Z.of_N n + 1)%Z)
+    by (rewrite add_spec, Hxn; change (φ 1) with 1%Z; apply Z.mod_small; rewrite wB_val; lia).
+  set (n1 := xn + 1) in *.
+  assert (Hmk : (φ (PArray.length (PArray.make n1 0))) = (φ n1)).
+  { rewrite alength_make.
+    replace (n1 <=? PArray.max_length) with true; [reflexivity|].
+    symmetry. apply leb_spec. rewrite max_length_val. lia. }
+  split.
+  2:{ eapply (init_loop_avl (N.to_nat n)); [lia | lia | reflexivity | change (φ 1) with 1%Z; lia | exact I | exact I | exact I | change (φ 1) with 1%Z; simpl; lia]. }
+  destruct (init_loop_spec (Z.of_N n) n1 Hn1 ltac:(lia) _ 1 (PArray.make n1 0) Leaf
+              (Zwf_well_founded 0 (gap n1 1)) eq_refl
+              ltac:(change (φ 1) with 1%Z; lia) Hmk
+              ltac:(intros i Hi; change (φ 1) with 1%Z in Hi; lia) I I
+              ltac:(change (φ 1) with 1%Z; apply Permutation.perm_nil))
+    as (Hkl & Hk & Hok & Hs & Hperm).
+  set (m := PArray.length xt).
+  assert (HmL : PArray.length (PArray.make m 0) = m).
+  { rewrite alength_make.
+    replace (m <=? PArray.max_length) with true; [reflexivity|].
+    symmetry. apply leb_spec. rewrite max_length_val. exact (alength_bound xt). }
+  unfold Inv. change (φ 0) with 0%Z. cbn [Z.to_nat].
+  split; [rewrite Hkl; exact Hn1|].
+  split.
+  { intros i Hi. rewrite Hk by exact Hi. rewrite keyf_0.
+    change (φ K0) with 2305825417027649536%Z. lia. }
+  split; [exact Hok|]. split; [exact Hs|].
+  split.
+  { replace (Z.to_nat (Z.of_N n)) with (N.to_nat n) in Hperm by lia.
+    eapply Permutation.perm_trans; [exact Hperm|]. unfold teams. rewrite map_map.
+    apply Permutation.Permutation_refl'. apply map_ext. intros i. rewrite keyf_0.
+    change (φ K0) with 2305825417027649536%Z. lia. }
+  split; [exact HmL|].
+  intros i Hi. pose proof (to_Z_bounded i). lia.
+Qed.
+
+Ltac layer_zero :=
+  repeat match goal with
+  | |- context [@cost ?T ?m] =>
+      lazymatch m with
+      | make_cost _ _ _ => change (@cost T m) with 0%nat
+      | extract (make_cost _ _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (make_cost _ _ _) _ _) _ _ => change (@cost T m) with 1%nat
+      | init_loop_cost _ _ _ => change (@cost T m) with 0%nat
+      | extract (init_loop_cost _ _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (init_loop_cost _ _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (extract (init_loop_cost _ _ _) _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | ev_loop_cost _ _ _ => change (@cost T m) with 0%nat
+      | extract (ev_loop_cost _ _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (ev_loop_cost _ _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (extract (ev_loop_cost _ _ _) _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (extract (extract (ev_loop_cost _ _ _) _ _) _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (extract (extract (extract (ev_loop_cost _ _ _) _ _) _ _) _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | extract (extract (extract (extract (extract (extract (ev_loop_cost _ _ _) _ _) _ _) _ _) _ _) _ _) _ _ => change (@cost T m) with 0%nat
+      | gcpc_impl_cost _ _ _ => change (@cost T m) with 0%nat
+      | extract (gcpc_impl_cost _ _ _) _ _ => change (@cost T m) with 0%nat
+      end
+  end.
+
+Theorem gcpc_time : exists c1 c2 : nat,
+  forall (team_count : N) (event_teams event_penalties :
+  list N)
+  (team_count_int : uint)
+  (event_teams_arr event_penalties_arr : array uint),
+  valid_input team_count event_teams event_penalties ->
+  repr team_count_int team_count ->
+  repr event_teams_arr event_teams ->
+  repr event_penalties_arr event_penalties ->
+  (cost3 gcpc_cost team_count_int event_teams_arr event_penalties_arr <= c1 * ((Cost.size team_count_int + Cost.size event_teams_arr + 1) * (Nat.log2 (Cost.size team_count_int) + 1)) + c2)%nat.
+Proof.
+  exists 4000%nat, 300%nat.
+  intros n t p xn xt xp Hv Hn Ht Hp.
+  match goal with |- (_ <= ?R)%nat => remember R as RHS eqn:ER end.
+  unfold cost3, gcpc_cost. cost_simpl. layer_zero. unfold gcpc_impl_cost. cost_simpl. layer_zero.
+  destruct (vi_facts n t p Hv) as (Hnb & Hm & Hpl & _).
+  assert (Hxn : (φ xn) = Z.of_N n).
+  { unfold repr, repr_uint in Hn. pose proof (to_Z_bounded xn). lia. }
+  assert (Hn1 : (φ (xn + 1)) = Z.of_nat (N.to_nat n + 1))
+    by (rewrite add_spec, Hxn; change (φ 1) with 1%Z; rewrite Z.mod_small; [|rewrite wB_val]; lia).
+  pose proof (repr_length _ _ Ht) as Lt.
+  set (N0 := N.to_nat n) in *.
+  set (D := (3 * Nat.log2 (N0 + 1) + 2)%nat).
+  assert (HL : (Nat.log2 (N0 + 1) <= 16)%nat) by (apply log_small; lia).
+  assert (HD : (D < 899)%nat) by (unfold D; lia).
+  assert (HDT : forall T, avl T -> (cnt T <= N0)%nat -> (depth T <= D)%nat).
+  { intros T HA HC. pose proof (avl_depth_log T HA). unfold D.
+    pose proof (Nat.log2_le_mono (cnt T + 1) (N0 + 1) ltac:(lia)). lia. }
+  destruct (init_facts n t p xn xt Hv Hn Ht) as [IF1 IF2].
+  match goal with |- context [@cost ?Ty (extract (extract (extract (extract (init_loop_cost _ ?n1 ?n1C) ?k ?kC) ?ks ?ksC) ?T ?TC) ?H ?HC)] =>
+    pose proof (init_time n1 n1C N0 D Hn1 HD HDT k kC ks ksC T TC H HC ltac:(change (φ 1) with 1%Z; lia) I I I ltac:(change (φ 1) with 1%Z; simpl; lia)) as HI0
+  end.
+  cost_align HI0. name_costs HI0.
+  match goal with |- context [init_loop ?a ?b ?c ?d ?e] =>
+    cost_destruct_witness (init_loop a b c d e) as [keys keysC T TC] eqn:E end.
+  cost_simpl. layer_zero. cbn [fst snd] in IF1, IF2.
+  match goal with |- context [@cost ?Ty (extract (extract (extract (extract (extract (extract (extract
+       (ev_loop_cost _ _ ?xtC) _ ?xpC) _ ?mC) ?j ?jC) ?ks ?ksC) ?T ?TC) ?o ?oC) ?H ?HC)] =>
+    pose proof (ev_time n t p xt xp Hv Ht Hp xtC xpC mC D HD HDT j jC ks ksC T TC o oC H HC
+                  ltac:(change (φ 0) with 0%Z; pose proof (to_Z_bounded (PArray.length xt)); lia) IF1 IF2) as HE0
+  end.
+  cost_align HE0. name_costs HE0.
+  assert (G1 : Z.to_nat (gap (xn + 1) 1) = N0) by (unfold gap; rewrite Hn1; change (φ 1) with 1%Z; lia).
+  assert (S1 : Cost.size xn = N0) by (unfold Cost.size, size_uint; rewrite Hxn; lia).
+  set (M := Cost.size xt) in *.
+  assert (G2 : Z.to_nat (gap (PArray.length xt) 0) = M) by (unfold gap; change (φ 0) with 0%Z; rewrite Z.sub_0_r; reflexivity).
+  rewrite G1 in HI0. rewrite G2 in HE0.
+  rewrite S1 in ER.
+  pose proof (Nat.log2_succ_le N0) as HLs.
+  set (L := Nat.log2 N0) in *.
+  assert (HDL : (D <= 3 * L + 5)%nat) by (unfold D; rewrite Nat.add_1_r; lia).
+  clearbody D. subst RHS.
+  assert (A1 : (N0 * (D * 260 + 400) <= N0 * (L * 1800 + 3700))%nat) by (apply Nat.mul_le_mono_l; lia).
+  assert (A2 : (M * (D * 600 + 700) <= M * (L * 1800 + 3700))%nat) by (apply Nat.mul_le_mono_l; lia).
+  assert (A3 : (N0 * (L * 1800 + 3700) + M * (L * 1800 + 3700) <= 4000 * ((N0 + M + 1) * (L + 1)))%nat) by nia.
+  clear -HI0 HE0 A1 A2 A3. lia.
+Qed.
+
+Print Assumptions gcpc_time.

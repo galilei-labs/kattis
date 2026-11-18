@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules cudak_extracted_marray)
- (theories Cudak Cudak.spec Stdlib stdpp StdGalilei))
+ (theories Cudak Cudak.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name cudak_extraction)

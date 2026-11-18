@@ -1,4 +1,3 @@
-// Generated from OwnedANF. This printer is not verified.
 #[allow(unused_imports)] use std::rc::Rc;
 #[allow(unused_imports)] use rocq_array::Array;
 
@@ -30,21 +29,6 @@ impl<A: Clone + 'static> Clone for datetime<A> {
 
 pub type uint = u64;
 
-// Rocq: Booking.booking_implem.min_rooms
-// Variant: uncurried
-pub fn min_rooms() -> Rc<dyn Fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64> {
-  let v0: fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64 = min_rooms_impl;
-  let v1: Rc<dyn Fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64> = Rc::new(v0);
-  v1
-}
-
-// Rocq: Booking.booking_implem.min_rooms
-pub fn min_rooms_curried() -> Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>>> {
-  let v0: fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>> = min_rooms_impl_curried;
-  let v1: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>>> = Rc::new(v0);
-  v1
-}
-
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
 // Variant: uncurried
 pub fn eqb(v0: u64, v1: u64) -> bool {
@@ -59,21 +43,18 @@ pub fn ltb(v0: u64, v1: u64) -> bool {
 
 // Rocq: Booking.booking_implem.bdec
 pub fn bdec(b: bool) -> sumbool {
-  match b {
-    true => {
-      sumbool::left
-    },
-    false => {
-      sumbool::right
-    },
+  if b {
+    sumbool::left
+  } else {
+    sumbool::right
   }
 }
 
 // Rocq: Booking.spec.Prelude.year
 // Variant: borrowed
 pub fn year<A: Clone + 'static>(d: &Rc<datetime<A>>) -> A {
-  let v1 = d;
-  Clone::clone((&(&**v1).year))
+  let tmp = d;
+  Clone::clone(&tmp.year)
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
@@ -102,11 +83,11 @@ pub fn div(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Booking.booking_implem.days_before_year
 pub fn days_before_year(y: u64) -> u64 {
-  let v11 = mul(365u64, y);
-  let v20 = add(y, 3u64);
-  let v53 = sub(add(v11, div(v20, 4u64)), div(add(y, 99u64), 100u64));
-  let v62 = add(y, 399u64);
-  add(v53, div(v62, 400u64))
+  let tmp = mul(365u64, y);
+  let tmp_1 = add(y, 3u64);
+  let tmp_2 = sub(add(tmp, div(tmp_1, 4u64)), div(add(y, 99u64), 100u64));
+  let tmp_3 = add(y, 399u64);
+  add(tmp_2, div(tmp_3, 400u64))
 }
 
 // Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
@@ -118,26 +99,20 @@ pub fn leb(v0: u64, v1: u64) -> bool {
 // Rocq: Corelib.Init.Datatypes.orb
 // Variant: uncurried
 pub fn orb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      true
-    },
-    false => {
-      b2
-    },
+  if b1 {
+    true
+  } else {
+    b2
   }
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
 // Variant: uncurried
 pub fn andb(b1: bool, b2: bool) -> bool {
-  match b1 {
-    true => {
-      b2
-    },
-    false => {
-      false
-    },
+  if b1 {
+    b2
+  } else {
+    false
   }
 }
 
@@ -149,13 +124,10 @@ pub fn mod_(v0: u64, v1: u64) -> u64 {
 
 // Rocq: Corelib.Init.Datatypes.negb
 pub fn negb(b: bool) -> bool {
-  match b {
-    true => {
-      false
-    },
-    false => {
-      true
-    },
+  if b {
+    false
+  } else {
+    true
   }
 }
 
@@ -167,94 +139,82 @@ pub fn leapb(y: u64) -> bool {
 // Rocq: Booking.booking_implem.days_before_month
 // Variant: uncurried
 pub fn days_before_month(y: u64, m: u64) -> u64 {
-  let v26 = div(sub(mul(367u64, m), 362u64), 12u64);
-  let v29 = 2u64;
-  let v35 = match leb(m, v29) {
-    true => {
-      0u64
-    },
-    false => {
-      match leapb(y) {
-        true => {
-          1u64
-        },
-        false => {
-          2u64
-        },
-      }
-    },
+  let tmp = div(sub(mul(367u64, m), 362u64), 12u64);
+  let tmp_1 = 2u64;
+  let tmp_2 = if leb(m, tmp_1) {
+    0u64
+  } else {
+    if leapb(y) {
+      1u64
+    } else {
+      2u64
+    }
   };
-  sub(v26, v35)
+  sub(tmp, tmp_2)
 }
 
 // Rocq: Booking.spec.Prelude.month
 // Variant: borrowed
 pub fn month<A: Clone + 'static>(d: &Rc<datetime<A>>) -> A {
-  let v1 = d;
-  Clone::clone((&(&**v1).month))
+  let tmp = d;
+  Clone::clone(&tmp.month)
 }
 
 // Rocq: Booking.spec.Prelude.day
 // Variant: borrowed
 pub fn day<A: Clone + 'static>(d: &Rc<datetime<A>>) -> A {
-  let v1 = d;
-  Clone::clone((&(&**v1).day))
+  let tmp = d;
+  Clone::clone(&tmp.day)
 }
 
 // Rocq: Booking.spec.Prelude.hour
 // Variant: borrowed
 pub fn hour<A: Clone + 'static>(d: &Rc<datetime<A>>) -> A {
-  let v1 = d;
-  Clone::clone((&(&**v1).hour))
+  let tmp = d;
+  Clone::clone(&tmp.hour)
 }
 
 // Rocq: Booking.spec.Prelude.minute
 pub fn minute<A: Clone + 'static>(d: Rc<datetime<A>>) -> A {
-  let v3 = Clone::clone((&(&**&d).minute));
+  let d_minute_clone = Clone::clone(&d.minute);
   std::mem::drop(d);
-  v3
+  d_minute_clone
 }
 
 // Rocq: Booking.booking_implem.mach_minutes
 pub fn mach_minutes(t: Rc<datetime<u64>>) -> u64 {
   let y = year::<u64>(&t);
-  let v10 = days_before_year(y);
-  let v15 = month::<u64>(&t);
-  let v25 = add(v10, days_before_month(y, v15));
-  let v30 = day::<u64>(&t);
-  let days = add(v25, sub(v30, 1u64));
-  let v53 = mul(days, 24u64);
-  let v57 = hour::<u64>(&t);
-  let v62 = add(v53, v57);
-  add(mul(v62, 60u64), minute::<u64>(t))
+  let tmp = days_before_year(y);
+  let tmp_1 = month::<u64>(&t);
+  let tmp_2 = add(tmp, days_before_month(y, tmp_1));
+  let tmp_3 = day::<u64>(&t);
+  let days = add(tmp_2, sub(tmp_3, 1u64));
+  let tmp_4 = mul(days, 24u64);
+  let tmp_5 = hour::<u64>(&t);
+  let tmp_6 = add(tmp_4, tmp_5);
+  add(mul(tmp_6, 60u64), minute::<u64>(t))
 }
 
 // Rocq: Booking.booking_implem.key_al
 // Variant: uncurried
 pub fn key_al(ma: u64, r: u64, i: u64) -> u64 {
-  match eqb(ma, r) {
-    true => {
-      let v26 = add(mul(ma, 20000u64), 5000u64);
-      add(v26, mul(2u64, i))
-    },
-    false => {
-      let v59 = add(mul(ma, 20000u64), 15000u64);
-      add(v59, i)
-    },
+  if eqb(ma, r) {
+    let tmp = add(mul(ma, 20000u64), 5000u64);
+    add(tmp, mul(2u64, i))
+  } else {
+    let tmp_1 = add(mul(ma, 20000u64), 15000u64);
+    add(tmp_1, i)
   }
 }
 
 // Rocq: Booking.booking_implem.key_rh
 // Variant: uncurried
 pub fn key_rh(ma: u64, r: u64, i: u64) -> u64 {
-  match eqb(ma, r) {
-    true => {
-      let v26 = add(mul(ma, 20000u64), 5001u64);
-      add(v26, mul(2u64, i))
-    },
-    false => {
-      add(mul(r, 20000u64), i)
-    },
+  if eqb(ma, r) {
+    let tmp = add(mul(ma, 20000u64), 5001u64);
+    add(tmp, mul(2u64, i))
+  } else {
+    add(mul(r, 20000u64), i)
   }
 }
 
@@ -267,21 +227,19 @@ pub fn fill_1(xa: Rc<Array<Rc<datetime<u64>>>>, xd: Rc<Array<Rc<datetime<u64>>>>
 // Rocq: Booking.booking_implem.fill (local: fill)
 // Variant: uncurried, lifted
 pub fn fill(xa: Rc<Array<Rc<datetime<u64>>>>, xd: Rc<Array<Rc<datetime<u64>>>>, c: u64, n: u64, k: u64, A: Rc<Array<u64>>, R: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let v15 = ltb(k, n);
-  match bdec(v15) {
+  let tmp = ltb(k, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v20 = &xa;
-      let v24 = rocq_array::get::<Rc<datetime<u64>>>(&v20, k);
-      let ma = mach_minutes(v24);
-      let v29 = &xd;
-      let v33 = rocq_array::get::<Rc<datetime<u64>>>(&v29, k);
-      let r = add(mach_minutes(v33), c);
-      let v48 = add(k, 1u64);
-      let v56 = key_al(ma, r, k);
-      let v63 = rocq_array::set::<u64>(A, k, v56);
-      let v71 = key_rh(ma, r, k);
-      let v78 = rocq_array::set::<u64>(R, k, v71);
-      fill(xa, xd, c, n, v48, v63, v78, ())
+      let tmp_1 = rocq_array::get::<Rc<datetime<u64>>>(&xa, k);
+      let ma = mach_minutes(tmp_1);
+      let tmp_2 = rocq_array::get::<Rc<datetime<u64>>>(&xd, k);
+      let r = add(mach_minutes(tmp_2), c);
+      let tmp_3 = add(k, 1u64);
+      let tmp_4 = key_al(ma, r, k);
+      let tmp_5 = rocq_array::set::<u64>(A, k, tmp_4);
+      let tmp_6 = key_rh(ma, r, k);
+      let tmp_7 = rocq_array::set::<u64>(R, k, tmp_6);
+      fill(xa, xd, c, n, tmp_3, tmp_5, tmp_7, ())
     },
     sumbool::right => {
       std::mem::drop(xa);
@@ -294,12 +252,10 @@ pub fn fill(xa: Rc<Array<Rc<datetime<u64>>>>, xd: Rc<Array<Rc<datetime<u64>>>>, 
 // Rocq: Booking.booking_implem.swap
 // Variant: uncurried
 pub fn swap(a: Rc<Array<u64>>, i: u64, j: u64) -> Rc<Array<u64>> {
-  let v3 = &a;
-  let x = rocq_array::get::<u64>(&v3, i);
-  let v7 = &a;
-  let y = rocq_array::get::<u64>(&v7, j);
-  let v18 = rocq_array::set::<u64>(a, i, y);
-  rocq_array::set::<u64>(v18, j, x)
+  let x = rocq_array::get::<u64>(&a, i);
+  let y = rocq_array::get::<u64>(&a, j);
+  let tmp = rocq_array::set::<u64>(a, i, y);
+  rocq_array::set::<u64>(tmp, j, x)
 }
 
 // Rocq: Booking.booking_implem.part_loop
@@ -311,19 +267,15 @@ pub fn part_loop_1(a: Rc<Array<u64>>, p: u64, hi1: u64, i: u64, j: u64) -> (Rc<A
 // Rocq: Booking.booking_implem.part_loop (local: part_loop)
 // Variant: uncurried, lifted
 pub fn part_loop(a: Rc<Array<u64>>, p: u64, hi1: u64, i: u64, j: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let v13 = ltb(j, hi1);
-  match bdec(v13) {
+  let tmp = ltb(j, hi1);
+  match bdec(tmp) {
     sumbool::left => {
-      let v18 = &a;
-      let v22 = rocq_array::get::<u64>(&v18, j);
-      match ltb(v22, p) {
-        true => {
-          let v35 = swap(a, i, j);
-          part_loop(v35, p, hi1, add(i, 1u64), add(j, 1u64), ())
-        },
-        false => {
-          part_loop(a, p, hi1, i, add(j, 1u64), ())
-        },
+      let tmp_1 = rocq_array::get::<u64>(&a, j);
+      if ltb(tmp_1, p) {
+        let tmp_2 = swap(a, i, j);
+        part_loop(tmp_2, p, hi1, add(i, 1u64), add(j, 1u64), ())
+      } else {
+        part_loop(a, p, hi1, i, add(j, 1u64), ())
       }
     },
     sumbool::right => {
@@ -335,17 +287,16 @@ pub fn part_loop(a: Rc<Array<u64>>, p: u64, hi1: u64, i: u64, j: u64, _H: ()) ->
 // Rocq: Booking.booking_implem.partition
 // Variant: uncurried
 pub fn partition(a: Rc<Array<u64>>, lo: u64, hi: u64) -> (Rc<Array<u64>>, u64) {
-  let v10 = sub(hi, lo);
-  let mid = add(lo, div(v10, 2u64));
+  let tmp = sub(hi, lo);
+  let mid = add(lo, div(tmp, 2u64));
   let hi1 = sub(hi, 1u64);
   let a1 = swap(a, mid, hi1);
-  let v39 = &a1;
-  let p = rocq_array::get::<u64>(&v39, hi1);
-  let v54 = part_loop_1(a1, p, hi1, lo, lo);
-  match v54 {
+  let p = rocq_array::get::<u64>(&a1, hi1);
+  let tmp_1 = part_loop_1(a1, p, hi1, lo, lo);
+  match tmp_1 {
     (v56, v58) => {
-      let v68 = swap(v56, v58, hi1);
-      (v68, v58)
+      let tmp_2 = swap(v56, v58, hi1);
+      (tmp_2, v58)
     },
   }
 }
@@ -359,14 +310,14 @@ pub fn qsort_1(a: Rc<Array<u64>>, lo: u64, hi: u64) -> Rc<Array<u64>> {
 // Rocq: Booking.booking_implem.qsort (local: qsort)
 // Variant: uncurried, lifted
 pub fn qsort(a: Rc<Array<u64>>, lo: u64, hi: u64, _H: ()) -> Rc<Array<u64>> {
-  let v19 = ltb(add(lo, 1u64), hi);
-  match bdec(v19) {
+  let tmp = ltb(add(lo, 1u64), hi);
+  match bdec(tmp) {
     sumbool::left => {
-      let v30 = partition(a, lo, hi);
-      match v30 {
+      let tmp_1 = partition(a, lo, hi);
+      match tmp_1 {
         (v32, v34) => {
-          let v55 = andb(leb(lo, v34), ltb(v34, hi));
-          match bdec(v55) {
+          let tmp_2 = andb(leb(lo, v34), ltb(v34, hi));
+          match bdec(tmp_2) {
             sumbool::left => {
               let a2 = qsort(v32, lo, v34, ());
               qsort(a2, add(v34, 1u64), hi, ())
@@ -386,9 +337,8 @@ pub fn qsort(a: Rc<Array<u64>>, lo: u64, hi: u64, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Booking.booking_implem.sort_all
 pub fn sort_all(a: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let v4 = &a;
-  let v5 = rocq_array::length::<u64>(&v4);
-  qsort_1(a, 0u64, v5)
+  let tmp = rocq_array::length::<u64>(&a);
+  qsort_1(a, 0u64, tmp)
 }
 
 // Rocq: Booking.booking_implem.sweep
@@ -400,32 +350,27 @@ pub fn sweep_1(A: Rc<Array<u64>>, R: Rc<Array<u64>>, n: u64, p: u64, q: u64, bes
 // Rocq: Booking.booking_implem.sweep (local: sweep)
 // Variant: uncurried, lifted
 pub fn sweep(A: Rc<Array<u64>>, R: Rc<Array<u64>>, n: u64, p: u64, q: u64, best: u64, _H: ()) -> u64 {
-  let v14 = ltb(p, n);
-  match bdec(v14) {
+  let tmp = ltb(p, n);
+  match bdec(tmp) {
     sumbool::left => {
-      let v25 = ltb(q, n);
-      let v27 = &R;
-      let v30 = rocq_array::get::<u64>(&v27, q);
-      let v31 = &A;
-      let v34 = rocq_array::get::<u64>(&v31, p);
-      let v45 = andb(v25, leb(v30, v34));
-      match bdec(v45) {
+      let tmp_1 = ltb(q, n);
+      let tmp_2 = rocq_array::get::<u64>(&R, q);
+      let tmp_3 = rocq_array::get::<u64>(&A, p);
+      let tmp_4 = andb(tmp_1, leb(tmp_2, tmp_3));
+      match bdec(tmp_4) {
         sumbool::left => {
           sweep(A, R, n, p, add(q, 1u64), best, ())
         },
         sumbool::right => {
-          let v84 = add(p, 1u64);
-          let v91 = add(best, q);
-          let v99 = add(p, 1u64);
-          let v105 = match ltb(v91, v99) {
-            true => {
-              sub(add(p, 1u64), q)
-            },
-            false => {
-              best
-            },
+          let tmp_5 = add(p, 1u64);
+          let tmp_6 = add(best, q);
+          let tmp_7 = add(p, 1u64);
+          let tmp_8 = if ltb(tmp_6, tmp_7) {
+            sub(add(p, 1u64), q)
+          } else {
+            best
           };
-          sweep(A, R, n, v84, q, v105, ())
+          sweep(A, R, n, tmp_5, q, tmp_8, ())
         },
       }
     },
@@ -440,39 +385,17 @@ pub fn sweep(A: Rc<Array<u64>>, R: Rc<Array<u64>>, n: u64, p: u64, q: u64, best:
 // Rocq: Booking.booking_implem.min_rooms_impl
 // Variant: uncurried
 pub fn min_rooms_impl(c: u64, xa: Rc<Array<Rc<datetime<u64>>>>, xd: Rc<Array<Rc<datetime<u64>>>>) -> u64 {
-  let v3 = &xa;
-  let n = rocq_array::length::<Rc<datetime<u64>>>(&v3);
-  let v14 = rocq_array::make::<u64>(n, 0u64);
-  let v21 = rocq_array::make::<u64>(n, 0u64);
-  let v36 = fill_1(xa, xd, c, n, 0u64, v14, v21);
-  match v36 {
+  let n = rocq_array::length::<Rc<datetime<u64>>>(&xa);
+  let tmp = rocq_array::make::<u64>(n, 0u64);
+  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
+  let tmp_2 = fill_1(xa, xd, c, n, 0u64, tmp, tmp_1);
+  match tmp_2 {
     (v38, v40) => {
       let A_ = sort_all(v38);
       let R_ = sort_all(v40);
       sweep_1(A_, R_, n, 0u64, 0u64, 0u64)
     },
   }
-}
-
-// Rocq: Booking.booking_implem.min_rooms_impl
-pub fn min_rooms_impl_curried(c: u64) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>> {
-  let v3 = {
-    move |xa: Rc<Array<Rc<datetime<u64>>>>| -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64> {
-      let c = &c;
-      let v8 = Clone::clone(c);
-      let v11 = {
-        move |xd: Rc<Array<Rc<datetime<u64>>>>| -> u64 {
-          let v19 = Clone::clone(&v8);
-          let v21 = Rc::clone(&xa);
-          min_rooms_impl(v19, v21, xd)
-        }
-      };
-      let v27: Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64> = Rc::new(v11);
-      v27
-    }
-  };
-  let v31: Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>> = Rc::new(v3);
-  v31
 }
 
 mod __rocq_reuse {
@@ -623,10 +546,3 @@ mod tests {
 }
 
 }
-
-pub fn run() -> Rc<dyn Fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64> {
-  let v0: Rc<dyn Fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64> = __rocq_global_722.with(Clone::clone);
-  v0
-}
-std::thread_local! { static __rocq_global_722: Rc<dyn Fn(u64, Rc<Array<Rc<datetime<u64>>>>, Rc<Array<Rc<datetime<u64>>>>) -> u64> = min_rooms(); }
-std::thread_local! { static __rocq_global_725: Rc<dyn Fn(u64) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> Rc<dyn Fn(Rc<Array<Rc<datetime<u64>>>>) -> u64>>> = min_rooms_curried(); }

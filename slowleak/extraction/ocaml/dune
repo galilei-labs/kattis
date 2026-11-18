@@ -4,7 +4,7 @@
 (rocq.extraction
  (prelude extract_marray)
  (extracted_modules slowleak_extracted_marray)
- (theories Slowleak Slowleak.spec Stdlib stdpp StdGalilei))
+ (theories Slowleak Slowleak.spec Stdlib stdpp StdGalilei KattisLib))
 
 (library
  (name slowleak_extraction)

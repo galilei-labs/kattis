@@ -24,11 +24,7 @@ val set : 'a1 Marray.t -> Uint63.t -> 'a1 -> 'a1 Marray.t
 
 val length : 'a1 Marray.t -> Uint63.t
 
-type char63 = Uint63.t
-
 type string = Pstring.t
-
-val make0 : Uint63.t -> char63 -> string
 
 val compare : string -> string -> comparison
 

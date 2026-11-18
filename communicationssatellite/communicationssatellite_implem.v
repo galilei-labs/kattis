@@ -42,6 +42,7 @@ From Stdlib Require Import FinFun.
 From Stdlib Require Sint63.
 From Stdlib Require Import Relation_Operators Operators_Properties Sorting.Sorted Sorting.Permutation Classical_Prop.
 From StdGalilei Require Import repr repr_float.
+From KattisLib Require Import Cost.
 Import ListNotations.
 
 (* ================================================================== *)
@@ -1142,6 +1143,9 @@ Definition bdec (b : bool) : {b = true} + {b = false} :=
   | true => left eq_refl
   | false => right eq_refl
   end.
+Elpi complexity sumbool.
+Elpi complexity bdec.
+Arguments bdec_cost : simpl never.
 
 Definition gap (m j : int) : Z := (to_Z m - to_Z j)%Z.
 
@@ -1166,19 +1170,29 @@ Definition loop (hi : int) (f : int -> St -> St) (i : int) (s : St) : St :=
   wloop hi f i s (Zwf_well_founded 0 (gap hi i)).
 
 End Loop.
+Elpi complexity wloop.
+Arguments wloop_cost : simpl never.
+Elpi complexity loop.
+Arguments loop_cost : simpl never.
 
 (* the squared distance of the centres of dishes i and j, exact in int *)
 Definition dsq (x y : array sint) (i j : int) : int :=
   let dx := x.[i] - x.[j] in
   let dy := y.[i] - y.[j] in
   dx * dx + dy * dy.
+Elpi complexity dsq.
+Arguments dsq_cost : simpl never.
 
 (* the weight of the edge i j : the gap between the two dishes *)
 Definition wt (x y : array sint) (r : array uint) (i j : int) : float :=
   (PrimFloat.sqrt (of_uint63 (dsq x y i j)) - of_uint63 (r.[i] + r.[j]))%float.
+Elpi complexity wt.
+Arguments wt_cost : simpl never.
 
 Definition init_step (x y : array sint) (r : array uint) (v : int) (key : array float) : array float :=
   key.[v <- wt x y r 0 v].
+Elpi complexity init_step.
+Arguments init_step_cost : simpl never.
 
 (* the argmin of key over the dishes not in the tree ; n is "none yet" *)
 Definition amin_step (n : int) (inT : array bool) (key : array float) (v : int) (st : int * float)
@@ -1187,6 +1201,8 @@ Definition amin_step (n : int) (inT : array bool) (key : array float) (v : int) 
   if inT.[v] then st
   else if b =? n then (v, key.[v])
   else if (key.[v] <? bv)%float then (v, key.[v]) else st.
+Elpi complexity amin_step.
+Arguments amin_step_cost : simpl never.
 
 (* dish b joined the tree : update the keys of the others *)
 Definition upd_step (x y : array sint) (r : array uint) (inT : array bool) (b : int)
@@ -1195,6 +1211,9 @@ Definition upd_step (x y : array sint) (r : array uint) (inT : array bool) (b : 
   else
     let wv := wt x y r b v in
     if (wv <? key.[v])%float then key.[v <- wv] else key.
+Elpi complexity upd_step.
+Arguments upd_step_cost : simpl never.
+Elpi complexity PrimFloat.zero.
 
 Definition prim_step (x y : array sint) (r : array uint) (n : int) (k : int)
     (st : array bool * array float * float) : array bool * array float * float :=
@@ -1204,6 +1223,8 @@ Definition prim_step (x y : array sint) (r : array uint) (n : int) (k : int)
   let inT := inT.[b <- true] in
   let key := loop n (upd_step x y r inT b) 0 key in
   (inT, key, tot).
+Elpi complexity prim_step.
+Arguments prim_step_cost : simpl never.
 
 Definition comsat (x y : array sint) (r : array uint) : float :=
   let n := PArray.length x in
@@ -1211,6 +1232,8 @@ Definition comsat (x y : array sint) (r : array uint) : float :=
   let key := loop n (init_step x y r) 0 (PArray.make n PrimFloat.zero) in
   let '(_, _, tot) := loop n (prim_step x y r n) 1 (inT, key, PrimFloat.zero) in
   tot.
+Elpi complexity comsat.
+Arguments comsat_cost : simpl never.
 
 (* ================================================================== *)
 (* Part 6. Proof of the program                                        *)
@@ -1865,6 +1888,7 @@ Qed.
 End Mach.
 
 Definition communicationssatellite : array sint -> array sint -> array uint -> float := comsat.
+Elpi complexity communicationssatellite.
 
 Lemma communicationssatellite_correct :
   forall (xs ys : list Z) (rs : list N) (x y : array sint) (r : array uint),
@@ -1872,3 +1896,174 @@ Lemma communicationssatellite_correct :
     exists v : R, repr (communicationssatellite x y r) v /\
       communicationssatellite_spec xs ys rs v.
 Proof. intros xs ys rs x y r Hv Hx Hy Hr. exact (comsat_main xs ys rs x y r Hv Hx Hy Hr). Qed.
+
+(* ================================================================== *)
+(* Part 7. Cost                                                        *)
+(* ================================================================== *)
+
+Close Scope R_scope.
+Open Scope uint63_scope.
+From Stdlib Require Import ssreflect.
+Arguments gap : simpl never.
+Arguments Uint63.to_Z : simpl never.
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; unfold bdec_cost; cbn; lia. Qed.
+
+Lemma gap_succ hi k : (k <? hi) = true -> (Z.to_nat (gap hi (k + 1)) < Z.to_nat (gap hi k))%nat.
+Proof.
+  intros H. rewrite Uint63.ltb_spec in H. unfold gap.
+  assert (φ (k + 1) = (φ k + 1)%Z) by (zify; Z.to_euclidean_division_equations; lia). lia.
+Qed.
+
+Section LoopCost.
+Context {St : Type} {StC : St -> Type}.
+
+Definition fT (f : int -> St -> St) := forall H : int, int_cost stepsCM H ->
+  @CostM stepsCM (forall H0 : St, StC H0 -> @CostM stepsCM (StC (f H H0))).
+
+(* every round costs at most K *)
+Lemma wloop_time (K : nat) (hi : int) (hiC : int_cost stepsCM hi)
+  (f : int -> St -> St) (fC : fT f) :
+  (forall j jC t tC, (φ j < φ hi)%Z ->
+     (cost (fC j jC) + cost (extract (fC j jC) t tC) <= K)%nat) ->
+  forall i iC s sC H HC,
+  (cost (extract (extract (extract (extract (extract (wloop_cost stepsCM St StC) hi hiC) f fC) i iC) s sC) H HC)
+     <= (K + 30) * Z.to_nat (gap hi i) + 10)%nat.
+Proof.
+  intros Hf.
+  unfold wloop_cost. cbn.
+  match goal with |- forall i iC s sC H HC, (@cost ?T (?G hi hiC f fC i iC s sC H HC) <= _)%nat =>
+    assert (HG : forall k i iC s sC H HC, (Z.to_nat (gap hi i) <= k)%nat ->
+       (cost (G hi hiC f fC i iC s sC H HC) <= (K + 30) * Z.to_nat (gap hi i) + 10)%nat) end.
+  { induction k as [|k IH]; intros i' iC' s' sC' [g] HC' Hk;
+      cost_simpl.
+    all: pose proof (bdec_time (i' <? hi) (bool_w (i' <? hi))) as HB;
+      cost_destruct (bdec (i' <? hi)); cost_simpl.
+    - exfalso. pose proof (gap_succ hi i' e). lia.
+    - lia.
+    - pose proof (gap_succ hi i' e) as Hs.
+      assert (Hk' : (Z.to_nat (gap hi (i' + 1)) <= k)%nat) by lia.
+      assert (Hlt : (φ i' < φ hi)%Z) by (apply Uint63.ltb_spec; exact e).
+      pose proof (Hf i' iC' s' sC' Hlt) as Hcost.
+      match goal with |- context [@cost ?T (?G' hi hiC f fC (i' + 1)%uint63 ?w (f i' s') ?ws ?h ?e2)] =>
+        have HI := (IH (i' + 1)%uint63 w (f i' s') ws h e2 Hk' : (@cost T (G' hi hiC f fC (i' + 1)%uint63 w (f i' s') ws h e2) <= _)%nat) end.
+      assert (Hm : ((K + 30) * Z.to_nat (gap hi (i' + 1)) + (K + 30) <= (K + 30) * Z.to_nat (gap hi i'))%nat) by nia.
+      lia.
+    - lia. }
+  intros i iC s sC H HC. apply (HG _ i iC s sC H HC (le_n _)).
+Qed.
+
+Lemma loop_time (K : nat) (hi : int) (hiC : int_cost stepsCM hi)
+  (f : int -> St -> St) (fC : fT f) :
+  (forall j jC t tC, (φ j < φ hi)%Z ->
+     (cost (fC j jC) + cost (extract (fC j jC) t tC) <= K)%nat) ->
+  forall i iC s sC,
+  (cost (extract (extract (extract (extract (loop_cost stepsCM St StC) hi hiC) f fC) i iC) s sC)
+     <= (K + 30) * Z.to_nat (gap hi i) + 20)%nat.
+Proof.
+  intros Hf i iC s sC.
+  unfold loop_cost. cost_simpl.
+  repeat match goal with |- context [@cost ?T ?X] =>
+    lazymatch X with context [Zwf_well_founded] => fail | _ => change (@cost T X) with 0%nat end end.
+  pose proof (wloop_time K hi hiC f fC Hf i iC s sC (Zwf_well_founded 0 (gap hi i)) erased_I) as HW.
+  lia.
+Qed.
+End LoopCost.
+
+Ltac zero_layers := repeat match goal with |- context [@cost ?T ?X] => change (@cost T X) with 0%nat end.
+
+Ltac const_costs := repeat match goal with |- context [@cost ?T ?X] =>
+  first [ change (@cost T X) with 0%nat | change (@cost T X) with 1%nat ] end.
+
+Lemma init_step_time x xC y yC r rC v vC key keyC :
+  (cost (extract (extract (extract (init_step_cost stepsCM x xC) y yC) r rC) v vC) +
+   cost (extract (extract (extract (extract (init_step_cost stepsCM x xC) y yC) r rC) v vC) key keyC) <= 100)%nat.
+Proof.
+  unfold init_step_cost, wt_cost, dsq_cost. cost_simpl. const_costs. lia.
+Qed.
+
+Lemma amin_step_time n nC inT inTC key keyC v vC st stC :
+  (cost (extract (extract (extract (amin_step_cost stepsCM n nC) inT inTC) key keyC) v vC) +
+   cost (extract (extract (extract (extract (amin_step_cost stepsCM n nC) inT inTC) key keyC) v vC) st stC) <= 100)%nat.
+Proof.
+  destruct stC as [b bC bv bvC].
+  unfold amin_step_cost. cost_simpl.
+  generalize (array_elems inTC v). destruct (inT.[v]); intros; cost_simpl; [lia|].
+  cost_destruct (b =? n); cost_simpl; [lia|].
+  cost_destruct ((key.[v] <? bv)%float); cost_simpl; lia.
+Qed.
+
+Lemma upd_step_time x xC y yC r rC inT inTC b bC v vC key keyC :
+  (cost (extract (extract (extract (extract (extract (upd_step_cost stepsCM x xC) y yC) r rC) inT inTC) b bC) v vC) +
+   cost (extract (extract (extract (extract (extract (extract (upd_step_cost stepsCM x xC) y yC) r rC) inT inTC) b bC) v vC) key keyC) <= 100)%nat.
+Proof.
+  unfold upd_step_cost, wt_cost, dsq_cost. cost_simpl.
+  generalize (array_elems inTC v). destruct (inT.[v]); intros; cost_simpl; [lia|].
+  const_costs.
+  match goal with |- context [bool_w ?c] => cost_destruct c end; cost_simpl; const_costs; lia.
+Qed.
+
+
+Ltac gen_loop K := match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with extract (extract (extract (extract (loop_cost stepsCM ?St ?StC) ?hi ?hiC) ?f ?fC) ?i ?iC) ?s ?sC =>
+  let Hc := fresh "Hloop" in
+  assert (Hc : (@cost T X <= (K + 30) * Z.to_nat (gap hi i) + 20)%nat);
+  [ apply (loop_time (St:=St) (StC:=StC) K hi hiC f fC)
+  | revert Hc; generalize (@cost T X); intros ? Hc ] end end.
+
+Lemma gap0 n : Z.to_nat (gap n 0) = Z.to_nat (φ n).
+Proof. unfold gap. change (φ 0) with 0%Z. rewrite Z.sub_0_r. reflexivity. Qed.
+
+Lemma prim_step_time x xC y yC r rC n nC k kC st stC :
+  (cost (extract (extract (extract (extract (prim_step_cost stepsCM x xC) y yC) r rC) n nC) k kC) +
+   cost (extract (extract (extract (extract (extract (prim_step_cost stepsCM x xC) y yC) r rC) n nC) k kC) st stC)
+     <= Z.to_nat (φ n) * 300 + 100)%nat.
+Proof.
+  destruct stC as [p pC tot totC]. destruct pC as [inT inTC key keyC].
+  unfold prim_step_cost. cost_simpl.
+  gen_loop 100%nat. { intros; apply amin_step_time. }
+  cost_destruct_witness (loop n (amin_step n inT key) 0 (n, zero)) as [b bC f fC] eqn:E.
+  cost_simpl.
+  gen_loop 100%nat. { intros; apply upd_step_time. }
+  rewrite !gap0 in Hloop, Hloop0. const_costs. lia.
+Qed.
+
+Lemma comsat_time x xC y yC r rC :
+  (cost (comsat_cost stepsCM x xC) + cost (extract (comsat_cost stepsCM x xC) y yC) +
+   cost (extract (extract (comsat_cost stepsCM x xC) y yC) r rC)
+     <= Z.to_nat (φ (PArray.length x)) * Z.to_nat (φ (PArray.length x)) * 300
+        + Z.to_nat (φ (PArray.length x)) * 300 + 300)%nat.
+Proof.
+  remember (Z.to_nat (φ (PArray.length x))) as N eqn:EN.
+  remember (N * N * 300 + N * 300 + 300)%nat as RHS eqn:ER.
+  unfold comsat_cost. cost_simpl.
+  gen_loop 100%nat. { intros; apply init_step_time. }
+  gen_loop (Z.to_nat (φ (PArray.length x)) * 300 + 100)%nat. { intros; apply prim_step_time. }
+  match goal with |- context [@cost _ (match ?L with _ => _ end _)] => cost_destruct_witness L as [p pC t tC] eqn:E end.
+  destruct pC. cost_simpl. const_costs.
+  rewrite gap0 in Hloop. rewrite <- EN in Hloop, Hloop0.
+  assert (Z.to_nat (gap (length x) 1) <= N)%nat by (subst N; unfold gap; lia).
+  subst RHS. clear -Hloop Hloop0 H. nia.
+Qed.
+
+Theorem communicationssatellite_time : exists c1 c2 : nat,
+  forall (x_coordinates y_coordinates : list Z)
+  (radii : list N)
+  (x_coordinates_arr y_coordinates_arr : array sint)
+  (radii_arr : array uint),
+  valid_input x_coordinates y_coordinates radii ->
+  repr x_coordinates_arr x_coordinates ->
+  repr y_coordinates_arr y_coordinates
+  -> repr radii_arr radii ->
+  (cost3 communicationssatellite_cost x_coordinates_arr y_coordinates_arr radii_arr <= c1 * ((size x_coordinates_arr + 1) * (size x_coordinates_arr + 1)) + c2)%nat.
+Proof.
+  exists 300%nat, 0%nat. intros xs ys rs x y r _ _ _ _.
+  remember (300 * ((size x + 1) * (size x + 1)) + 0)%nat as RHS eqn:ER.
+  unfold cost3. rewrite call_cost3_eq. unfold communicationssatellite_cost. cost_simpl.
+  match goal with |- context [extract (extract (comsat_cost stepsCM x ?wx) y ?wy) r ?wr] =>
+    pose proof (comsat_time x wx y wy r wr) as HC end.
+  assert (ES : Z.to_nat (φ (PArray.length x)) = size x) by reflexivity. rewrite ES in HC.
+  subst RHS. revert HC. generalize (size x). intros N HC. rewrite Nat.add_assoc. eapply Nat.le_trans; [exact HC|]. nia.
+Qed.
+
