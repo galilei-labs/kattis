@@ -1,7 +1,9 @@
 #[allow(unused_imports)] use std::rc::Rc;
-#[allow(unused_imports)] use rocq_array::Array;
+#[allow(unused_imports)] use crate::rocq_reuse as __rocq_reuse;
+use rocq_int63::{int63, Int63};
+#[allow(unused_imports)] use rocq_array::{self as a, Array};
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<Int63>; };
 
 #[derive(Clone, Copy)]
 pub enum sumbool {
@@ -11,7 +13,7 @@ pub enum sumbool {
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
-pub type uint = u64;
+pub type uint = Int63;
 
 // Rocq: Corelib.Init.Datatypes.snd
 pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
@@ -20,42 +22,18 @@ pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
   p_1_clone
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
-// Variant: uncurried
-pub fn sub(v0: u64, v1: u64) -> u64 {
-  rocq_int63::sub(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
-// Variant: uncurried
-pub fn ltb(v0: u64, v1: u64) -> bool {
-  rocq_int63::ltb(v0, v1)
-}
-
 // Rocq: Ultraquicksort.ultraquicksort_implem.bdec
-pub fn bdec(b: bool) -> sumbool {
-  if b {
+pub fn bdec(b_1: bool) -> sumbool {
+  if b_1 {
     sumbool::left
   } else {
     sumbool::right
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
-// Variant: uncurried
-pub fn add(v0: u64, v1: u64) -> u64 {
-  rocq_int63::add(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
-// Variant: uncurried
-pub fn div(v0: u64, v1: u64) -> u64 {
-  rocq_int63::div(v0, v1)
-}
-
 // Rocq: Corelib.Init.Datatypes.negb
-pub fn negb(b: bool) -> bool {
-  if b {
+pub fn negb(b_1: bool) -> bool {
+  if b_1 {
     false
   } else {
     true
@@ -64,46 +42,43 @@ pub fn negb(b: bool) -> bool {
 
 // Rocq: Ultraquicksort.ultraquicksort_implem.merge
 // Variant: uncurried
-pub fn merge_1(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, c: u64) -> (Rc<Array<u64>>, u64) {
+pub fn merge_1(src: Array<Int63>, dst: Array<Int63>, mid: Int63, hi: Int63, i: Int63, j: Int63, k: Int63, c: Int63) -> (Array<Int63>, Int63) {
   merge(src, dst, mid, hi, i, j, k, c, ())
 }
 
 // Rocq: Ultraquicksort.ultraquicksort_implem.merge (local: merge)
 // Variant: uncurried, lifted
-pub fn merge(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, c: u64, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let tmp = ltb(i, mid);
+pub fn merge(src: Array<Int63>, dst: Array<Int63>, mid: Int63, hi: Int63, i: Int63, j: Int63, k: Int63, c: Int63, _H: ()) -> (Array<Int63>, Int63) {
+  let tmp = i < mid;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = ltb(j, hi);
+      let tmp_1 = j < hi;
       match bdec(tmp_1) {
         sumbool::left => {
-          let x = rocq_array::get::<u64>(&src, i);
-          let y = rocq_array::get::<u64>(&src, j);
-          if ltb(y, x) {
-            let tmp_2 = rocq_array::set::<u64>(dst, k, y);
-            let tmp_3 = add(j, 1u64);
-            let tmp_4 = add(k, 1u64);
-            let tmp_5 = sub(mid, i);
-            merge(src, tmp_2, mid, hi, i, tmp_3, tmp_4, add(c, tmp_5), ())
+          let x = src.get_cloned(i);
+          let y = src.get_cloned(j);
+          if y < x {
+            let tmp_2 = dst.set(k, y);
+            let tmp_3 = j + int63!(1);
+            let tmp_4 = k + int63!(1);
+            let tmp_5 = mid - i;
+            merge(src, tmp_2, mid, hi, i, tmp_3, tmp_4, c + tmp_5, ())
           } else {
-            let tmp_6 = rocq_array::set::<u64>(dst, k, x);
-            merge(src, tmp_6, mid, hi, add(i, 1u64), j, add(k, 1u64), c, ())
+            merge(src, dst.set(k, x), mid, hi, i + int63!(1), j, k + int63!(1), c, ())
           }
         },
         sumbool::right => {
-          let tmp_7 = rocq_array::get::<u64>(&src, i);
-          let tmp_8 = rocq_array::set::<u64>(dst, k, tmp_7);
-          merge(src, tmp_8, mid, hi, add(i, 1u64), j, add(k, 1u64), c, ())
+          let tmp_6 = src.get_cloned(i);
+          merge(src, dst.set(k, tmp_6), mid, hi, i + int63!(1), j, k + int63!(1), c, ())
         },
       }
     },
     sumbool::right => {
-      let tmp_9 = ltb(j, hi);
-      match bdec(tmp_9) {
+      let tmp_7 = j < hi;
+      match bdec(tmp_7) {
         sumbool::left => {
-          let tmp_10 = rocq_array::get::<u64>(&src, j);
-          let tmp_11 = rocq_array::set::<u64>(dst, k, tmp_10);
-          merge(src, tmp_11, mid, hi, i, add(j, 1u64), add(k, 1u64), c, ())
+          let tmp_8 = src.get_cloned(j);
+          merge(src, dst.set(k, tmp_8), mid, hi, i, j + int63!(1), k + int63!(1), c, ())
         },
         sumbool::right => {
           std::mem::drop(src);
@@ -116,32 +91,32 @@ pub fn merge(src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64
 
 // Rocq: Ultraquicksort.ultraquicksort_implem.msort
 // Variant: uncurried
-pub fn msort_1(b: bool, lo: u64, hi: u64, w: Rc<Array<u64>>, s: Rc<Array<u64>>, c: u64) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  msort(b, lo, hi, w, s, c, ())
+pub fn msort_1(b_1: bool, lo: Int63, hi: Int63, w: Array<Int63>, s: Array<Int63>, c: Int63) -> ((Array<Int63>, Array<Int63>), Int63) {
+  msort(b_1, lo, hi, w, s, c, ())
 }
 
 // Rocq: Ultraquicksort.ultraquicksort_implem.msort (local: msort)
 // Variant: uncurried, lifted
-pub fn msort(b: bool, lo: u64, hi: u64, w: Rc<Array<u64>>, s: Rc<Array<u64>>, c: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), u64) {
-  let tmp = ltb(1u64, sub(hi, lo));
+pub fn msort(b_1: bool, lo: Int63, hi: Int63, w: Array<Int63>, s: Array<Int63>, c: Int63, _H: ()) -> ((Array<Int63>, Array<Int63>), Int63) {
+  let tmp = int63!(1) < hi - lo;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = sub(hi, lo);
-      let mid = add(lo, div(tmp_1, 2u64));
-      let tmp_2 = msort(negb(b), lo, mid, w, s, c, ());
+      let tmp_1 = hi - lo;
+      let mid = lo + tmp_1 / int63!(2);
+      let tmp_2 = msort(negb(b_1), lo, mid, w, s, c, ());
       match tmp_2 {
         (v69, v71) => {
           match v69 {
             (v74, v76) => {
-              let tmp_3 = msort(negb(b), mid, hi, v74, v76, v71, ());
+              let tmp_3 = msort(negb(b_1), mid, hi, v74, v76, v71, ());
               match tmp_3 {
                 (v101, v103) => {
                   match v101 {
                     (v106, v108) => {
                       let s2 = &v106;
                       let w2 = &v108;
-                      if b {
-                        let w2_clone = Rc::clone(w2);
+                      if b_1 {
+                        let w2_clone = Clone::clone(w2);
                         let tmp_4 = merge_1(w2_clone, v106, mid, hi, lo, mid, lo, v103);
                         match tmp_4 {
                           (v132, v134) => {
@@ -149,7 +124,7 @@ pub fn msort(b: bool, lo: u64, hi: u64, w: Rc<Array<u64>>, s: Rc<Array<u64>>, c:
                           },
                         }
                       } else {
-                        let s2_clone = Rc::clone(s2);
+                        let s2_clone = Clone::clone(s2);
                         let tmp_5 = merge_1(s2_clone, v108, mid, hi, lo, mid, lo, v103);
                         match tmp_5 {
                           (v172, v174) => {
@@ -167,172 +142,23 @@ pub fn msort(b: bool, lo: u64, hi: u64, w: Rc<Array<u64>>, s: Rc<Array<u64>>, c:
       }
     },
     sumbool::right => {
-      if b {
+      if b_1 {
         ((w, s), c)
       } else {
-        let tmp_6 = rocq_array::get::<u64>(&w, lo);
-        let tmp_7 = rocq_array::set::<u64>(s, lo, tmp_6);
-        ((w, tmp_7), c)
+        let tmp_6 = w.get_cloned(lo);
+        ((w, s.set(lo, tmp_6)), c)
       }
     },
   }
 }
 
 // Rocq: Ultraquicksort.ultraquicksort_implem.inversions_impl
-pub fn inversions_impl(a: Rc<Array<u64>>) -> u64 {
-  let n = rocq_array::length::<u64>(&a);
-  let tmp = 0u64;
-  let tmp_1 = rocq_array::copy::<u64>(&a);
-  std::mem::drop(a);
-  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
-  snd::<(Rc<Array<u64>>, Rc<Array<u64>>), u64>(msort_1(true, tmp, n, tmp_1, tmp_2, 0u64))
-}
-
-mod __rocq_reuse {
-//! Empty allocation ownership for OwnedANF reset and exact-type rebuilding.
-use std::mem::MaybeUninit;
-use std::rc::Rc;
-
-/// Move-only and opaque: storage has no initialized `T` and cannot be inspected.
-pub struct Token<T> {
-    _storage: Option<Rc<MaybeUninit<T>>>,
-}
-
-/// Consume an owner. The caller supplies the IR-approved shallow field copy;
-/// This may use a compiler-generated structural Clone implementation, but does
-/// not authorize arbitrary host clone behavior merely because T implements Clone.
-#[inline]
-pub fn reset<T>(mut owner: Rc<T>, duplicate: impl FnOnce(&T) -> T) -> (T, Token<T>) {
-    if let Some(payload) = Rc::get_mut(&mut owner) {
-        // SAFETY: get_mut establishes exclusive access (including no Weak
-        // owners). T and MaybeUninit<T> have identical size/alignment, so their
-        // Rc allocation layouts agree. After read, no potentially panicking
-        // user code runs before ownership becomes Rc<MaybeUninit<T>>. There is
-        // exactly one from_raw for into_raw, and the original Rc<T> is consumed.
-        // The token never reads or drops the moved T; dropping it only frees
-        // the allocation. The payload returned here owns T's fields once.
-        unsafe {
-            let value = std::ptr::read(payload);
-            let raw = Rc::into_raw(owner).cast::<MaybeUninit<T>>();
-            let storage = Rc::from_raw(raw);
-            (value, Token { _storage: Some(storage) })
-        }
-    } else {
-        let value = duplicate(&owner);
-        drop(owner);
-        (value, Token { _storage: None })
-    }
-}
-
-/// Consume reserved storage and a fully evaluated payload. Empty tokens allocate.
-#[inline]
-pub fn rebuild<T>(token: Token<T>, payload: T) -> Rc<T> {
-    match token._storage {
-        None => Rc::new(payload),
-        Some(mut storage) => {
-            // The opaque, non-Clone token owns the only strong reference and
-            // has no weak references. Check before initializing, so a panic
-            // cannot leave an initialized T hidden inside MaybeUninit<T>.
-            Rc::get_mut(&mut storage).expect("exclusive reuse token").write(payload);
-            // SAFETY: the payload is now fully initialized; no panicking code
-            // lies between initialization and this ownership conversion. The
-            // reset conversion established identical allocation layouts.
-            unsafe { Rc::from_raw(Rc::into_raw(storage).cast::<T>()) }
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::cell::Cell;
-
-    struct Probe(Rc<Cell<usize>>);
-    impl Drop for Probe {
-        fn drop(&mut self) { self.0.set(self.0.get() + 1); }
-    }
-
-    #[test]
-    fn rebuilding_preserves_address_and_drops_only_new_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner);
-        let (old, token) = reset(owner, |_| panic!("unique"));
-        drop(old);
-        assert_eq!(drops.get(), 1);
-        let new = rebuild(token, Probe(drops.clone()));
-        assert_eq!(Rc::as_ptr(&new), address);
-        assert_eq!(drops.get(), 1);
-        drop(new);
-        assert_eq!(drops.get(), 2);
-    }
-
-    #[test]
-    fn empty_token_allocates_and_preserves_old_alias() {
-        let old = Rc::new(7);
-        let alias = old.clone();
-        let (_, token) = reset(old, |x| *x);
-        let new = rebuild(token, 19);
-        assert_eq!(*alias, 7);
-        assert_eq!(*new, 19);
-        assert!(!Rc::ptr_eq(&alias, &new));
-    }
-
-    #[test]
-    fn unique_token_drop_does_not_drop_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner).cast::<MaybeUninit<Probe>>();
-        let (payload, token) = reset(owner, |_| panic!("unique path duplicated"));
-        assert_eq!(Rc::as_ptr(token._storage.as_ref().unwrap()), address);
-        drop(token);
-        assert_eq!(drops.get(), 0);
-        drop(payload);
-        assert_eq!(drops.get(), 1);
-    }
-
-    #[test]
-    fn shared_fallback_preserves_aliases() {
-        let field = Rc::new(7);
-        let owner = Rc::new((field.clone(), 9));
-        let alias = owner.clone();
-        let (payload, token) = reset(owner, |x| (x.0.clone(), x.1));
-        assert!(token._storage.is_none());
-        assert!(Rc::ptr_eq(&payload.0, &alias.0));
-        assert_eq!(Rc::strong_count(&field), 3);
-        drop(token);
-        drop(payload);
-        assert_eq!(alias.1, 9);
-        drop(alias);
-        assert_eq!(Rc::strong_count(&field), 1);
-    }
-
-    #[test]
-    fn weak_pointer_forces_fallback() {
-        let owner = Rc::new(17);
-        let weak = Rc::downgrade(&owner);
-        let (payload, token) = reset(owner, |x| *x);
-        assert_eq!(payload, 17);
-        assert!(token._storage.is_none());
-        assert!(weak.upgrade().is_none());
-    }
-
-    #[test]
-    fn panicking_fallback_releases_consumed_handle() {
-        let owner = Rc::new(17);
-        let alias = owner.clone();
-        let result = std::panic::catch_unwind(|| reset(owner, |_| panic!("copy failed")));
-        assert!(result.is_err());
-        assert_eq!(Rc::strong_count(&alias), 1);
-        assert_eq!(*alias, 17);
-    }
-
-    #[test]
-    fn zero_sized_payload() {
-        let (payload, token) = reset(Rc::new(()), |_| panic!("unique"));
-        drop(token);
-        assert_eq!(payload, ());
-    }
-}
-
+pub fn inversions_impl(a_1: Array<Int63>) -> Int63 {
+  let n = a_1.length();
+  let tmp = int63!(0);
+  let a_ref = &a_1;
+  let tmp_1 = a_ref.copy();
+  std::mem::drop(a_1);
+  let tmp_2 = Array::<Int63>::make(n, int63!(0));
+  snd::<(Array<Int63>, Array<Int63>), Int63>(msort_1(true, tmp, n, tmp_1, tmp_2, int63!(0)))
 }
