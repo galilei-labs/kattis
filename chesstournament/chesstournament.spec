@@ -1,0 +1,193 @@
+(** * Chess Tournament *)
+
+(** ** Description *)
+
+(** Decide whether reported wins and draws admit consistent numerical skill
+    levels: a win requires a strictly higher level, and a draw requires
+    equal levels.
+
+    [@kattis chesstournament]
+    - Difficulty: 5.0
+    - CPU time limit: 4 seconds
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Player count: $2 \le n \le 5 \times 10^{4}$; Match count: $1 \le m \le 2.5 \times 10^{5}$.
+    - At most one match per pair; every player appears in at least one
+      match. *)
+
+(** ** Examples *)
+
+(** - Input convention: Participant and relation counts, followed by relations of the form K = L or K > L.
+    - Output convention: consistent if the relations admit skill levels; inconsistent otherwise. *)
+(* Input:
+3 3
+0 > 1
+1 = 2
+0 = 2
+Output:
+inconsistent
+*)
+
+(** ** [@hide] Environment *)
+
+(* @function        chess_consistent
+   @signature       uint -> array uint -> array bool -> array uint -> bool
+   @math_signature  N -> list N -> list bool -> list N -> bool
+   @summary         [chess_consistent player_count first_players wins
+                    second_players] reads m reported matches between players
+                    0..player_count-1, match j being "first_players_j beat
+                    second_players_j" when wins_j is true and
+                    "first_players_j drew with second_players_j" when it is
+                    false.  It returns true ("consistent") exactly when some
+                    skill level per player explains every match, the more
+                    skilled player always winning and a draw happening iff
+                    the two skills are equal; false ("inconsistent")
+                    otherwise.
+*)
+
+From Stdlib Require Import ZArith NArith List Uint63 PArray.
+From StdGalilei Require Import repr.
+Import ListNotations.
+Open Scope N_scope.
+
+(* The m match lines "K s L" are three parallel
+  lists, one per
+   column; the symbol s is a bool: true for '>', false for
+     '='. *)
+
+(** ** Definitions *)
+
+(** The number of elements of [l]. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
+
+(** The entry at zero-based index [j] in [l], or [default] beyond the end. *)
+Definition at_ {A} (default : A) (l : list A) (j : N) : A :=
+  nth (N.to_nat j) l default.
+
+(** Matches [j1] and [j2] involve the same pair of players, regardless of their
+    order. *)
+Definition same_pair
+  (first_players second_players : list N) (j1 j2 : N)
+  : Prop :=
+  (at_ 0 first_players j1 = at_ 0 first_players j2 /\
+   at_ 0 second_players j1 = at_ 0 second_players j2) \/
+  (at_ 0 first_players j1 = at_ 0 second_players j2 /\
+   at_ 0 second_players j1 = at_ 0 first_players j2).
+
+(** The player skill levels [skills] agree with match [j]: the winner has strictly
+    greater skill, and a draw requires equal skill. *)
+Definition explains (skills : N -> Z)
+  (first_players : list N)
+    (wins : list bool) (second_players : list N)
+      (j : N) : Prop :=
+  if at_ false wins j
+  then Z.gt (skills (at_ 0 first_players j)) (skills
+    (at_ 0 second_players j))
+  else skills (at_ 0 first_players j) = skills
+    (at_ 0 second_players j).
+
+(** The list is consistent: some skill levels explain
+    every reported match. Otherwise at least one match
+    is necessarily falsely reported. *)
+Definition consistent (first_players : list N)
+  (wins : list bool)
+    (second_players : list N) : Prop :=
+  exists skills : N -> Z, forall j, j < len first_players ->
+    explains skills first_players wins second_players j.
+
+(** [@inside chess_consistent_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
+Record valid_input (player_count : N)
+  (first_players : list N)
+    (wins : list bool) (second_players : list N) : Prop := {
+  (* 2 <= N <= 5 * 10^4 *)
+  vi_n : 2 <= player_count <= 50000;
+  (* 1 <= M <= 2.5 * 10^5 *)
+  vi_m : 1 <= len first_players <= 250000;
+  (* the following M lines each consist of an integer K, a
+    symbol and
+     another integer L *)
+  vi_wins_len : len wins = len first_players;
+  vi_ls_len : len second_players = len first_players;
+  (* 0 <= K, L < N *)
+  vi_ks : Forall
+    (fun player => player < player_count) first_players;
+  vi_ls : Forall
+    (fun player => player < player_count) second_players;
+  (* there is at most one reported match between any given
+    pair of players *)
+  vi_one_match : forall j1 j2,
+    j1 < len first_players -> j2 < len first_players ->
+    same_pair first_players second_players j1 j2 -> j1 = j2;
+  (* each player takes part in at least one reported match
+    *)
+  vi_every_player : forall player, player < player_count ->
+    exists j, j < len first_players /\
+      (at_ 0 first_players j = player
+        \/ at_ 0 second_players j = player);
+}.
+
+(** ** Correctness *)
+
+(** [@requirement]
+    The output is true exactly when numerical skill levels can satisfy every equality
+    and strict-order relation. *)
+Definition chess_consistent_spec (player_count : N)
+  (first_players : list N)
+    (wins : list bool) (second_players : list N)
+      (output : bool)
+    : Prop :=
+  output = true <-> consistent first_players wins second_players.
+
+(** ** Interface *)
+
+(** Decide whether reported wins and draws admit consistent numerical skill levels: a win
+    requires a strictly higher level, and a draw requires equal levels.
+    - Input [player_count]: Number of participants.
+    - Input [first_players]: First participant in each reported relation.
+    - Input [wins]: Whether each relation is a strict win rather than a draw.
+    - Input [second_players]: Second participant in each reported relation.
+    - Output [output]: The output is true exactly when numerical skill levels can satisfy every equality and strict-order relation. *)
+Program chess_consistent :
+  uint -> array uint -> array bool -> array uint -> bool.
+
+(** [@example chess_consistent]
+    - Sample: 1
+    - Input [player_count]: 3
+    - Input [first_players]: [0; 1; 0]
+    - Input [wins]: [true; false; false]
+    - Input [second_players]: [1; 2; 2]
+    - Output [output]: false
+*)
+
+(** ** Bridge *)
+
+(** [@requirement chess_consistent_spec] [@fold full
+    correctness statement] On valid represented inputs,
+    the program returns a represented output satisfying
+    [chess_consistent_spec]. *)
+Specification chess_consistent_correct :
+  forall (player_count : N) (first_players : list N)
+    (wins : list bool)
+         (second_players : list N) (player_count_int : uint)
+         (first_players_arr : array uint)
+           (wins_arr : array bool)
+         (second_players_arr : array uint),
+  valid_input player_count first_players wins second_players
+    ->
+  repr player_count_int player_count
+    -> repr first_players_arr first_players ->
+  repr wins_arr wins
+    -> repr second_players_arr second_players ->
+  exists output : bool,
+    repr (chess_consistent player_count_int
+      first_players_arr wins_arr
+            second_players_arr) output /\
+    chess_consistent_spec player_count first_players wins
+      second_players
+      output.
+
+(** [@hide] The kernel primitives (int, array, float,
+    string) and their axioms. *)
+Allowed Primitive Axioms.

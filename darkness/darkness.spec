@@ -1,0 +1,260 @@
+(** * The Darkness *)
+
+(** ** Description *)
+
+(** A nightclub floor is divided into grid cells, with one bulb above each
+    cell. A bulb of strength $s$ at height $h$ contributes
+    $s/(\Delta r^2 + \Delta c^2 + h^2)$ to a cell, where $\Delta r$ and
+    $\Delta c$ are the row and column offsets from the bulb. Light levels
+    are the sums of all bulb contributions. Find the cheapest fences
+    separating cells below the light threshold from the floor boundary.
+    A barrier between adjacent cells costs 43 if both are sufficiently lit,
+    and 11 otherwise.
+
+    [@kattis darkness]
+    - Difficulty: 6.0
+    - CPU time limit: 1 second
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Row and column counts: $1 \le R, C \le 30$; bulb strengths: $0 \le s \le 9$.
+    - Light threshold: $1 \le B \le 9$; height: $1 \le H \le 5$.
+    - Every boundary cell meets the light threshold. *)
+
+(** ** Examples *)
+
+(** - Input convention: Light threshold, source height, grid dimensions, then one string of light-strength digits per row.
+    - Output convention: A single integer giving the minimum barrier cost. *)
+(* Input:
+9
+1
+6 6
+333333
+300003
+300003
+300003
+300003
+333333
+Output:
+176
+*)
+
+(** ** [@hide] Environment *)
+
+(* @function        darkness
+   @signature       uint -> uint -> array (array uint) -> uint
+   @math_signature  N -> N -> list (list N) -> N
+   @summary         [darkness min_light ceiling_height club] is the least
+                    amount, in pounds, of fencing between side-adjacent cells
+                    of the club [club] (a grid of bulb strengths under a
+                    ceiling of height [ceiling_height]) that cuts every cell
+                    whose light level is below [min_light] off from every
+                    border cell; a section costs 43 when both its cells are
+                    lit, 11 otherwise. The light level of a cell is the exact
+                    sum, over every bulb (its own included), of
+                    s / (dr^2 + dc^2 + ceiling_height^2).
+*)
+
+From Stdlib Require Import ZArith NArith List Uint63 PArray
+  QArith Relations.
+From StdGalilei Require Import repr.
+Import ListNotations.
+Open Scope N_scope.
+
+(* The club is the list of its R rows, each the
+  list of the C
+   bulb strengths of its cells; cell
+     (i, j) is row i, column j. *)
+
+(** ** Definitions *)
+
+(** The number of elements of [l]. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
+
+(** The number of rows in the club grid. *)
+Definition rows (club : list (list N)) : N := len club.
+(** The number of columns in the club grid. *)
+Definition cols (club : list (list N)) : N :=
+  len (hd [] club).
+
+(** The coordinates lie inside the club grid. *)
+Definition in_grid club (i j : N) : Prop :=
+  i < rows club /\ j < cols club.
+
+(** The cell lies on the outer border of the grid. *)
+Definition on_border club (i j : N) : Prop :=
+  in_grid club i j /\
+  (i = 0 \/ i = rows club - 1 \/ j = 0
+    \/ j = cols club - 1).
+
+(** The strength of the bulb above cell [(i, j)]. *)
+Definition strength club (i j : N) : N :=
+  nth (N.to_nat j) (nth (N.to_nat i) club []) 0.
+
+(** The sum of [term] over indices from zero through [term_count - 1], computed in
+    [Q]. *)
+Fixpoint qsum (term : N -> Q) (term_count : nat) : Q :=
+  match term_count with
+  | O => 0%Q
+  | S previous => (qsum term previous + term
+    (N.of_nat previous))%Q
+  end.
+
+(** The exact light level at the centre of cell [(i, j)]. Each bulb, including the
+    one directly above this cell, contributes its strength divided by the squared
+    distance to the cell centre. *)
+Definition light (ceiling_height : N) club (i j : N) : Q :=
+  qsum (fun i' => qsum (fun j' =>
+    inject_Z (Z.of_N (strength club i' j')) /
+    inject_Z ((Z.of_N i - Z.of_N i') ^ 2 +
+      (Z.of_N j - Z.of_N j') ^ 2
+              + Z.of_N ceiling_height ^ 2))%Q
+    (N.to_nat (cols club))) (N.to_nat (rows club)).
+
+(** Cell [(i, j)] has light level at least [min_light]. *)
+Definition lit (min_light ceiling_height : N) club
+  (i j : N) : bool :=
+  Qle_bool (inject_Z (Z.of_N min_light))
+    (light ceiling_height club i j).
+
+(** One move between side-adjacent cells with no fence between them.
+    [h_fences i j] marks the fence between [(i, j)] and [(i, j + 1)];
+    [v_fences i j] marks the fence between [(i, j)] and [(i + 1, j)].
+    Coordinates are zero-based, with rows increasing downward. Fence values
+    outside the internal cell boundaries are never read. *)
+Definition step (h_fences v_fences : N -> N -> bool) club
+  (cell cell' : N * N)
+    : Prop :=
+  let '(i, j) := cell in let '(i', j') := cell' in
+  in_grid club i j /\ in_grid club i' j' /\
+  ((i' = i /\ j' = j + 1 /\ h_fences i j = false) \/
+   (i' = i /\ j = j' + 1 /\ h_fences i j' = false) \/
+   (i' = i + 1 /\ j' = j /\ v_fences i j = false) \/
+   (i = i' + 1 /\ j' = j /\ v_fences i' j = false)).
+
+(** No unfenced walk leads from a dark cell to a border
+    cell. *)
+Definition fences_out_dark
+  (min_light ceiling_height : N) club
+    h_fences v_fences : Prop :=
+  forall i j i' j', in_grid club i j ->
+  lit min_light ceiling_height club i j = false ->
+  on_border club i' j' ->
+  ~ clos_refl_trans _ (step h_fences v_fences club) (i, j)
+    (i', j').
+
+(** The cost of fencing the shared boundary between the two cells. *)
+Definition price (min_light ceiling_height : N) club
+  (i j i' j' : N) : N :=
+  if lit min_light ceiling_height club i j &&
+     lit min_light ceiling_height club i' j' then 43 else
+       11.
+
+(** The sum of [term] over indices from zero through [term_count - 1], computed in
+    [N]. *)
+Fixpoint nsum (term : N -> N) (term_count : nat) : N :=
+  match term_count with
+  | O => 0
+  | S previous => nsum term previous + term
+    (N.of_nat previous)
+  end.
+
+(** The price of all the sections a fencing builds. *)
+Definition cost (min_light ceiling_height : N) club
+    (h_fences v_fences : N -> N -> bool) : N :=
+  nsum (fun i => nsum (fun j =>
+     if h_fences i j then price min_light ceiling_height
+       club i j i (j + 1)
+     else 0)
+     (N.to_nat (cols club - 1))) (N.to_nat (rows club)) +
+  nsum (fun i => nsum (fun j =>
+     if v_fences i j then price min_light ceiling_height
+       club i j (i + 1) j
+     else 0)
+     (N.to_nat (cols club))) (N.to_nat (rows club - 1)).
+
+(** [@inside darkness_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
+Record valid_input (min_light ceiling_height : N)
+  (club : list (list N))
+    : Prop := {
+  (* an integer B
+    (0 < B <= 9), the minimum required light level *)
+  vi_b : 0 < min_light <= 9;
+  (* an integer H (0 < H <= 5), the height of the ceiling *)
+  vi_h : 0 < ceiling_height <= 5;
+  (* two integers R and C (0 < R, C <= 30) *)
+  vi_r : 0 < rows club <= 30;
+  vi_c : 0 < cols club <= 30;
+  (* R further lines, each containing a string of C digits
+    *)
+  vi_rows : Forall (fun row => len row = cols club) club;
+  vi_digits : Forall (Forall (fun bulb => bulb <= 9)) club;
+  (* the 2(R+C)-4 cells along the borders of the club are
+    sufficiently lit *)
+  vi_border : forall i j, on_border club i j ->
+    lit min_light ceiling_height club i j = true;
+}.
+
+(** ** Correctness *)
+
+(** [@requirement]
+    The output is the minimum total barrier cost separating every insufficiently lit
+    cell from the grid boundary. *)
+Definition darkness_spec (min_light ceiling_height : N) club
+    (output : N) : Prop :=
+  (exists h_fences v_fences,
+     fences_out_dark min_light ceiling_height club h_fences
+       v_fences /\
+     cost min_light ceiling_height club h_fences v_fences =
+       output) /\
+  (forall h_fences v_fences,
+     fences_out_dark min_light ceiling_height club h_fences
+       v_fences ->
+     output <= cost min_light ceiling_height club h_fences
+       v_fences).
+
+(** ** Interface *)
+
+(** Find the cheapest fences separating dark cells from the nightclub floor
+    boundary. Light at each cell is the sum of bulb strengths divided by
+    squared spatial distances. A fence between adjacent cells costs 43 if
+    both meet the light threshold, and 11 otherwise.
+    - Input [min_light]: Minimum acceptable illumination of a cell.
+    - Input [ceiling_height]: Height of the light sources above the grid.
+    - Input [club]: Bulb strengths as integers from zero through nine, one grid row per array entry; a bulb is directly above each cell. The Kattis text input encodes these integers as digit characters.
+    - Output [output]: The output is the minimum total barrier cost separating every insufficiently lit cell from the grid boundary. *)
+Program darkness : uint -> uint -> array (array uint)
+  -> uint.
+
+(** [@example darkness]
+    - Sample: 1
+    - Input [min_light]: 9
+    - Input [ceiling_height]: 1
+    - Input [club]: [[3; 3; 3; 3; 3; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 0; 0; 0; 0; 3]; [3; 3; 3; 3; 3; 3]]
+    - Output [output]: 176
+*)
+
+(** ** Bridge *)
+
+(** [@requirement darkness_spec] [@fold full correctness
+    statement] On valid represented inputs, the program
+    returns a represented output satisfying
+    [darkness_spec]. *)
+Specification darkness_correct :
+  forall (min_light ceiling_height : N) (club : list
+    (list N))
+         (min_light_int ceiling_height_int : uint)
+         (club_arr : array (array uint)),
+  valid_input min_light ceiling_height club ->
+  repr min_light_int min_light
+    -> repr ceiling_height_int ceiling_height ->
+  repr club_arr club ->
+  exists output : N,
+    repr (darkness min_light_int ceiling_height_int
+      club_arr) output /\
+    darkness_spec min_light ceiling_height club output.
+
+(** [@hide] The kernel primitives (int, array, float,
+    string) and their axioms. *)
+Allowed Primitive Axioms.

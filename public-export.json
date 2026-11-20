@@ -1,0 +1,691 @@
+{
+  "problems": {
+    "ada": {
+      "files": {
+        "ada/ada.spec": "27782e2e79e21ffc9c46ce32fbae3c58eb732f84cda0a23eb03edfec8981f836",
+        "ada/ada_implem.v": "76aee978e34e7b9ed94a30ed9c8d7bd1ef51df413e385d5441f933e22d913f93",
+        "ada/extraction/rust/snapshots/ada_extracted.rs": "fd247d49d36e2e968f708c5b13b62cf7b4404b0c3c996c28b81f42d83996e21b"
+      }
+    },
+    "addemup": {
+      "files": {
+        "addemup/addemup.spec": "f1b358344ce6d95742a578339c74c61ee30594a3aba9c5b345af57ee1685bbd9",
+        "addemup/addemup_implem.v": "0303bf3c1167e7fbfb929284002a4db74e2e1497bd9518e7a6b2bd9b37c18984",
+        "addemup/extraction/rust/snapshots/addemup_extracted.rs": "c66d04e79a984386981d7c840a8f063792743cc22c97df5bd127dfdb97021524"
+      }
+    },
+    "allpairspath": {
+      "files": {
+        "allpairspath/allpairspath.spec": "a1a94b2b2e7176a579df92d144aa50b885c192059500caa8ff28a6217ae09686",
+        "allpairspath/allpairspath_implem.v": "7de5f2534b074129eb6245cc00bb4334d272b4f776e27501f3a7d454ba30c16a",
+        "allpairspath/extraction/rust/snapshots/allpairspath_extracted.rs": "0c5a323c622d8d71bf57474df7bf16f6a2f49dde0b49e06a9ec8bbb37e71253d"
+      }
+    },
+    "anothersubstringqueryproblem": {
+      "files": {
+        "anothersubstringqueryproblem/anothersubstringqueryproblem.spec": "7ad137de767f958211d508e656b46d99e02d6b7e43d4c441cefb78472b003b8f",
+        "anothersubstringqueryproblem/anothersubstringqueryproblem_implem.v": "d020eedb5d256f801fb7acaf1194dc44c432dde50dc908a367232f5102d46ea4",
+        "anothersubstringqueryproblem/extraction/rust/snapshots/anothersubstringqueryproblem_extracted.rs": "cad9feb081539d31d088c2104a7e63115fbe3fe9fac8aec72c18f019b145bf10"
+      }
+    },
+    "antiarithmetic": {
+      "files": {
+        "antiarithmetic/antiarithmetic.spec": "43089d2de8f67ec29335ef517bc213608e0d8084d20e9f01d8e0f8e2e7528257",
+        "antiarithmetic/antiarithmetic_implem.v": "c59f768c90a54975bd1aecae18067e25037424d5796dece6c64c045fcf761050",
+        "antiarithmetic/extraction/rust/snapshots/antiarithmetic_extracted.rs": "b2fabaa5847f02f1f46ed99bd02cd6049fafaafd289f67f8f44ab94d6f051b9d"
+      }
+    },
+    "arbitrage": {
+      "files": {
+        "arbitrage/arbitrage.spec": "7ca00a8693e2b8bcd11f9b1e14a6a8c3524b20313ade17dc165554b69921d580",
+        "arbitrage/arbitrage_implem.v": "f31ef18aa941552f54c8c82237d56f52a9cf7caa1a664572450987def668dd56",
+        "arbitrage/extraction/rust/snapshots/arbitrage_extracted.rs": "2cfedfabc6f3ca501f0f4e319af37521221bd1c29d91484c3f1014a5d947a99b"
+      }
+    },
+    "atrivialpursuit": {
+      "files": {
+        "atrivialpursuit/atrivialpursuit.spec": "0eb0f87cb8ff6c94f822cea3c6eb9cc7f8a4460e554071a8a7b77208178c424d",
+        "atrivialpursuit/atrivialpursuit_implem.v": "faa90687b472ab949bf7838f933b2325f4bd68555039c691460215e7c5b9908a",
+        "atrivialpursuit/extraction/rust/snapshots/atrivialpursuit_extracted.rs": "b305497a97f74bee46bd39cde3571097c5fcaa26209293ffa117948297acb06e"
+      }
+    },
+    "babelfish": {
+      "files": {
+        "babelfish/babelfish.spec": "969a7424e11e9d341f2b00728e4cf8b1a834b4c06f39b713f11f4cd0308ced3b",
+        "babelfish/babelfish_implem.v": "b9918528992637ce5530f88dfb3838a2c1229d92de39cf08d16950be6f20f462",
+        "babelfish/extraction/rust/snapshots/babelfish_extracted.rs": "1b7e033c7d9736f95e6fa9f9131f20f02fa9bf7396a0be2434753063d46d5ab8"
+      }
+    },
+    "bank": {
+      "files": {
+        "bank/bank.spec": "3df127194ef494b8b518108c149340b1c7cead25963d50713f819e267091ce00",
+        "bank/bank_implem.v": "f552863b1c77473f0a873151874a131ac65d7fe52195c3e2567a9de4117cf246",
+        "bank/extraction/rust/snapshots/bank_extracted.rs": "53c4c797c3ad81ce46462f22a3440250c319737e0d1dcb71d6cd0c1c17cc916d"
+      }
+    },
+    "basincity": {
+      "files": {
+        "basincity/basincity.spec": "6741be938d1dfa1cddd35183a5a6fcdf523a0abae565d1b0708c0e0a45eca8e9",
+        "basincity/basincity_implem.v": "9221abeee592a43d29767d3f5b1860c647834e02af2d1c9527d854a735f1ec3a",
+        "basincity/extraction/rust/snapshots/basincity_extracted.rs": "b9859c31b2834a7ea3ce02f3d4c2a42350389532a68d2d8dcc26ca1df2c8c751"
+      }
+    },
+    "baza": {
+      "files": {
+        "baza/baza.spec": "0212b5c6a19f5f105c577eb5c9db49496889ae29a6d69dfce328d10b97bd3064",
+        "baza/baza_implem.v": "2975da84801575ffec7ce83ea0395c3f1ce78c40e2eee1b2313a2ed779d13690",
+        "baza/extraction/rust/snapshots/baza_extracted.rs": "86bc931e0a196334991b52694ca9ca7067c5920c82ccaa48cb403029fe137184"
+      }
+    },
+    "bigfactoring": {
+      "files": {
+        "bigfactoring/bigfactoring.spec": "01a75ad21eeac13487f5909641c82ec055a7ffbfdde02b37e593b8b9a36d3809",
+        "bigfactoring/bigfactoring_implem.v": "b847691c3aae996c635cef50398ebff8c9901a9465585d650468e604c616e51e",
+        "bigfactoring/extraction/rust/snapshots/bigfactoring_extracted.rs": "134b85e975342633e6638c5e9b873faeabf66df8352426abbfbf3cd370c5f794"
+      }
+    },
+    "bilateral": {
+      "files": {
+        "bilateral/bilateral.spec": "8c4f235c7a5b6c685e44be5f22f6a2bd72b6f160e19c4d49c2d540e29af26d9a",
+        "bilateral/bilateral_implem.v": "8df8f332fcc1f84e2c1bcb766dbb00467c1b02b66a000da3bed1f355a33bc324",
+        "bilateral/extraction/rust/snapshots/bilateral_extracted.rs": "c321ffeb9f43495b44a03a951712e0ce5cb7b7f981dd1fdd9e3779ace21acb7e"
+      }
+    },
+    "bitwise": {
+      "files": {
+        "bitwise/bitwise.spec": "2dc90c53b1a8f52474be8bdda45e55979ff710e2317ee9aa3a5ad34be9705910",
+        "bitwise/bitwise_implem.v": "6c0a786f1d9ec7615eb4736d4f9c4ffff11ca9c865ebe30c3fa5e94f8b0a924f",
+        "bitwise/extraction/rust/snapshots/bitwise_extracted.rs": "a2f7b0bf5b221ec14424e403666648ed732448ce1f3ffbb320d08c11f57736fe"
+      }
+    },
+    "booking": {
+      "files": {
+        "booking/booking.spec": "95e3aad8cead3343f5e0c1c01557bfee7dd94bb628d474421159f06468cc772f",
+        "booking/booking_implem.v": "67cceaf2b5991ec7b314c29e71974c3f12b4f3a159638fc7b36e6df17182b32a",
+        "booking/extraction/rust/snapshots/booking_extracted.rs": "d60a14c359e2b61a81402e52b21e59f5172cccd73793d065cbea8eb35c6fe632"
+      }
+    },
+    "bracketsequence": {
+      "files": {
+        "bracketsequence/bracketsequence.spec": "4f338ff5bb314c3f71468c317e5e7077eb296ebe94af0e67a046a85082734efa",
+        "bracketsequence/bracketsequence_implem.v": "cf51a8da0814df08439c33f8c0f363c8cdaeba581b039fe9c2d345783c21355b",
+        "bracketsequence/extraction/rust/snapshots/bracketsequence_extracted.rs": "42ad8179b026d284b63b3a95a3978c736e98f1158606fb5341c449fc66b13ad6"
+      }
+    },
+    "bst": {
+      "files": {
+        "bst/bst.spec": "62df2b2759b8a34c19923bce5715a5cc577cc4325dfd6245a1845eb66297caff",
+        "bst/bst_implem.v": "801028d91a0480dc96b3f688f79c1e1765ff5a93461d047af0d1f7128ab3741e",
+        "bst/extraction/rust/snapshots/bst_extracted.rs": "1874c9b2f3a97ce28b84119f227c0d64d3005d767f7c8b6712a5fdfdd527f153"
+      }
+    },
+    "candydistribution": {
+      "files": {
+        "candydistribution/candydistribution.spec": "73d096f26c8c1fe2b68e84e8ecd3db9240963724a3d63a82470c5156684ebac2",
+        "candydistribution/candydistribution_implem.v": "5c157f5a75f769fd85dd7aedf80e0b54ff24c9e178878e4fd9a7d3ed426997e5",
+        "candydistribution/extraction/rust/snapshots/candydistribution_extracted.rs": "e856846971ae9922fc60cd9488b93e3110f6d5b16e18ee594c5f31d5e8fe834a"
+      }
+    },
+    "canonical": {
+      "files": {
+        "canonical/canonical.spec": "3cf1d93e6acc476b8552d86d30c224d50debe0ace9ad91c2c0c7f35bcfeb7294",
+        "canonical/canonical_implem.v": "8582e8a114bfe1235641ca7a4e29f6240aeb391445df89f766e1252d3069de01",
+        "canonical/extraction/rust/snapshots/canonical_extracted.rs": "ed808b0f4d9ab245ba20e995082b2ad23d55fa65589105103b280c601dec4499"
+      }
+    },
+    "canvas": {
+      "files": {
+        "canvas/canvas.spec": "ebab890b6592141f8de2a7469a32cbed7778e7e04cab30198b968ffcf8b2babf",
+        "canvas/canvas_implem.v": "6c0b8e61340e5bb7a25a7b537ea75aa93d78644606300a7ee61e5b5bf3d54865",
+        "canvas/extraction/rust/snapshots/canvas_extracted.rs": "ca0a010018899e6b4ea032bfe15a5b1c317d9a9979e39e3836ac5d78a582056d"
+      }
+    },
+    "cardhand": {
+      "files": {
+        "cardhand/cardhand.spec": "fba8ce71551cf63f1d068a080cdb6718959128e6dbe916080d435a498d38320f",
+        "cardhand/cardhand_implem.v": "a2740de04badbbd6323ded695a3353669fc6ead5301496eb658097727cfa3ac3",
+        "cardhand/extraction/rust/snapshots/cardhand_extracted.rs": "16d250ae15a4157cd3d7b26e4eff5fb2d385c15caf346303ac33768abc798d9c"
+      }
+    },
+    "catenyms": {
+      "files": {
+        "catenyms/catenyms.spec": "f9be8edc9d1b960c15db4078efe41925c741bf3c9d0d7d72f04fdc158ab85a6c",
+        "catenyms/catenyms_implem.v": "989895ef9b51dc20be4050064068fd7276b16a50a77bc7cb1e5b87d81c4bf98c",
+        "catenyms/extraction/rust/snapshots/catenyms_extracted.rs": "75704c2ef988383c9286731f20fe2c2518988e0813891dbf40f6bd30eb2374c8"
+      }
+    },
+    "chatter": {
+      "files": {
+        "chatter/chatter.spec": "96d22c7e07165b4af5ef30fc1f9c2d5ee5f014183cf079016b81a278d11b3921",
+        "chatter/chatter_implem.v": "ab331ace2315204823f90061ecb39d8fb16e75c64c6f588f7970cd114de2e90b",
+        "chatter/extraction/rust/snapshots/chatter_extracted.rs": "cbd77f6d93b60c79810c758a85d6527eb6284aad54dd1c87a39e666cfc7b4233"
+      }
+    },
+    "chesstournament": {
+      "files": {
+        "chesstournament/chesstournament.spec": "829d737f6ad4aa88f403ed8f37c6ab1fb21925e26d620b5b8c32df7005da8a06",
+        "chesstournament/chesstournament_implem.v": "4e7ea0d61cbb99d18d8fd8dfd0190d0bd78d612f4569d1cf083b322d8eeabfa7",
+        "chesstournament/extraction/rust/snapshots/chesstournament_extracted.rs": "1b9866cf4b0d7542fcf988e34281b6f741df05491ccbc0e4b3c71b37fef29775"
+      }
+    },
+    "closestpair1": {
+      "files": {
+        "closestpair1/closestpair1.spec": "db3f6860a3cf57799bbd93af03ae0e16f9d3ac304be00cfebe158044fd83e0b9",
+        "closestpair1/closestpair1_implem.v": "8397cee91557f8aaea88af1c7f341a15a5fabd1442e0aab54c6289ee18332cfb",
+        "closestpair1/extraction/rust/snapshots/closestpair1_extracted.rs": "4cd290fbc85924ec7d055cca62d204007aa74956a2919a6044d0b9d3c489f72a"
+      }
+    },
+    "closestpair2": {
+      "files": {
+        "closestpair2/closestpair2.spec": "7fd5692a3f626f50d7b81cb5efdfbad2a5e81ce92c60db0e500b25351516a896",
+        "closestpair2/closestpair2_implem.v": "90458a51e12839a313bb64eed0319694ceac27f14ee89aa8215a8cdc28e54fd2",
+        "closestpair2/extraction/rust/snapshots/closestpair2_extracted.rs": "fe38867facfe966d53cedfde756705516c7a535eeaabd941358a2de0ccb5668a"
+      }
+    },
+    "cold": {
+      "files": {
+        "cold/cold.spec": "9157a49280443f7ebd5a148df3bf47a45896dec45c98fc9984fec9720120779b",
+        "cold/cold_implem.v": "1fd45134cc697f669c8e1c5adb81e1d3b569cc16b3d0413468a3149349de7455",
+        "cold/extraction/rust/snapshots/cold_extracted.rs": "0b1201b7dbff46a19450217f0f9815ddea00ca27cd705d3bce8c3477048ee970"
+      }
+    },
+    "committeeassignment": {
+      "files": {
+        "committeeassignment/committeeassignment.spec": "c1d2a5f540f44f59f0a1ba06bc3b36d7db6b74183d74d4d2e33a9a8181077f51",
+        "committeeassignment/committeeassignment_implem.v": "8a9b960b24060a3812aa500ec5de04b49d89105d141b0ed97132790eb71695de",
+        "committeeassignment/extraction/rust/snapshots/committeeassignment_extracted.rs": "7e5c24622eb02239b05b019851228f2dc9db4e83f13740e0a930117a04481eca"
+      }
+    },
+    "communicationssatellite": {
+      "files": {
+        "communicationssatellite/communicationssatellite.spec": "f62546386a9d94f405d315467188488cf7e63ccebb528f89c213585523ce29a3",
+        "communicationssatellite/communicationssatellite_implem.v": "23b5da3a069c498caa71d59083d12d38424d16d557ff281f88dbeddf9a90691d",
+        "communicationssatellite/extraction/rust/snapshots/communicationssatellite_extracted.rs": "877cb73fae7083886a79100161b257ce6b9e2cb1a7e294eb5482e00bf60c540d"
+      }
+    },
+    "convexhull": {
+      "files": {
+        "convexhull/convexhull.spec": "ae51bc71684e057ba255e64ca125cf372f054faf6f70fac896fe5def67bd2edf",
+        "convexhull/convexhull_implem.v": "b1845323189f93032075f154f3820b425cfcdc093043f88424bc11d547011af8",
+        "convexhull/extraction/rust/snapshots/convexhull_extracted.rs": "748d1935648bb3a39965822554736a0dd97cae94c6c2d699ad128edbc8a0f0a5"
+      }
+    },
+    "cuboidslicinggame": {
+      "files": {
+        "cuboidslicinggame/cuboidslicinggame.spec": "a653c49f2556dbe910c3e5ba8d0d8a5c8a0ae8ac7e77bad220c92c519252a5a3",
+        "cuboidslicinggame/cuboidslicinggame_implem.v": "04eaec9aebab81e854fffd342cef542111f2fcac41a32627f33e28e27dc5f44c",
+        "cuboidslicinggame/extraction/rust/snapshots/cuboidslicinggame_extracted.rs": "f55da98cb6307d5785159a5b11462c6ea32b5e8c2f75ae7eab485820b15ba45a"
+      }
+    },
+    "cudak": {
+      "files": {
+        "cudak/cudak.spec": "cbda567f9521f95ca69d985e6f48dbfc5dbeb1fa478df517ff3d5a8ea9aee036",
+        "cudak/cudak_implem.v": "44e2bdf2e430a80166b19aacc1bbc6b57aa69d77b6dcda61a6e00fca1c4f5969",
+        "cudak/extraction/rust/snapshots/cudak_extracted.rs": "f0dc9fd409766ac10e10d104b6a6fab88d026301801d93656a9a525ada4258fa"
+      }
+    },
+    "darkness": {
+      "files": {
+        "darkness/darkness.spec": "7a00a3f5b5118132707d742444dfe7605e088e46f8838b0e5aef392003c0e391",
+        "darkness/darkness_implem.v": "e2f2b5bb5c6a5f7b98218b10561587df28130085a9d22cdd088b3b966a436f6c",
+        "darkness/extraction/rust/snapshots/darkness_extracted.rs": "bb30815a59f73feeb73e5146ee977745c7a87a7a16bbe97c814ca3ec917765fc"
+      }
+    },
+    "derangementrotations": {
+      "files": {
+        "derangementrotations/derangementrotations.spec": "b86688a662b886a5080950cd111c547b2ee6a721301d10aa161cd3f44c191ee4",
+        "derangementrotations/derangementrotations_implem.v": "8f0f4a88741a3a6cdae10ef52734a98839079f24c594560bf30bd22d99b92ce8",
+        "derangementrotations/extraction/rust/snapshots/derangementrotations_extracted.rs": "3cb5beb53072abdcc54ea7242ec4e7024b7164f72360fdf94c6b91b68cc70be1"
+      }
+    },
+    "dimensionalanalysis": {
+      "files": {
+        "dimensionalanalysis/dimensionalanalysis.spec": "bc5bae67d02f5caf92ce2bb70365b20f9bf0cc5e1687c5b42f76199c2b04a6f1",
+        "dimensionalanalysis/dimensionalanalysis_implem.v": "5d4c11cbd368b1e0357d14fb5b2deb37af3868c65c2dbeb59fcf5075d7bf7531",
+        "dimensionalanalysis/extraction/rust/snapshots/dimensionalanalysis_extracted.rs": "b36d68d1baee0d8e755463fda8d1e7f0c8afdca82bd9a087d2a0dc9d6c419303"
+      }
+    },
+    "dirtydriving": {
+      "files": {
+        "dirtydriving/dirtydriving.spec": "a40c51849421b05ca86e1c09e091821ad5fe7363a1ac7833d999b9c36ccaade8",
+        "dirtydriving/dirtydriving_implem.v": "74cbb3ed1b0e438b8ff55022219ccba0c62daa11e66b242f86f8af879640a236",
+        "dirtydriving/extraction/rust/snapshots/dirtydriving_extracted.rs": "f8971cf90410050cc962a77df4a81cba1edf974597b81d2ebe5b7f670b68eb9b"
+      }
+    },
+    "doublets": {
+      "files": {
+        "doublets/doublets.spec": "52491fced110b0f73886d22230e773e1b1f101c7db776501d0efc1faa31f61ea",
+        "doublets/doublets_implem.v": "0cbfd5bc15c3f1cedd84e6f65884a6e8d85e15938420acd0bf98e97eb075df7a",
+        "doublets/extraction/rust/snapshots/doublets_extracted.rs": "02a5db36bc9bdd46864c633c533154357e61d12ed8d02482f8c089f394875873"
+      }
+    },
+    "equationsolver_exact": {
+      "files": {
+        "equationsolver_exact/equationsolver_exact.spec": "1ce404c84ad9b62212db2f77e990578621f374ac0242a3828b5b021234e53384",
+        "equationsolver_exact/equationsolver_exact_implem.v": "dcdbdb246379fd8acf91de075326f7a5a839fa46d01c969e20e23d4dd09bb456",
+        "equationsolver_exact/extraction/rust/snapshots/equationsolver_exact_extracted.rs": "5ceec7c3343936817808e37cceff2ab51556ae0d4395084453e0d38ada4c0e59"
+      }
+    },
+    "excavatorexpedition": {
+      "files": {
+        "excavatorexpedition/excavatorexpedition.spec": "f4e74a0b325f05746d50490065570b0e9c1c9d775baed7decbae025658e8fdef",
+        "excavatorexpedition/excavatorexpedition_implem.v": "34c711f2ab49becd6f9b6f7317fe3f59ca30262ecf3d49a026e37d57c92884a8",
+        "excavatorexpedition/extraction/rust/snapshots/excavatorexpedition_extracted.rs": "19cb6dc8a9547a0a927c32a2516130d3a1b9c41dbeebe6256cc44d9c58db8cd7"
+      }
+    },
+    "farmingmars": {
+      "files": {
+        "farmingmars/extraction/rust/snapshots/farmingmars_extracted.rs": "572a9ead085ef03f6e5a32715f446e829f292e97b84d3adacaa5fb0dd0ac126c",
+        "farmingmars/farmingmars.spec": "99403a02f83d167909cbba1d9bb640928a0d409ca6586c8077e49c284de95d2e",
+        "farmingmars/farmingmars_implem.v": "fe8b53a44d5d5d3dc84dffa3a55868aec5be691589ccff4b211830d4b775603d"
+      }
+    },
+    "fulltank": {
+      "files": {
+        "fulltank/extraction/rust/snapshots/fulltank_extracted.rs": "d68e7d75f4362494e27d53ccead5fbba2393bbbec1fee8104e9f07a42e21b335",
+        "fulltank/fulltank.spec": "318bd640432c772600882918296d85e25d14024650137296b93f92c3e35655a3",
+        "fulltank/fulltank_implem.v": "921621603fd940464cefa2a4ffa06dab1faff1fdf3a9fe281ac1ba45845c4937"
+      }
+    },
+    "gcpc": {
+      "files": {
+        "gcpc/extraction/rust/snapshots/gcpc_extracted.rs": "f42cc5c938eb60890deb8021896eb20b150b8bea94d5f63ad9f39390d79ffe5f",
+        "gcpc/gcpc.spec": "cddecc09d85c9ef2528d81bc96cf150d8cddb71d77f2bfa03e54487534f71549",
+        "gcpc/gcpc_implem.v": "70306cd81ac8e2eb83eeaa8cc87e0ec0a0d46438813d87d0262b3ac393d3e978"
+      }
+    },
+    "generalchineseremainder": {
+      "files": {
+        "generalchineseremainder/extraction/rust/snapshots/generalchineseremainder_extracted.rs": "ec468a8de455b48985ab6168d21dd75991adda3b6b6934a1435d1152d7ca082a",
+        "generalchineseremainder/generalchineseremainder.spec": "dc7e85c08ae9806c103b22ebbacc4ca7eb06c7b2cd8fece95c7f2274c798f8ac",
+        "generalchineseremainder/generalchineseremainder_implem.v": "ef97b65d974f9cc2225323c58c7c6be5a7e01720ddb16acdd2dd20de7b0fe0de"
+      }
+    },
+    "hashing": {
+      "files": {
+        "hashing/extraction/rust/snapshots/hashing_extracted.rs": "aefe3bf7c315ec29decb4b68b1978c79e504b19866285433a6a5036a83232f70",
+        "hashing/hashing.spec": "fd3d8072b9890046decdd7e4c7c0d01207580c2a6beadad91aea5d93b0dac323",
+        "hashing/hashing_implem.v": "da8a604ce342a19127956a17ea1b1428fb1495ea4321995d31388177768a9b8b"
+      }
+    },
+    "helpfulcurrents": {
+      "files": {
+        "helpfulcurrents/extraction/rust/snapshots/helpfulcurrents_extracted.rs": "7fab63aba4ef6fed48ad6b64d88f049ce626110118315a4f065d334510fcea3c",
+        "helpfulcurrents/helpfulcurrents.spec": "7d2d0734ad5ae77232008e70ea400cbdfdba08b7787b7651c197fa8ac692e45a",
+        "helpfulcurrents/helpfulcurrents_implem.v": "3326f1122af3076e9e87a2bc14114e4c5ad71250b0e86e21ceb5016bd6a9a53a"
+      }
+    },
+    "indoorienteering": {
+      "files": {
+        "indoorienteering/extraction/rust/snapshots/indoorienteering_extracted.rs": "92347b1ea8982f65f92d1fbcbf8deaef3c862279ff324f7d4eef8685ad6cb321",
+        "indoorienteering/indoorienteering.spec": "109f59c89b8eb93397cd82d3414ea275dce10cadada9503bb4306679fc2bb6cd",
+        "indoorienteering/indoorienteering_implem.v": "b2bc5f5a6b0677eb9ecdad04101d5e2182905190f04ac92050cffe5cbabd4d2a"
+      }
+    },
+    "intersectingrectangles": {
+      "files": {
+        "intersectingrectangles/extraction/rust/snapshots/intersectingrectangles_extracted.rs": "f7b577d2c62d5968cc53ed44e841f75441cc3d1a85eec6e8abf4e33c6bdbf116",
+        "intersectingrectangles/intersectingrectangles.spec": "ad3b39de2fffd96fbb46fa04a89656a775a812c529a6b7a632d74f0123453c4e",
+        "intersectingrectangles/intersectingrectangles_implem.v": "8dea60f0bff048c9a20cb75e0bd803094f328b01e9c39d6a60ce902d3d2dedf4"
+      }
+    },
+    "intervalcover": {
+      "files": {
+        "intervalcover/extraction/rust/snapshots/intervalcover_extracted.rs": "80395dfbed7163b1b8af49c58ac63eb7d74cb420d58320930c2c49fec6ccd2fd",
+        "intervalcover/intervalcover.spec": "3c36def3c67aac9de1429bd9ead4c792865804d007374bd33be925b12ff611ea",
+        "intervalcover/intervalcover_implem.v": "e69f2ffe369337acd7e0145fc2ff561bb9d83a9c78032dcd4d466eaa80baf12b"
+      }
+    },
+    "isahasa": {
+      "files": {
+        "isahasa/extraction/rust/snapshots/isahasa_extracted.rs": "e9a1bb34d879426ab1fcb56e36ab76c96eb77782dba3808de9de86eb54cd4e99",
+        "isahasa/isahasa.spec": "76873e4c1d8987cc6b9f50597fc6ca56c82ca3ba0c75a30dc5b416d163cb9c07",
+        "isahasa/isahasa_implem.v": "f7a8f286238cba0f4d64f65ed8f69f50885a15c58023c847fafac4bce8fbbab5"
+      }
+    },
+    "joggers": {
+      "files": {
+        "joggers/extraction/rust/snapshots/joggers_extracted.rs": "cbf5cbfa4af40b4e5f5035c351c9fddd5a47f8ff0a6f5d12a83520ca5cb81aad",
+        "joggers/joggers.spec": "409e0287cf9456dc4c25343e0dc43a28907a9d3a4eb6f338fd717ead986eb0b7",
+        "joggers/joggers_implem.v": "204922db89689ab6cedbebc3353e7245b638f43a860b1dc27ac4d4ae05d7ff9b"
+      }
+    },
+    "joinstrings": {
+      "files": {
+        "joinstrings/extraction/rust/snapshots/joinstrings_extracted.rs": "5ab4ea22abfd55ea389d44f68dea915aea11ebfe6ada5d8973e719beba0df6ca",
+        "joinstrings/joinstrings.spec": "d2916eef0b2132c26f13819e301e55c62f9078f01d8c1cea52af92fbc1d17006",
+        "joinstrings/joinstrings_implem.v": "d83eb109bdb50df0e8d35800c4ac04c952f803ec2a8d94742b72809248a34136"
+      }
+    },
+    "kattissquest": {
+      "files": {
+        "kattissquest/extraction/rust/snapshots/kattissquest_extracted.rs": "3559d18cb7dce2b9acf2a2eabd094c0b08747b355d9a07264ab1998292477891",
+        "kattissquest/kattissquest.spec": "d1e6e72bffa5169ecc69428f0e36c9825d23a405d6f3c89524a6c97f78ad04ca",
+        "kattissquest/kattissquest_implem.v": "1b352f262c65a92d15116f0ff30add4271b228f931c73c7cb3351576bb885dca"
+      }
+    },
+    "kingpinescape": {
+      "files": {
+        "kingpinescape/extraction/rust/snapshots/kingpinescape_extracted.rs": "55f91d8553c8b0f387fbaefe82ffeb3ff924b29355dc924e45e217bbdd5073d4",
+        "kingpinescape/kingpinescape.spec": "14395da66cbdce0b54b8d51a4601c09f1bb9c96b55ed13f202e845208325d81d",
+        "kingpinescape/kingpinescape_implem.v": "6a95f90eb93f73caabddf5e81a01fa23732f7343286e2b081f7d54bcf6333d96"
+      }
+    },
+    "knapsack": {
+      "files": {
+        "knapsack/extraction/rust/snapshots/knapsack_extracted.rs": "212935325fbefd1372a0d592f801062ad99e49b4fcca644853014c4debc659b5",
+        "knapsack/knapsack.spec": "e76f32fa8f57f8ce6e6bf39f7cd3f3d614996580ed4b512c057fb3ed83611b3c",
+        "knapsack/knapsack_implem.v": "35265d806ed673322acf04dfe53fd628a09668aff291cdbe69a86db8030d4a3e"
+      }
+    },
+    "knapsack2": {
+      "files": {
+        "knapsack2/extraction/rust/snapshots/knapsack2_extracted.rs": "51a5f47c039f0bbb31a6137cd7713f81161235ef7abd01a59ea5740a58883e3c",
+        "knapsack2/knapsack2.spec": "97cca65c56bfea8f7c1e1805ae4afa80fa99b2562e7d0bc640705dddb86a5e4b",
+        "knapsack2/knapsack2_implem.v": "bf872e5f08de5826a4b598ab8ba71ca67f2fd1c330323913c82c3b2ad5863784"
+      }
+    },
+    "knigsoftheforest": {
+      "files": {
+        "knigsoftheforest/extraction/rust/snapshots/knigsoftheforest_extracted.rs": "cf162ef739333523da46d9ef218d51b0c0024193fa3d2d8f459fb2b0326a7951",
+        "knigsoftheforest/knigsoftheforest.spec": "35f34e898eb2183b2b3ff3f19f18d2a17e2a6533ec7292d6abf855d5a986eb18",
+        "knigsoftheforest/knigsoftheforest_implem.v": "72b4680d52e573cc60b675d7caa24191510c7014bfb190c28b85436d769c0cef"
+      }
+    },
+    "largesttriangle": {
+      "files": {
+        "largesttriangle/extraction/rust/snapshots/largesttriangle_extracted.rs": "e7457990b0758c062cfe0607631f16be82b2f5cb248eae508d397e3b8635c4b8",
+        "largesttriangle/largesttriangle.spec": "4197fbe1836eb3f3874526f7043d56462f371e303cf93c22ce45f04fa13230c2",
+        "largesttriangle/largesttriangle_implem.v": "d65e0eb7d19a2f1ec5ca989bdadad547ae40b2f2d6b206d8b0a8e8716f643af6"
+      }
+    },
+    "longincsubseq": {
+      "files": {
+        "longincsubseq/extraction/rust/snapshots/longincsubseq_extracted.rs": "6d71ad3a25d827205a61bf849be7941ecd9da6bb77a519026d4f3ce63538722a",
+        "longincsubseq/longincsubseq.spec": "dc21a182a54bdbcc3cf46fc8a9084c917a97d8c6dd8b6dd1a6cf16a44eedb7be",
+        "longincsubseq/longincsubseq_implem.v": "449bdcdd52fdd7340d98bb40b8804fab8424c7ad8eba84757066814f1cefdad5"
+      }
+    },
+    "loopycabdrivers": {
+      "files": {
+        "loopycabdrivers/extraction/rust/snapshots/loopycabdrivers_extracted.rs": "ec3ba5194d9bb5f1487754362dbd5bb5927093456e53336aabeba3b3e6e4e5df",
+        "loopycabdrivers/loopycabdrivers.spec": "3792ca044fa3f965c868975db41822967b3c35516d486a5de94209168e6d81d9",
+        "loopycabdrivers/loopycabdrivers_implem.v": "3ec289cbcae8a1cc3573bdfee2a3b1c24eb59784156c6566f9b3942ea2580634"
+      }
+    },
+    "magicsequence": {
+      "files": {
+        "magicsequence/extraction/rust/snapshots/magicsequence_extracted.rs": "3dd8127ae63e43d860e4f7c9beda39644bda64561c059657463405eab6f127c1",
+        "magicsequence/magicsequence.spec": "5fd8d133fa5c2efd709685ebccc3b53557cb3cae53e0ac7dda1a3b49c0affe32",
+        "magicsequence/magicsequence_implem.v": "700ffa1c1bc3bec09079dfeb2c242e9860e0db93b81f1b1f8a7a6980d3c998ba"
+      }
+    },
+    "mazemovement": {
+      "files": {
+        "mazemovement/extraction/rust/snapshots/mazemovement_extracted.rs": "fa8e571290b9415aa42c3478228209a7963c8e3ca6108e8702102f2f156702b2",
+        "mazemovement/mazemovement.spec": "984399735be75ed559d814feb0c00ae044a1b5ad8d91ed47f24d549a9543159e",
+        "mazemovement/mazemovement_implem.v": "b386d99204ccefaf6a2a1c8f34e74195434330d81a9e28d1afde84b35ed99c12"
+      }
+    },
+    "median": {
+      "files": {
+        "median/extraction/rust/snapshots/median_extracted.rs": "b0dc660e1650080e0e829206cfb91a58ffe265d665ad4e529722c9191aeb2189",
+        "median/median.spec": "8772c61e976d5b6cdc54588758ae2976f7f8a77ee8d8cae80e50b8586866e300",
+        "median/median_implem.v": "ae1a6b9fbfe7ddcd9c2cf0d30f2cc5183bae16e4d9a635814d21706b745c18a0"
+      }
+    },
+    "minspantree": {
+      "files": {
+        "minspantree/extraction/rust/snapshots/minspantree_extracted.rs": "ed65234b5ae5ee97822b78fba3409ad4a92c83078889847e572b310db732ea4a",
+        "minspantree/minspantree.spec": "60284cdca4294115ebe37c1881f2c96a525cd14f28e48a0e6bc4ad24abe9cb61",
+        "minspantree/minspantree_implem.v": "16c54de51d5b237ba40e4bce4e99d72ff36d4be3031f4b385b10a2518943f682"
+      }
+    },
+    "nonnegpartsums": {
+      "files": {
+        "nonnegpartsums/extraction/rust/snapshots/nonnegpartsums_extracted.rs": "1ac224f4d64b7031028617b53aed94d19de4c2798aaa406bb28150bfe158decd",
+        "nonnegpartsums/nonnegpartsums.spec": "a00828c28bf499245fc9e6d6ad6a9f96f3c21b9333538919289dcd08a4980b1b",
+        "nonnegpartsums/nonnegpartsums_implem.v": "09ed6c645317fb2a63da0c3a8648a1d61dbd21753331378447ba2291cae34e98"
+      }
+    },
+    "numbersetshard": {
+      "files": {
+        "numbersetshard/extraction/rust/snapshots/numbersetshard_extracted.rs": "332e88905f3df9d13b4c2a69cb215516cc31e156ae40a79f77a4dcc29c14ec5a",
+        "numbersetshard/numbersetshard.spec": "79b4e11de62a89d3b758c2c98238e1e57492fb26ec8e9c25fd723e281d7997c9",
+        "numbersetshard/numbersetshard_implem.v": "b0f8ef3095a3ab17115805a849e1321a40fdd00b4b492a2508e7ceb829066f75"
+      }
+    },
+    "oddmanout": {
+      "files": {
+        "oddmanout/extraction/rust/snapshots/oddmanout_extracted.rs": "43a7c471e14052c6e7d3eef8933b8f6ab633e407ce42686d5428c29709304d18",
+        "oddmanout/oddmanout.spec": "94acb8d7aa782f22526f6bb9df1459a619d5d47a6f6a0a41b35599e0d5106172",
+        "oddmanout/oddmanout_implem.v": "7f019b8e5c70c40f180a6b91145e1396ce0daaff12822c6cde727488ea3ec151"
+      }
+    },
+    "palindromes": {
+      "files": {
+        "palindromes/extraction/rust/snapshots/palindromes_extracted.rs": "fa4fe038a7a326bb8aa15de9a55c9d9ec75b2e3dd3af5f7c9f8d69934159980b",
+        "palindromes/palindromes.spec": "c7d41ee3d2ebff05866f2cccd7447ddb85d39c79fa4e4b9322c75aa05feba469",
+        "palindromes/palindromes_implem.v": "eef9ccfb9aa4c0784826dcb7f4b9ce5102ca595d58cc7700015466f7776bc09d"
+      }
+    },
+    "pascal": {
+      "files": {
+        "pascal/extraction/rust/snapshots/pascal_extracted.rs": "dd0f8260d6b7fe0feaf94942d275e3fbca18ed3e6dfd00a42f02e0715006b83c",
+        "pascal/pascal.spec": "9bb421fc45136fc20cf09b15d62d1ce8ca7927f72253c3d14eda74c57617884f",
+        "pascal/pascal_implem.v": "236c8d120199b7691841910bbf83d2ed66f1a8255f78f843ab32137edd37869b"
+      }
+    },
+    "plot": {
+      "files": {
+        "plot/extraction/rust/snapshots/plot_extracted.rs": "64c9d44efc4e47c2474a33e353b1885324592007d3d2ecdceb7cd890e4fad403",
+        "plot/plot.spec": "f50e69920f43c04144fc3fa4dc5f09df543d625e4cf89680cb94d1235fd39300",
+        "plot/plot_implem.v": "c93c4635787bb2e49db0fd7d1ebe15c0244b0522f5e7431645fa63c7c193ce08"
+      }
+    },
+    "polygonarea": {
+      "files": {
+        "polygonarea/extraction/rust/snapshots/polygonarea_extracted.rs": "a207a0c1ddb651776d04d5e7edfb4fff4b6c19c2b9b6306335bebfa7d16d51a1",
+        "polygonarea/polygonarea.spec": "5ee82abd29d5a36269ba26e68f3da14496b044e8f3668055964b877d5a55e58a",
+        "polygonarea/polygonarea_implem.v": "5a9280ffab38dc80a93a63a180cd7ad1ea71099ef7138711ce2bd380a078396f"
+      }
+    },
+    "polymul1": {
+      "files": {
+        "polymul1/extraction/rust/snapshots/polymul1_extracted.rs": "64433c13734c2f8b4e923058ba83bc44e912eedc1a5cc62bec9425e3a223a55b",
+        "polymul1/polymul1.spec": "a2e218df6d3e3992f7660320a9c87a4bc0cdd8a14741b80c97bb62aeb8d6f0fc",
+        "polymul1/polymul1_implem.v": "35e623f39ab2ef2689bb15413faf39ef0f3c8930dcea3fc0da539b65f3e99edf"
+      }
+    },
+    "polymul2": {
+      "files": {
+        "polymul2/extraction/rust/snapshots/polymul2_extracted.rs": "9f9923386858003bdeb671695e683d00bce79a01fa46fdae3e1fbb8c950c41e1",
+        "polymul2/polymul2.spec": "313970ea30d2103203a51406eb5c167d466dac3906558f5afcd5632ad1f80f44",
+        "polymul2/polymul2_implem.v": "4063db28fcc4d2d6344ca101731963551fa0195adbc81c8e19090978469c8d15"
+      }
+    },
+    "primepower": {
+      "files": {
+        "primepower/extraction/rust/snapshots/primepower_extracted.rs": "705494b1581d70dccd9c12e8fc816d8de4eb7f13ce13d51a0d97608e908b2ac8",
+        "primepower/primepower.spec": "4632ab852e86d3cd031ded768926e5115aa461bf22399fd775902dbf86605210",
+        "primepower/primepower_implem.v": "75e88dfec9a981e5068c3b6c26b37656fafd316675f2da6e29a6e3fd5916d735"
+      }
+    },
+    "purplerain": {
+      "files": {
+        "purplerain/extraction/rust/snapshots/purplerain_extracted.rs": "6cd098ab32cb73a5072ee5ea29e9168e402d2e4cb0291ac2ddd292c34421849c",
+        "purplerain/purplerain.spec": "6cb7ce7ed6066dea0ef450923fdc7dc11d1bc50e4b1d2d509f4660099904ff7c",
+        "purplerain/purplerain_implem.v": "6e26f96f911be4918f683e68e34db6045382a6bd218076788361294d12cdef93"
+      }
+    },
+    "relatives": {
+      "files": {
+        "relatives/extraction/rust/snapshots/relatives_extracted.rs": "f85646949bd98e960fcbac085b08cac1d90e08658ed92966aebcba7829c87592",
+        "relatives/relatives.spec": "a2742eaf12aee12e66cf01746b9c1a1c9a70a114f75455d944c520a7fb6109e9",
+        "relatives/relatives_implem.v": "f179d17b2189c63252986f4c8903ab3f0501389e0a3198788490261278a75822"
+      }
+    },
+    "remainderreminder": {
+      "files": {
+        "remainderreminder/extraction/rust/snapshots/remainderreminder_extracted.rs": "a0dc239711f829f457f3c2524ceef7ee428fdb0bfc3538f8fdfc7684a87db647",
+        "remainderreminder/remainderreminder.spec": "aa814b37ca20c1c7b36adc951a56aaa10d4973ff5e88f4010bf2a98c25c1e973",
+        "remainderreminder/remainderreminder_implem.v": "38b79572ea10b499435d5a96d60393b998383657bb8b10530f82a663881e2c69"
+      }
+    },
+    "roadtimes": {
+      "files": {
+        "roadtimes/extraction/rust/snapshots/roadtimes_extracted.rs": "d5acc0e45aeca7f302d61c496ac81f19c25b7cd3f76adde817b63f3fcdb3afd2",
+        "roadtimes/roadtimes.spec": "64aa10231644008ca9acf7332696e43b2295f06efbd375f2666c30f3f6e74efe",
+        "roadtimes/roadtimes_implem.v": "4ffdfd76de664af8676e31b46aaac8b0c2cca09c3226fe315d6c23af26e22ae6"
+      }
+    },
+    "roberthood": {
+      "files": {
+        "roberthood/extraction/rust/snapshots/roberthood_extracted.rs": "45afaff49cc3c781e756be29f9fe28224afd783399ce96275761073ac683a129",
+        "roberthood/roberthood.spec": "0cd768e8ad4825f5f3f1932df6c55eb1accbfa32c834d1eee00bec4911e726d2",
+        "roberthood/roberthood_implem.v": "35c8c18f424f6ddd373c877f595376cbc65a6283c6d8ad7c8af5e5bc4a163455"
+      }
+    },
+    "satisfiability": {
+      "files": {
+        "satisfiability/extraction/rust/snapshots/satisfiability_extracted.rs": "6730dba566c7f6dbea6891d52b297d33577cc9fca0d201a442bf207ce21ee918",
+        "satisfiability/satisfiability.spec": "f25636b72f4d80cd41837a381339d44718c3f442f1cee1c355b735d8bfd2e847",
+        "satisfiability/satisfiability_implem.v": "3449a4201cd63099bc85cf4185ca6dbebec161d6029f5f9bde49e2a9659693ed"
+      }
+    },
+    "securitybadge": {
+      "files": {
+        "securitybadge/extraction/rust/snapshots/securitybadge_extracted.rs": "415cf05ab27444642990be03db2f1a54f783f11c4819135231dc4189592aeeb0",
+        "securitybadge/securitybadge.spec": "3220a26a7d6b6468010e41d7851fd729f435419b5dcfc6c7c8efa51d3a4e03f6",
+        "securitybadge/securitybadge_implem.v": "75b0d409b1240911107f4fb5c7884fa69bf148b13557e80c00dc07a4229858a5"
+      }
+    },
+    "segmentintersection": {
+      "files": {
+        "segmentintersection/extraction/rust/snapshots/segmentintersection_extracted.rs": "dd95a78c79d12cf64944e7fe8ff63c1ae9c7a141751124239a412f0f0f38d400",
+        "segmentintersection/segmentintersection.spec": "5254651963391976939e31fc7783ddb5b160da5cb40d33ea4d1b1f21a78b138e",
+        "segmentintersection/segmentintersection_implem.v": "652c8624edaea704c04f6aa57f8851a0ec12db46fe769f3e8f040c43de06d18a"
+      }
+    },
+    "selfbalancingbst": {
+      "files": {
+        "selfbalancingbst/extraction/rust/snapshots/selfbalancingbst_extracted.rs": "878dc51455072987b687a08448c43f84e76c3cd28526ee6d85bf57d1f81fd86b",
+        "selfbalancingbst/selfbalancingbst.spec": "c8f79a55e7471f00a2fc7b89fe5ae048ac443d517a2a93cb53e95920db7e13bb",
+        "selfbalancingbst/selfbalancingbst_implem.v": "c8dbbadf6b355a36d36c2ab05b073dee96433877444e84cf240d1d315981b745"
+      }
+    },
+    "shortestpath1": {
+      "files": {
+        "shortestpath1/extraction/rust/snapshots/shortestpath1_extracted.rs": "a5c598651ced6100cb621b2a643c2873ec786591a49f1a9f8854c5ce902b60c7",
+        "shortestpath1/shortestpath1.spec": "75f18f52012f87f6a717aaac2a8ee307bd810d864b99611820c55b25245fd601",
+        "shortestpath1/shortestpath1_implem.v": "c285494259f7c6ad2c0bb8e770d322123685b838b24ce0be5d7957271c81e7af"
+      }
+    },
+    "shortestpath3": {
+      "files": {
+        "shortestpath3/extraction/rust/snapshots/shortestpath3_extracted.rs": "fb2b82f8666005277f4330a3c37d04b0d46e842bad94c262bdea4f9eca75c4ce",
+        "shortestpath3/shortestpath3.spec": "5ed3504434624e7e6fae7b01bf33723590864147b9f4d8d2a18939d963456c40",
+        "shortestpath3/shortestpath3_implem.v": "8d4827601319000ac28f0d18f9834e4c1ecf089cb7e195c3a546423481b08fe9"
+      }
+    },
+    "slowleak": {
+      "files": {
+        "slowleak/extraction/rust/snapshots/slowleak_extracted.rs": "38143361e357737576e7c30e74255c2ac91392d609722d9812edefbbc06320ea",
+        "slowleak/slowleak.spec": "26bee9638ca4c38966b79b346b5695ec3453af65fe7f71703bac38e820e657c5",
+        "slowleak/slowleak_implem.v": "8aadedb31ce808d778d243a0fa19f643803f887f4837f4dde44c2796723b4588"
+      }
+    },
+    "stringmatching": {
+      "files": {
+        "stringmatching/extraction/rust/snapshots/stringmatching_extracted.rs": "a5e10196412fabbd143ddbdb126b9e2173126c150cbc8b87e8e997ad15f5417a",
+        "stringmatching/stringmatching.spec": "fdcfb19a730b54db74154c858d3c54012860202fcf7379decd25255a134a90f0",
+        "stringmatching/stringmatching_implem.v": "1ca97154890b1843a8339b769ee80db333598b497f3b24ba6f64b181c222c985"
+      }
+    },
+    "stringmultimatching": {
+      "files": {
+        "stringmultimatching/extraction/rust/snapshots/stringmultimatching_extracted.rs": "680ed04aefb6e82452fcca3dc38a690a0a9309cbc191793ac7a5d957c24745ee",
+        "stringmultimatching/stringmultimatching.spec": "2c9949db454e909e37478a83fa33c6b1c1b72d3d5aa68dc36dcd8b71688ebcc1",
+        "stringmultimatching/stringmultimatching_implem.v": "315298e63aa6562d3a1b99f4097fc22825efc98cd8c3cad3f932e3179493a10d"
+      }
+    },
+    "suffixsorting": {
+      "files": {
+        "suffixsorting/extraction/rust/snapshots/suffixsorting_extracted.rs": "12903888bb783bf02840dfc535b770338034492335248e1b64562cef46e9fe0b",
+        "suffixsorting/suffixsorting.spec": "1d65eecac9d82635ab51a6b3f22191a5d9d7810eaba7c19d8a5de570e6a1ef20",
+        "suffixsorting/suffixsorting_implem.v": "c1d26d950eeb3839dd5beb02813d27baa15586aac30c9415a7dc10e6a169339b"
+      }
+    },
+    "sumsets": {
+      "files": {
+        "sumsets/extraction/rust/snapshots/sumsets_extracted.rs": "794c55fb81297cef4cf21a679a66d5e9601291eabcbcb074e5eedf60092fd300",
+        "sumsets/sumsets.spec": "f1eeb1d778d689d7a24e580cff02c3e642afe98de47df30286653b02e396b1ce",
+        "sumsets/sumsets_implem.v": "e1df9fec0f790bb8077c041f9eac1b3342b6972a28a1101267d99fcd70f55449"
+      }
+    },
+    "timing": {
+      "files": {
+        "timing/extraction/rust/snapshots/timing_extracted.rs": "25207ebeb26a0d972c17577616206f1ab426eb9c7164a3c8f42e3b70cf5d8863",
+        "timing/timing.spec": "8e2f1c6f1efb4767cb02a5fc266896ae839b48495fdcc40cfc22bed8a0148b39",
+        "timing/timing_implem.v": "fb7ebdbf0e6223fd5fa0ddc0585c48d8b5d139f559630579945627ff76de831d"
+      }
+    },
+    "tugofwar": {
+      "files": {
+        "tugofwar/extraction/rust/snapshots/tugofwar_extracted.rs": "1bcf67196bf3c5530f973983109aae48d11d156b1454f4c570d2e488de858393",
+        "tugofwar/tugofwar.spec": "56556cb85a103054935937ceb826deae0059317d6596b2ca1a96442c644e0e65",
+        "tugofwar/tugofwar_implem.v": "e23e4aa10ac14aa45fa8627ecf41f637194ae13da1109e78e7d3bb9e8b9a67d7"
+      }
+    },
+    "ultraquicksort": {
+      "files": {
+        "ultraquicksort/extraction/rust/snapshots/ultraquicksort_extracted.rs": "537a5db11caf1af730f75b60dc0d376edfe0329b2e34a7ac69ed7a8df2312bd1",
+        "ultraquicksort/ultraquicksort.spec": "34ed210722fdb224847cfb402a93d203c3c014ebbb0be993fb3458f4c5627592",
+        "ultraquicksort/ultraquicksort_implem.v": "789acfe247986e02feec2b66b5b96a3073e2d414dc8208f68aefa38467cc0f20"
+      }
+    },
+    "unionfind": {
+      "files": {
+        "unionfind/extraction/rust/snapshots/unionfind_extracted.rs": "17d3e02e1eac1e447989ebdbcdff47cd7aef6586e0a7a2010d6d360212c857fd",
+        "unionfind/unionfind.spec": "a06cb03013e329d992a95b9459404bea7bf8d65bbb87841959ba254a202b794f",
+        "unionfind/unionfind_implem.v": "bbd60539644643925acf62922d7de6f6d7eb0f3219c2ab059d9529adb8d7fc7c"
+      }
+    },
+    "water": {
+      "files": {
+        "water/extraction/rust/snapshots/water_extracted.rs": "1afadb1bb2eccce8d0a92f7f46e9199c2a6549707ff2e51610995c638723640b",
+        "water/water.spec": "9edc14b26409d294754a034240cca689afef052dcbb1e510a6f339040c7eece8",
+        "water/water_implem.v": "c40df12be94aeab526fb8be5928f0306b06965db5adc46469c3f8c42c84191ed"
+      }
+    },
+    "worstweather": {
+      "files": {
+        "worstweather/extraction/rust/snapshots/worstweather_extracted.rs": "eebf0c249aef7a8464c3f667af8fd0c993bdd9c3c7b3fa1c13d5536364762896",
+        "worstweather/worstweather.spec": "0865078e8d07d67a4d21dea21ca2373362afba058f023b63e8ee8968fe15405a",
+        "worstweather/worstweather_implem.v": "a2543eb7474b0edd190ac20c9cd62f41d97bf3622f39aa9ff761e4a92c008627"
+      }
+    },
+    "xormax": {
+      "files": {
+        "xormax/extraction/rust/snapshots/xormax_extracted.rs": "6388a8b3d8c9a76c6754c27867a110c15f37cf0d79523a3d6a207fe38014855d",
+        "xormax/xormax.spec": "ee911de0b0d4797e181e7298db515b9c8bfce75b5962e4149e85f9ddc80dd27c",
+        "xormax/xormax_implem.v": "6e642070103a7ab17987393a51c1d8df98b07206f51b42955ef5cf34ce6f7791"
+      }
+    },
+    "yatp": {
+      "files": {
+        "yatp/extraction/rust/snapshots/yatp_extracted.rs": "4d61be9b69d1f8c91ed4e2defafa7946450498e249e7b61e2d6900cf70fe5eb5",
+        "yatp/yatp.spec": "7dd13caff427aeb22cb8d0f5e6af31fb5dc18a4ca04a3bbc07a98da062674cca",
+        "yatp/yatp_implem.v": "52db9db267c4ec5307ded97d60f3ee528e4883a5cbbfcee8bb35856cbaa31b86"
+      }
+    },
+    "zapis": {
+      "files": {
+        "zapis/extraction/rust/snapshots/zapis_extracted.rs": "d6ab74e3dee58309f85a4a25b0779747db685b94fa65a1b8cd67af004fc21bfd",
+        "zapis/zapis.spec": "5ebf3f11420f91532a7ae4be56a978e8a9d54d2058bc789c486a6b2de747eae8",
+        "zapis/zapis_implem.v": "cea6c7a1006ccce7f939aacedb9f42382e08f23473fc12443f9dda38f7a304af"
+      }
+    }
+  },
+  "version": 1
+}

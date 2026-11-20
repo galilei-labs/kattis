@@ -1,0 +1,10 @@
+*.vo
+*.vos
+*.vok
+*.glob
+.*.aux
+cold_spec.v
+extraction/.check/
+
+.generated/
+.lia.cache

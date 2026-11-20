@@ -1,0 +1,169 @@
+(** * Indoorienteering *)
+
+(** ** Description *)
+
+(** Plan an indoor orienteering race through the given control points.
+    Distances between every pair of points are supplied. The race must visit
+    every control point exactly once and then return to its starting point.
+    Decide whether some visiting order gives exactly the requested total
+    length, including the final leg back to the start.
+
+    [@kattis indoorienteering]
+    - Difficulty: 6.6
+    - CPU time limit: 8 seconds
+    - Memory limit: 1024 MB
+
+    **Kattis Bounds**
+    - Vertex count: $2 \le n \le 14$; target length: $1 \le L \le 10^{15}$.
+    - Distances are symmetric, zero on the diagonal, and otherwise satisfy
+      $1 \le d_{ij} \le L$; they satisfy the triangle inequality. *)
+
+(** ** Examples *)
+
+(** - Input convention: Vertex count and target tour length, followed by a square distance matrix.
+    - Output convention: The function returns [true] if a tour of exactly the requested length exists, and [false] otherwise. The Kattis text format prints these as "possible" and "impossible", respectively. *)
+(* Input:
+4 10
+0 3 2 1
+3 0 1 3
+2 1 0 2
+1 3 2 0
+Output:
+possible
+*)
+
+(** ** [@hide] Environment *)
+(* @function        indoorienteering
+   @signature       array (array uint) -> uint -> bool
+   @math_signature  list (list N) -> N -> bool
+   @summary         [indoorienteering distances desired_length] decides
+                    whether the n control points, whose pairwise distances
+                    form the n x n matrix distances, can be visited each
+                    exactly once in some order, returning directly to the
+                    first one, with a total race length of exactly
+                    desired_length. It returns true ("possible") iff such
+                    an order exists, false ("impossible") otherwise.
+*)
+
+From Stdlib Require Import ZArith NArith List Uint63 PArray.
+From StdGalilei Require Import repr.
+Import ListNotations.
+Open Scope N_scope.
+
+(** ** Definitions *)
+
+(** The number of elements of [l]. *)
+Definition len {A} (l : list A) : N :=
+  N.of_nat (List.length l).
+
+(** The matrix distance between control points [i] and [j]. *)
+Definition dist (distances : list (list N)) (i j : N) : N :=
+  nth (N.to_nat j) (nth (N.to_nat i) distances []) 0.
+
+(** [order] lists every zero-based control-point index exactly once. *)
+Definition visiting_order (distances : list (list N))
+  (order : list N)
+    : Prop :=
+  NoDup order /\ forall point, In point order <-> point <
+    len distances.
+
+(** The sum of distances between consecutive vertices in [order], without
+    adding the closing leg back to the first vertex. *)
+Fixpoint path_length (distances : list (list N))
+  (order : list N) : N :=
+  match order with
+  | point :: ((next :: _) as rest) =>
+      dist distances point next + path_length distances rest
+  | _ => 0
+  end.
+
+(** The total distance along [order], including the return from the final point to
+    the first. *)
+Definition race_length (distances : list (list N))
+  (order : list N) : N :=
+  match order with
+  | [] => 0
+  | start :: _ =>
+      path_length distances order + dist distances (last
+        order start) start
+  end.
+
+(** [@inside indoorienteering_correct] Input constraints based on the Kattis problem bounds, within which the implementation's correctness is guaranteed. *)
+Record valid_input (distances : list (list N))
+  (desired_length : N)
+    : Prop := {
+  (* 2 <= n <= 14, the number of control points *)
+  vi_n : 2 <= len distances <= 14;
+  (* 1 <= L <= 10^15, the desired length of the race
+     (desired_length) *)
+  vi_L : 1 <= desired_length <= 10 ^ 15;
+  (* n lines with n integers each *)
+  vi_rows : Forall (fun row => len row = len distances)
+    distances;
+  (* d_ii = 0 *)
+  vi_diag : forall i, i < len distances ->
+    dist distances i i = 0;
+  (* 1 <= d_ij <= L for i <> j *)
+  vi_dist : forall i j, i < len distances ->
+    j < len distances -> i <> j ->
+    1 <= dist distances i j <= desired_length;
+  (* d_ij = d_ji *)
+  vi_sym : forall i j, i < len distances ->
+    j < len distances ->
+    dist distances i j = dist distances j i;
+  (* d_ij <= d_ik + d_kj *)
+  vi_tri : forall i j k,
+    i < len distances -> j < len distances ->
+      k < len distances ->
+    dist distances i j <= dist distances i k + dist
+      distances k j;
+}.
+
+(** ** Correctness *)
+
+(** [@requirement]
+    The output is true exactly when a race visits every control point once,
+    returns to its start, and has exactly the requested total length. *)
+Definition indoorienteering_spec (distances : list (list N))
+    (desired_length : N) (output : bool) : Prop :=
+  output = true <->
+    exists order, visiting_order distances order /\
+      race_length distances order = desired_length.
+
+(** ** Interface *)
+
+(** Decide whether an orienteering race can visit every control point once
+    and return to its start with exactly the requested total length.
+    - Input [distances]: Matrix of pairwise distances between control points.
+    - Input [desired_length]: Required total length of the closed tour.
+    - Output [output]: [true] if such a tour of total length [desired_length] exists, and [false] otherwise. *)
+Program indoorienteering : array
+  (array uint) -> uint -> bool.
+
+(** [@example indoorienteering]
+    - Sample: 1
+    - Input [distances]: [[0; 3; 2; 1]; [3; 0; 1; 3]; [2; 1; 0; 2]; [1; 3; 2; 0]]
+    - Input [desired_length]: 10
+    - Output [output]: true
+*)
+
+(** ** Bridge *)
+
+(** [@requirement indoorienteering_spec] [@fold full correctness
+    statement] On valid represented inputs, [indoorienteering]
+    returns a represented output satisfying [indoorienteering_spec]. *)
+Specification indoorienteering_correct :
+  forall (distances : list (list N)) (desired_length : N)
+         (distances_arr : array (array uint))
+           (desired_length_int : uint),
+  valid_input distances desired_length ->
+  repr distances_arr distances ->
+    repr desired_length_int desired_length ->
+  exists output : bool,
+    repr (indoorienteering distances_arr desired_length_int)
+      output /\
+    indoorienteering_spec distances desired_length output.
+
+(** [@hide] The kernel primitives (int, array, float, string) and their
+    axioms. *)
+Allowed Primitive Axioms.

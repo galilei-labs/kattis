@@ -1,0 +1,369 @@
+(* Implementation of pascal (pascal.spec): trial division.
+
+   Code.  [pascal n] finds the smallest divisor p >= 2 of n by trying
+   p = 2, 3, 4, ... while p <= n and p * p <= n ([sd_loop]); when no
+   candidate divides n (n prime, or n = 1) the loop returns n itself.  The
+   answer is n - n / p: Frane's loop counts down from n - 1 to the largest
+   proper divisor n / p of n.  For n = 1 the loop returns 1 and the answer
+   is 1 - 1 = 0.  All arithmetic is on Uint63 [int]; no array, no Z.
+
+   Termination: [sd_loop] recurses structurally on an erased
+   [Acc (Zwf 0) (gap n p)] proof, gap n p = n + 1 - p (the template's
+   device); the test [p <? n] makes the decrease unconditional (p + 1
+   cannot wrap) and, with the contract's bound, keeps p * p exact.
+
+   Cost: Elpi complexity on sumbool, andb, bdec, sd_loop, pascal_impl,
+   pascal (callee first).  sd_loop from p costs at most
+   (sqrt n + 1 - p) * 50 + 50 steps when n <= 10^9 (sd_loop_time, by
+   induction on a nat bound of gap n p); pascal_time with c1 = 50,
+   c2 = 100.  The bound needs n <= 10^9: for larger words p * p wraps and
+   the loop overruns sqrt n. *)
+
+From Pascal.spec Require Import Prelude.
+From StdGalilei Require Import repr.
+From Stdlib Require Import ZArith NArith List Uint63 ZifyUint63 Lia Zwf.
+From KattisLib Require Import Cost.
+
+Open Scope uint63_scope.
+
+Unset Lia Cache.
+
+Ltac sia := zify; Z.to_euclidean_division_equations; lia.
+
+(* ------------------------------------------------------------------ *)
+(* The termination device                                              *)
+(* ------------------------------------------------------------------ *)
+
+Definition bdec (b : bool) : {b = true} + {b = false} :=
+  match b as b0 return {b0 = true} + {b0 = false} with
+  | true => left eq_refl
+  | false => right eq_refl
+  end.
+Elpi complexity sumbool.
+Elpi complexity andb.
+Elpi complexity bdec.
+
+Definition gap (n p : int) : Z := ((φ n) + 1 - (φ p))%Z.
+Arguments gap : simpl never.
+
+Lemma dec_step : forall n p : int,
+  ((p <? n) && (p * p <=? n))%bool = true -> Zwf 0 (gap n (p + 1)) (gap n p).
+Proof.
+  intros n p H. apply andb_prop in H. destruct H as [H _].
+  rewrite ltb_spec in H.
+  assert (H1 : (φ (p + 1)) = ((φ p) + 1)%Z).
+  { pose proof (to_Z_bounded n). sia. }
+  unfold Zwf, gap. lia.
+Qed.
+
+(* ------------------------------------------------------------------ *)
+(* The program                                                         *)
+(* ------------------------------------------------------------------ *)
+
+(* The smallest divisor of n among p, p+1, ... below sqrt n, or n. *)
+Fixpoint sd_loop (n p : int) (H : Acc (Zwf 0) (gap n p)) {struct H} : int :=
+  match bdec ((p <? n) && (p * p <=? n))%bool with
+  | left Hc =>
+      if n mod p =? 0 then p
+      else sd_loop n (p + 1) (Acc_inv H (dec_step n p Hc))
+  | right _ => n
+  end.
+Elpi complexity sd_loop.
+Arguments sd_loop_cost : simpl never.
+
+Lemma sd_loop_eq : forall n p H,
+  sd_loop n p H =
+  match bdec ((p <? n) && (p * p <=? n))%bool with
+  | left Hc =>
+      if n mod p =? 0 then p
+      else sd_loop n (p + 1) (Acc_inv H (dec_step n p Hc))
+  | right _ => n
+  end.
+Proof. intros. destruct H. reflexivity. Qed.
+
+Definition pascal_impl (n : uint) : uint :=
+  n - n / sd_loop n 2 (Zwf_well_founded 0 (gap n 2)).
+Elpi complexity pascal_impl.
+Arguments pascal_impl_cost : simpl never.
+
+(* ------------------------------------------------------------------ *)
+(* Prop side: Frane's loop stops at the largest proper divisor          *)
+(* ------------------------------------------------------------------ *)
+
+Lemma frane_loop_S : forall n i c,
+  frane_loop n (S i) c =
+  (if (n mod N.of_nat (S i) =? 0)%N then (c + 1)%N else frane_loop n i (c + 1)%N).
+Proof. reflexivity. Qed.
+
+Lemma frane_loop_div : forall n d i c,
+  (1 <= d)%N -> (d <= N.of_nat i)%N -> (n mod d = 0)%N ->
+  (forall j, (d < j <= N.of_nat i)%N -> (n mod j <> 0)%N) ->
+  frane_loop n i c = (c + (N.of_nat i - d + 1))%N.
+Proof.
+  intros n d i. induction i as [| i IH]; intros c H1 Hd Hm Hj.
+  - simpl in Hd. lia.
+  - rewrite frane_loop_S.
+    destruct (N.eqb_spec (n mod N.of_nat (S i)) 0) as [E | E].
+    + assert (N.of_nat (S i) = d).
+      { destruct (N.lt_ge_cases d (N.of_nat (S i))) as [Hl | Hl]; [| lia].
+        exfalso. exact (Hj _ (conj Hl (N.le_refl _)) E). }
+      rewrite H. lia.
+    + assert (Hne : N.of_nat (S i) <> d) by (intro Heq; rewrite Heq in E; exact (E Hm)).
+      rewrite IH; [lia | lia | lia | exact Hm |].
+      intros j Hj'. apply Hj. lia.
+Qed.
+
+(* With p the smallest divisor >= 2 of n (p = n = 1 allowed), Frane's
+   program prints n - n / p. *)
+Lemma frane_output_sd : forall n p,
+  (1 <= n)%N -> (1 <= p)%N -> (n mod p = 0)%N -> ((2 <= n)%N -> (2 <= p)%N) ->
+  (forall k, (2 <= k < p)%N -> (n mod k <> 0)%N) ->
+  frane_output n = (n - n / p)%N.
+Proof.
+  intros n p Hn Hp Hm H2 Hk.
+  destruct (N.eq_dec n 1) as [E | E].
+  { subst n. assert (p = 1%N).
+    { pose proof (N.mod_le 1 p ltac:(lia)).
+      destruct (N.eq_dec p 1); [assumption|].
+      rewrite N.mod_small in Hm by lia. discriminate. }
+    subst p. reflexivity. }
+  specialize (H2 ltac:(lia)).
+  pose proof (N.div_mod n p ltac:(lia)) as Hdm. rewrite Hm, N.add_0_r in Hdm.
+  set (d := (n / p)%N) in *. clearbody d.
+  assert (Hd1 : (1 <= d)%N) by nia.
+  assert (Hdn : (d <= n - 1)%N) by nia.
+  unfold frane_output.
+  rewrite (frane_loop_div n d); rewrite ?N2Nat.id.
+  - lia.
+  - exact Hd1.
+  - exact Hdn.
+  - rewrite Hdm. apply N.mod_mul. lia.
+  - intros j Hj Hjm.
+    pose proof (N.div_mod n j ltac:(lia)) as Hjd. rewrite Hjm, N.add_0_r in Hjd.
+    set (k := (n / j)%N) in *. clearbody k.
+    assert (Hk2 : (2 <= k)%N).
+    { destruct (N.eq_dec k 0) as [E0 | E0]; [rewrite E0 in Hjd; lia|].
+      destruct (N.eq_dec k 1) as [E1 | E1]; [rewrite E1 in Hjd; lia|].
+      lia. }
+    assert (Hkm : (n mod k = 0)%N).
+    { rewrite Hjd. apply N.mod_mul. lia. }
+    destruct (N.lt_ge_cases k p) as [Hkp | Hkp].
+    + exact (Hk k (conj Hk2 Hkp) Hkm).
+    + assert ((j * p <= j * k)%N) by (apply N.mul_le_mono_l; lia).
+      assert ((d * p < j * p)%N) by (apply N.mul_lt_mono_pos_r; lia).
+      lia.
+Qed.
+
+(* ------------------------------------------------------------------ *)
+(* The loop                                                            *)
+(* ------------------------------------------------------------------ *)
+
+Lemma sq_exact : forall p n : int,
+  ((φ p) < (φ n))%Z -> ((φ n) <= 1000000000)%Z -> (φ (p * p)) = ((φ p) * (φ p))%Z.
+Proof.
+  intros p n H1 H2. pose proof (to_Z_bounded p).
+  rewrite mul_spec. apply Z.mod_small.
+  assert ((φ p) * (φ p) <= 1000000000 * 1000000000)%Z by (apply Z.mul_le_mono_nonneg; lia).
+  change wB with 9223372036854775808%Z. lia.
+Qed.
+
+Lemma sd_loop_spec : forall n p H,
+  (1 <= (φ n) <= 1000000000)%Z -> (2 <= (φ p))%Z ->
+  (forall k, (2 <= k < (φ p))%Z -> ((φ n) mod k <> 0)%Z) ->
+  let r := sd_loop n p H in
+  (1 <= (φ r))%Z /\ ((φ n) mod (φ r) = 0)%Z /\ ((2 <= (φ n))%Z -> (2 <= (φ r))%Z) /\
+  (forall k, (2 <= k < (φ r))%Z -> ((φ n) mod k <> 0)%Z).
+Proof.
+  intros n p H. revert p H.
+  fix IH 2. intros p H Hn Hp Hk r. subst r.
+  rewrite sd_loop_eq.
+  destruct (bdec ((p <? n) && (p * p <=? n))%bool) as [Hc | Hc].
+  - assert (Hc' := Hc). apply andb_prop in Hc'. destruct Hc' as [Hpn Hpp].
+    rewrite ltb_spec in Hpn.
+    assert (Hpp' : ((φ p) * (φ p) <= (φ n))%Z).
+    { rewrite leb_spec in Hpp.
+      rewrite (sq_exact p n) in Hpp by lia. lia. }
+    destruct (n mod p =? 0) eqn:E.
+    + rewrite eqb_spec in E. assert (E' : ((φ n) mod (φ p) = 0)%Z).
+      { rewrite <- mod_spec, E. reflexivity. }
+      repeat split; try lia. exact Hk.
+    + rewrite <- Bool.not_true_iff_false, eqb_spec in E.
+      assert (E' : ((φ n) mod (φ p) <> 0)%Z).
+      { intro E'. apply E. apply to_Z_inj. rewrite mod_spec. exact E'. }
+      assert (Hp1 : (φ (p + 1)) = ((φ p) + 1)%Z) by sia.
+      apply IH; [lia | lia |].
+      intros k Hk'. destruct (Z.eq_dec k (φ p)) as [-> | Hne]; [exact E'|].
+      apply Hk. lia.
+  - assert (Hstop : ((φ n) < (φ p) * (φ p))%Z \/ ((φ n) <= (φ p))%Z).
+    { destruct (p <? n) eqn:E1.
+      - simpl in Hc. left. rewrite ltb_spec in E1.
+        assert ((φ (p * p)) = ((φ p) * (φ p))%Z) by (apply (sq_exact p n); lia).
+        rewrite <- Bool.not_true_iff_false, leb_spec in Hc. lia.
+      - right. rewrite <- Bool.not_true_iff_false, ltb_spec in E1. lia. }
+    repeat split.
+    + lia.
+    + apply Z_mod_same_full.
+    + lia.
+    + intros k Hk' Hkm.
+      destruct (Z.lt_ge_cases k (φ p)) as [Hkp | Hkp]; [exact (Hk k ltac:(lia) Hkm)|].
+      destruct Hstop as [Hstop | Hstop]; [| lia].
+      pose proof (Z.div_mod (φ n) k ltac:(lia)) as Hd. rewrite Hkm, Z.add_0_r in Hd.
+      set (m := ((φ n) / k)%Z) in *.
+      assert (Hm0 : (0 <= m)%Z) by (apply Z.div_pos; lia). clearbody m.
+      assert (Hm2 : (2 <= m)%Z).
+      { destruct (Z.eq_dec m 0) as [E0 | E0]; [rewrite E0 in Hd; lia|].
+        destruct (Z.eq_dec m 1) as [E1 | E1]; [rewrite E1 in Hd; lia|].
+        lia. }
+      assert (Hmm : ((φ n) mod m = 0)%Z).
+      { rewrite Hd. apply Z_mod_mult. }
+      destruct (Z.lt_ge_cases m (φ p)) as [Hmp | Hmp].
+      * exact (Hk m ltac:(lia) Hmm).
+      * assert (((φ p) * (φ p) <= k * m)%Z) by (apply Z.mul_le_mono_nonneg; lia).
+        lia.
+Qed.
+
+(* ------------------------------------------------------------------ *)
+(* The contract                                                        *)
+(* ------------------------------------------------------------------ *)
+
+Lemma pascal_impl_correct : forall (n : N) (x : uint),
+  valid_input n -> repr x n ->
+  exists c : N, repr (pascal_impl x) c /\ pascal_spec n c.
+Proof.
+  intros n x [Hv] Hx. unfold repr, repr_uint in Hx.
+  pose proof (to_Z_bounded x) as Hxb.
+  assert (Hxv : (1 <= (φ x) <= 1000000000)%Z).
+  { subst n. lia. }
+  destruct (sd_loop_spec x 2 (Zwf_well_founded 0 (gap x 2)) Hxv
+              ltac:(change (φ 2) with 2%Z; lia)
+              ltac:(intros k Hk; change (φ 2) with 2%Z in Hk; lia))
+    as (Hr1 & Hrm & Hr2 & Hrk).
+  set (r := sd_loop x 2 (Zwf_well_founded 0 (gap x 2))) in *.
+  exists (frane_output n). split; [| reflexivity].
+  unfold pascal_impl. fold r.
+  assert (Hrx : ((φ r) <= (φ x))%Z).
+  { apply Z.mod_divide in Hrm; [| lia]. apply Z.divide_pos_le; [lia | exact Hrm]. }
+  assert (Hq : (0 <= (φ x) / (φ r) <= (φ x))%Z).
+  { split; [apply Z.div_pos; lia | apply Z.div_le_upper_bound; nia]. }
+  assert (Hval : (φ (x - x / r)) = ((φ x) - (φ x) / (φ r))%Z).
+  { rewrite sub_spec, div_spec. rewrite Z.mod_small; [reflexivity | lia]. }
+  unfold repr, repr_uint. rewrite Hval.
+  rewrite (frane_output_sd n (Z.to_N (φ r))).
+  - subst n. apply N2Z.inj.
+    rewrite Z2N.id by lia.
+    rewrite N2Z.inj_sub.
+    + rewrite N2Z.inj_div, !Z2N.id by lia. reflexivity.
+    + apply N2Z.inj_le. rewrite N2Z.inj_div, !Z2N.id by lia. lia.
+  - lia.
+  - lia.
+  - subst n. apply N2Z.inj. rewrite N2Z.inj_mod, !Z2N.id by lia. exact Hrm.
+  - lia.
+  - intros k Hk Hkm. apply (Hrk (Z.of_N k)); [lia|].
+    subst n. apply (f_equal Z.of_N) in Hkm.
+    rewrite N2Z.inj_mod, Z2N.id in Hkm by lia. exact Hkm.
+Qed.
+
+(* ------------------------------------------------------------------ *)
+(* The spec's items, at top level                                      *)
+(* ------------------------------------------------------------------ *)
+
+Definition pascal : uint -> uint := pascal_impl.
+Elpi complexity pascal.
+
+Definition pascal_correct : forall (n : N) (x : uint),
+  valid_input n -> repr x n ->
+  exists c : N, repr (pascal x) c /\ pascal_spec n c
+  := pascal_impl_correct.
+
+
+(* ------------------------------------------------------------------ *)
+(* Cost                                                                *)
+(* ------------------------------------------------------------------ *)
+
+From Stdlib Require Import ssreflect.
+
+Definition Nof (x : int) : nat := Z.to_nat (φ x).
+
+Lemma bdec_time b (w : bool_cost stepsCM b) : (cost (bdec_cost stepsCM b w) <= 2)%nat.
+Proof. destruct w; cbn; lia. Qed.
+
+Arguments sd_loop : simpl never.
+Arguments Zwf_well_founded : simpl never.
+
+Lemma sqrt_ge D m : (D * D <= m)%nat -> (D <= Nat.sqrt m)%nat.
+Proof.
+  intros H. pose proof (Nat.sqrt_le_mono _ _ H) as H1. rewrite Nat.sqrt_square in H1. exact H1.
+Qed.
+
+(* one more turn of the loop: the measure drops, p grows by one and stays
+   below sqrt n *)
+Lemma step_facts n p : (φ n <= 1000000000)%Z ->
+  ((p <? n) && (p * p <=? n))%bool = true ->
+  and (Z.to_nat (gap n (p + 1)) + 1 = Z.to_nat (gap n p))%nat
+  (and (Nof (p + 1) = Nof p + 1)%nat (Nof p <= Nat.sqrt (Nof n))%nat).
+Proof.
+  intros Hn E. pose proof (dec_step n p E) as [Z1 Z2].
+  apply andb_prop in E. destruct E as [E1 E2]. rewrite ltb_spec in E1.
+  rewrite leb_spec (sq_exact p n E1 Hn) in E2.
+  pose proof (to_Z_bounded p) as Bp. pose proof (to_Z_bounded n) as Bn.
+  assert (Hp1 : φ (p + 1) = (φ p + 1)%Z) by sia.
+  unfold gap in *. unfold Nof. rewrite Hp1.
+  split; [lia|]. split; [lia|].
+  apply sqrt_ge. rewrite <- Z2Nat.inj_mul by lia. apply Z2Nat.inj_le; lia.
+Qed.
+
+Ltac kill_andb b := repeat match goal with |- context [@cost ?T ?X] =>
+  lazymatch X with context [bool_w b] =>
+    let H := fresh in assert (H : @cost T X = 0%nat) by (destruct b; reflexivity);
+    rewrite H; clear H end end.
+
+Lemma sd_loop_time n nC p pC H HC : (φ n <= 1000000000)%Z ->
+  (cost (extract (extract (sd_loop_cost stepsCM n nC) p pC) H HC)
+   <= (Nat.sqrt (Nof n) + 1 - Nof p) * 50 + 50)%nat.
+Proof.
+  intros Hn. unfold sd_loop_cost. cbn.
+  match goal with |- context [@cost ?T (?G n nC p pC H HC)] =>
+    assert (HG : forall k p pC H HC, (Z.to_nat (gap n p) <= k)%nat ->
+       forall Sq P, Sq = Nat.sqrt (Nof n) -> P = Nof p ->
+       (cost (G n nC p pC H HC) <= (Sq + 1 - P) * 50 + 50)%nat) end.
+  { induction k as [|k IH]; intros p' pC' [g] HC' Hk Sq P HSq HP;
+      cost_simpl;
+      match goal with |- context [cost (bdec_cost stepsCM ?b ?w)] => pose proof (bdec_time b w) as HB end;
+      cost_destruct (bdec ((p' <? n) && (p' * p' <=? n))); cost_simpl; kill_andb (p' <? n).
+    - exfalso. pose proof (andb_prop _ _ e) as [e1 _]. rewrite ltb_spec in e1.
+      unfold gap in Hk. lia.
+    - lia.
+    - cost_destruct_eqn (n mod p' =? 0) E3; cost_simpl.
+      + lia.
+      + destruct (step_facts n p' Hn e) as (F1 & F2 & F3).
+        assert (Hk' : (Z.to_nat (gap n (p' + 1)) <= k)%nat) by lia.
+        match goal with |- context [@cost ?T (?G' n ?nc (p' + 1)%uint63 ?w ?h ?hc)] =>
+          have HI := (IH (p' + 1)%uint63 w h hc Hk' _ _ HSq eq_refl
+                      : (@cost T (G' n nc (p' + 1)%uint63 w h hc) <= _)%nat) end.
+        rewrite F2 in HI. rewrite <- HP, <- HSq in F3. lia.
+    - lia. }
+  match goal with |- context [@cost ?T (?G n nC p pC H HC)] =>
+    exact (HG _ p pC H HC (le_n _) _ _ eq_refl eq_refl
+           : (@cost T (G n nC p pC H HC) <= _)%nat) end.
+Qed.
+
+Theorem pascal_time : exists c1 c2 : nat,
+  forall (number : N) (number_int : uint),
+  valid_input number -> repr number_int number ->
+  (cost1 pascal_cost number_int <= c1 * (Nat.sqrt (size number_int) + 1) + c2)%nat.
+Proof.
+  exists 50%nat, 100%nat. intros number x [Hv] Hx.
+  assert (E : Nof x = size x) by reflexivity.
+  remember (Nat.sqrt (size x)) as Sq eqn:ESq.
+  assert (Hn : (φ x <= 1000000000)%Z).
+  { unfold repr, repr_uint in Hx. subst number. lia. }
+  pose proof (sd_loop_time x (witness x) 2 (int_val stepsCM 2) (Zwf_well_founded 0 (gap x 2)) erased_I Hn)
+    as HL.
+  rewrite E -ESq in HL. change (Nof 2) with 2%nat in HL.
+  unfold cost1, pascal_cost, pascal_impl_cost. cost_simpl.
+  change (cost (sd_loop_cost stepsCM x (witness x))) with 0%nat.
+  change (cost (extract (sd_loop_cost stepsCM x (witness x)) 2%uint63 (int_val stepsCM 2))) with 0%nat.
+  revert HL. generalize (cost (extract (extract (sd_loop_cost stepsCM x (witness x)) 2%uint63
+    (int_val stepsCM 2)) (Zwf_well_founded 0 (gap x 2)) erased_I)). intros c HL.
+  lia.
+Qed.
