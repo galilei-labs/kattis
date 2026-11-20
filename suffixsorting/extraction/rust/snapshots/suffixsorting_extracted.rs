@@ -1,7 +1,10 @@
 #[allow(unused_imports)] use std::rc::Rc;
-#[allow(unused_imports)] use rocq_array::Array;
+#[allow(unused_imports)] use crate::rocq_reuse as __rocq_reuse;
+use rocq_int63::{int63, Int63};
+#[allow(unused_imports)] use rocq_array::{self as a, Array};
+#[allow(unused_imports)] use rocq_bigint as b;
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<Int63>; };
 
 #[derive(Clone, Copy)]
 pub enum sumbool {
@@ -11,75 +14,56 @@ pub enum sumbool {
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint::PositiveTag>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<b::PositiveTag>; };
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint::NaturalTag>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<b::NaturalTag>; };
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<rocq_bigint::IntegerTag>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<b::IntegerTag>; };
 
-pub type char63 = u64;
+pub type char63 = Int63;
 
-pub type uint = u64;
+pub type uint = Int63;
 
 // Rocq: Corelib.Strings.PrimString.length
-pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let tmp = rocq_string::length(&v0);
+pub fn length(v0: rocq_string::RocqString) -> Int63 {
+  let tmp = v0.length();
   std::mem::drop(v0);
   tmp
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
-// Variant: uncurried
-pub fn eqb(v0: u64, v1: u64) -> bool {
-  rocq_int63::eqb(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
-// Variant: uncurried
-pub fn ltb(v0: u64, v1: u64) -> bool {
-  rocq_int63::ltb(v0, v1)
-}
-
 // Rocq: Suffixsorting.suffixsorting_implem.bdec
-pub fn bdec(b: bool) -> sumbool {
-  if b {
+pub fn bdec(b_1: bool) -> sumbool {
+  if b_1 {
     sumbool::left
   } else {
     sumbool::right
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
-// Variant: uncurried
-pub fn add(v0: u64, v1: u64) -> u64 {
-  rocq_int63::add(v0, v1)
-}
-
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
-pub fn get(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let tmp = rocq_string::get(&v0, v1);
+pub fn get(v0: rocq_string::RocqString, v1: Int63) -> Int63 {
+  let tmp = v0.get(v1);
   std::mem::drop(v0);
   tmp
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.init_rank
 // Variant: uncurried
-pub fn init_rank_1(x: Rc<rocq_string::RocqString>, n: u64, i: u64, r: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn init_rank_1(x: rocq_string::RocqString, n: Int63, i: Int63, r: Array<Int63>) -> Array<Int63> {
   init_rank(x, n, i, r, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.init_rank (local: init_rank)
 // Variant: uncurried, lifted
-pub fn init_rank(x: Rc<rocq_string::RocqString>, n: u64, i: u64, r: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn init_rank(x: rocq_string::RocqString, n: Int63, i: Int63, r: Array<Int63>, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = add(i, 1u64);
-      let x_clone = Rc::clone(&x);
+      let tmp_1 = i + int63!(1);
+      let x_clone = Clone::clone(&x);
       let tmp_2 = get(x_clone, i);
-      let tmp_3 = rocq_array::set::<u64>(r, i, add(tmp_2, 1u64));
-      init_rank(x, n, tmp_1, tmp_3, ())
+      init_rank(x, n, tmp_1, r.set(i, tmp_2 + int63!(1)), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -90,19 +74,17 @@ pub fn init_rank(x: Rc<rocq_string::RocqString>, n: u64, i: u64, r: Rc<Array<u64
 
 // Rocq: Suffixsorting.suffixsorting_implem.init_id
 // Variant: uncurried
-pub fn init_id_1(n: u64, i: u64, sa: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn init_id_1(n: Int63, i: Int63, sa: Array<Int63>) -> Array<Int63> {
   init_id(n, i, sa, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.init_id (local: init_id)
 // Variant: uncurried, lifted
-pub fn init_id(n: u64, i: u64, sa: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn init_id(n: Int63, i: Int63, sa: Array<Int63>, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = add(i, 1u64);
-      let tmp_2 = rocq_array::set::<u64>(sa, i, i);
-      init_id(n, tmp_1, tmp_2, ())
+      init_id(n, i + int63!(1), sa.set(i, i), ())
     },
     sumbool::right => {
       sa
@@ -111,44 +93,37 @@ pub fn init_id(n: u64, i: u64, sa: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.cbound
-pub fn cbound(n: u64) -> u64 {
-  if ltb(n, 256u64) {
-    257u64
+pub fn cbound(n: Int63) -> Int63 {
+  if n < int63!(256) {
+    int63!(257)
   } else {
-    add(n, 1u64)
+    n + int63!(1)
   }
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.count_loop
 // Variant: uncurried
-pub fn count_loop_1(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn count_loop_1(r: Array<Int63>, n: Int63, k: Int63, src: Array<Int63>, i: Int63, cnt: Array<Int63>) -> Array<Int63> {
   count_loop(r, n, k, src, i, cnt, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.count_loop (local: count_loop)
 // Variant: uncurried, lifted
-pub fn count_loop(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn count_loop(r: Array<Int63>, n: Int63, k: Int63, src: Array<Int63>, i: Int63, cnt: Array<Int63>, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let src_ref = &src;
-      let tmp_1 = i;
-      let x = Clone::clone(&(src_ref)[tmp_1]);
-      let tmp_2 = add(x, k);
-      let v = if ltb(tmp_2, n) {
-        let tmp_3 = add(x, k);
-        let r_ref = &r;
-        let tmp_4 = tmp_3;
-        Clone::clone(&(r_ref)[tmp_4])
+      let x = src.get_cloned(i);
+      let tmp_1 = x + k;
+      let v = if tmp_1 < n {
+        let tmp_2 = x + k;
+        r.get_cloned(tmp_2)
       } else {
-        0u64
+        int63!(0)
       };
-      let tmp_5 = add(i, 1u64);
-      let cnt_ref = &cnt;
-      let tmp_6 = v;
-      let tmp_7 = Clone::clone(&(cnt_ref)[tmp_6]);
-      let tmp_8 = rocq_array::set::<u64>(cnt, v, add(tmp_7, 1u64));
-      count_loop(r, n, k, src, tmp_5, tmp_8, ())
+      let tmp_3 = i + int63!(1);
+      let tmp_4 = cnt.get_cloned(v);
+      count_loop(r, n, k, src, tmp_3, cnt.set(v, tmp_4 + int63!(1)), ())
     },
     sumbool::right => {
       std::mem::drop(r);
@@ -160,23 +135,18 @@ pub fn count_loop(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64
 
 // Rocq: Suffixsorting.suffixsorting_implem.prefix_loop
 // Variant: uncurried
-pub fn prefix_loop_1(B: u64, v: u64, acc: u64, cnt: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn prefix_loop_1(B: Int63, v: Int63, acc: Int63, cnt: Array<Int63>) -> Array<Int63> {
   prefix_loop(B, v, acc, cnt, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.prefix_loop (local: prefix_loop)
 // Variant: uncurried, lifted
-pub fn prefix_loop(B: u64, v: u64, acc: u64, cnt: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(v, B);
+pub fn prefix_loop(B: Int63, v: Int63, acc: Int63, cnt: Array<Int63>, _H: ()) -> Array<Int63> {
+  let tmp = v < B;
   match bdec(tmp) {
     sumbool::left => {
-      let cnt_ref = &cnt;
-      let tmp_1 = v;
-      let c = Clone::clone(&(cnt_ref)[tmp_1]);
-      let tmp_2 = add(v, 1u64);
-      let tmp_3 = add(acc, c);
-      let tmp_4 = rocq_array::set::<u64>(cnt, v, acc);
-      prefix_loop(B, tmp_2, tmp_3, tmp_4, ())
+      let c = cnt.get_cloned(v);
+      prefix_loop(B, v + int63!(1), acc + c, cnt.set(v, acc), ())
     },
     sumbool::right => {
       cnt
@@ -186,35 +156,26 @@ pub fn prefix_loop(B: u64, v: u64, acc: u64, cnt: Rc<Array<u64>>, _H: ()) -> Rc<
 
 // Rocq: Suffixsorting.suffixsorting_implem.place_loop
 // Variant: uncurried
-pub fn place_loop_1(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u64>>, dst: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn place_loop_1(r: Array<Int63>, n: Int63, k: Int63, src: Array<Int63>, i: Int63, cnt: Array<Int63>, dst: Array<Int63>) -> Array<Int63> {
   place_loop(r, n, k, src, i, cnt, dst, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.place_loop (local: place_loop)
 // Variant: uncurried, lifted
-pub fn place_loop(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64, cnt: Rc<Array<u64>>, dst: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn place_loop(r: Array<Int63>, n: Int63, k: Int63, src: Array<Int63>, i: Int63, cnt: Array<Int63>, dst: Array<Int63>, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let src_ref = &src;
-      let tmp_1 = i;
-      let x = Clone::clone(&(src_ref)[tmp_1]);
-      let tmp_2 = add(x, k);
-      let v = if ltb(tmp_2, n) {
-        let tmp_3 = add(x, k);
-        let r_ref = &r;
-        let tmp_4 = tmp_3;
-        Clone::clone(&(r_ref)[tmp_4])
+      let x = src.get_cloned(i);
+      let tmp_1 = x + k;
+      let v = if tmp_1 < n {
+        let tmp_2 = x + k;
+        r.get_cloned(tmp_2)
       } else {
-        0u64
+        int63!(0)
       };
-      let cnt_ref = &cnt;
-      let tmp_5 = v;
-      let p = Clone::clone(&(cnt_ref)[tmp_5]);
-      let tmp_6 = add(i, 1u64);
-      let tmp_7 = rocq_array::set::<u64>(cnt, v, add(p, 1u64));
-      let tmp_8 = rocq_array::set::<u64>(dst, p, x);
-      place_loop(r, n, k, src, tmp_6, tmp_7, tmp_8, ())
+      let p = cnt.get_cloned(v);
+      place_loop(r, n, k, src, i + int63!(1), cnt.set(v, p + int63!(1)), dst.set(p, x), ())
     },
     sumbool::right => {
       std::mem::drop(r);
@@ -227,80 +188,62 @@ pub fn place_loop(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, i: u64
 
 // Rocq: Suffixsorting.suffixsorting_implem.csort
 // Variant: uncurried
-pub fn csort(r: Rc<Array<u64>>, n: u64, k: u64, src: Rc<Array<u64>>, dst: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn csort(r: Array<Int63>, n: Int63, k: Int63, src: Array<Int63>, dst: Array<Int63>) -> Array<Int63> {
   let B = cbound(n);
-  let tmp = rocq_array::make::<u64>(B, 0u64);
-  let r_clone = Rc::clone(&r);
-  let src_clone = Rc::clone(&src);
-  let c0 = count_loop_1(r_clone, n, k, src_clone, 0u64, tmp);
-  let c1 = prefix_loop_1(B, 0u64, 0u64, c0);
-  place_loop_1(r, n, k, src, 0u64, c1, dst)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
-// Variant: uncurried
-pub fn sub(v0: u64, v1: u64) -> u64 {
-  rocq_int63::sub(v0, v1)
+  let tmp = Array::<Int63>::make(B, int63!(0));
+  let r_clone = Clone::clone(&r);
+  let src_clone = Clone::clone(&src);
+  let c0 = count_loop_1(r_clone, n, k, src_clone, int63!(0), tmp);
+  let c1 = prefix_loop_1(B, int63!(0), int63!(0), c0);
+  place_loop_1(r, n, k, src, int63!(0), c1, dst)
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.skey
 // Variant: uncurried
-pub fn skey(r: Rc<Array<u64>>, n: u64, k: u64, x: u64) -> u64 {
-  let tmp = add(x, k);
-  if ltb(tmp, n) {
-    let tmp_1 = add(x, k);
-    let r_ref = &r;
-    let tmp_2 = tmp_1;
-    let tmp_3 = Clone::clone(&(r_ref)[tmp_2]);
+pub fn skey(r: Array<Int63>, n: Int63, k: Int63, x: Int63) -> Int63 {
+  let tmp = x + k;
+  if tmp < n {
+    let tmp_1 = r.get_cloned(x + k);
     std::mem::drop(r);
-    tmp_3
+    tmp_1
   } else {
     std::mem::drop(r);
-    0u64
+    int63!(0)
   }
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.rank_loop
 // Variant: uncurried
-pub fn rank_loop_1(r: Rc<Array<u64>>, n: u64, k: u64, sa: Rc<Array<u64>>, t: u64, cur: u64, nr: Rc<Array<u64>>) -> (Rc<Array<u64>>, u64) {
+pub fn rank_loop_1(r: Array<Int63>, n: Int63, k: Int63, sa: Array<Int63>, t: Int63, cur: Int63, nr: Array<Int63>) -> (Array<Int63>, Int63) {
   rank_loop(r, n, k, sa, t, cur, nr, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.rank_loop (local: rank_loop)
 // Variant: uncurried, lifted
-pub fn rank_loop(r: Rc<Array<u64>>, n: u64, k: u64, sa: Rc<Array<u64>>, t: u64, cur: u64, nr: Rc<Array<u64>>, _H: ()) -> (Rc<Array<u64>>, u64) {
-  let tmp = ltb(t, n);
+pub fn rank_loop(r: Array<Int63>, n: Int63, k: Int63, sa: Array<Int63>, t: Int63, cur: Int63, nr: Array<Int63>, _H: ()) -> (Array<Int63>, Int63) {
+  let tmp = t < n;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = sub(t, 1u64);
-      let sa_ref = &sa;
-      let tmp_2 = tmp_1;
-      let a = Clone::clone(&(sa_ref)[tmp_2]);
-      let sa_ref_1 = &sa;
-      let tmp_3 = t;
-      let b = Clone::clone(&(sa_ref_1)[tmp_3]);
-      let r_ref = &r;
-      let tmp_4 = a;
-      let tmp_5 = Clone::clone(&(r_ref)[tmp_4]);
-      let r_ref_1 = &r;
-      let tmp_6 = b;
-      let tmp_7 = Clone::clone(&(r_ref_1)[tmp_6]);
-      let tmp_8 = if eqb(tmp_5, tmp_7) {
-        let r_clone = Rc::clone(&r);
-        let tmp_9 = skey(r_clone, n, k, a);
-        let r_clone_1 = Rc::clone(&r);
-        eqb(tmp_9, skey(r_clone_1, n, k, b))
+      let a_1 = sa.get_cloned(t - int63!(1));
+      let b_1 = sa.get_cloned(t);
+      let tmp_1 = r.get_cloned(a_1);
+      let tmp_2 = r.get_cloned(b_1);
+      let tmp_3 = if tmp_1 == tmp_2 {
+        let r_clone = Clone::clone(&r);
+        let tmp_4 = skey(r_clone, n, k, a_1);
+        let r_clone_1 = Clone::clone(&r);
+        tmp_4 == skey(r_clone_1, n, k, b_1)
       } else {
         false
       };
-      let c = if tmp_8 {
+      let c = if tmp_3 {
         cur
       } else {
-        add(cur, 1u64)
+        cur + int63!(1)
       };
-      let tmp_10 = add(t, 1u64);
-      let tmp_11 = rocq_array::set::<u64>(nr, b, c);
-      rank_loop(r, n, k, sa, tmp_10, c, tmp_11, ())
+      let tmp_5 = t + int63!(1);
+      let tmp_6 = nr.set(b_1, c);
+      rank_loop(r, n, k, sa, tmp_5, c, tmp_6, ())
     },
     sumbool::right => {
       std::mem::drop(r);
@@ -336,41 +279,37 @@ pub fn fst<A: Clone + 'static, B: 'static>(p: (A, B)) -> A {
 
 // Rocq: Suffixsorting.suffixsorting_implem.rounds
 // Variant: uncurried
-pub fn rounds_1(n: u64, k: u64, r: Rc<Array<u64>>, nr: Rc<Array<u64>>, sa: Rc<Array<u64>>, tmp: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn rounds_1(n: Int63, k: Int63, r: Array<Int63>, nr: Array<Int63>, sa: Array<Int63>, tmp: Array<Int63>) -> Array<Int63> {
   rounds(n, k, r, nr, sa, tmp, ())
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.rounds (local: rounds)
 // Variant: uncurried, lifted
-pub fn rounds(n: u64, k: u64, r: Rc<Array<u64>>, nr: Rc<Array<u64>>, sa: Rc<Array<u64>>, tmp: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let r_clone = Rc::clone(&r);
-  let sa_clone = Rc::clone(&sa);
+pub fn rounds(n: Int63, k: Int63, r: Array<Int63>, nr: Array<Int63>, sa: Array<Int63>, tmp: Array<Int63>, _H: ()) -> Array<Int63> {
+  let r_clone = Clone::clone(&r);
+  let sa_clone = Clone::clone(&sa);
   let tmp1 = csort(r_clone, n, k, sa_clone, tmp);
-  let r_clone_1 = Rc::clone(&r);
-  let tmp1_clone = Rc::clone(&tmp1);
-  let sa1 = csort(r_clone_1, n, 0u64, tmp1_clone, sa);
-  let sa1_ref = &sa1;
-  let tmp_1 = 0u64;
-  let tmp_2 = Clone::clone(&(sa1_ref)[tmp_1]);
-  let tmp_3 = rocq_array::set::<u64>(nr, tmp_2, 1u64);
-  let r_clone_2 = Rc::clone(&r);
-  let sa1_clone = Rc::clone(&sa1);
-  let q = rank_loop_1(r_clone_2, n, k, sa1_clone, 1u64, 1u64, tmp_3);
+  let r_clone_1 = Clone::clone(&r);
+  let tmp1_clone = Clone::clone(&tmp1);
+  let sa1 = csort(r_clone_1, n, int63!(0), tmp1_clone, sa);
+  let tmp_1 = sa1.get_cloned(int63!(0));
+  let tmp_2 = nr.set(tmp_1, int63!(1));
+  let r_clone_2 = Clone::clone(&r);
+  let sa1_clone = Clone::clone(&sa1);
+  let q = rank_loop_1(r_clone_2, n, k, sa1_clone, int63!(1), int63!(1), tmp_2);
   let q_clone = Clone::clone(&q);
-  let tmp_4 = snd::<Rc<Array<u64>>, u64>(q_clone);
-  if eqb(tmp_4, n) {
+  let tmp_3 = snd::<Array<Int63>, Int63>(q_clone);
+  if tmp_3 == n {
     std::mem::drop(q);
     std::mem::drop(tmp1);
     std::mem::drop(r);
     sa1
   } else {
-    let tmp_5 = add(k, k);
-    let tmp_6 = andb(ltb(k, tmp_5), ltb(add(k, k), n));
-    match bdec(tmp_6) {
+    let tmp_4 = k + k;
+    let tmp_5 = andb(k < tmp_4, k + k < n);
+    match bdec(tmp_5) {
       sumbool::left => {
-        let tmp_7 = add(k, k);
-        let tmp_8 = fst::<Rc<Array<u64>>, u64>(q);
-        rounds(n, tmp_7, tmp_8, r, sa1, tmp1, ())
+        rounds(n, k + k, fst::<Array<Int63>, Int63>(q), r, sa1, tmp1, ())
       },
       sumbool::right => {
         std::mem::drop(q);
@@ -383,163 +322,14 @@ pub fn rounds(n: u64, k: u64, r: Rc<Array<u64>>, nr: Rc<Array<u64>>, sa: Rc<Arra
 }
 
 // Rocq: Suffixsorting.suffixsorting_implem.suffix_array_impl
-pub fn suffix_array_impl(x: Rc<rocq_string::RocqString>) -> Rc<Array<u64>> {
-  let x_clone = Rc::clone(&x);
+pub fn suffix_array_impl(x: rocq_string::RocqString) -> Array<Int63> {
+  let x_clone = Clone::clone(&x);
   let n = length(x_clone);
-  let tmp = rocq_array::make::<u64>(n, 0u64);
-  let r = init_rank_1(x, n, 0u64, tmp);
-  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
-  let sa = init_id_1(n, 0u64, tmp_1);
-  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
-  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
-  rounds_1(n, 1u64, r, tmp_2, sa, tmp_3)
-}
-
-mod __rocq_reuse {
-//! Empty allocation ownership for OwnedANF reset and exact-type rebuilding.
-use std::mem::MaybeUninit;
-use std::rc::Rc;
-
-/// Move-only and opaque: storage has no initialized `T` and cannot be inspected.
-pub struct Token<T> {
-    _storage: Option<Rc<MaybeUninit<T>>>,
-}
-
-/// Consume an owner. The caller supplies the IR-approved shallow field copy;
-/// This may use a compiler-generated structural Clone implementation, but does
-/// not authorize arbitrary host clone behavior merely because T implements Clone.
-#[inline]
-pub fn reset<T>(mut owner: Rc<T>, duplicate: impl FnOnce(&T) -> T) -> (T, Token<T>) {
-    if let Some(payload) = Rc::get_mut(&mut owner) {
-        // SAFETY: get_mut establishes exclusive access (including no Weak
-        // owners). T and MaybeUninit<T> have identical size/alignment, so their
-        // Rc allocation layouts agree. After read, no potentially panicking
-        // user code runs before ownership becomes Rc<MaybeUninit<T>>. There is
-        // exactly one from_raw for into_raw, and the original Rc<T> is consumed.
-        // The token never reads or drops the moved T; dropping it only frees
-        // the allocation. The payload returned here owns T's fields once.
-        unsafe {
-            let value = std::ptr::read(payload);
-            let raw = Rc::into_raw(owner).cast::<MaybeUninit<T>>();
-            let storage = Rc::from_raw(raw);
-            (value, Token { _storage: Some(storage) })
-        }
-    } else {
-        let value = duplicate(&owner);
-        drop(owner);
-        (value, Token { _storage: None })
-    }
-}
-
-/// Consume reserved storage and a fully evaluated payload. Empty tokens allocate.
-#[inline]
-pub fn rebuild<T>(token: Token<T>, payload: T) -> Rc<T> {
-    match token._storage {
-        None => Rc::new(payload),
-        Some(mut storage) => {
-            // The opaque, non-Clone token owns the only strong reference and
-            // has no weak references. Check before initializing, so a panic
-            // cannot leave an initialized T hidden inside MaybeUninit<T>.
-            Rc::get_mut(&mut storage).expect("exclusive reuse token").write(payload);
-            // SAFETY: the payload is now fully initialized; no panicking code
-            // lies between initialization and this ownership conversion. The
-            // reset conversion established identical allocation layouts.
-            unsafe { Rc::from_raw(Rc::into_raw(storage).cast::<T>()) }
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::cell::Cell;
-
-    struct Probe(Rc<Cell<usize>>);
-    impl Drop for Probe {
-        fn drop(&mut self) { self.0.set(self.0.get() + 1); }
-    }
-
-    #[test]
-    fn rebuilding_preserves_address_and_drops_only_new_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner);
-        let (old, token) = reset(owner, |_| panic!("unique"));
-        drop(old);
-        assert_eq!(drops.get(), 1);
-        let new = rebuild(token, Probe(drops.clone()));
-        assert_eq!(Rc::as_ptr(&new), address);
-        assert_eq!(drops.get(), 1);
-        drop(new);
-        assert_eq!(drops.get(), 2);
-    }
-
-    #[test]
-    fn empty_token_allocates_and_preserves_old_alias() {
-        let old = Rc::new(7);
-        let alias = old.clone();
-        let (_, token) = reset(old, |x| *x);
-        let new = rebuild(token, 19);
-        assert_eq!(*alias, 7);
-        assert_eq!(*new, 19);
-        assert!(!Rc::ptr_eq(&alias, &new));
-    }
-
-    #[test]
-    fn unique_token_drop_does_not_drop_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner).cast::<MaybeUninit<Probe>>();
-        let (payload, token) = reset(owner, |_| panic!("unique path duplicated"));
-        assert_eq!(Rc::as_ptr(token._storage.as_ref().unwrap()), address);
-        drop(token);
-        assert_eq!(drops.get(), 0);
-        drop(payload);
-        assert_eq!(drops.get(), 1);
-    }
-
-    #[test]
-    fn shared_fallback_preserves_aliases() {
-        let field = Rc::new(7);
-        let owner = Rc::new((field.clone(), 9));
-        let alias = owner.clone();
-        let (payload, token) = reset(owner, |x| (x.0.clone(), x.1));
-        assert!(token._storage.is_none());
-        assert!(Rc::ptr_eq(&payload.0, &alias.0));
-        assert_eq!(Rc::strong_count(&field), 3);
-        drop(token);
-        drop(payload);
-        assert_eq!(alias.1, 9);
-        drop(alias);
-        assert_eq!(Rc::strong_count(&field), 1);
-    }
-
-    #[test]
-    fn weak_pointer_forces_fallback() {
-        let owner = Rc::new(17);
-        let weak = Rc::downgrade(&owner);
-        let (payload, token) = reset(owner, |x| *x);
-        assert_eq!(payload, 17);
-        assert!(token._storage.is_none());
-        assert!(weak.upgrade().is_none());
-    }
-
-    #[test]
-    fn panicking_fallback_releases_consumed_handle() {
-        let owner = Rc::new(17);
-        let alias = owner.clone();
-        let result = std::panic::catch_unwind(|| reset(owner, |_| panic!("copy failed")));
-        assert!(result.is_err());
-        assert_eq!(Rc::strong_count(&alias), 1);
-        assert_eq!(*alias, 17);
-    }
-
-    #[test]
-    fn zero_sized_payload() {
-        let (payload, token) = reset(Rc::new(()), |_| panic!("unique"));
-        drop(token);
-        assert_eq!(payload, ());
-    }
-}
-
+  let tmp = Array::<Int63>::make(n, int63!(0));
+  let r = init_rank_1(x, n, int63!(0), tmp);
+  let tmp_1 = Array::<Int63>::make(n, int63!(0));
+  let sa = init_id_1(n, int63!(0), tmp_1);
+  let tmp_2 = Array::<Int63>::make(n, int63!(0));
+  let tmp_3 = Array::<Int63>::make(n, int63!(0));
+  rounds_1(n, int63!(1), r, tmp_2, sa, tmp_3)
 }

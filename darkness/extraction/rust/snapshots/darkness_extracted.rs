@@ -1,13 +1,15 @@
 #[allow(unused_imports)] use std::rc::Rc;
-#[allow(unused_imports)] use rocq_array::Array;
+#[allow(unused_imports)] use crate::rocq_reuse as __rocq_reuse;
+use rocq_int63::{int63, Int63};
+#[allow(unused_imports)] use rocq_array::{self as a, Array};
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<Int63>; };
 
 pub struct bst {
-  pub bd: Rc<Array<u64>>,
-  pub bp: Rc<Array<u64>>,
-  pub bq: Rc<Array<u64>>,
-  pub bt: u64,
+  pub bd: Array<Int63>,
+  pub bp: Array<Int63>,
+  pub bq: Array<Int63>,
+  pub bt: Int63,
 }
 
 impl Clone for bst {
@@ -60,17 +62,11 @@ impl Clone for positive {
   }
 }
 
-pub type uint = u64;
+pub type uint = Int63;
 
 // Rocq: Darkness.darkness_implem.M48
-pub fn M48() -> u64 {
-  281474976710656u64
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
-// Variant: uncurried
-pub fn mul_1(v0: u64, v1: u64) -> u64 {
-  rocq_int63::mul(v0, v1)
+pub fn M48() -> Int63 {
+  int63!(281474976710656)
 }
 
 // Rocq: Corelib.BinNums.PosDef.Pos.compare_cont
@@ -575,58 +571,40 @@ pub fn add_2(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
-// Variant: uncurried
-pub fn eqb(v0: u64, v1: u64) -> bool {
-  rocq_int63::eqb(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
-// Variant: uncurried
-pub fn ltb(v0: u64, v1: u64) -> bool {
-  rocq_int63::ltb(v0, v1)
-}
-
 // Rocq: Darkness.darkness_implem.bdec
-pub fn bdec(b: bool) -> sumbool {
-  if b {
+pub fn bdec(b_1: bool) -> sumbool {
+  if b_1 {
     sumbool::left
   } else {
     sumbool::right
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
-// Variant: uncurried
-pub fn add_3(v0: u64, v1: u64) -> u64 {
-  rocq_int63::add(v0, v1)
-}
-
 // Rocq: Darkness.darkness_implem.gloop
 // Variant: uncurried
-pub fn gloop_1<A: Clone + 'static>(C: u64, n: u64, f: Rc<dyn Fn(u64, u64, u64, A) -> A>, u: u64, i: u64, j: u64, a: A) -> A {
-  gloop::<A>((), C, n, f, u, i, j, a, ())
+pub fn gloop_1<A: Clone + 'static>(C: Int63, n: Int63, f: Rc<dyn Fn(Int63, Int63, Int63, A) -> A>, u: Int63, i: Int63, j: Int63, a_1: A) -> A {
+  gloop::<A>((), C, n, f, u, i, j, a_1, ())
 }
 
 // Rocq: Darkness.darkness_implem.gloop (local: gloop)
 // Variant: uncurried, lifted
-pub fn gloop<A: Clone + 'static>(_A_1: (), C: u64, n: u64, f: Rc<dyn Fn(u64, u64, u64, A) -> A>, u: u64, i: u64, j: u64, a: A, _H: ()) -> A {
-  let tmp = ltb(u, n);
+pub fn gloop<A: Clone + 'static>(_A_1: (), C: Int63, n: Int63, f: Rc<dyn Fn(Int63, Int63, Int63, A) -> A>, u: Int63, i: Int63, j: Int63, a_1: A, _H: ()) -> A {
+  let tmp = u < n;
   match bdec(tmp) {
     sumbool::left => {
-      let f_ref: &Rc<dyn Fn(u64, u64, u64, A) -> A> = &f;
-      let a_ = f_ref(u, i, j, a);
-      let j1 = add_3(j, 1u64);
-      let e = eqb(j1, C);
+      let f_ref: &Rc<dyn Fn(Int63, Int63, Int63, A) -> A> = &f;
+      let a_ = f_ref(u, i, j, a_1);
+      let j1 = j + int63!(1);
+      let e = j1 == C;
       let tmp_1 = ();
-      let tmp_2 = add_3(u, 1u64);
+      let tmp_2 = u + int63!(1);
       let tmp_3 = if e {
-        add_3(i, 1u64)
+        i + int63!(1)
       } else {
         i
       };
       let tmp_4 = if e {
-        0u64
+        int63!(0)
       } else {
         j1
       };
@@ -634,103 +612,79 @@ pub fn gloop<A: Clone + 'static>(_A_1: (), C: u64, n: u64, f: Rc<dyn Fn(u64, u64
     },
     sumbool::right => {
       std::mem::drop(f);
-      a
+      a_1
     },
   }
 }
 
 // Rocq: Darkness.darkness_implem.grid_fold
 // Variant: uncurried
-pub fn grid_fold<A: Clone + 'static>(C: u64, n: u64, f: Rc<dyn Fn(u64, u64, u64, A) -> A>, a: A) -> A {
-  gloop_1::<A>(C, n, f, 0u64, 0u64, 0u64, a)
+pub fn grid_fold<A: Clone + 'static>(C: Int63, n: Int63, f: Rc<dyn Fn(Int63, Int63, Int63, A) -> A>, a_1: A) -> A {
+  gloop_1::<A>(C, n, f, int63!(0), int63!(0), int63!(0), a_1)
 }
 
 // Rocq: Darkness.darkness_implem.flat
 // Variant: uncurried
-pub fn flat(xg: Rc<Array<Rc<Array<u64>>>>, C: u64, n: u64) -> Rc<Array<u64>> {
-  let callback: Rc<dyn Fn(u64, u64, u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
-    move |u: u64, i: u64, j: u64, a: Rc<Array<u64>>| -> Rc<Array<u64>> {
+pub fn flat(xg: Array<Array<Int63>>, C: Int63, n: Int63) -> Array<Int63> {
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Array<Int63>) -> Array<Int63>> = Rc::new({
+    move |u: Int63, i: Int63, j: Int63, a_1: Array<Int63>| -> Array<Int63> {
       let xg = &xg;
-      let xg_clone = Rc::clone(xg);
-      let tmp = rocq_array::get::<Rc<Array<u64>>>(&xg_clone, i);
+      let xg_clone = Clone::clone(xg);
+      let tmp = &xg_clone;
+      let tmp_1 = tmp.get_cloned(i);
       std::mem::drop(xg_clone);
-      let tmp_1 = rocq_array::get::<u64>(&tmp, j);
-      std::mem::drop(tmp);
-      rocq_array::set::<u64>(a, u, tmp_1)
+      let tmp_2 = tmp_1.get_cloned(j);
+      std::mem::drop(tmp_1);
+      a_1.set(u, tmp_2)
     }
   });
-  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
-  grid_fold::<Rc<Array<u64>>>(C, n, callback, tmp_2)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
-// Variant: uncurried
-pub fn div(v0: u64, v1: u64) -> u64 {
-  rocq_int63::div(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
-// Variant: uncurried
-pub fn sub(v0: u64, v1: u64) -> u64 {
-  rocq_int63::sub(v0, v1)
+  let tmp_3 = Array::<Int63>::make(n, int63!(0));
+  grid_fold::<Array<Int63>>(C, n, callback, tmp_3)
 }
 
 // Rocq: Darkness.darkness_implem.absdiff
 // Variant: uncurried
-pub fn absdiff(a: u64, b: u64) -> u64 {
-  if ltb(a, b) {
-    sub(b, a)
+pub fn absdiff(a_1: Int63, b_1: Int63) -> Int63 {
+  if a_1 < b_1 {
+    b_1 - a_1
   } else {
-    sub(a, b)
+    a_1 - b_1
   }
 }
 
 // Rocq: Darkness.darkness_implem.denom
 // Variant: uncurried
-pub fn denom(hh: u64, i: u64, j: u64, i_: u64, j_: u64) -> u64 {
+pub fn denom(hh: Int63, i: Int63, j: Int63, i_: Int63, j_: Int63) -> Int63 {
   let di = absdiff(i, i_);
   let dj = absdiff(j, j_);
-  let tmp = add_3(mul_1(di, di), mul_1(dj, dj));
-  add_3(tmp, hh)
+  di * di + dj * dj + hh
 }
 
 // Rocq: Darkness.darkness_implem.lo_sum
 // Variant: borrowed, uncurried
-pub fn lo_sum(s: &Rc<Array<u64>>, C: u64, n: u64, hh: u64, i: u64, j: u64) -> u64 {
+pub fn lo_sum(s: &Array<Int63>, C: Int63, n: Int63, hh: Int63, i: Int63, j: Int63) -> Int63 {
   let C_1 = C;
   let n_1 = n;
-  let s_clone = Rc::clone(s);
-  let callback: Rc<dyn Fn(u64, u64, u64, u64) -> u64> = Rc::new({
-    move |u: u64, i_: u64, j_: u64, acc: u64| -> u64 {
+  let s_clone = Clone::clone(s);
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Int63) -> Int63> = Rc::new({
+    move |u: Int63, i_: Int63, j_: Int63, acc: Int63| -> Int63 {
       let s = &s_clone;
       let hh = &hh;
       let i = &i;
       let j = &j;
-      let tmp = mul_1(__rocq_global_789, rocq_array::get::<u64>(s, u));
+      let tmp = __rocq_global_789 * s.get_cloned(u);
       let hh_clone = Clone::clone(hh);
       let i_clone = Clone::clone(i);
       let j_clone = Clone::clone(j);
-      add_3(acc, div(tmp, denom(hh_clone, i_clone, j_clone, i_, j_)))
+      acc + tmp / denom(hh_clone, i_clone, j_clone, i_, j_)
     }
   });
-  grid_fold::<u64>(C_1, n_1, callback, 0u64)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
-// Variant: uncurried
-pub fn leb(v0: u64, v1: u64) -> bool {
-  rocq_int63::leb(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mod
-// Variant: uncurried
-pub fn mod_(v0: u64, v1: u64) -> u64 {
-  rocq_int63::modulo(v0, v1)
+  grid_fold::<Int63>(C_1, n_1, callback, int63!(0))
 }
 
 // Rocq: Corelib.BinNums.PosDef.Pos.mul
 // Variant: uncurried
-pub fn mul_2(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
+pub fn mul_1(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
   mul(x, y)
 }
 
@@ -755,7 +709,7 @@ pub fn mul(x: Rc<positive>, y: Rc<positive>) -> Rc<positive> {
 
 // Rocq: Corelib.BinNums.IntDef.Z.mul
 // Variant: uncurried
-pub fn mul_3(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
+pub fn mul_2(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
   let (v2, v3) = __rocq_reuse::reset(x, |__payload| Clone::clone(__payload));
   match v2 {
     Z::Z0 => {
@@ -771,10 +725,10 @@ pub fn mul_3(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
           __rocq_reuse::rebuild(v17, Z::Z0)
         },
         Z::Zpos(v28) => {
-          __rocq_reuse::rebuild(v17, Z::Zpos(mul_2(v14, v28)))
+          __rocq_reuse::rebuild(v17, Z::Zpos(mul_1(v14, v28)))
         },
         Z::Zneg(v43) => {
-          __rocq_reuse::rebuild(v17, Z::Zneg(mul_2(v14, v43)))
+          __rocq_reuse::rebuild(v17, Z::Zneg(mul_1(v14, v43)))
         },
       }
     },
@@ -787,10 +741,10 @@ pub fn mul_3(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
           __rocq_reuse::rebuild(v64, Z::Z0)
         },
         Z::Zpos(v75) => {
-          __rocq_reuse::rebuild(v64, Z::Zneg(mul_2(v61, v75)))
+          __rocq_reuse::rebuild(v64, Z::Zneg(mul_1(v61, v75)))
         },
         Z::Zneg(v90) => {
-          __rocq_reuse::rebuild(v64, Z::Zpos(mul_2(v61, v90)))
+          __rocq_reuse::rebuild(v64, Z::Zpos(mul_1(v61, v90)))
         },
       }
     },
@@ -798,29 +752,29 @@ pub fn mul_3(x: Rc<Z>, y: Rc<Z>) -> Rc<Z> {
 }
 
 // Rocq: Darkness.darkness_implem.zofint_aux
-pub fn zofint_aux_1(x: u64) -> Rc<Z> {
+pub fn zofint_aux_1(x: Int63) -> Rc<Z> {
   zofint_aux(x, ())
 }
 
 // Rocq: Darkness.darkness_implem.zofint_aux (local: zofint_aux)
 // Variant: uncurried, lifted
-pub fn zofint_aux(x: u64, _H: ()) -> Rc<Z> {
-  let tmp = eqb(x, 0u64);
+pub fn zofint_aux(x: Int63, _H: ()) -> Rc<Z> {
+  let tmp = x == int63!(0);
   match bdec(tmp) {
     sumbool::left => {
       Rc::new(Z::Z0)
     },
     sumbool::right => {
-      let r = zofint_aux(div(x, 2u64), ());
-      let tmp_1 = mod_(x, 2u64);
-      if eqb(tmp_1, 0u64) {
+      let r = zofint_aux(x / int63!(2), ());
+      let tmp_1 = x % int63!(2);
+      if tmp_1 == int63!(0) {
         let tmp_2 = Rc::new(positive::xH);
         let tmp_3 = Rc::new(positive::xO(tmp_2));
-        mul_3(Rc::new(Z::Zpos(tmp_3)), r)
+        mul_2(Rc::new(Z::Zpos(tmp_3)), r)
       } else {
         let tmp_4 = Rc::new(positive::xH);
         let tmp_5 = Rc::new(positive::xO(tmp_4));
-        let tmp_6 = mul_3(Rc::new(Z::Zpos(tmp_5)), r);
+        let tmp_6 = mul_2(Rc::new(Z::Zpos(tmp_5)), r);
         let tmp_7 = Rc::new(positive::xH);
         add_2(tmp_6, Rc::new(Z::Zpos(tmp_7)))
       }
@@ -829,7 +783,7 @@ pub fn zofint_aux(x: u64, _H: ()) -> Rc<Z> {
 }
 
 // Rocq: Darkness.darkness_implem.zofint
-pub fn zofint(x: u64) -> Rc<Z> {
+pub fn zofint(x: Int63) -> Rc<Z> {
   zofint_aux_1(x)
 }
 
@@ -849,25 +803,25 @@ pub fn snd<A: 'static, B: Clone + 'static>(p: (A, B)) -> B {
 
 // Rocq: Darkness.darkness_implem.exact_sum
 // Variant: borrowed, uncurried
-pub fn exact_sum(s: &Rc<Array<u64>>, C: u64, n: u64, hh: u64, i: u64, j: u64) -> (Rc<Z>, Rc<Z>) {
+pub fn exact_sum(s: &Array<Int63>, C: Int63, n: Int63, hh: Int63, i: Int63, j: Int63) -> (Rc<Z>, Rc<Z>) {
   let C_1 = C;
   let n_1 = n;
-  let s_clone = Rc::clone(s);
-  let callback: Rc<dyn Fn(u64, u64, u64, (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>)> = Rc::new({
-    move |u: u64, i_: u64, j_: u64, pq: (Rc<Z>, Rc<Z>)| -> (Rc<Z>, Rc<Z>) {
+  let s_clone = Clone::clone(s);
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, (Rc<Z>, Rc<Z>)) -> (Rc<Z>, Rc<Z>)> = Rc::new({
+    move |u: Int63, i_: Int63, j_: Int63, pq: (Rc<Z>, Rc<Z>)| -> (Rc<Z>, Rc<Z>) {
       let hh = &hh;
       let i = &i;
       let j = &j;
       let s = &s_clone;
       let d = zofint(denom(Clone::clone(hh), Clone::clone(i), Clone::clone(j), i_, j_));
-      let tmp = rocq_array::get::<u64>(s, u);
+      let tmp = s.get_cloned(u);
       let sv = zofint(tmp);
       let pq_clone = Clone::clone(&pq);
       let tmp_1 = fst::<Rc<Z>, Rc<Z>>(pq_clone);
       let d_clone = Rc::clone(&d);
-      let tmp_2 = mul_3(tmp_1, d_clone);
+      let tmp_2 = mul_2(tmp_1, d_clone);
       let pq_clone_1 = Clone::clone(&pq);
-      (add_2(tmp_2, mul_3(sv, snd::<Rc<Z>, Rc<Z>>(pq_clone_1))), mul_3(snd::<Rc<Z>, Rc<Z>>(pq), d))
+      (add_2(tmp_2, mul_2(sv, snd::<Rc<Z>, Rc<Z>>(pq_clone_1))), mul_2(snd::<Rc<Z>, Rc<Z>>(pq), d))
     }
   });
   let tmp_3 = Rc::new(Z::Z0);
@@ -877,7 +831,7 @@ pub fn exact_sum(s: &Rc<Array<u64>>, C: u64, n: u64, hh: u64, i: u64, j: u64) ->
 
 // Rocq: Corelib.BinNums.IntDef.Z.leb
 // Variant: uncurried
-pub fn leb_1(x: Rc<Z>, y: Rc<Z>) -> bool {
+pub fn leb(x: Rc<Z>, y: Rc<Z>) -> bool {
   match compare(x, y) {
     std::cmp::Ordering::Equal => {
       true
@@ -893,43 +847,43 @@ pub fn leb_1(x: Rc<Z>, y: Rc<Z>) -> bool {
 
 // Rocq: Darkness.darkness_implem.lit_cell
 // Variant: borrowed, uncurried
-pub fn lit_cell(s: &Rc<Array<u64>>, C: u64, n: u64, b: u64, hh: u64, i: u64, j: u64) -> bool {
+pub fn lit_cell(s: &Array<Int63>, C: Int63, n: Int63, b_1: Int63, hh: Int63, i: Int63, j: Int63) -> bool {
   let C_1 = C;
   let n_1 = n;
-  let b_1 = b;
+  let b_2 = b_1;
   let hh_1 = hh;
   let i_1 = i;
   let j_1 = j;
   let lo = lo_sum(s, C_1, n_1, hh_1, i_1, j_1);
-  let mb = mul_1(__rocq_global_789, b_1);
-  if leb(mb, lo) {
+  let mb = __rocq_global_789 * b_2;
+  if mb <= lo {
     true
   } else {
-    let tmp = add_3(lo, n_1);
-    if ltb(tmp, mb) {
+    let tmp = lo + n_1;
+    if tmp < mb {
       false
     } else {
       let pq = exact_sum(s, C_1, n_1, hh_1, i_1, j_1);
-      let tmp_1 = zofint(b_1);
+      let tmp_1 = zofint(b_2);
       let pq_clone = Clone::clone(&pq);
-      leb_1(mul_3(tmp_1, snd::<Rc<Z>, Rc<Z>>(pq_clone)), fst::<Rc<Z>, Rc<Z>>(pq))
+      leb(mul_2(tmp_1, snd::<Rc<Z>, Rc<Z>>(pq_clone)), fst::<Rc<Z>, Rc<Z>>(pq))
     }
   }
 }
 
 // Rocq: Darkness.darkness_implem.lit_arr
 // Variant: uncurried
-pub fn lit_arr(s: Rc<Array<u64>>, C: u64, n: u64, b: u64, hh: u64) -> Rc<Array<bool>> {
-  let callback: Rc<dyn Fn(u64, u64, u64, Rc<Array<bool>>) -> Rc<Array<bool>>> = Rc::new({
+pub fn lit_arr(s: Array<Int63>, C: Int63, n: Int63, b_1: Int63, hh: Int63) -> Array<bool> {
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Array<bool>) -> Array<bool>> = Rc::new({
     let __anf_capture_19 = C;
     let __anf_capture_21 = n;
-    move |u: u64, i: u64, j: u64, a: Rc<Array<bool>>| -> Rc<Array<bool>> {
-      let tmp = lit_cell(&s, Clone::clone(&__anf_capture_19), Clone::clone(&__anf_capture_21), Clone::clone(&b), Clone::clone(&hh), i, j);
-      rocq_array::set::<bool>(a, u, tmp)
+    move |u: Int63, i: Int63, j: Int63, a_1: Array<bool>| -> Array<bool> {
+      let tmp = lit_cell(&s, Clone::clone(&__anf_capture_19), Clone::clone(&__anf_capture_21), Clone::clone(&b_1), Clone::clone(&hh), i, j);
+      a_1.set(u, tmp)
     }
   });
-  let tmp_1 = rocq_array::make::<bool>(n, false);
-  grid_fold::<Rc<Array<bool>>>(C, n, callback, tmp_1)
+  let tmp_1 = Array::<bool>::make(n, false);
+  grid_fold::<Array<bool>>(C, n, callback, tmp_1)
 }
 
 // Rocq: Corelib.Init.Datatypes.andb
@@ -944,74 +898,73 @@ pub fn andb(b1: bool, b2: bool) -> bool {
 
 // Rocq: Darkness.darkness_implem.capf
 // Variant: uncurried
-pub fn capf(x: bool, y: bool) -> u64 {
+pub fn capf(x: bool, y: bool) -> Int63 {
   if andb(x, y) {
-    43u64
+    int63!(43)
   } else {
-    11u64
+    int63!(11)
   }
 }
 
 // Rocq: Darkness.darkness_implem.init_res
 // Variant: uncurried
-pub fn init_res(lt: Rc<Array<bool>>, C: u64, n: u64) -> Rc<Array<u64>> {
-  let callback: Rc<dyn Fn(u64, u64, u64, Rc<Array<u64>>) -> Rc<Array<u64>>> = Rc::new({
+pub fn init_res(lt: Array<bool>, C: Int63, n: Int63) -> Array<Int63> {
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Array<Int63>) -> Array<Int63>> = Rc::new({
     let __anf_capture_9 = C;
-    move |u: u64, _i: u64, _j: u64, r: Rc<Array<u64>>| -> Rc<Array<u64>> {
+    move |u: Int63, _i: Int63, _j: Int63, r: Array<Int63>| -> Array<Int63> {
       let C = &__anf_capture_9;
-      let c1 = capf(rocq_array::get::<bool>(&lt, u), rocq_array::get::<bool>(&lt, add_3(u, 1u64)));
-      let tmp = rocq_array::get::<bool>(&lt, u);
-      let tmp_1 = rocq_array::get::<bool>(&lt, add_3(u, Clone::clone(C)));
+      let c1 = capf(lt.get_cloned(u), lt.get_cloned(u + int63!(1)));
+      let tmp = lt.get_cloned(u);
+      let tmp_1 = lt.get_cloned(u + Clone::clone(C));
       let c2 = capf(tmp, tmp_1);
-      let tmp_2 = rocq_array::set::<u64>(r, mul_1(2u64, u), c1);
-      rocq_array::set::<u64>(tmp_2, add_3(mul_1(2u64, u), 1u64), c2)
+      r.set(int63!(2) * u, c1).set(int63!(2) * u + int63!(1), c2)
     }
   });
-  let tmp_3 = rocq_array::make::<u64>(mul_1(2u64, n), 0u64);
-  grid_fold::<Rc<Array<u64>>>(C, n, callback, tmp_3)
+  let tmp_2 = int63!(2) * n;
+  grid_fold::<Array<Int63>>(C, n, callback, Array::<Int63>::make(tmp_2, int63!(0)))
 }
 
 // Rocq: Darkness.darkness_implem.bt
-pub fn bt_owned(b: Rc<bst>) -> u64 {
-  let b_bt_clone = Clone::clone(&b.bt);
-  std::mem::drop(b);
+pub fn bt_owned(b_1: Rc<bst>) -> Int63 {
+  let b_bt_clone = Clone::clone(&b_1.bt);
+  std::mem::drop(b_1);
   b_bt_clone
 }
 
 // Rocq: Darkness.darkness_implem.bt
 // Variant: borrowed
-pub fn bt(b: &Rc<bst>) -> u64 {
-  let tmp = b;
+pub fn bt(b_1: &Rc<bst>) -> Int63 {
+  let tmp = b_1;
   Clone::clone(&tmp.bt)
 }
 
 // Rocq: Darkness.darkness_implem.bq
-pub fn bq(b: Rc<bst>) -> Rc<Array<u64>> {
-  let b_bq_clone = Rc::clone(&b.bq);
-  std::mem::drop(b);
+pub fn bq(b_1: Rc<bst>) -> Array<Int63> {
+  let b_bq_clone = Clone::clone(&b_1.bq);
+  std::mem::drop(b_1);
   b_bq_clone
 }
 
 // Rocq: Darkness.darkness_implem.bd
-pub fn bd(b: Rc<bst>) -> Rc<Array<u64>> {
-  let b_bd_clone = Rc::clone(&b.bd);
-  std::mem::drop(b);
+pub fn bd(b_1: Rc<bst>) -> Array<Int63> {
+  let b_bd_clone = Clone::clone(&b_1.bd);
+  std::mem::drop(b_1);
   b_bd_clone
 }
 
 // Rocq: Darkness.darkness_implem.nbr
 // Variant: uncurried
-pub fn nbr(C: u64, p: u64, d: u64) -> u64 {
-  if eqb(d, 0u64) {
-    add_3(p, 1u64)
+pub fn nbr(C: Int63, p: Int63, d: Int63) -> Int63 {
+  if d == int63!(0) {
+    p + int63!(1)
   } else {
-    if eqb(d, 1u64) {
-      sub(p, 1u64)
+    if d == int63!(1) {
+      p - int63!(1)
     } else {
-      if eqb(d, 2u64) {
-        add_3(p, C)
+      if d == int63!(2) {
+        p + C
       } else {
-        sub(p, C)
+        p - C
       }
     }
   }
@@ -1019,17 +972,17 @@ pub fn nbr(C: u64, p: u64, d: u64) -> u64 {
 
 // Rocq: Darkness.darkness_implem.slot
 // Variant: uncurried
-pub fn slot(C: u64, p: u64, d: u64) -> u64 {
-  if eqb(d, 0u64) {
-    mul_1(2u64, p)
+pub fn slot(C: Int63, p: Int63, d: Int63) -> Int63 {
+  if d == int63!(0) {
+    int63!(2) * p
   } else {
-    if eqb(d, 1u64) {
-      mul_1(2u64, sub(p, 1u64))
+    if d == int63!(1) {
+      int63!(2) * (p - int63!(1))
     } else {
-      if eqb(d, 2u64) {
-        add_3(mul_1(2u64, p), 1u64)
+      if d == int63!(2) {
+        int63!(2) * p + int63!(1)
       } else {
-        add_3(mul_1(2u64, sub(p, C)), 1u64)
+        int63!(2) * (p - C) + int63!(1)
       }
     }
   }
@@ -1046,61 +999,58 @@ pub fn orb(b1: bool, b2: bool) -> bool {
 }
 
 // Rocq: Darkness.darkness_implem.fwd
-pub fn fwd(d: u64) -> bool {
-  orb(eqb(d, 0u64), eqb(d, 2u64))
+pub fn fwd(d: Int63) -> bool {
+  orb(d == int63!(0), d == int63!(2))
 }
 
 // Rocq: Darkness.darkness_implem.resid
 // Variant: uncurried
-pub fn resid(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, p: u64, d: u64) -> u64 {
+pub fn resid(lt: Array<bool>, res: Array<Int63>, C: Int63, p: Int63, d: Int63) -> Int63 {
   let k = slot(C, p, d);
   if fwd(d) {
     std::mem::drop(lt);
-    let tmp = rocq_array::get::<u64>(&res, k);
+    let tmp = res.get_cloned(k);
     std::mem::drop(res);
     tmp
   } else {
-    let tmp_1 = 2u64;
-    let tmp_2 = rocq_array::get::<bool>(&lt, p);
-    let tmp_3 = rocq_array::get::<bool>(&lt, nbr(C, p, d));
+    let tmp_1 = int63!(2);
+    let tmp_2 = lt.get_cloned(p);
+    let tmp_3 = lt.get_cloned(nbr(C, p, d));
     std::mem::drop(lt);
-    let tmp_4 = mul_1(tmp_1, capf(tmp_2, tmp_3));
-    let tmp_5 = rocq_array::get::<u64>(&res, k);
+    let tmp_4 = tmp_1 * capf(tmp_2, tmp_3);
+    let tmp_5 = res.get_cloned(k);
     std::mem::drop(res);
-    sub(tmp_4, tmp_5)
+    tmp_4 - tmp_5
   }
 }
 
 // Rocq: Darkness.darkness_implem.bp
-pub fn bp(b: Rc<bst>) -> Rc<Array<u64>> {
-  let b_bp_clone = Rc::clone(&b.bp);
-  std::mem::drop(b);
+pub fn bp(b_1: Rc<bst>) -> Array<Int63> {
+  let b_bp_clone = Clone::clone(&b_1.bp);
+  std::mem::drop(b_1);
   b_bp_clone
 }
 
 // Rocq: Darkness.darkness_implem.visit
 // Variant: uncurried
-pub fn visit(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, st: Rc<bst>, v: u64, dv: u64, d: u64, ok: bool) -> Rc<bst> {
+pub fn visit(lt: Array<bool>, res: Array<Int63>, C: Int63, st: Rc<bst>, v: Int63, dv: Int63, d: Int63, ok: bool) -> Rc<bst> {
   if ok {
     let w = nbr(C, v, d);
     let tmp = resid(lt, res, C, v, d);
-    if ltb(0u64, tmp) {
+    if int63!(0) < tmp {
       let st_clone = Rc::clone(&st);
       let tmp_1 = bd(st_clone);
-      let tmp_2 = rocq_array::get::<u64>(&tmp_1, w);
-      if eqb(tmp_2, 0u64) {
+      let tmp_2 = tmp_1.get_cloned(w);
+      if tmp_2 == int63!(0) {
         std::mem::drop(tmp_1);
         let st_clone_1 = Rc::clone(&st);
-        let tmp_3 = bd(st_clone_1);
-        let tmp_4 = rocq_array::set::<u64>(tmp_3, w, add_3(dv, 1u64));
+        let tmp_3 = bd(st_clone_1).set(w, dv + int63!(1));
         let st_clone_2 = Rc::clone(&st);
-        let tmp_5 = bp(st_clone_2);
-        let tmp_6 = rocq_array::set::<u64>(tmp_5, w, d);
+        let tmp_4 = bp(st_clone_2).set(w, d);
         let st_clone_3 = Rc::clone(&st);
-        let tmp_7 = bq(st_clone_3);
-        let tmp_8 = bt(&st);
-        let tmp_9 = rocq_array::set::<u64>(tmp_7, tmp_8, w);
-        Rc::new(bst { bd: tmp_4, bp: tmp_6, bq: tmp_9, bt: add_3(bt_owned(st), 1u64) })
+        let tmp_5 = bq(st_clone_3);
+        let tmp_6 = bt(&st);
+        Rc::new(bst { bd: tmp_3, bp: tmp_4, bq: tmp_5.set(tmp_6, w), bt: bt_owned(st) + int63!(1) })
       } else {
         std::mem::drop(tmp_1);
         st
@@ -1117,44 +1067,44 @@ pub fn visit(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, st: Rc<bst>, v: u
 
 // Rocq: Darkness.darkness_implem.bfs_loop
 // Variant: uncurried
-pub fn bfs_loop_1(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, n: u64, head: u64, st: Rc<bst>) -> Rc<bst> {
+pub fn bfs_loop_1(lt: Array<bool>, res: Array<Int63>, C: Int63, n: Int63, head: Int63, st: Rc<bst>) -> Rc<bst> {
   bfs_loop(lt, res, C, n, head, st, ())
 }
 
 // Rocq: Darkness.darkness_implem.bfs_loop (local: bfs_loop)
 // Variant: uncurried, lifted
-pub fn bfs_loop(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, n: u64, head: u64, st: Rc<bst>, _H: ()) -> Rc<bst> {
-  let tmp = ltb(head, n);
+pub fn bfs_loop(lt: Array<bool>, res: Array<Int63>, C: Int63, n: Int63, head: Int63, st: Rc<bst>, _H: ()) -> Rc<bst> {
+  let tmp = head < n;
   match bdec(tmp) {
     sumbool::left => {
       let tmp_1 = bt(&st);
-      if ltb(head, tmp_1) {
+      if head < tmp_1 {
         let st_clone = Rc::clone(&st);
         let tmp_2 = bq(st_clone);
-        let v = rocq_array::get::<u64>(&tmp_2, head);
+        let v = tmp_2.get_cloned(head);
         std::mem::drop(tmp_2);
         let st_clone_1 = Rc::clone(&st);
         let tmp_3 = bd(st_clone_1);
-        let dv = rocq_array::get::<u64>(&tmp_3, v);
+        let dv = tmp_3.get_cloned(v);
         std::mem::drop(tmp_3);
-        let j = mod_(v, C);
-        let tmp_4 = ltb(add_3(j, 1u64), C);
-        let lt_clone = Rc::clone(&lt);
-        let res_clone = Rc::clone(&res);
-        let st1 = visit(lt_clone, res_clone, C, st, v, dv, 0u64, tmp_4);
-        let tmp_5 = ltb(0u64, j);
-        let lt_clone_1 = Rc::clone(&lt);
-        let res_clone_1 = Rc::clone(&res);
-        let st2 = visit(lt_clone_1, res_clone_1, C, st1, v, dv, 1u64, tmp_5);
-        let tmp_6 = ltb(add_3(v, C), n);
-        let lt_clone_2 = Rc::clone(&lt);
-        let res_clone_2 = Rc::clone(&res);
-        let st3 = visit(lt_clone_2, res_clone_2, C, st2, v, dv, 2u64, tmp_6);
-        let tmp_7 = leb(C, v);
-        let lt_clone_3 = Rc::clone(&lt);
-        let res_clone_3 = Rc::clone(&res);
-        let st4 = visit(lt_clone_3, res_clone_3, C, st3, v, dv, 3u64, tmp_7);
-        bfs_loop(lt, res, C, n, add_3(head, 1u64), st4, ())
+        let j = v % C;
+        let tmp_4 = j + int63!(1) < C;
+        let lt_clone = Clone::clone(&lt);
+        let res_clone = Clone::clone(&res);
+        let st1 = visit(lt_clone, res_clone, C, st, v, dv, int63!(0), tmp_4);
+        let tmp_5 = int63!(0) < j;
+        let lt_clone_1 = Clone::clone(&lt);
+        let res_clone_1 = Clone::clone(&res);
+        let st2 = visit(lt_clone_1, res_clone_1, C, st1, v, dv, int63!(1), tmp_5);
+        let tmp_6 = v + C < n;
+        let lt_clone_2 = Clone::clone(&lt);
+        let res_clone_2 = Clone::clone(&res);
+        let st3 = visit(lt_clone_2, res_clone_2, C, st2, v, dv, int63!(2), tmp_6);
+        let tmp_7 = C <= v;
+        let lt_clone_3 = Clone::clone(&lt);
+        let res_clone_3 = Clone::clone(&res);
+        let st4 = visit(lt_clone_3, res_clone_3, C, st3, v, dv, int63!(3), tmp_7);
+        bfs_loop(lt, res, C, n, head + int63!(1), st4, ())
       } else {
         std::mem::drop(lt);
         std::mem::drop(res);
@@ -1171,61 +1121,58 @@ pub fn bfs_loop(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, n: u64, head: 
 
 // Rocq: Darkness.darkness_implem.root_step
 // Variant: uncurried
-pub fn root_step(lt: Rc<Array<bool>>, u: u64, _i: u64, _j: u64, st: Rc<bst>) -> Rc<bst> {
-  let tmp = rocq_array::get::<bool>(&lt, u);
+pub fn root_step(lt: Array<bool>, u: Int63, _i: Int63, _j: Int63, st: Rc<bst>) -> Rc<bst> {
+  let tmp = lt.get_cloned(u);
   if tmp {
     std::mem::drop(lt);
     st
   } else {
     std::mem::drop(lt);
     let st_clone = Rc::clone(&st);
-    let tmp_1 = bd(st_clone);
-    let tmp_2 = rocq_array::set::<u64>(tmp_1, u, 1u64);
+    let tmp_1 = bd(st_clone).set(u, int63!(1));
     let st_clone_1 = Rc::clone(&st);
-    let tmp_3 = bp(st_clone_1);
-    let tmp_4 = rocq_array::set::<u64>(tmp_3, u, 4u64);
+    let tmp_2 = bp(st_clone_1).set(u, int63!(4));
     let st_clone_2 = Rc::clone(&st);
-    let tmp_5 = bq(st_clone_2);
-    let tmp_6 = bt(&st);
-    let tmp_7 = rocq_array::set::<u64>(tmp_5, tmp_6, u);
-    Rc::new(bst { bd: tmp_2, bp: tmp_4, bq: tmp_7, bt: add_3(bt_owned(st), 1u64) })
+    let tmp_3 = bq(st_clone_2);
+    let tmp_4 = bt(&st);
+    Rc::new(bst { bd: tmp_1, bp: tmp_2, bq: tmp_3.set(tmp_4, u), bt: bt_owned(st) + int63!(1) })
   }
 }
 
 // Rocq: Darkness.darkness_implem.roots
 // Variant: uncurried
-pub fn roots(lt: Rc<Array<bool>>, C: u64, n: u64) -> Rc<bst> {
-  let callback: Rc<dyn Fn(u64, u64, u64, Rc<bst>) -> Rc<bst>> = Rc::new({
-    move |v9: u64, v10: u64, v11: u64, v12: Rc<bst>| -> Rc<bst> {
-      let lt_clone = Rc::clone(&lt);
+pub fn roots(lt: Array<bool>, C: Int63, n: Int63) -> Rc<bst> {
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Rc<bst>) -> Rc<bst>> = Rc::new({
+    move |v9: Int63, v10: Int63, v11: Int63, v12: Rc<bst>| -> Rc<bst> {
+      let lt_clone = Clone::clone(&lt);
       root_step(lt_clone, v9, v10, v11, v12)
     }
   });
-  let tmp = rocq_array::make::<u64>(n, 0u64);
-  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
-  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
-  grid_fold::<Rc<bst>>(C, n, callback, Rc::new(bst { bd: tmp, bp: tmp_1, bq: tmp_2, bt: 0u64 }))
+  let tmp = Array::<Int63>::make(n, int63!(0));
+  let tmp_1 = Array::<Int63>::make(n, int63!(0));
+  let tmp_2 = Array::<Int63>::make(n, int63!(0));
+  grid_fold::<Rc<bst>>(C, n, callback, Rc::new(bst { bd: tmp, bp: tmp_1, bq: tmp_2, bt: int63!(0) }))
 }
 
 // Rocq: Darkness.darkness_implem.bfs
 // Variant: uncurried
-pub fn bfs(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, n: u64) -> Rc<bst> {
-  let lt_clone = Rc::clone(&lt);
+pub fn bfs(lt: Array<bool>, res: Array<Int63>, C: Int63, n: Int63) -> Rc<bst> {
+  let lt_clone = Clone::clone(&lt);
   let tmp = roots(lt_clone, C, n);
-  bfs_loop_1(lt, res, C, n, 0u64, tmp)
+  bfs_loop_1(lt, res, C, n, int63!(0), tmp)
 }
 
 // Rocq: Darkness.darkness_implem.is_border
 // Variant: uncurried
-pub fn is_border(R: u64, C: u64, i: u64, j: u64) -> bool {
-  let tmp = orb(eqb(i, 0u64), eqb(i, sub(R, 1u64)));
-  let tmp_1 = orb(tmp, eqb(j, 0u64));
-  orb(tmp_1, eqb(j, sub(C, 1u64)))
+pub fn is_border(R: Int63, C: Int63, i: Int63, j: Int63) -> bool {
+  let tmp = orb(i == int63!(0), i == R - int63!(1));
+  let tmp_1 = orb(tmp, j == int63!(0));
+  orb(tmp_1, j == C - int63!(1))
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
-pub fn negb(b: bool) -> bool {
-  if b {
+pub fn negb(b_1: bool) -> bool {
+  if b_1 {
     false
   } else {
     true
@@ -1234,7 +1181,7 @@ pub fn negb(b: bool) -> bool {
 
 // Rocq: Darkness.darkness_implem.fb_step
 // Variant: borrowed, uncurried
-pub fn fb_step(dist: &Rc<Array<u64>>, R: u64, C: u64, n: u64, u: u64, i: u64, j: u64, acc: u64) -> u64 {
+pub fn fb_step(dist: &Array<Int63>, R: Int63, C: Int63, n: Int63, u: Int63, i: Int63, j: Int63, acc: Int63) -> Int63 {
   let R_1 = R;
   let C_1 = C;
   let n_1 = n;
@@ -1242,8 +1189,8 @@ pub fn fb_step(dist: &Rc<Array<u64>>, R: u64, C: u64, n: u64, u: u64, i: u64, j:
   let i_1 = i;
   let j_1 = j;
   let acc_1 = acc;
-  let tmp = andb(is_border(R_1, C_1, i_1, j_1), negb(eqb(rocq_array::get::<u64>(dist, u_1), 0u64)));
-  let tmp_1 = orb(eqb(acc_1, n_1), ltb(rocq_array::get::<u64>(dist, u_1), rocq_array::get::<u64>(dist, acc_1)));
+  let tmp = andb(is_border(R_1, C_1, i_1, j_1), negb(dist.get_cloned(u_1) == int63!(0)));
+  let tmp_1 = orb(acc_1 == n_1, dist.get_cloned(u_1) < dist.get_cloned(acc_1));
   if andb(tmp, tmp_1) {
     u_1
   } else {
@@ -1253,11 +1200,11 @@ pub fn fb_step(dist: &Rc<Array<u64>>, R: u64, C: u64, n: u64, u: u64, i: u64, j:
 
 // Rocq: Darkness.darkness_implem.find_border
 // Variant: uncurried
-pub fn find_border(dist: Rc<Array<u64>>, R: u64, C: u64, n: u64) -> u64 {
-  let callback: Rc<dyn Fn(u64, u64, u64, u64) -> u64> = Rc::new({
+pub fn find_border(dist: Array<Int63>, R: Int63, C: Int63, n: Int63) -> Int63 {
+  let callback: Rc<dyn Fn(Int63, Int63, Int63, Int63) -> Int63> = Rc::new({
     let __anf_capture_18 = C;
     let __anf_capture_20 = n;
-    move |v22: u64, v23: u64, v24: u64, v25: u64| -> u64 {
+    move |v22: Int63, v23: Int63, v24: Int63, v25: Int63| -> Int63 {
       let dist = &dist;
       let R_clone = Clone::clone(&R);
       let tmp = Clone::clone(&__anf_capture_18);
@@ -1265,21 +1212,21 @@ pub fn find_border(dist: Rc<Array<u64>>, R: u64, C: u64, n: u64) -> u64 {
       fb_step(dist, R_clone, tmp, tmp_1, v22, v23, v24, v25)
     }
   });
-  grid_fold::<u64>(C, n, callback, n)
+  grid_fold::<Int63>(C, n, callback, n)
 }
 
 // Rocq: Darkness.darkness_implem.opp
-pub fn opp(d: u64) -> u64 {
-  if eqb(d, 0u64) {
-    1u64
+pub fn opp(d: Int63) -> Int63 {
+  if d == int63!(0) {
+    int63!(1)
   } else {
-    if eqb(d, 1u64) {
-      0u64
+    if d == int63!(1) {
+      int63!(0)
     } else {
-      if eqb(d, 2u64) {
-        3u64
+      if d == int63!(2) {
+        int63!(3)
       } else {
-        2u64
+        int63!(2)
       }
     }
   }
@@ -1287,25 +1234,25 @@ pub fn opp(d: u64) -> u64 {
 
 // Rocq: Darkness.darkness_implem.tmin
 // Variant: uncurried
-pub fn tmin_1(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, par: Rc<Array<u64>>, dist: Rc<Array<u64>>, v: u64, dl: u64) -> u64 {
+pub fn tmin_1(lt: Array<bool>, res: Array<Int63>, C: Int63, par: Array<Int63>, dist: Array<Int63>, v: Int63, dl: Int63) -> Int63 {
   tmin(lt, res, C, par, dist, v, dl, ())
 }
 
 // Rocq: Darkness.darkness_implem.tmin (local: tmin)
 // Variant: uncurried, lifted
-pub fn tmin(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, par: Rc<Array<u64>>, dist: Rc<Array<u64>>, v: u64, dl: u64, _H: ()) -> u64 {
-  let d = rocq_array::get::<u64>(&par, v);
-  if ltb(d, 4u64) {
+pub fn tmin(lt: Array<bool>, res: Array<Int63>, C: Int63, par: Array<Int63>, dist: Array<Int63>, v: Int63, dl: Int63, _H: ()) -> Int63 {
+  let d = par.get_cloned(v);
+  if d < int63!(4) {
     let p = nbr(C, v, opp(d));
-    let tmp = rocq_array::get::<u64>(&dist, p);
-    let tmp_1 = rocq_array::get::<u64>(&dist, v);
-    let tmp_2 = ltb(tmp, tmp_1);
+    let tmp = dist.get_cloned(p);
+    let tmp_1 = dist.get_cloned(v);
+    let tmp_2 = tmp < tmp_1;
     match bdec(tmp_2) {
       sumbool::left => {
-        let lt_clone = Rc::clone(&lt);
-        let res_clone = Rc::clone(&res);
+        let lt_clone = Clone::clone(&lt);
+        let res_clone = Clone::clone(&res);
         let r = resid(lt_clone, res_clone, C, p, d);
-        let tmp_3 = if ltb(r, dl) {
+        let tmp_3 = if r < dl {
           r
         } else {
           dl
@@ -1331,32 +1278,32 @@ pub fn tmin(lt: Rc<Array<bool>>, res: Rc<Array<u64>>, C: u64, par: Rc<Array<u64>
 
 // Rocq: Darkness.darkness_implem.aug
 // Variant: uncurried
-pub fn aug(res: Rc<Array<u64>>, C: u64, p: u64, d: u64, dl: u64) -> Rc<Array<u64>> {
+pub fn aug(res: Array<Int63>, C: Int63, p: Int63, d: Int63, dl: Int63) -> Array<Int63> {
   let k = slot(C, p, d);
   if fwd(d) {
-    let tmp = rocq_array::get::<u64>(&res, k);
-    rocq_array::set::<u64>(res, k, sub(tmp, dl))
+    let tmp = res.get_cloned(k);
+    res.set(k, tmp - dl)
   } else {
-    let tmp_1 = rocq_array::get::<u64>(&res, k);
-    rocq_array::set::<u64>(res, k, add_3(tmp_1, dl))
+    let tmp_1 = res.get_cloned(k);
+    res.set(k, tmp_1 + dl)
   }
 }
 
 // Rocq: Darkness.darkness_implem.tapp
 // Variant: uncurried
-pub fn tapp_1(C: u64, par: Rc<Array<u64>>, dist: Rc<Array<u64>>, dl: u64, v: u64, res: Rc<Array<u64>>) -> Rc<Array<u64>> {
+pub fn tapp_1(C: Int63, par: Array<Int63>, dist: Array<Int63>, dl: Int63, v: Int63, res: Array<Int63>) -> Array<Int63> {
   tapp(C, par, dist, dl, v, res, ())
 }
 
 // Rocq: Darkness.darkness_implem.tapp (local: tapp)
 // Variant: uncurried, lifted
-pub fn tapp(C: u64, par: Rc<Array<u64>>, dist: Rc<Array<u64>>, dl: u64, v: u64, res: Rc<Array<u64>>, _H: ()) -> Rc<Array<u64>> {
-  let d = rocq_array::get::<u64>(&par, v);
-  if ltb(d, 4u64) {
+pub fn tapp(C: Int63, par: Array<Int63>, dist: Array<Int63>, dl: Int63, v: Int63, res: Array<Int63>, _H: ()) -> Array<Int63> {
+  let d = par.get_cloned(v);
+  if d < int63!(4) {
     let p = nbr(C, v, opp(d));
-    let tmp = rocq_array::get::<u64>(&dist, p);
-    let tmp_1 = rocq_array::get::<u64>(&dist, v);
-    let tmp_2 = ltb(tmp, tmp_1);
+    let tmp = dist.get_cloned(p);
+    let tmp_1 = dist.get_cloned(v);
+    let tmp_2 = tmp < tmp_1;
     match bdec(tmp_2) {
       sumbool::left => {
         let tmp_3 = aug(res, C, p, d, dl);
@@ -1377,39 +1324,36 @@ pub fn tapp(C: u64, par: Rc<Array<u64>>, dist: Rc<Array<u64>>, dl: u64, v: u64, 
 
 // Rocq: Darkness.darkness_implem.flow_loop
 // Variant: uncurried
-pub fn flow_loop_1(lt: Rc<Array<bool>>, R: u64, C: u64, n: u64, B: u64, res: Rc<Array<u64>>, F: u64) -> u64 {
+pub fn flow_loop_1(lt: Array<bool>, R: Int63, C: Int63, n: Int63, B: Int63, res: Array<Int63>, F: Int63) -> Int63 {
   flow_loop(lt, R, C, n, B, res, F, ())
 }
 
 // Rocq: Darkness.darkness_implem.flow_loop (local: flow_loop)
 // Variant: uncurried, lifted
-pub fn flow_loop(lt: Rc<Array<bool>>, R: u64, C: u64, n: u64, B: u64, res: Rc<Array<u64>>, F: u64, _H: ()) -> u64 {
-  let lt_clone = Rc::clone(&lt);
-  let res_clone = Rc::clone(&res);
+pub fn flow_loop(lt: Array<bool>, R: Int63, C: Int63, n: Int63, B: Int63, res: Array<Int63>, F: Int63, _H: ()) -> Int63 {
+  let lt_clone = Clone::clone(&lt);
+  let res_clone = Clone::clone(&res);
   let st = bfs(lt_clone, res_clone, C, n);
   let st_clone = Rc::clone(&st);
-  let tmp = bd(st_clone);
-  let w = find_border(tmp, R, C, n);
-  if eqb(w, n) {
+  let w = find_border(bd(st_clone), R, C, n);
+  if w == n {
     std::mem::drop(st);
     std::mem::drop(lt);
     std::mem::drop(res);
     F
   } else {
     let st_clone_1 = Rc::clone(&st);
-    let tmp_1 = bp(st_clone_1);
+    let tmp = bp(st_clone_1);
     let st_clone_2 = Rc::clone(&st);
-    let tmp_2 = bd(st_clone_2);
-    let lt_clone_1 = Rc::clone(&lt);
-    let res_clone_1 = Rc::clone(&res);
-    let dl = tmin_1(lt_clone_1, res_clone_1, C, tmp_1, tmp_2, w, 1000u64);
+    let tmp_1 = bd(st_clone_2);
+    let lt_clone_1 = Clone::clone(&lt);
+    let res_clone_1 = Clone::clone(&res);
+    let dl = tmin_1(lt_clone_1, res_clone_1, C, tmp, tmp_1, w, int63!(1000));
     let st_clone_3 = Rc::clone(&st);
-    let tmp_3 = bp(st_clone_3);
-    let tmp_4 = bd(st);
-    let res_ = tapp_1(C, tmp_3, tmp_4, dl, w, res);
-    let F_ = add_3(F, dl);
-    let tmp_5 = andb(ltb(F, F_), leb(F_, B));
-    match bdec(tmp_5) {
+    let res_ = tapp_1(C, bp(st_clone_3), bd(st), dl, w, res);
+    let F_ = F + dl;
+    let tmp_2 = andb(F < F_, F_ <= B);
+    match bdec(tmp_2) {
       sumbool::left => {
         flow_loop(lt, R, C, n, B, res_, F_, ())
       },
@@ -1424,168 +1368,20 @@ pub fn flow_loop(lt: Rc<Array<bool>>, R: u64, C: u64, n: u64, B: u64, res: Rc<Ar
 
 // Rocq: Darkness.darkness_implem.darkness_impl
 // Variant: uncurried
-pub fn darkness_impl(xb: u64, xh: u64, xg: Rc<Array<Rc<Array<u64>>>>) -> u64 {
-  let R = rocq_array::length::<Rc<Array<u64>>>(&xg);
-  let xg_clone = Rc::clone(&xg);
-  let tmp = rocq_array::get::<Rc<Array<u64>>>(&xg_clone, 0u64);
+pub fn darkness_impl(xb: Int63, xh: Int63, xg: Array<Array<Int63>>) -> Int63 {
+  let R = xg.length();
+  let xg_clone = Clone::clone(&xg);
+  let tmp = &xg_clone;
+  let tmp_1 = tmp.get_cloned(int63!(0));
   std::mem::drop(xg_clone);
-  let C = rocq_array::length::<u64>(&tmp);
-  std::mem::drop(tmp);
-  let n = mul_1(R, C);
+  let C = tmp_1.length();
+  std::mem::drop(tmp_1);
+  let n = R * C;
   let s = flat(xg, C, n);
-  let lt = lit_arr(s, C, n, xb, mul_1(xh, xh));
-  let lt_clone = Rc::clone(&lt);
+  let lt = lit_arr(s, C, n, xb, xh * xh);
+  let lt_clone = Clone::clone(&lt);
   let res = init_res(lt_clone, C, n);
-  let B = mul_1(86u64, n);
-  flow_loop_1(lt, R, C, n, B, res, 0u64)
+  let B = int63!(86) * n;
+  flow_loop_1(lt, R, C, n, B, res, int63!(0))
 }
-
-mod __rocq_reuse {
-//! Empty allocation ownership for OwnedANF reset and exact-type rebuilding.
-use std::mem::MaybeUninit;
-use std::rc::Rc;
-
-/// Move-only and opaque: storage has no initialized `T` and cannot be inspected.
-pub struct Token<T> {
-    _storage: Option<Rc<MaybeUninit<T>>>,
-}
-
-/// Consume an owner. The caller supplies the IR-approved shallow field copy;
-/// This may use a compiler-generated structural Clone implementation, but does
-/// not authorize arbitrary host clone behavior merely because T implements Clone.
-#[inline]
-pub fn reset<T>(mut owner: Rc<T>, duplicate: impl FnOnce(&T) -> T) -> (T, Token<T>) {
-    if let Some(payload) = Rc::get_mut(&mut owner) {
-        // SAFETY: get_mut establishes exclusive access (including no Weak
-        // owners). T and MaybeUninit<T> have identical size/alignment, so their
-        // Rc allocation layouts agree. After read, no potentially panicking
-        // user code runs before ownership becomes Rc<MaybeUninit<T>>. There is
-        // exactly one from_raw for into_raw, and the original Rc<T> is consumed.
-        // The token never reads or drops the moved T; dropping it only frees
-        // the allocation. The payload returned here owns T's fields once.
-        unsafe {
-            let value = std::ptr::read(payload);
-            let raw = Rc::into_raw(owner).cast::<MaybeUninit<T>>();
-            let storage = Rc::from_raw(raw);
-            (value, Token { _storage: Some(storage) })
-        }
-    } else {
-        let value = duplicate(&owner);
-        drop(owner);
-        (value, Token { _storage: None })
-    }
-}
-
-/// Consume reserved storage and a fully evaluated payload. Empty tokens allocate.
-#[inline]
-pub fn rebuild<T>(token: Token<T>, payload: T) -> Rc<T> {
-    match token._storage {
-        None => Rc::new(payload),
-        Some(mut storage) => {
-            // The opaque, non-Clone token owns the only strong reference and
-            // has no weak references. Check before initializing, so a panic
-            // cannot leave an initialized T hidden inside MaybeUninit<T>.
-            Rc::get_mut(&mut storage).expect("exclusive reuse token").write(payload);
-            // SAFETY: the payload is now fully initialized; no panicking code
-            // lies between initialization and this ownership conversion. The
-            // reset conversion established identical allocation layouts.
-            unsafe { Rc::from_raw(Rc::into_raw(storage).cast::<T>()) }
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::cell::Cell;
-
-    struct Probe(Rc<Cell<usize>>);
-    impl Drop for Probe {
-        fn drop(&mut self) { self.0.set(self.0.get() + 1); }
-    }
-
-    #[test]
-    fn rebuilding_preserves_address_and_drops_only_new_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner);
-        let (old, token) = reset(owner, |_| panic!("unique"));
-        drop(old);
-        assert_eq!(drops.get(), 1);
-        let new = rebuild(token, Probe(drops.clone()));
-        assert_eq!(Rc::as_ptr(&new), address);
-        assert_eq!(drops.get(), 1);
-        drop(new);
-        assert_eq!(drops.get(), 2);
-    }
-
-    #[test]
-    fn empty_token_allocates_and_preserves_old_alias() {
-        let old = Rc::new(7);
-        let alias = old.clone();
-        let (_, token) = reset(old, |x| *x);
-        let new = rebuild(token, 19);
-        assert_eq!(*alias, 7);
-        assert_eq!(*new, 19);
-        assert!(!Rc::ptr_eq(&alias, &new));
-    }
-
-    #[test]
-    fn unique_token_drop_does_not_drop_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner).cast::<MaybeUninit<Probe>>();
-        let (payload, token) = reset(owner, |_| panic!("unique path duplicated"));
-        assert_eq!(Rc::as_ptr(token._storage.as_ref().unwrap()), address);
-        drop(token);
-        assert_eq!(drops.get(), 0);
-        drop(payload);
-        assert_eq!(drops.get(), 1);
-    }
-
-    #[test]
-    fn shared_fallback_preserves_aliases() {
-        let field = Rc::new(7);
-        let owner = Rc::new((field.clone(), 9));
-        let alias = owner.clone();
-        let (payload, token) = reset(owner, |x| (x.0.clone(), x.1));
-        assert!(token._storage.is_none());
-        assert!(Rc::ptr_eq(&payload.0, &alias.0));
-        assert_eq!(Rc::strong_count(&field), 3);
-        drop(token);
-        drop(payload);
-        assert_eq!(alias.1, 9);
-        drop(alias);
-        assert_eq!(Rc::strong_count(&field), 1);
-    }
-
-    #[test]
-    fn weak_pointer_forces_fallback() {
-        let owner = Rc::new(17);
-        let weak = Rc::downgrade(&owner);
-        let (payload, token) = reset(owner, |x| *x);
-        assert_eq!(payload, 17);
-        assert!(token._storage.is_none());
-        assert!(weak.upgrade().is_none());
-    }
-
-    #[test]
-    fn panicking_fallback_releases_consumed_handle() {
-        let owner = Rc::new(17);
-        let alias = owner.clone();
-        let result = std::panic::catch_unwind(|| reset(owner, |_| panic!("copy failed")));
-        assert!(result.is_err());
-        assert_eq!(Rc::strong_count(&alias), 1);
-        assert_eq!(*alias, 17);
-    }
-
-    #[test]
-    fn zero_sized_payload() {
-        let (payload, token) = reset(Rc::new(()), |_| panic!("unique"));
-        drop(token);
-        assert_eq!(payload, ());
-    }
-}
-
-}
-const __rocq_global_789: u64 = 281474976710656u64;
+const __rocq_global_789: Int63 = int63!(281474976710656);

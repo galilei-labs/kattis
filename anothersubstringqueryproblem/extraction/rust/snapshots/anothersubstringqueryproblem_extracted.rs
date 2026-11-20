@@ -1,7 +1,9 @@
 #[allow(unused_imports)] use std::rc::Rc;
-#[allow(unused_imports)] use rocq_array::Array;
+#[allow(unused_imports)] use crate::rocq_reuse as __rocq_reuse;
+use rocq_int63::{int63, Int63};
+#[allow(unused_imports)] use rocq_array::{self as a, Array};
 
-const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<u64>; };
+const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<Int63>; };
 
 #[derive(Clone, Copy)]
 pub enum sumbool {
@@ -13,23 +15,17 @@ const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<bool>; };
 
 const _: () = { fn require_copy<T: Copy>() {} let _ = require_copy::<std::cmp::Ordering>; };
 
-pub type uint = u64;
+pub type uint = Int63;
 
-pub type char63 = u64;
+pub type char63 = Int63;
 
-pub type sint = u64;
+pub type sint = Int63;
 
 // Rocq: Corelib.Strings.PrimString.length
-pub fn length(v0: Rc<rocq_string::RocqString>) -> u64 {
-  let tmp = rocq_string::length(&v0);
+pub fn length(v0: rocq_string::RocqString) -> Int63 {
+  let tmp = v0.length();
   std::mem::drop(v0);
   tmp
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.eqb
-// Variant: uncurried
-pub fn eqb(v0: u64, v1: u64) -> bool {
-  rocq_int63::eqb(v0, v1)
 }
 
 // Rocq: Corelib.Init.Datatypes.fst
@@ -49,65 +45,40 @@ pub fn andb(b1: bool, b2: bool) -> bool {
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.ltb
-// Variant: uncurried
-pub fn ltb(v0: u64, v1: u64) -> bool {
-  rocq_int63::ltb(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.sub
-// Variant: uncurried
-pub fn sub(v0: u64, v1: u64) -> u64 {
-  rocq_int63::sub(v0, v1)
-}
-
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.bdec
-pub fn bdec(b: bool) -> sumbool {
-  if b {
+pub fn bdec(b_1: bool) -> sumbool {
+  if b_1 {
     sumbool::left
   } else {
     sumbool::right
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.add
-// Variant: uncurried
-pub fn add(v0: u64, v1: u64) -> u64 {
-  rocq_int63::add(v0, v1)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.div
-// Variant: uncurried
-pub fn div(v0: u64, v1: u64) -> u64 {
-  rocq_int63::div(v0, v1)
-}
-
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.midp
 // Variant: uncurried
-pub fn midp(lo: u64, hi: u64) -> u64 {
-  let tmp = sub(hi, lo);
-  add(lo, div(tmp, 2u64))
+pub fn midp(lo: Int63, hi: Int63) -> Int63 {
+  let tmp = hi - lo;
+  lo + tmp / int63!(2)
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.copy
 // Variant: uncurried
-pub fn copy_1(a: Rc<Array<u64>>, b: Rc<Array<u64>>, hi: u64, k: u64) -> Rc<Array<u64>> {
-  copy(a, b, hi, k, ())
+pub fn copy_1(a_1: Array<Int63>, b_1: Array<Int63>, hi: Int63, k: Int63) -> Array<Int63> {
+  copy(a_1, b_1, hi, k, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.copy (local: copy)
 // Variant: uncurried, lifted
-pub fn copy(a: Rc<Array<u64>>, b: Rc<Array<u64>>, hi: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(k, hi);
+pub fn copy(a_1: Array<Int63>, b_1: Array<Int63>, hi: Int63, k: Int63, _H: ()) -> Array<Int63> {
+  let tmp = k < hi;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = rocq_array::get::<u64>(&a, k);
-      let tmp_2 = rocq_array::set::<u64>(b, k, tmp_1);
-      copy(a, tmp_2, hi, add(k, 1u64), ())
+      let tmp_1 = a_1.get_cloned(k);
+      copy(a_1, b_1.set(k, tmp_1), hi, k + int63!(1), ())
     },
     sumbool::right => {
-      std::mem::drop(a);
-      b
+      std::mem::drop(a_1);
+      b_1
     },
   }
 }
@@ -122,39 +93,31 @@ pub fn orb(b1: bool, b2: bool) -> bool {
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.leb
-// Variant: uncurried
-pub fn leb(v0: u64, v1: u64) -> bool {
-  rocq_int63::leb(v0, v1)
-}
-
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.merge
 // Variant: uncurried
-pub fn merge_1(le: Rc<dyn Fn(u64, u64) -> bool>, src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64) -> Rc<Array<u64>> {
+pub fn merge_1(le: Rc<dyn Fn(Int63, Int63) -> bool>, src: Array<Int63>, dst: Array<Int63>, mid: Int63, hi: Int63, i: Int63, j: Int63, k: Int63) -> Array<Int63> {
   merge(le, src, dst, mid, hi, i, j, k, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.merge (local: merge)
 // Variant: uncurried, lifted
-pub fn merge(le: Rc<dyn Fn(u64, u64) -> bool>, src: Rc<Array<u64>>, dst: Rc<Array<u64>>, mid: u64, hi: u64, i: u64, j: u64, k: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(k, hi);
+pub fn merge(le: Rc<dyn Fn(Int63, Int63) -> bool>, src: Array<Int63>, dst: Array<Int63>, mid: Int63, hi: Int63, i: Int63, j: Int63, k: Int63, _H: ()) -> Array<Int63> {
+  let tmp = k < hi;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = ltb(i, mid);
-      let tmp_2 = leb(hi, j);
-      let tmp_3 = rocq_array::get::<u64>(&src, i);
-      let tmp_4 = rocq_array::get::<u64>(&src, j);
-      let le_ref: &Rc<dyn Fn(u64, u64) -> bool> = &le;
+      let tmp_1 = i < mid;
+      let tmp_2 = hi <= j;
+      let tmp_3 = src.get_cloned(i);
+      let tmp_4 = src.get_cloned(j);
+      let le_ref: &Rc<dyn Fn(Int63, Int63) -> bool> = &le;
       let tmp_5 = le_ref(tmp_3, tmp_4);
       let tmp_6 = orb(tmp_2, tmp_5);
       if andb(tmp_1, tmp_6) {
-        let tmp_7 = rocq_array::get::<u64>(&src, i);
-        let tmp_8 = rocq_array::set::<u64>(dst, k, tmp_7);
-        merge(le, src, tmp_8, mid, hi, add(i, 1u64), j, add(k, 1u64), ())
+        let tmp_7 = src.get_cloned(i);
+        merge(le, src, dst.set(k, tmp_7), mid, hi, i + int63!(1), j, k + int63!(1), ())
       } else {
-        let tmp_9 = rocq_array::get::<u64>(&src, j);
-        let tmp_10 = rocq_array::set::<u64>(dst, k, tmp_9);
-        merge(le, src, tmp_10, mid, hi, i, add(j, 1u64), add(k, 1u64), ())
+        let tmp_8 = src.get_cloned(j);
+        merge(le, src, dst.set(k, tmp_8), mid, hi, i, j + int63!(1), k + int63!(1), ())
       }
     },
     sumbool::right => {
@@ -167,35 +130,34 @@ pub fn merge(le: Rc<dyn Fn(u64, u64) -> bool>, src: Rc<Array<u64>>, dst: Rc<Arra
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.msort
 // Variant: uncurried
-pub fn msort_1(le: Rc<dyn Fn(u64, u64) -> bool>, a: Rc<Array<u64>>, b: Rc<Array<u64>>, lo: u64, hi: u64) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  msort(le, a, b, lo, hi, ())
+pub fn msort_1(le: Rc<dyn Fn(Int63, Int63) -> bool>, a_1: Array<Int63>, b_1: Array<Int63>, lo: Int63, hi: Int63) -> (Array<Int63>, Array<Int63>) {
+  msort(le, a_1, b_1, lo, hi, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.msort (local: msort)
 // Variant: uncurried, lifted
-pub fn msort(le: Rc<dyn Fn(u64, u64) -> bool>, a: Rc<Array<u64>>, b: Rc<Array<u64>>, lo: u64, hi: u64, _H: ()) -> (Rc<Array<u64>>, Rc<Array<u64>>) {
-  let tmp = andb(ltb(lo, hi), ltb(1u64, sub(hi, lo)));
+pub fn msort(le: Rc<dyn Fn(Int63, Int63) -> bool>, a_1: Array<Int63>, b_1: Array<Int63>, lo: Int63, hi: Int63, _H: ()) -> (Array<Int63>, Array<Int63>) {
+  let tmp = andb(lo < hi, int63!(1) < hi - lo);
   match bdec(tmp) {
     sumbool::left => {
       let mid = midp(lo, hi);
-      let le_clone: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
-      let tmp_1 = msort(le_clone, a, b, lo, mid, ());
+      let le_clone: Rc<dyn Fn(Int63, Int63) -> bool> = Rc::clone(&le);
+      let tmp_1 = msort(le_clone, a_1, b_1, lo, mid, ());
       match &tmp_1 {
         (b1, a1) => {
           let tmp_2 = ();
-          let le_clone_1: Rc<dyn Fn(u64, u64) -> bool> = Rc::clone(&le);
-          let b1_clone = Rc::clone(b1);
-          let a1_clone = Rc::clone(a1);
+          let le_clone_1: Rc<dyn Fn(Int63, Int63) -> bool> = Rc::clone(&le);
+          let b1_clone = Clone::clone(b1);
+          let a1_clone = Clone::clone(a1);
           std::mem::drop(tmp_1);
           let tmp_3 = msort(le_clone_1, b1_clone, a1_clone, mid, hi, tmp_2);
           match tmp_3 {
             (v84, v86) => {
               let b2 = &v84;
-              let b2_clone = Rc::clone(b2);
+              let b2_clone = Clone::clone(b2);
               let b3 = copy_1(b2_clone, v86, hi, lo);
-              let b3_clone = Rc::clone(&b3);
-              let tmp_4 = merge_1(le, b3_clone, v84, mid, hi, lo, mid, lo);
-              (tmp_4, b3)
+              let b3_clone = Clone::clone(&b3);
+              (merge_1(le, b3_clone, v84, mid, hi, lo, mid, lo), b3)
             },
           }
         },
@@ -203,99 +165,93 @@ pub fn msort(le: Rc<dyn Fn(u64, u64) -> bool>, a: Rc<Array<u64>>, b: Rc<Array<u6
     },
     sumbool::right => {
       std::mem::drop(le);
-      (a, b)
+      (a_1, b_1)
     },
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.r2
 // Variant: borrowed, uncurried
-pub fn r2(rk: &Rc<Array<u64>>, h: u64, n: u64, p: u64) -> u64 {
+pub fn r2(rk: &Array<Int63>, h: Int63, n: Int63, p: Int63) -> Int63 {
   let h_1 = h;
   let n_1 = n;
   let p_1 = p;
-  let tmp = add(p_1, h_1);
-  if ltb(tmp, n_1) {
-    let tmp_1 = add(p_1, h_1);
-    add(rocq_array::get::<u64>(rk, tmp_1), 1u64)
+  let tmp = p_1 + h_1;
+  if tmp < n_1 {
+    rk.get_cloned(p_1 + h_1) + int63!(1)
   } else {
-    0u64
+    int63!(0)
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.keyle
 // Variant: borrowed, uncurried
-pub fn keyle(rk: &Rc<Array<u64>>, h: u64, n: u64, p: u64, q: u64) -> bool {
+pub fn keyle(rk: &Array<Int63>, h: Int63, n: Int63, p: Int63, q: Int63) -> bool {
   let h_1 = h;
   let n_1 = n;
   let p_1 = p;
   let q_1 = q;
-  orb(ltb(rocq_array::get::<u64>(rk, p_1), rocq_array::get::<u64>(rk, q_1)), andb(eqb(rocq_array::get::<u64>(rk, p_1), rocq_array::get::<u64>(rk, q_1)), leb(r2(rk, h_1, n_1, p_1), r2(rk, h_1, n_1, q_1))))
+  orb(rk.get_cloned(p_1) < rk.get_cloned(q_1), andb(rk.get_cloned(p_1) == rk.get_cloned(q_1), r2(rk, h_1, n_1, p_1) <= r2(rk, h_1, n_1, q_1)))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.iota_loop
 // Variant: uncurried
-pub fn iota_loop_1(a: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Array<u64>> {
-  iota_loop(a, n, i, ())
+pub fn iota_loop_1(a_1: Array<Int63>, n: Int63, i: Int63) -> Array<Int63> {
+  iota_loop(a_1, n, i, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.iota_loop (local: iota_loop)
 // Variant: uncurried, lifted
-pub fn iota_loop(a: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn iota_loop(a_1: Array<Int63>, n: Int63, i: Int63, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = rocq_array::set::<u64>(a, i, i);
-      iota_loop(tmp_1, n, add(i, 1u64), ())
+      iota_loop(a_1.set(i, i), n, i + int63!(1), ())
     },
     sumbool::right => {
-      a
+      a_1
     },
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.sort_round
 // Variant: uncurried
-pub fn sort_round(rk: Rc<Array<u64>>, h: u64, n: u64) -> Rc<Array<u64>> {
-  let callback: Rc<dyn Fn(u64, u64) -> bool> = Rc::new({
+pub fn sort_round(rk: Array<Int63>, h: Int63, n: Int63) -> Array<Int63> {
+  let callback: Rc<dyn Fn(Int63, Int63) -> bool> = Rc::new({
     let __anf_capture_16 = n;
-    move |v18: u64, v19: u64| -> bool {
+    move |v18: Int63, v19: Int63| -> bool {
       let rk = &rk;
       let h_clone = Clone::clone(&h);
       let tmp = Clone::clone(&__anf_capture_16);
       keyle(rk, h_clone, tmp, v18, v19)
     }
   });
-  let tmp_1 = rocq_array::make::<u64>(n, 0u64);
-  let tmp_2 = iota_loop_1(tmp_1, n, 0u64);
-  let tmp_3 = rocq_array::make::<u64>(n, 0u64);
-  fst::<Rc<Array<u64>>, Rc<Array<u64>>>(msort_1(callback, tmp_2, tmp_3, 0u64, n))
+  fst::<Array<Int63>, Array<Int63>>(msort_1(callback, iota_loop_1(Array::<Int63>::make(n, int63!(0)), n, int63!(0)), Array::<Int63>::make(n, int63!(0)), int63!(0), n))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rank_loop
 // Variant: uncurried
-pub fn rank_loop_1(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Array<u64>> {
+pub fn rank_loop_1(le: Rc<dyn Fn(Int63, Int63) -> bool>, sa: Array<Int63>, nr: Array<Int63>, n: Int63, i: Int63) -> Array<Int63> {
   rank_loop(le, sa, nr, n, i, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rank_loop (local: rank_loop)
 // Variant: uncurried, lifted
-pub fn rank_loop(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn rank_loop(le: Rc<dyn Fn(Int63, Int63) -> bool>, sa: Array<Int63>, nr: Array<Int63>, n: Int63, i: Int63, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let p = rocq_array::get::<u64>(&sa, i);
-      let q = rocq_array::get::<u64>(&sa, sub(i, 1u64));
-      let tmp_1 = rocq_array::get::<u64>(&nr, q);
-      let le_ref: &Rc<dyn Fn(u64, u64) -> bool> = &le;
+      let p = sa.get_cloned(i);
+      let q = sa.get_cloned(i - int63!(1));
+      let tmp_1 = nr.get_cloned(q);
+      let le_ref: &Rc<dyn Fn(Int63, Int63) -> bool> = &le;
       let tmp_2 = le_ref(p, q);
       let tmp_3 = if tmp_2 {
-        0u64
+        int63!(0)
       } else {
-        1u64
+        int63!(1)
       };
-      let tmp_4 = rocq_array::set::<u64>(nr, p, add(tmp_1, tmp_3));
-      rank_loop(le, sa, tmp_4, n, add(i, 1u64), ())
+      rank_loop(le, sa, nr.set(p, tmp_1 + tmp_3), n, i + int63!(1), ())
     },
     sumbool::right => {
       std::mem::drop(le);
@@ -306,8 +262,8 @@ pub fn rank_loop(le: Rc<dyn Fn(u64, u64) -> bool>, sa: Rc<Array<u64>>, nr: Rc<Ar
 }
 
 // Rocq: Corelib.Init.Datatypes.negb
-pub fn negb(b: bool) -> bool {
-  if b {
+pub fn negb(b_1: bool) -> bool {
+  if b_1 {
     false
   } else {
     true
@@ -316,41 +272,41 @@ pub fn negb(b: bool) -> bool {
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rounds
 // Variant: uncurried
-pub fn rounds_1(n: u64, rk: Rc<Array<u64>>, h: u64) -> Rc<Array<u64>> {
+pub fn rounds_1(n: Int63, rk: Array<Int63>, h: Int63) -> Array<Int63> {
   rounds(n, rk, h, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.rounds (local: rounds)
 // Variant: uncurried, lifted
-pub fn rounds(n: u64, rk: Rc<Array<u64>>, h: u64, _H: ()) -> Rc<Array<u64>> {
-  let rk_clone = Rc::clone(&rk);
+pub fn rounds(n: Int63, rk: Array<Int63>, h: Int63, _H: ()) -> Array<Int63> {
+  let rk_clone = Clone::clone(&rk);
   let sa = sort_round(rk_clone, h, n);
-  let rk_clone_1 = Rc::clone(&rk);
-  let callback: Rc<dyn Fn(u64, u64) -> bool> = Rc::new({
+  let rk_clone_1 = Clone::clone(&rk);
+  let callback: Rc<dyn Fn(Int63, Int63) -> bool> = Rc::new({
     let __anf_capture_24 = h;
     let __anf_capture_26 = n;
-    move |v28: u64, v29: u64| -> bool {
+    move |v28: Int63, v29: Int63| -> bool {
       let rk = &rk_clone_1;
       let tmp = Clone::clone(&__anf_capture_24);
       let tmp_1 = Clone::clone(&__anf_capture_26);
       keyle(rk, tmp, tmp_1, v28, v29)
     }
   });
-  let tmp_2 = rocq_array::make::<u64>(n, 0u64);
-  let sa_clone = Rc::clone(&sa);
-  let nr = rank_loop_1(callback, sa_clone, tmp_2, n, 1u64);
-  let tmp_3 = andb(ltb(0u64, h), ltb(h, n));
-  let tmp_4 = sub(n, h);
-  let tmp_5 = ltb(h, tmp_4);
-  let tmp_6 = rocq_array::get::<u64>(&sa, sub(n, 1u64));
-  let tmp_7 = rocq_array::get::<u64>(&nr, tmp_6);
-  let tmp_8 = andb(tmp_5, negb(eqb(tmp_7, sub(n, 1u64))));
+  let tmp_2 = Array::<Int63>::make(n, int63!(0));
+  let sa_clone = Clone::clone(&sa);
+  let nr = rank_loop_1(callback, sa_clone, tmp_2, n, int63!(1));
+  let tmp_3 = andb(int63!(0) < h, h < n);
+  let tmp_4 = n - h;
+  let tmp_5 = h < tmp_4;
+  let tmp_6 = sa.get_cloned(n - int63!(1));
+  let tmp_7 = nr.get_cloned(tmp_6);
+  let tmp_8 = andb(tmp_5, negb(tmp_7 == n - int63!(1)));
   let tmp_9 = andb(tmp_3, tmp_8);
   match bdec(tmp_9) {
     sumbool::left => {
       std::mem::drop(rk);
       std::mem::drop(sa);
-      rounds(n, nr, add(h, h), ())
+      rounds(n, nr, h + h, ())
     },
     sumbool::right => {
       std::mem::drop(rk);
@@ -362,34 +318,33 @@ pub fn rounds(n: u64, rk: Rc<Array<u64>>, h: u64, _H: ()) -> Rc<Array<u64>> {
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: uncurried
-pub fn get_owned(v0: Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  let tmp = rocq_string::get(&v0, v1);
+pub fn get_owned(v0: rocq_string::RocqString, v1: Int63) -> Int63 {
+  let tmp = v0.get(v1);
   std::mem::drop(v0);
   tmp
 }
 
 // Rocq: Corelib.Strings.PrimString.get
 // Variant: borrowed, uncurried
-pub fn get(v0: &Rc<rocq_string::RocqString>, v1: u64) -> u64 {
-  rocq_string::get(v0, v1)
+pub fn get(v0: &rocq_string::RocqString, v1: Int63) -> Int63 {
+  v0.get(v1)
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.init_rk
 // Variant: uncurried
-pub fn init_rk_1(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: u64) -> Rc<Array<u64>> {
+pub fn init_rk_1(x: rocq_string::RocqString, rk: Array<Int63>, n: Int63, i: Int63) -> Array<Int63> {
   init_rk(x, rk, n, i, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.init_rk (local: init_rk)
 // Variant: uncurried, lifted
-pub fn init_rk(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(i, n);
+pub fn init_rk(x: rocq_string::RocqString, rk: Array<Int63>, n: Int63, i: Int63, _H: ()) -> Array<Int63> {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let x_clone = Rc::clone(&x);
+      let x_clone = Clone::clone(&x);
       let tmp_1 = get_owned(x_clone, i);
-      let tmp_2 = rocq_array::set::<u64>(rk, i, tmp_1);
-      init_rk(x, tmp_2, n, add(i, 1u64), ())
+      init_rk(x, rk.set(i, tmp_1), n, i + int63!(1), ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -400,33 +355,26 @@ pub fn init_rk(x: Rc<rocq_string::RocqString>, rk: Rc<Array<u64>>, n: u64, i: u6
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.build_sa
 // Variant: uncurried
-pub fn build_sa(x: Rc<rocq_string::RocqString>, n: u64) -> Rc<Array<u64>> {
-  let tmp = rocq_array::make::<u64>(n, 0u64);
-  let tmp_1 = init_rk_1(x, tmp, n, 0u64);
-  rounds_1(n, tmp_1, 1u64)
-}
-
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.lsl
-// Variant: uncurried
-pub fn lsl(v0: u64, v1: u64) -> u64 {
-  rocq_int63::lsl(v0, v1)
+pub fn build_sa(x: rocq_string::RocqString, n: Int63) -> Array<Int63> {
+  let tmp = init_rk_1(x, Array::<Int63>::make(n, int63!(0)), n, int63!(0));
+  rounds_1(n, tmp, int63!(1))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.depth_loop
 // Variant: uncurried
-pub fn depth_loop_1(n: u64, d: u64) -> u64 {
+pub fn depth_loop_1(n: Int63, d: Int63) -> Int63 {
   depth_loop(n, d, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.depth_loop (local: depth_loop)
 // Variant: uncurried, lifted
-pub fn depth_loop(n: u64, d: u64, _H: ()) -> u64 {
-  let tmp = ltb(d, 20u64);
+pub fn depth_loop(n: Int63, d: Int63, _H: ()) -> Int63 {
+  let tmp = d < int63!(20);
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = lsl(1u64, d);
-      if ltb(tmp_1, n) {
-        depth_loop(n, add(d, 1u64), ())
+      let tmp_1 = int63!(1) << d;
+      if tmp_1 < n {
+        depth_loop(n, d + int63!(1), ())
       } else {
         d
       }
@@ -437,62 +385,51 @@ pub fn depth_loop(n: u64, d: u64, _H: ()) -> u64 {
   }
 }
 
-// Rocq: Corelib.Numbers.Cyclic.Int63.PrimInt63.mul
-// Variant: uncurried
-pub fn mul(v0: u64, v1: u64) -> u64 {
-  rocq_int63::mul(v0, v1)
-}
-
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.ins
 // Variant: uncurried
-pub fn ins_1(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, nx: u64, x: u64, d: u64, v: u64) -> ((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>) {
+pub fn ins_1(L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, nx: Int63, x: Int63, d: Int63, v: Int63) -> ((Array<Int63>, Array<Int63>), Array<Int63>) {
   ins(L, R, C, nx, x, d, v, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.ins (local: ins)
 // Variant: uncurried, lifted
-pub fn ins(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, nx: u64, x: u64, d: u64, v: u64, _H: ()) -> ((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>) {
-  let tmp = ltb(0u64, d);
+pub fn ins(L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, nx: Int63, x: Int63, d: Int63, v: Int63, _H: ()) -> ((Array<Int63>, Array<Int63>), Array<Int63>) {
+  let tmp = int63!(0) < d;
   match bdec(tmp) {
     sumbool::left => {
-      let half = lsl(1u64, sub(d, 1u64));
-      let y = add(nx, d);
-      if ltb(v, half) {
-        let tmp_1 = rocq_array::get::<u64>(&L, x);
-        let tmp_2 = ins(L, R, C, nx, tmp_1, sub(d, 1u64), v, ());
+      let half = int63!(1) << d - int63!(1);
+      let y = nx + d;
+      if v < half {
+        let tmp_1 = L.get_cloned(x);
+        let tmp_2 = ins(L, R, C, nx, tmp_1, d - int63!(1), v, ());
         match tmp_2 {
           (v84, v86) => {
             let p = &v86;
             match v84 {
               (v90, v92) => {
                 let Lq = &v92;
-                let tmp_3 = rocq_array::set::<u64>(v90, y, add(nx, sub(d, 1u64)));
-                let tmp_4 = rocq_array::get::<u64>(Lq, x);
-                let tmp_5 = rocq_array::set::<u64>(v92, y, tmp_4);
-                let tmp_6 = (tmp_3, tmp_5);
-                let tmp_7 = rocq_array::get::<u64>(p, x);
-                let tmp_8 = rocq_array::set::<u64>(v86, y, add(tmp_7, 1u64));
-                (tmp_6, tmp_8)
+                let tmp_3 = v90.set(y, nx + (d - int63!(1)));
+                let tmp_4 = Lq.get_cloned(x);
+                let tmp_5 = (tmp_3, v92.set(y, tmp_4));
+                let tmp_6 = p.get_cloned(x);
+                (tmp_5, v86.set(y, tmp_6 + int63!(1)))
               },
             }
           },
         }
       } else {
-        let tmp_9 = rocq_array::get::<u64>(&R, x);
-        let tmp_10 = ins(L, R, C, nx, tmp_9, sub(d, 1u64), sub(v, half), ());
-        match tmp_10 {
+        let tmp_7 = R.get_cloned(x);
+        let tmp_8 = ins(L, R, C, nx, tmp_7, d - int63!(1), v - half, ());
+        match tmp_8 {
           (v203, v205) => {
             let p = &v205;
             match v203 {
               (v209, v211) => {
                 let Rq = &v209;
-                let tmp_11 = rocq_array::get::<u64>(Rq, x);
-                let tmp_12 = rocq_array::set::<u64>(v209, y, tmp_11);
-                let tmp_13 = rocq_array::set::<u64>(v211, y, add(nx, sub(d, 1u64)));
-                let tmp_14 = (tmp_12, tmp_13);
-                let tmp_15 = rocq_array::get::<u64>(p, x);
-                let tmp_16 = rocq_array::set::<u64>(v205, y, add(tmp_15, 1u64));
-                (tmp_14, tmp_16)
+                let tmp_9 = Rq.get_cloned(x);
+                let tmp_10 = (v209.set(y, tmp_9), v211.set(y, nx + (d - int63!(1))));
+                let tmp_11 = p.get_cloned(x);
+                (tmp_10, v205.set(y, tmp_11 + int63!(1)))
               },
             }
           },
@@ -500,37 +437,36 @@ pub fn ins(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, nx: u64, x: 
       }
     },
     sumbool::right => {
-      let tmp_17 = (L, R);
-      let tmp_18 = rocq_array::get::<u64>(&C, x);
-      let tmp_19 = rocq_array::set::<u64>(C, nx, add(tmp_18, 1u64));
-      (tmp_17, tmp_19)
+      let tmp_12 = (L, R);
+      let tmp_13 = C.get_cloned(x);
+      (tmp_12, C.set(nx, tmp_13 + int63!(1)))
     },
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.build
 // Variant: uncurried
-pub fn build_1(sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, n: u64, D: u64, i: u64, nx: u64) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
+pub fn build_1(sa: Array<Int63>, L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, roots: Array<Int63>, n: Int63, D: Int63, i: Int63, nx: Int63) -> (((Array<Int63>, Array<Int63>), Array<Int63>), Array<Int63>) {
   build(sa, L, R, C, roots, n, D, i, nx, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.build (local: build)
 // Variant: uncurried, lifted
-pub fn build(sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, n: u64, D: u64, i: u64, nx: u64, _H: ()) -> (((Rc<Array<u64>>, Rc<Array<u64>>), Rc<Array<u64>>), Rc<Array<u64>>) {
-  let tmp = ltb(i, n);
+pub fn build(sa: Array<Int63>, L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, roots: Array<Int63>, n: Int63, D: Int63, i: Int63, nx: Int63, _H: ()) -> (((Array<Int63>, Array<Int63>), Array<Int63>), Array<Int63>) {
+  let tmp = i < n;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = rocq_array::get::<u64>(&roots, i);
-      let tmp_2 = rocq_array::get::<u64>(&sa, i);
+      let tmp_1 = roots.get_cloned(i);
+      let tmp_2 = sa.get_cloned(i);
       let tmp_3 = ins_1(L, R, C, nx, tmp_1, D, tmp_2);
       match tmp_3 {
         (v46, v48) => {
           match v46 {
             (v51, v53) => {
-              let tmp_4 = rocq_array::set::<u64>(roots, add(i, 1u64), add(nx, D));
-              let tmp_5 = add(i, 1u64);
-              let tmp_6 = add(nx, D);
-              build(sa, v51, v53, v48, tmp_4, n, D, tmp_5, add(tmp_6, 1u64), ())
+              let tmp_4 = roots.set(i + int63!(1), nx + D);
+              let tmp_5 = i + int63!(1);
+              let tmp_6 = nx + D;
+              build(sa, v51, v53, v48, tmp_4, n, D, tmp_5, tmp_6 + int63!(1), ())
             },
           }
         },
@@ -545,24 +481,24 @@ pub fn build(sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Arr
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.bs
 // Variant: uncurried
-pub fn bs_1(P: Rc<dyn Fn(u64) -> bool>, lo: u64, hi: u64) -> u64 {
+pub fn bs_1(P: Rc<dyn Fn(Int63) -> bool>, lo: Int63, hi: Int63) -> Int63 {
   bs(P, lo, hi, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.bs (local: bs)
 // Variant: uncurried, lifted
-pub fn bs(P: Rc<dyn Fn(u64) -> bool>, lo: u64, hi: u64, _H: ()) -> u64 {
-  let tmp = ltb(lo, hi);
+pub fn bs(P: Rc<dyn Fn(Int63) -> bool>, lo: Int63, hi: Int63, _H: ()) -> Int63 {
+  let tmp = lo < hi;
   match bdec(tmp) {
     sumbool::left => {
       let tmp_1 = midp(lo, hi);
-      let P_ref: &Rc<dyn Fn(u64) -> bool> = &P;
+      let P_ref: &Rc<dyn Fn(Int63) -> bool> = &P;
       let tmp_2 = P_ref(tmp_1);
       if tmp_2 {
         let tmp_3 = midp(lo, hi);
         bs(P, lo, tmp_3, ())
       } else {
-        bs(P, add(midp(lo, hi), 1u64), hi, ())
+        bs(P, midp(lo, hi) + int63!(1), hi, ())
       }
     },
     sumbool::right => {
@@ -574,7 +510,7 @@ pub fn bs(P: Rc<dyn Fn(u64) -> bool>, lo: u64, hi: u64, _H: ()) -> u64 {
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.cmpt
 // Variant: borrowed, uncurried
-pub fn cmpt_1(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, n: u64, m: u64, p: u64, k: u64) -> std::cmp::Ordering {
+pub fn cmpt_1(x: &rocq_string::RocqString, t: &rocq_string::RocqString, n: Int63, m: Int63, p: Int63, k: Int63) -> std::cmp::Ordering {
   let n_1 = n;
   let m_1 = m;
   let p_1 = p;
@@ -584,25 +520,25 @@ pub fn cmpt_1(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, 
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.cmpt (local: cmpt)
 // Variant: borrowed, uncurried, lifted
-pub fn cmpt(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, n: u64, m: u64, p: u64, k: u64, _H: ()) -> std::cmp::Ordering {
+pub fn cmpt(x: &rocq_string::RocqString, t: &rocq_string::RocqString, n: Int63, m: Int63, p: Int63, k: Int63, _H: ()) -> std::cmp::Ordering {
   let n_1 = n;
   let m_1 = m;
   let p_1 = p;
   let k_1 = k;
-  let tmp = ltb(k_1, m_1);
+  let tmp = k_1 < m_1;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = add(p_1, k_1);
-      if ltb(tmp_1, n_1) {
-        let a = get(t, k_1);
-        let b = get(x, add(p_1, k_1));
-        if ltb(a, b) {
+      let tmp_1 = p_1 + k_1;
+      if tmp_1 < n_1 {
+        let a_1 = get(t, k_1);
+        let b_1 = get(x, p_1 + k_1);
+        if a_1 < b_1 {
           std::cmp::Ordering::Less
         } else {
-          if ltb(b, a) {
+          if b_1 < a_1 {
             std::cmp::Ordering::Greater
           } else {
-            cmpt(x, t, n_1, m_1, p_1, add(k_1, 1u64), ())
+            cmpt(x, t, n_1, m_1, p_1, k_1 + int63!(1), ())
           }
         }
       } else {
@@ -617,62 +553,62 @@ pub fn cmpt(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, n:
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.cmp_at
 // Variant: borrowed, uncurried
-pub fn cmp_at(x: &Rc<rocq_string::RocqString>, t: &Rc<rocq_string::RocqString>, n: u64, m: u64, sa: &Rc<Array<u64>>, i: u64) -> std::cmp::Ordering {
+pub fn cmp_at(x: &rocq_string::RocqString, t: &rocq_string::RocqString, n: Int63, m: Int63, sa: &Array<Int63>, i: Int63) -> std::cmp::Ordering {
   let n_1 = n;
   let m_1 = m;
   let i_1 = i;
-  cmpt_1(x, t, n_1, m_1, rocq_array::get::<u64>(sa, i_1), 0u64)
+  cmpt_1(x, t, n_1, m_1, sa.get_cloned(i_1), int63!(0))
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qry
 // Variant: uncurried
-pub fn qry_1(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, a: u64, b: u64, d: u64, k: u64) -> u64 {
-  qry(L, R, C, a, b, d, k, ())
+pub fn qry_1(L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, a_1: Int63, b_1: Int63, d: Int63, k: Int63) -> Int63 {
+  qry(L, R, C, a_1, b_1, d, k, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qry (local: qry)
 // Variant: uncurried, lifted
-pub fn qry(L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, a: u64, b: u64, d: u64, k: u64, _H: ()) -> u64 {
-  let tmp = ltb(0u64, d);
+pub fn qry(L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, a_1: Int63, b_1: Int63, d: Int63, k: Int63, _H: ()) -> Int63 {
+  let tmp = int63!(0) < d;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = rocq_array::get::<u64>(&L, b);
-      let tmp_2 = rocq_array::get::<u64>(&C, tmp_1);
-      let tmp_3 = rocq_array::get::<u64>(&L, a);
-      let tmp_4 = rocq_array::get::<u64>(&C, tmp_3);
-      let cl = sub(tmp_2, tmp_4);
-      if leb(k, cl) {
-        let tmp_5 = rocq_array::get::<u64>(&L, a);
-        let tmp_6 = rocq_array::get::<u64>(&L, b);
-        qry(L, R, C, tmp_5, tmp_6, sub(d, 1u64), k, ())
+      let tmp_1 = L.get_cloned(b_1);
+      let tmp_2 = C.get_cloned(tmp_1);
+      let tmp_3 = L.get_cloned(a_1);
+      let tmp_4 = C.get_cloned(tmp_3);
+      let cl = tmp_2 - tmp_4;
+      if k <= cl {
+        let tmp_5 = L.get_cloned(a_1);
+        let tmp_6 = L.get_cloned(b_1);
+        qry(L, R, C, tmp_5, tmp_6, d - int63!(1), k, ())
       } else {
-        let tmp_7 = lsl(1u64, sub(d, 1u64));
-        let tmp_8 = rocq_array::get::<u64>(&R, a);
-        let tmp_9 = rocq_array::get::<u64>(&R, b);
-        add(tmp_7, qry(L, R, C, tmp_8, tmp_9, sub(d, 1u64), sub(k, cl), ()))
+        let tmp_7 = int63!(1) << d - int63!(1);
+        let tmp_8 = R.get_cloned(a_1);
+        let tmp_9 = R.get_cloned(b_1);
+        tmp_7 + qry(L, R, C, tmp_8, tmp_9, d - int63!(1), k - cl, ())
       }
     },
     sumbool::right => {
       std::mem::drop(L);
       std::mem::drop(R);
       std::mem::drop(C);
-      0u64
+      int63!(0)
     },
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.answer1
 // Variant: uncurried
-pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, D: u64, t: Rc<rocq_string::RocqString>, k: u64) -> u64 {
-  let t_clone = Rc::clone(&t);
+pub fn answer1(x: rocq_string::RocqString, n: Int63, sa: Array<Int63>, L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, roots: Array<Int63>, D: Int63, t: rocq_string::RocqString, k: Int63) -> Int63 {
+  let t_clone = Clone::clone(&t);
   let m = length(t_clone);
-  let x_clone = Rc::clone(&x);
-  let t_clone_1 = Rc::clone(&t);
-  let sa_clone = Rc::clone(&sa);
-  let callback: Rc<dyn Fn(u64) -> bool> = Rc::new({
+  let x_clone = Clone::clone(&x);
+  let t_clone_1 = Clone::clone(&t);
+  let sa_clone = Clone::clone(&sa);
+  let callback: Rc<dyn Fn(Int63) -> bool> = Rc::new({
     let __anf_capture_34 = n;
     let __anf_capture_36 = m;
-    move |i: u64| -> bool {
+    move |i: Int63| -> bool {
       let x = &x_clone;
       let t = &t_clone_1;
       let n = &__anf_capture_34;
@@ -693,14 +629,14 @@ pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
       }
     }
   });
-  let lo = bs_1(callback, 0u64, n);
-  let x_clone_1 = Rc::clone(&x);
-  let t_clone_2 = Rc::clone(&t);
-  let sa_clone_1 = Rc::clone(&sa);
-  let callback_1: Rc<dyn Fn(u64) -> bool> = Rc::new({
+  let lo = bs_1(callback, int63!(0), n);
+  let x_clone_1 = Clone::clone(&x);
+  let t_clone_2 = Clone::clone(&t);
+  let sa_clone_1 = Clone::clone(&sa);
+  let callback_1: Rc<dyn Fn(Int63) -> bool> = Rc::new({
     let __anf_capture_98 = n;
     let __anf_capture_100 = m;
-    move |i: u64| -> bool {
+    move |i: Int63| -> bool {
       let x = &x_clone_1;
       let t = &t_clone_2;
       let n = &__anf_capture_98;
@@ -721,16 +657,16 @@ pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
       }
     }
   });
-  let hi = bs_1(callback_1, 0u64, n);
-  let tmp = sub(hi, lo);
-  if leb(k, tmp) {
+  let hi = bs_1(callback_1, int63!(0), n);
+  let tmp = hi - lo;
+  if k <= tmp {
     std::mem::drop(x);
     std::mem::drop(sa);
     std::mem::drop(t);
-    let tmp_1 = rocq_array::get::<u64>(&roots, lo);
-    let tmp_2 = rocq_array::get::<u64>(&roots, hi);
+    let tmp_1 = roots.get_cloned(lo);
+    let tmp_2 = roots.get_cloned(hi);
     std::mem::drop(roots);
-    add(qry_1(L, R, C, tmp_1, tmp_2, D, k), 1u64)
+    qry_1(L, R, C, tmp_1, tmp_2, D, k) + int63!(1)
   } else {
     std::mem::drop(x);
     std::mem::drop(sa);
@@ -739,32 +675,33 @@ pub fn answer1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc
     std::mem::drop(C);
     std::mem::drop(roots);
     std::mem::drop(t);
-    sub(0u64, 1u64)
+    int63!(0) - int63!(1)
   }
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qloop
 // Variant: uncurried
-pub fn qloop_1(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, D: u64, ts: Rc<Array<Rc<rocq_string::RocqString>>>, ks: Rc<Array<u64>>, out: Rc<Array<u64>>, q: u64, Q: u64) -> Rc<Array<u64>> {
+pub fn qloop_1(x: rocq_string::RocqString, n: Int63, sa: Array<Int63>, L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, roots: Array<Int63>, D: Int63, ts: Array<rocq_string::RocqString>, ks: Array<Int63>, out: Array<Int63>, q: Int63, Q: Int63) -> Array<Int63> {
   qloop(x, n, sa, L, R, C, roots, D, ts, ks, out, q, Q, ())
 }
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.qloop (local: qloop)
 // Variant: uncurried, lifted
-pub fn qloop(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<Array<u64>>, R: Rc<Array<u64>>, C: Rc<Array<u64>>, roots: Rc<Array<u64>>, D: u64, ts: Rc<Array<Rc<rocq_string::RocqString>>>, ks: Rc<Array<u64>>, out: Rc<Array<u64>>, q: u64, Q: u64, _H: ()) -> Rc<Array<u64>> {
-  let tmp = ltb(q, Q);
+pub fn qloop(x: rocq_string::RocqString, n: Int63, sa: Array<Int63>, L: Array<Int63>, R: Array<Int63>, C: Array<Int63>, roots: Array<Int63>, D: Int63, ts: Array<rocq_string::RocqString>, ks: Array<Int63>, out: Array<Int63>, q: Int63, Q: Int63, _H: ()) -> Array<Int63> {
+  let tmp = q < Q;
   match bdec(tmp) {
     sumbool::left => {
-      let tmp_1 = rocq_array::get::<Rc<rocq_string::RocqString>>(&ts, q);
-      let tmp_2 = rocq_array::get::<u64>(&ks, q);
-      let x_clone = Rc::clone(&x);
-      let sa_clone = Rc::clone(&sa);
-      let L_clone = Rc::clone(&L);
-      let R_clone = Rc::clone(&R);
-      let C_clone = Rc::clone(&C);
-      let roots_clone = Rc::clone(&roots);
-      let tmp_3 = rocq_array::set::<u64>(out, q, answer1(x_clone, n, sa_clone, L_clone, R_clone, C_clone, roots_clone, D, tmp_1, tmp_2));
-      qloop(x, n, sa, L, R, C, roots, D, ts, ks, tmp_3, add(q, 1u64), Q, ())
+      let ts_ref = &ts;
+      let tmp_1 = ts_ref.get_cloned(q);
+      let tmp_2 = ks.get_cloned(q);
+      let x_clone = Clone::clone(&x);
+      let sa_clone = Clone::clone(&sa);
+      let L_clone = Clone::clone(&L);
+      let R_clone = Clone::clone(&R);
+      let C_clone = Clone::clone(&C);
+      let roots_clone = Clone::clone(&roots);
+      let tmp_3 = answer1(x_clone, n, sa_clone, L_clone, R_clone, C_clone, roots_clone, D, tmp_1, tmp_2);
+      qloop(x, n, sa, L, R, C, roots, D, ts, ks, out.set(q, tmp_3), q + int63!(1), Q, ())
     },
     sumbool::right => {
       std::mem::drop(x);
@@ -782,182 +719,31 @@ pub fn qloop(x: Rc<rocq_string::RocqString>, n: u64, sa: Rc<Array<u64>>, L: Rc<A
 
 // Rocq: Anothersubstringqueryproblem.anothersubstringqueryproblem_implem.kth_occurrences_impl
 // Variant: uncurried
-pub fn kth_occurrences_impl(x: Rc<rocq_string::RocqString>, ts: Rc<Array<Rc<rocq_string::RocqString>>>, ks: Rc<Array<u64>>) -> Rc<Array<u64>> {
-  let x_clone = Rc::clone(&x);
+pub fn kth_occurrences_impl(x: rocq_string::RocqString, ts: Array<rocq_string::RocqString>, ks: Array<Int63>) -> Array<Int63> {
+  let x_clone = Clone::clone(&x);
   let n = length(x_clone);
-  let x_clone_1 = Rc::clone(&x);
+  let x_clone_1 = Clone::clone(&x);
   let sa = build_sa(x_clone_1, n);
-  let D = depth_loop_1(n, 0u64);
-  let tmp = add(D, 1u64);
-  let M = add(mul(n, tmp), 1u64);
-  let tmp_1 = rocq_array::make::<u64>(M, 0u64);
-  let tmp_2 = rocq_array::make::<u64>(M, 0u64);
-  let tmp_3 = rocq_array::make::<u64>(M, 0u64);
-  let tmp_4 = rocq_array::make::<u64>(add(n, 1u64), 0u64);
-  let sa_clone = Rc::clone(&sa);
-  let tmp_5 = build_1(sa_clone, tmp_1, tmp_2, tmp_3, tmp_4, n, D, 0u64, 1u64);
-  match tmp_5 {
+  let D = depth_loop_1(n, int63!(0));
+  let M = n * (D + int63!(1)) + int63!(1);
+  let tmp = Array::<Int63>::make(M, int63!(0));
+  let tmp_1 = Array::<Int63>::make(M, int63!(0));
+  let tmp_2 = Array::<Int63>::make(M, int63!(0));
+  let tmp_3 = Array::<Int63>::make(n + int63!(1), int63!(0));
+  let sa_clone = Clone::clone(&sa);
+  let tmp_4 = build_1(sa_clone, tmp, tmp_1, tmp_2, tmp_3, n, D, int63!(0), int63!(1));
+  match tmp_4 {
     (v107, v109) => {
       match v107 {
         (v112, v114) => {
           match v112 {
             (v117, v119) => {
-              let Q = rocq_array::length::<Rc<rocq_string::RocqString>>(&ts);
-              let tmp_6 = rocq_array::make::<u64>(Q, 0u64);
-              qloop_1(x, n, sa, v117, v119, v114, v109, D, ts, ks, tmp_6, 0u64, Q)
+              let Q = ts.length();
+              qloop_1(x, n, sa, v117, v119, v114, v109, D, ts, ks, Array::<Int63>::make(Q, int63!(0)), int63!(0), Q)
             },
           }
         },
       }
     },
   }
-}
-
-mod __rocq_reuse {
-//! Empty allocation ownership for OwnedANF reset and exact-type rebuilding.
-use std::mem::MaybeUninit;
-use std::rc::Rc;
-
-/// Move-only and opaque: storage has no initialized `T` and cannot be inspected.
-pub struct Token<T> {
-    _storage: Option<Rc<MaybeUninit<T>>>,
-}
-
-/// Consume an owner. The caller supplies the IR-approved shallow field copy;
-/// This may use a compiler-generated structural Clone implementation, but does
-/// not authorize arbitrary host clone behavior merely because T implements Clone.
-#[inline]
-pub fn reset<T>(mut owner: Rc<T>, duplicate: impl FnOnce(&T) -> T) -> (T, Token<T>) {
-    if let Some(payload) = Rc::get_mut(&mut owner) {
-        // SAFETY: get_mut establishes exclusive access (including no Weak
-        // owners). T and MaybeUninit<T> have identical size/alignment, so their
-        // Rc allocation layouts agree. After read, no potentially panicking
-        // user code runs before ownership becomes Rc<MaybeUninit<T>>. There is
-        // exactly one from_raw for into_raw, and the original Rc<T> is consumed.
-        // The token never reads or drops the moved T; dropping it only frees
-        // the allocation. The payload returned here owns T's fields once.
-        unsafe {
-            let value = std::ptr::read(payload);
-            let raw = Rc::into_raw(owner).cast::<MaybeUninit<T>>();
-            let storage = Rc::from_raw(raw);
-            (value, Token { _storage: Some(storage) })
-        }
-    } else {
-        let value = duplicate(&owner);
-        drop(owner);
-        (value, Token { _storage: None })
-    }
-}
-
-/// Consume reserved storage and a fully evaluated payload. Empty tokens allocate.
-#[inline]
-pub fn rebuild<T>(token: Token<T>, payload: T) -> Rc<T> {
-    match token._storage {
-        None => Rc::new(payload),
-        Some(mut storage) => {
-            // The opaque, non-Clone token owns the only strong reference and
-            // has no weak references. Check before initializing, so a panic
-            // cannot leave an initialized T hidden inside MaybeUninit<T>.
-            Rc::get_mut(&mut storage).expect("exclusive reuse token").write(payload);
-            // SAFETY: the payload is now fully initialized; no panicking code
-            // lies between initialization and this ownership conversion. The
-            // reset conversion established identical allocation layouts.
-            unsafe { Rc::from_raw(Rc::into_raw(storage).cast::<T>()) }
-        }
-    }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use std::cell::Cell;
-
-    struct Probe(Rc<Cell<usize>>);
-    impl Drop for Probe {
-        fn drop(&mut self) { self.0.set(self.0.get() + 1); }
-    }
-
-    #[test]
-    fn rebuilding_preserves_address_and_drops_only_new_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner);
-        let (old, token) = reset(owner, |_| panic!("unique"));
-        drop(old);
-        assert_eq!(drops.get(), 1);
-        let new = rebuild(token, Probe(drops.clone()));
-        assert_eq!(Rc::as_ptr(&new), address);
-        assert_eq!(drops.get(), 1);
-        drop(new);
-        assert_eq!(drops.get(), 2);
-    }
-
-    #[test]
-    fn empty_token_allocates_and_preserves_old_alias() {
-        let old = Rc::new(7);
-        let alias = old.clone();
-        let (_, token) = reset(old, |x| *x);
-        let new = rebuild(token, 19);
-        assert_eq!(*alias, 7);
-        assert_eq!(*new, 19);
-        assert!(!Rc::ptr_eq(&alias, &new));
-    }
-
-    #[test]
-    fn unique_token_drop_does_not_drop_payload() {
-        let drops = Rc::new(Cell::new(0));
-        let owner = Rc::new(Probe(drops.clone()));
-        let address = Rc::as_ptr(&owner).cast::<MaybeUninit<Probe>>();
-        let (payload, token) = reset(owner, |_| panic!("unique path duplicated"));
-        assert_eq!(Rc::as_ptr(token._storage.as_ref().unwrap()), address);
-        drop(token);
-        assert_eq!(drops.get(), 0);
-        drop(payload);
-        assert_eq!(drops.get(), 1);
-    }
-
-    #[test]
-    fn shared_fallback_preserves_aliases() {
-        let field = Rc::new(7);
-        let owner = Rc::new((field.clone(), 9));
-        let alias = owner.clone();
-        let (payload, token) = reset(owner, |x| (x.0.clone(), x.1));
-        assert!(token._storage.is_none());
-        assert!(Rc::ptr_eq(&payload.0, &alias.0));
-        assert_eq!(Rc::strong_count(&field), 3);
-        drop(token);
-        drop(payload);
-        assert_eq!(alias.1, 9);
-        drop(alias);
-        assert_eq!(Rc::strong_count(&field), 1);
-    }
-
-    #[test]
-    fn weak_pointer_forces_fallback() {
-        let owner = Rc::new(17);
-        let weak = Rc::downgrade(&owner);
-        let (payload, token) = reset(owner, |x| *x);
-        assert_eq!(payload, 17);
-        assert!(token._storage.is_none());
-        assert!(weak.upgrade().is_none());
-    }
-
-    #[test]
-    fn panicking_fallback_releases_consumed_handle() {
-        let owner = Rc::new(17);
-        let alias = owner.clone();
-        let result = std::panic::catch_unwind(|| reset(owner, |_| panic!("copy failed")));
-        assert!(result.is_err());
-        assert_eq!(Rc::strong_count(&alias), 1);
-        assert_eq!(*alias, 17);
-    }
-
-    #[test]
-    fn zero_sized_payload() {
-        let (payload, token) = reset(Rc::new(()), |_| panic!("unique"));
-        drop(token);
-        assert_eq!(payload, ());
-    }
-}
-
 }
