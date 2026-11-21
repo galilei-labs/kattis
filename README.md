@@ -3,7 +3,7 @@
 A collection of [Kattis](open.kattis.com) problems with formal specifications and Rocq implementations and correctness proofs.
 We also provide snapshots of extracted Rust code.
 
-See [our blogpost](http://galilei.com/research/kattis/).
+See [our blogpost](http://galileilabs.com/research/kattis/).
 
 Each problem includes:
 - A `.spec` file containing its specification and accompanying documentation.
